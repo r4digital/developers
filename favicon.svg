@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 1024 1024">
+  <style>
+    .background { fill: #025; }
+    .letter { fill: #000; }
+
+    @media (prefers-color-scheme: dark) {
+      .letter { fill: #fff; }
+    }
+  </style>
+  <rect class="background" x="0" y="0" rx="15" ry="15" width="1024" height="1024" />
+  <path class="letter" d="M172.3 558.5v222.7H110V245.7h146.9c65.7 0 114.2 12.6 145.6 37.7 31.4 25.2 47.1 63 47.1 113.5 0 70.8-35.9 118.7-107.7 143.6l145.4 240.7h-73.6L284 558.5H172.3zm0-53.5h85.3c44 0 76.2-8.7 96.7-26.2s30.8-43.6 30.8-78.6c0-35.4-10.4-60.9-31.3-76.6-20.9-15.6-54.4-23.4-100.5-23.4h-80.9V505zM914 658.1h-79.5v123.1h-58.2V658.1H515.8V605L770 242.7h64.5v360.1H914v55.3zm-137.7-55.3v-178c0-34.9 1.2-74.4 3.7-118.3h-3c-11.7 23.4-22.7 42.9-33 58.2L576.7 602.8h199.6z" />
+</svg>

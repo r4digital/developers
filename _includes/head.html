@@ -1,0 +1,55 @@
+<head>
+  <meta charset="UTF-8">
+
+  {% capture title %}
+    {%- if page.title -%}
+      {{ page.title | strip_html | xml_escape  }} - {{ site.title | strip_html | xml_escape  }}
+    {%- else -%}
+      {{ site.title | strip_html | xml_escape }}
+    {%- endif -%}
+  {% endcapture %}
+
+  <title>{{ title }}</title>
+
+  {%- if site.noindex -%}
+  <meta name="robots" content="noindex,nofollow">
+  {%- endif -%}
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/img/apple-touch-icon.png">
+  <link rel="icon" href="/favicon.svg">
+  <link rel="manifest" href="/site.webmanifest">
+
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap">
+  <link rel="stylesheet" href="/css/normalize.css">
+  <link rel="stylesheet" href="/css/main.css">
+
+  <meta name="description" content="{{ description }}">
+  <link rel="canonical" href="{{ page.url | absolute_url | strip_index }}">
+
+  {% if site.keywords %}
+  <meta name="keywords" content="{{ site.keywords }}">
+  {% endif %}
+
+  {% if site.fb_app_id %}
+  <meta property="fb:app_id" content="{{ site.fb_app_id }}">
+  {% endif %}
+
+  {% if site.title %}
+  <meta property="og:site_name" content="{{ site.title }}">
+  {% endif %}
+
+  <meta property="og:title" content="{{ title }}">
+  <meta property="og:description" content="{{ description }}">
+
+  {% if img != "" %}
+  <meta property="og:image" content="{{ img | absolute_url }}">
+  {% endif %}
+
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="{{ page.url | absolute_url | strip_index }}">
+
+</head>
