@@ -1,0 +1,57 @@
+---
+layout: default
+---
+
+{{ content }}
+
+<div class="ms-CommandBar">
+  <div class="ms-CommandBar-mainArea">
+    <div class="ms-CommandButton ms-CommandButton--pivot">
+      <a class="ms-CommandButton-button" href="/" >
+        <span class="ms-CommandButton-label">{{ site.title }}</span>
+      </a>
+    </div>
+    <div class="ms-CommandButton ms-CommandButton--pivot is-active">
+      <a class="ms-CommandButton-button" href="{{ navigation.url }}">
+        <span class="ms-CommandButton-label">{{ page.title }}</span>
+      </a>
+    </div>
+  </div>
+</div>
+
+<div id="redoc-container"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/redoc@2.0.0-rc.40/bundles/redoc.standalone.js"></script>
+<script>
+  window.onload = () => {
+    Redoc.init('/assets/{{ page.openapi }}', {
+      hideDownloadButton: true,
+      nativeScrollbars: false,
+      theme: {
+        spacing: {
+          unit: 5,
+        },
+        typography: {
+          fontFamily: '"Segoe UI", "SegoeUI", "Helvetica Neue", Helvetica, Arial, sans-serif',
+
+          headings: {
+            fontFamily: '"Segoe UI WestEuropean", "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, "Helvetica Neue", sans-serif',
+          },
+          code: {
+            color: '#e53935',
+            backgroundColor: 'rgba(38, 50, 56, 0.05)',
+            fontFamily: 'Courier, monospace',
+          },
+        },
+        sidebar: {
+          backgroundColor: '#fafafa',
+          textColor: '#0078d7',
+        },
+        rightPanel: { // ##0078d7
+          backgroundColor: '#0078d7',
+          textColor: '#ffffff',
+        },
+      },
+    }, document.getElementById('redoc-container'));
+  };
+</script>

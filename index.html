@@ -1,3 +1,26 @@
 ---
 layout: home
 ---
+
+<div class="ms-CommandBar">
+  <div class="ms-CommandBar-mainArea">
+    <div class="ms-CommandButton ms-CommandButton--pivot is-active">
+      <a class="ms-CommandButton-button" href="/" >
+        <span class="ms-CommandButton-label">{{ site.title }}</span>
+      </a>
+    </div>
+</div>
+
+<div class="container">
+  {% for item in site.apis %}
+    <div class="row justify-content-center">
+      <div class="col col-12 col-sm-4">
+        <a class="ms-Button ms-Button--compound" href="{{ item.url }}">
+          <span class="ms-Button-icon"><i class="ms-Icon ms-Icon--plus"></i></span>
+          <span class="ms-Button-label">{{ item.title }}</span>
+          <span class="ms-Button-description">{{ item.description }}</span>
+        </a>
+      </div>
+    </div>
+  {% endfor %}
+</div>

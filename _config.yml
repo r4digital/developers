@@ -24,7 +24,8 @@ layout: default
 title: Developers - R4 Digital
 noindex: true
 
-# Facebook App ID
-#fb_app_id: ""
-
-
+# APIs
+collections:
+  apis:
+    output: true
+    permalinlk: /:collection/:path

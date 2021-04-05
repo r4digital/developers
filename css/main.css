@@ -1,30 +1,9 @@
 body {
-  font-family: Arial, Helvetica, sans-serif;
+  font-size: 15px;
+  font-family: "Segoe UI", "SegoeUI", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  min-width: 320px;
   color: #000;
   background-color: #fff;
-  overflow: hidden;
-}
-
-#background {
-  position: absolute;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
-}
-
-.logo {
-  display: block;
-  width: 150px;
-  height: 150px;
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  margin-left: -75px;
-  margin-top: -75px;
-  z-index: 8000;
-}
-
-.logo img {
-  border-radius: 15px;
+  margin: 0;
+  padding: 0;
 }
