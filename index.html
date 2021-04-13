@@ -14,8 +14,8 @@ layout: home
 <div class="container pt-5">
   <div class="row justify-content-center">
     {% for item in site.apis %}
-      <div class="col col-12 col-sm-4 p-5">
-        <div class="row p-3 apis-content">
+      <div class="col col-12 col-lg-4 p-5 pb-0">
+        <div class="row p-3 apis-content apis-content-box">
           <div class="col-12">
             <h2>{{ item.title }}</h2>
           </div>
@@ -30,5 +30,22 @@ layout: home
           </div>
         </div>
     {% endfor %}
+  </div>
+
+  <div class="row justify-content-center">
+    <div class="col col-12 p-5">
+      <div class="row p-3 apis-content">
+        <div class="col-12">
+          <h2>Endpoints</h2>
+        </div>
+        <div class="col-12 col-lg-6 p-3">
+          <h5>Production:</h5>
+          <code>https://api.r4digital.cloud</code>
+        </div>
+        <div class="col-12 col-lg-6 p-3">
+          <h5>Development:</h5>
+          <code>https://develop.r4digital.cloud</code>
+        </div>
+      </div>
   </div>
 </div>

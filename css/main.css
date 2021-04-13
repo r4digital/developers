@@ -31,13 +31,16 @@ a { text-decoration: none; }
 }
 
 .apis-content {
-  min-height: 320px;
   position: relative;
   backdrop-filter: saturate(180%) blur(6px);
   -webkit-backdrop-filter: saturate(180%) blur(6px);
   background: rgba(54, 54, 54, 0.5);
   -webkit-box-shadow: 0 0 5px 0 rgba(0,0,0,.6);
   box-shadow: 0 0 5px 0 rgba(0,0,0,.6);
+}
+
+.apis-content.apis-content-box {
+  min-height: 320px;
 }
 
 .apis-content h2 {
@@ -60,6 +63,12 @@ a { text-decoration: none; }
   text-align: center;
   color: #fff;
   text-transform: uppercase;
+}
+
+.apis-content code {
+  display: block;
+  padding: 20px;
+  background-color: rgba(28, 28, 28, 0.5);
 }
 
 .apis-content a:hover, .apis-content a:active {
