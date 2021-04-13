@@ -1,0 +1,476 @@
+{
+  "openapi": "3.0.2",
+  "info": {
+    "version": "0.0.2-beta",
+    "title": "Baas Banking",
+    "description": "**Description**: Api resposible for managing accounts, statements & balance\n# Schemas\n<a name=\"account_statuses\"></a>\n\n  ## Account statuses\n\n  <table>\n    <tr>\n      <td>Status</td>\n      <td>Description</td>\n    </tr>\n    <tr>\n      <td>`BLOCKED`</td>\n      <td>Informs that the account is blocked and can not do any transaction.</td>\n    </tr>\n    <tr>\n      <td>`ENABLED`</td>\n      <td>Informs that the account is enabled and ready for use.</td>\n    </tr>\n    <tr>\n      <td>`CANCELED`</td>\n      <td>Informs that the account is canceled and not able to do anything.</td>\n    </tr>\n  </table>\n\n\n# Errors\nAccount Middleware uses [HTTP response status codes](https://en.wikipedia.org/wiki/List_of_HTTP_status_codes) to indicate the success or failure of your API requests.\nIn general, there are three status code ranges you can expect:\n- `2xx` success status codes confirm that your request worked as expected\n- `4xx` error status codes indicate an error because of the information provided (e.g., a required parameter was not provided)\n- `5xx` error status codes are rare and indicate an error with R4's servers\n\n## HTTP Status code summary\nExtracted from [Stripe API codes](https://stripe.com/docs/api/errors)\n- `200 - OK` Everything worked as expected.\n- `400 - Bad Request` The request was unacceptable, often due to missing a required parameter.\n- `401 - Unauthorized` No valid API key provided.\n- `403 - Forbidden` The API key doesn't have permissions to perform the request.\n- `404 - Not Found` The requested resource doesn't exist.\n- `409 - Conflict` The request conflicts with another request (perhaps due to using the same idempotent key).\n- `429 - Too Many Requests` Too many requests hit the API too quickly. We recommend an exponential backoff of your requests.\n- `500, 502, 503, 504 - Server Errors` Something went wrong on R4's end.\n## Error codes\nBelow is a list of possible error codes that can be returned:\n<table>\n    <tr>\n      <td>Code</td>\n      <td>Description</td>\n    </tr>\n    <tr>\n      <td>`ACCOUNT_NOT_FOUND`</td>\n      <td>The account informed was not found.</td>\n    </tr>\n  </table>\n"
+  },
+  "servers": [
+    {
+      "description": "Development",
+      "url": "https://api.dev.xpto.com"
+    },
+    {
+      "description": "Production",
+      "url": "https://api.xpto.com"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Account"
+    }
+  ],
+  "paths": {
+    "/accounts": {
+      "get": {
+        "tags": [
+          "Account"
+        ],
+        "summary": "List of accounts",
+        "description": "Returns a list of accounts. If no account is found, an **empty** list will be returned.",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Accounts successfully found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AccountSchema"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
+          }
+        }
+      }
+    },
+    "/accounts/{account_id}": {
+      "get": {
+        "tags": [
+          "Account"
+        ],
+        "summary": "Retrieve an account",
+        "description": "Returns an account.",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/AccountIdParam"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Account successfully found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AccountSchema"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
+          }
+        }
+      }
+    },
+    "/accounts/{account_id}/balance": {
+      "get": {
+        "tags": [
+          "Account"
+        ],
+        "summary": "Retrieves the current account balance by a given account id",
+        "description": "Retrieves the current account balance",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/AccountIdParam"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Account balance successfully retrieved.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "value": {
+                      "description": "Balance amount.",
+                      "type": "integer",
+                      "example": 15230
+                    },
+                    "created_at": {
+                      "type": "string",
+                      "description": "Creation date of balance.",
+                      "example": "2020-08-06T22:10:00Z"
+                    },
+                    "updated_at": {
+                      "type": "string",
+                      "description": "Update date of balance.",
+                      "example": "2021-04-06T22:10:10Z"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
+          }
+        }
+      }
+    },
+    "/statements/{account_id}": {
+      "get": {
+        "tags": [
+          "Account"
+        ],
+        "summary": "Retrieve statements for a given account id",
+        "description": "Retrieves an statements cursor response for given account id",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/AccountIdParam"
+          },
+          {
+            "in": "query",
+            "name": "after",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Base64 filter to bring only statements after the provided value",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "before",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Base64 filter to bring only statements before the provided value",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The numbers of statements to return. Can be omitted if provided before or after filters with limit embedded in them. If nothing is provided, the default will be 1000 as limit",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Stataments successfully retrieved .",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "cursor": {
+                      "type": "object",
+                      "properties": {
+                        "after": {
+                          "type": "string",
+                          "format": "base64",
+                          "description": "cursor pointing at the last item of the list. If no more items exist, the property is removed from the response"
+                        },
+                        "before": {
+                          "type": "string",
+                          "format": "base64",
+                          "description": "cursor pointing at the first item of the list. If its the first available item, the property is removed from the response"
+                        },
+                        "limit": {
+                          "type": "number",
+                          "format": "base64",
+                          "description": "number of items to return."
+                        }
+                      }
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/StatementSchema"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "bearerFormat": "JWT",
+        "scheme": "bearer",
+        "description": "Bearer auth (https://developer.mozilla.org/en-US/docs/Web/HTTP/Authentication)."
+      }
+    },
+    "parameters": {
+      "AccountIdParam": {
+        "name": "account_id",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "$ref": "#/components/schemas/AccountIdSchema"
+        }
+      }
+    },
+    "schemas": {
+      "DocumentSchema": {
+        "type": "object",
+        "description": "Document of the person bound to the account.",
+        "properties": {
+          "type": {
+            "type": "string",
+            "description": "Document's type:\n\n  - `CPF`: Pessoa f\u00edsica (Natural)\n  - `CNPJ`: Pessoa jur\u00eddica (Juridical)\n",
+            "example": "CPF",
+            "enum": [
+              "CPF",
+              "CNPJ"
+            ]
+          },
+          "value": {
+            "type": "string",
+            "description": "Document's value",
+            "example": "12345678901"
+          }
+        }
+      },
+      "AccountIdSchema": {
+        "type": "string",
+        "description": "Unique identifier of the account.",
+        "format": "uuid-v4",
+        "example": "6d814c28-fe73-443c-bfe0-48d518aa32fa"
+      },
+      "IdSchema": {
+        "type": "string",
+        "description": "Unique identifier of the statement.",
+        "format": "uuid-v4",
+        "example": "e363aa8b-5b4d-48c6-920d-54c1afce2643"
+      },
+      "PartnerIdSchema": {
+        "type": "string",
+        "description": "Unique identifier of partner id.",
+        "format": "uuid-v4",
+        "example": "e363aa8b-5b4d-48c6-920d-54c1afce2643"
+      },
+      "AccountSchema": {
+        "type": "object",
+        "description": "Describes the properties of an account.",
+        "properties": {
+          "id": {
+            "$ref": "#/components/schemas/AccountIdSchema"
+          },
+          "application_id": {
+            "type": "string",
+            "description": "Unique identifier of the application which the account is bound.",
+            "format": "uuid-v4",
+            "example": "6d814c28-ff73-443c-bfe0-48d518aa32fa"
+          },
+          "bank_code": {
+            "type": "string",
+            "description": "Code identifying the account's bank.",
+            "example": "160"
+          },
+          "branch": {
+            "type": "string",
+            "description": "Number of the account's branch.",
+            "example": "0001"
+          },
+          "account_number": {
+            "type": "string",
+            "description": "Number of the account.",
+            "example": "123456"
+          },
+          "account_check_digit": {
+            "type": "string",
+            "description": "Number of the account's *check-digit*.",
+            "example": "7"
+          },
+          "status": {
+            "type": "string",
+            "description": "Status of the account.\n[See definitions here](#account_statuses).\n",
+            "enum": [
+              "BLOCKED",
+              "ENABLED",
+              "CANCELED"
+            ],
+            "example": "ENABLED"
+          },
+          "name": {
+            "type": "string",
+            "description": "Name of the person bound to the account.",
+            "example": "Julian Alfred Pankratz"
+          },
+          "document": {
+            "$ref": "#/components/schemas/DocumentSchema"
+          }
+        }
+      },
+      "StatementSchema": {
+        "type": "object",
+        "description": "Describes the properties of an statements.",
+        "properties": {
+          "id": {
+            "$ref": "#/components/schemas/IdSchema"
+          },
+          "account_id": {
+            "$ref": "#/components/schemas/AccountIdSchema"
+          },
+          "partner_id": {
+            "$ref": "#/components/schemas/PartnerIdSchema"
+          },
+          "value": {
+            "type": "integer",
+            "description": "Statement value.",
+            "example": 160
+          },
+          "history_code": {
+            "type": "integer",
+            "description": "Statement history code.",
+            "example": 1
+          },
+          "reconciliated_at": {
+            "type": "string",
+            "description": "Conciliation date of statement.",
+            "example": "2020-08-06T22:10:00Z"
+          },
+          "created_at": {
+            "type": "string",
+            "description": "Creation date of statement.",
+            "example": "2020-08-06T22:10:00Z"
+          },
+          "updated_at": {
+            "type": "string",
+            "description": "Update date of statement.",
+            "example": "2021-04-06T22:10:10Z"
+          }
+        }
+      }
+    },
+    "responses": {
+      "BadRequest": {
+        "description": "Invalid request",
+        "content": {
+          "application/json": {
+            "schema": {
+              "properties": {
+                "code": {
+                  "type": "string",
+                  "title": "Error code",
+                  "description": "The type of error",
+                  "example": "BAD_REQUEST"
+                },
+                "message": {
+                  "type": "string",
+                  "title": "Error message",
+                  "description": "Describes a message informing a reason for the error",
+                  "example": "Invalid request params"
+                }
+              }
+            }
+          }
+        }
+      },
+      "NotFound": {
+        "description": "Resource not found",
+        "content": {
+          "application/json": {
+            "schema": {
+              "properties": {
+                "code": {
+                  "type": "string",
+                  "title": "Error code",
+                  "description": "The type of error",
+                  "example": "ACCOUNT_NOT_FOUND"
+                },
+                "message": {
+                  "type": "string",
+                  "title": "Error message",
+                  "description": "Describes a message informing a reason for the error",
+                  "example": "Unable to found the requested account"
+                }
+              }
+            }
+          }
+        }
+      },
+      "InternalServerError": {
+        "description": "Internal server error",
+        "content": {
+          "application/json": {
+            "schema": {
+              "properties": {
+                "code": {
+                  "type": "string",
+                  "title": "Error code",
+                  "description": "The type of error",
+                  "example": "INTERNAL_SERVER_ERROR"
+                },
+                "message": {
+                  "type": "string",
+                  "title": "Error message",
+                  "description": "Describes a message informing a reason for the error",
+                  "example": "Unexpected error with our service"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
