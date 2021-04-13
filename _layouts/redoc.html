@@ -24,7 +24,7 @@ layout: default
 
 <script>
   window.onload = () => {
-    Redoc.init('/assets/{{ page.openapi }}', {
+    Redoc.init('/assets/{{ page.project_name }}/openapi.json', {
       hideDownloadButton: true,
       nativeScrollbars: false,
       theme: {
