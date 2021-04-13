@@ -4,19 +4,10 @@
   <body>
     {{ content }}
 
+    <script src="/js/three.r119.min.js"></script>
+    <script src="/js/vanta.net.min.js"></script>
     <script src="https://static2.sharepointonline.com/files/fabric/office-ui-fabric-js/1.4.0/js/fabric.min.js"></script>
-    <script type="text/javascript">
-      var CommandBarElements = document.querySelectorAll(".ms-CommandBar");
-      for (var i = 0; i < CommandBarElements.length; i++) {
-        new fabric['CommandBar'](CommandBarElements[i]);
-      }
-
-      var ButtonElements = document.querySelectorAll(".ms-Button");
-      for (var i = 0; i < ButtonElements.length; i++) {
-        new fabric['Button'](ButtonElements[i], function() {
-          // Insert Event Here
-        });
-      }
-    </script>
+    <script src="https://cdn.jsdelivr.net/npm/redoc@2.0.0-rc.40/bundles/redoc.standalone.js"></script>
+    <script src="/js/main.js"></script>
   </body>
 </html>

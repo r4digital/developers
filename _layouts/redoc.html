@@ -19,9 +19,9 @@ layout: default
   </div>
 </div>
 
+<div id="redoc-background"></div>
 <div id="redoc-container"></div>
 
-<script src="https://cdn.jsdelivr.net/npm/redoc@2.0.0-rc.40/bundles/redoc.standalone.js"></script>
 <script>
   window.onload = () => {
     Redoc.init('/assets/{{ page.openapi }}', {
@@ -38,18 +38,18 @@ layout: default
             fontFamily: '"Segoe UI WestEuropean", "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, "Helvetica Neue", sans-serif',
           },
           code: {
-            color: '#e53935',
-            backgroundColor: 'rgba(38, 50, 56, 0.05)',
+            // color: '#e53935',
+            // backgroundColor: 'rgba(38, 50, 56, 0.05)',
             fontFamily: 'Courier, monospace',
           },
         },
         sidebar: {
-          backgroundColor: '#fafafa',
-          textColor: '#0078d7',
+          // backgroundColor: '#fafafa',
+          // textColor: '#0078d7',
         },
-        rightPanel: { // ##0078d7
-          backgroundColor: '#0078d7',
-          textColor: '#ffffff',
+        rightPanel: {
+          backgroundColor: '#363636',
+          // textColor: '#ffffff',
         },
       },
     }, document.getElementById('redoc-container'));

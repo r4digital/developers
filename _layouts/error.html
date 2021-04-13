@@ -2,6 +2,25 @@
 layout: default
 ---
 
-{{ content }}
+<div id="background"></div>
 
-<h1>404</h1>
+<div class="ms-CommandBar">
+  <div class="ms-CommandBar-mainArea">
+    <div class="ms-CommandButton ms-CommandButton--pivot">
+      <a class="ms-CommandButton-button" href="/" >
+        <span class="ms-CommandButton-label">{{ site.title }}</span>
+      </a>
+    </div>
+  </div>
+</div>
+
+<div class="container pt-5">
+  <div class="row justify-content-center">
+    <div class="col col-12 col-sm-6 p-5">
+      <div class="row p-3 apis-content">
+        {{ content }}
+      </div>
+    </div>
+  </div>
+</div>
+
