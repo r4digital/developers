@@ -30,6 +30,11 @@ a { text-decoration: none; }
   background: none;
 }
 
+#redoc-container .redoc-wrap .menu-content {
+  -webkit-box-shadow: 2px 0 5px -3px rgba(0,0,0,.6);
+  box-shadow: 2px 0 5px -3px rgba(0,0,0,.6);
+}
+
 .apis-content {
   position: relative;
   backdrop-filter: saturate(180%) blur(6px);
