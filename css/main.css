@@ -24,9 +24,12 @@ a { text-decoration: none; }
   z-index: -1;
 }
 
+#redoc-background {
+  filter: blur(6px);
+  -webkit-filter: blur(6px);
+}
+
 #redoc-container .redoc-wrap {
-  backdrop-filter: saturate(120%) blur(6px);
-  -webkit-backdrop-filter: saturate(120%) blur(6px);
   background: none;
 }
 
