@@ -3,7 +3,7 @@
   "info": {
     "version": "0.0.2-beta",
     "title": "Baas Banking",
-    "description": "**Description**: Api responsible for managing accounts, statements & balance\n# Schemas\n<a name=\"account_statuses\"></a>\n\n  ## Account statuses\n\n  <table>\n    <tr>\n      <td>Status</td>\n      <td>Description</td>\n    </tr>\n    <tr>\n      <td>`BLOCKED`</td>\n      <td>Informs that the account is blocked and can not do any transaction.</td>\n    </tr>\n    <tr>\n      <td>`ENABLED`</td>\n      <td>Informs that the account is enabled and ready for use.</td>\n    </tr>\n    <tr>\n      <td>`CANCELED`</td>\n      <td>Informs that the account is canceled and not able to do anything.</td>\n    </tr>\n  </table>\n\n\n# Errors\nAccount Middleware uses [HTTP response status codes](https://en.wikipedia.org/wiki/List_of_HTTP_status_codes) to indicate the success or failure of your API requests.\nIn general, there are three status code ranges you can expect:\n- `2xx` success status codes confirm that your request worked as expected\n- `4xx` error status codes indicate an error because of the information provided (e.g., a required parameter was not provided)\n- `5xx` error status codes are rare and indicate an error with R4's servers\n\n## HTTP Status code summary\nExtracted from [Stripe API codes](https://stripe.com/docs/api/errors)\n- `200 - OK` Everything worked as expected.\n- `400 - Bad Request` The request was unacceptable, often due to missing a required parameter.\n- `401 - Unauthorized` No valid API key provided.\n- `403 - Forbidden` The API key doesn't have permissions to perform the request.\n- `404 - Not Found` The requested resource doesn't exist.\n- `429 - Too Many Requests` Too many requests hit the API too quickly. We recommend an exponential backoff of your requests.\n- `500, 502, 503, 504 - Server Errors` Something went wrong on R4's end.\n## Error codes\nBelow is a list of possible error codes that can be returned:\n<table>\n    <tr>\n      <td>Code</td>\n      <td>Description</td>\n    </tr>\n    <tr>\n      <td>`ACCOUNT_NOT_FOUND`</td>\n      <td>The account informed was not found.</td>\n    </tr>\n    <tr>\n      <td>`PROFILE_NOT_FOUND`</td>\n      <td>The profile informed was not found.</td>\n    </tr>\n    <tr>\n      <td>`UUID_INVALID`</td>\n      <td>The uuid informed was not valid.</td>\n    </tr>\n  </table>\n"
+    "description": "**Description**: Api responsible for managing accounts, statements & balance\n# Schemas\n<a name=\"account_statuses\"></a>\n\n  ## Account statuses\n\n  <table>\n    <tr>\n      <td>Status</td>\n      <td>Description</td>\n    </tr>\n    <tr>\n      <td>`BLOCKED`</td>\n      <td>Informs that the account is blocked and can not do any transaction.</td>\n    </tr>\n    <tr>\n      <td>`ENABLED`</td>\n      <td>Informs that the account is enabled and ready for use.</td>\n    </tr>\n    <tr>\n      <td>`CANCELED`</td>\n      <td>Informs that the account is canceled and not able to do anything.</td>\n    </tr>\n  </table>\n\n\n# Errors\nAccount Middleware uses [HTTP response status codes](https://en.wikipedia.org/wiki/List_of_HTTP_status_codes) to indicate the success or failure of your API requests.\nIn general, there are three status code ranges you can expect:\n- `2xx` success status codes confirm that your request worked as expected\n- `4xx` error status codes indicate an error because of the information provided (e.g., a required parameter was not provided)\n- `5xx` error status codes are rare and indicate an error with R4's servers\n\n## HTTP Status code summary\nExtracted from [Stripe API codes](https://stripe.com/docs/api/errors)\n- `200 - OK` Everything worked as expected.\n- `400 - Bad Request` The request was unacceptable, often due to missing a required parameter.\n- `401 - Unauthorized` No valid API key provided.\n- `403 - Forbidden` The API key doesn't have permissions to perform the request.\n- `404 - Not Found` The requested resource doesn't exist.\n- `429 - Too Many Requests` Too many requests hit the API too quickly. We recommend an exponential backoff of your requests.\n- `500, 502, 503, 504 - Server Errors` Something went wrong on R4's end.\n## Error codes\nBelow is a list of possible error codes that can be returned:\n<table>\n    <tr>\n      <td>Code</td>\n      <td>Description</td>\n    </tr>\n    <tr>\n      <td>`ACCOUNT_NOT_FOUND`</td>\n      <td>The account informed was not found.</td>\n    </tr>\n    <tr>\n      <td>`PROFILE_NOT_FOUND`</td>\n      <td>The profile informed was not found.</td>\n    </tr>\n    <tr>\n      <td>`UUID_INVALID`</td>\n      <td>The uuid informed was not valid.</td>\n    </tr>\n    <tr>\n      <td>`REQUEST_VALIDATOR_ERROR`</td>\n      <td>The request is not formatted correctly.</td>\n    </tr>\n    <tr>\n      <td>`UNAUTHORIZED`</td>\n      <td>The request unauthorized, no valid API key provided</td>\n    </tr>\n  </table>\n"
   },
   "servers": [
     {
@@ -41,17 +41,285 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/AccountSchema"
+                    "type": "object",
+                    "description": "Describes the properties of an account.",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "description": "Unique identifier of the account.",
+                        "format": "uuid-v4",
+                        "example": "6d814c28-fe73-443c-bfe0-48d518aa32fa"
+                      },
+                      "application_id": {
+                        "type": "string",
+                        "description": "Unique identifier of the application which the account is bound.",
+                        "format": "uuid-v4",
+                        "example": "6d814c28-ff73-443c-bfe0-48d518aa32fa"
+                      },
+                      "bank_code": {
+                        "type": "string",
+                        "description": "Code identifying the account's bank.",
+                        "example": "160"
+                      },
+                      "branch": {
+                        "type": "string",
+                        "description": "Number of the account's branch.",
+                        "example": "0001"
+                      },
+                      "account_number": {
+                        "type": "string",
+                        "description": "Number of the account.",
+                        "example": "123456"
+                      },
+                      "account_check_digit": {
+                        "type": "string",
+                        "description": "Number of the account's *check-digit*.",
+                        "example": "7"
+                      },
+                      "status": {
+                        "type": "string",
+                        "description": "Status of the account. [See definitions here](#account_statuses).\n",
+                        "enum": [
+                          "BLOCKED",
+                          "ENABLED",
+                          "CANCELED"
+                        ],
+                        "example": "ENABLED"
+                      },
+                      "name": {
+                        "type": "string",
+                        "description": "Name of the person bound to the account.",
+                        "example": "Julian Alfred Pankratz"
+                      },
+                      "document": {
+                        "type": "object",
+                        "description": "Document of the person bound to the account.",
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "description": "Document's type:\n  - `CPF`: Pessoa f\u00edsica (Natural)\n  - `CNPJ`: Pessoa jur\u00eddica (Juridical)\n",
+                            "example": "CPF",
+                            "enum": [
+                              "CPF",
+                              "CNPJ"
+                            ]
+                          },
+                          "value": {
+                            "type": "string",
+                            "description": "Document's value",
+                            "example": "12345678901"
+                          }
+                        }
+                      }
+                    }
                   }
                 }
               }
             }
           },
           "400": {
-            "$ref": "#/components/responses/BadRequest"
+            "description": "Error with types [BadRequest, UuidError].",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "title": "Bad Request",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "BAD_REQUEST",
+                          "enum": [
+                            "BAD_REQUEST"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "Invalid request params"
+                        },
+                        "status_code": {
+                          "type": "number",
+                          "description": "Error status code",
+                          "example": "400"
+                        }
+                      }
+                    },
+                    {
+                      "title": "Uuid Error",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "UUID_INVALID",
+                          "enum": [
+                            "UUID_INVALID"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "Uuid invalid"
+                        },
+                        "status_code": {
+                          "type": "number",
+                          "description": "Error status code",
+                          "example": "400"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Error with types [Unauthorized].",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "title": "Unauthorized",
+                      "properties": {
+                        "error": {
+                          "type": "object",
+                          "properties": {
+                            "code": {
+                              "type": "string",
+                              "title": "Error code",
+                              "description": "The type of error",
+                              "example": "UNAUTHORIZED",
+                              "enum": [
+                                "UNAUTHORIZED"
+                              ]
+                            },
+                            "message": {
+                              "type": "string",
+                              "title": "Error message",
+                              "description": "Describes a message informing a reason for the error",
+                              "example": "Unauthorized"
+                            },
+                            "status_code": {
+                              "type": "number",
+                              "description": "Error status code",
+                              "example": "401"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Error with types [NotFound, AccountNotFound, ProfileNotFound].",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "title": "Not Found",
+                      "properties": {
+                        "error": {
+                          "type": "object",
+                          "properties": {
+                            "code": {
+                              "type": "string",
+                              "title": "Error code",
+                              "description": "The type of error",
+                              "example": "NOT_FOUND",
+                              "enum": [
+                                "NOT_FOUND"
+                              ]
+                            },
+                            "message": {
+                              "type": "string",
+                              "title": "Error message",
+                              "description": "Describes a message informing a reason for the error",
+                              "example": "Unable to found the requested account"
+                            },
+                            "status_code": {
+                              "type": "number",
+                              "description": "Error status code",
+                              "example": "404"
+                            }
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "title": "Profile Not Found",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "PROFILE_NOT_FOUND",
+                          "enum": [
+                            "PROFILE_NOT_FOUND"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "Profile not found"
+                        },
+                        "status_code": {
+                          "type": "number",
+                          "description": "Error status code",
+                          "example": "404"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
           },
           "500": {
-            "$ref": "#/components/responses/InternalServerError"
+            "description": "Error with internal server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "title": "Internal Server Error",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "INTERNAL_SERVER_ERROR",
+                          "enum": [
+                            "INTERNAL_SERVER_ERROR"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "Unexpected error with our service"
+                        },
+                        "status_code": {
+                          "type": "number",
+                          "description": "Error status code",
+                          "example": "500"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
           }
         }
       }
@@ -70,7 +338,15 @@
         ],
         "parameters": [
           {
-            "$ref": "#/components/parameters/AccountIdParam"
+            "name": "account_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "Unique identifier of the account.",
+              "format": "uuid-v4",
+              "example": "6d814c28-fe73-443c-bfe0-48d518aa32fa"
+            }
           }
         ],
         "responses": {
@@ -79,19 +355,309 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/AccountSchema"
+                  "type": "object",
+                  "description": "Describes the properties of an account.",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "description": "Unique identifier of the account.",
+                      "format": "uuid-v4",
+                      "example": "6d814c28-fe73-443c-bfe0-48d518aa32fa"
+                    },
+                    "application_id": {
+                      "type": "string",
+                      "description": "Unique identifier of the application which the account is bound.",
+                      "format": "uuid-v4",
+                      "example": "6d814c28-ff73-443c-bfe0-48d518aa32fa"
+                    },
+                    "bank_code": {
+                      "type": "string",
+                      "description": "Code identifying the account's bank.",
+                      "example": "160"
+                    },
+                    "branch": {
+                      "type": "string",
+                      "description": "Number of the account's branch.",
+                      "example": "0001"
+                    },
+                    "account_number": {
+                      "type": "string",
+                      "description": "Number of the account.",
+                      "example": "123456"
+                    },
+                    "account_check_digit": {
+                      "type": "string",
+                      "description": "Number of the account's *check-digit*.",
+                      "example": "7"
+                    },
+                    "status": {
+                      "type": "string",
+                      "description": "Status of the account. [See definitions here](#account_statuses).\n",
+                      "enum": [
+                        "BLOCKED",
+                        "ENABLED",
+                        "CANCELED"
+                      ],
+                      "example": "ENABLED"
+                    },
+                    "name": {
+                      "type": "string",
+                      "description": "Name of the person bound to the account.",
+                      "example": "Julian Alfred Pankratz"
+                    },
+                    "document": {
+                      "type": "object",
+                      "description": "Document of the person bound to the account.",
+                      "properties": {
+                        "type": {
+                          "type": "string",
+                          "description": "Document's type:\n  - `CPF`: Pessoa f\u00edsica (Natural)\n  - `CNPJ`: Pessoa jur\u00eddica (Juridical)\n",
+                          "example": "CPF",
+                          "enum": [
+                            "CPF",
+                            "CNPJ"
+                          ]
+                        },
+                        "value": {
+                          "type": "string",
+                          "description": "Document's value",
+                          "example": "12345678901"
+                        }
+                      }
+                    }
+                  }
                 }
               }
             }
           },
           "400": {
-            "$ref": "#/components/responses/BadRequest"
+            "description": "Error with types [BadRequest, UuidError].",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "title": "Bad Request",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "BAD_REQUEST",
+                          "enum": [
+                            "BAD_REQUEST"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "Invalid request params"
+                        },
+                        "status_code": {
+                          "type": "number",
+                          "description": "Error status code",
+                          "example": "400"
+                        }
+                      }
+                    },
+                    {
+                      "title": "Uuid Error",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "UUID_INVALID",
+                          "enum": [
+                            "UUID_INVALID"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "Uuid invalid"
+                        },
+                        "status_code": {
+                          "type": "number",
+                          "description": "Error status code",
+                          "example": "400"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Error with types [Unauthorized].",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "title": "Unauthorized",
+                      "properties": {
+                        "error": {
+                          "type": "object",
+                          "properties": {
+                            "code": {
+                              "type": "string",
+                              "title": "Error code",
+                              "description": "The type of error",
+                              "example": "UNAUTHORIZED",
+                              "enum": [
+                                "UNAUTHORIZED"
+                              ]
+                            },
+                            "message": {
+                              "type": "string",
+                              "title": "Error message",
+                              "description": "Describes a message informing a reason for the error",
+                              "example": "Unauthorized"
+                            },
+                            "status_code": {
+                              "type": "number",
+                              "description": "Error status code",
+                              "example": "401"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
           },
           "404": {
-            "$ref": "#/components/responses/NotFound"
+            "description": "Error with types [NotFound, AccountNotFound, ProfileNotFound].",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "title": "Not Found",
+                      "properties": {
+                        "error": {
+                          "type": "object",
+                          "properties": {
+                            "code": {
+                              "type": "string",
+                              "title": "Error code",
+                              "description": "The type of error",
+                              "example": "NOT_FOUND",
+                              "enum": [
+                                "NOT_FOUND"
+                              ]
+                            },
+                            "message": {
+                              "type": "string",
+                              "title": "Error message",
+                              "description": "Describes a message informing a reason for the error",
+                              "example": "Unable to found the requested account"
+                            },
+                            "status_code": {
+                              "type": "number",
+                              "description": "Error status code",
+                              "example": "404"
+                            }
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "title": "Profile Not Found",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "PROFILE_NOT_FOUND",
+                          "enum": [
+                            "PROFILE_NOT_FOUND"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "Profile not found"
+                        },
+                        "status_code": {
+                          "type": "number",
+                          "description": "Error status code",
+                          "example": "404"
+                        }
+                      }
+                    },
+                    {
+                      "title": "Account Not Found",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "ACCOUNT_NOT_FOUND",
+                          "enum": [
+                            "ACCOUNT_NOT_FOUND"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "Account not found"
+                        },
+                        "status_code": {
+                          "type": "number",
+                          "description": "Error status code",
+                          "example": "404"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
           },
           "500": {
-            "$ref": "#/components/responses/InternalServerError"
+            "description": "Account successfully found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "title": "Internal Server Error",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "INTERNAL_SERVER_ERROR",
+                          "enum": [
+                            "INTERNAL_SERVER_ERROR"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "Unexpected error with our service"
+                        },
+                        "status_code": {
+                          "type": "number",
+                          "description": "Error status code",
+                          "example": "500"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
           }
         }
       }
@@ -110,7 +676,15 @@
         ],
         "parameters": [
           {
-            "$ref": "#/components/parameters/AccountIdParam"
+            "name": "account_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "Unique identifier of the account.",
+              "format": "uuid-v4",
+              "example": "6d814c28-fe73-443c-bfe0-48d518aa32fa"
+            }
           }
         ],
         "responses": {
@@ -142,13 +716,233 @@
             }
           },
           "400": {
-            "$ref": "#/components/responses/BadRequest"
+            "description": "Error with types [BadRequest, UuidError].",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "title": "Bad Request",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "BAD_REQUEST",
+                          "enum": [
+                            "BAD_REQUEST"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "Invalid request params"
+                        },
+                        "status_code": {
+                          "type": "number",
+                          "description": "Error status code",
+                          "example": "400"
+                        }
+                      }
+                    },
+                    {
+                      "title": "Uuid Error",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "UUID_INVALID",
+                          "enum": [
+                            "UUID_INVALID"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "Uuid invalid"
+                        },
+                        "status_code": {
+                          "type": "number",
+                          "description": "Error status code",
+                          "example": "400"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Error with types [Unauthorized].",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "title": "Unauthorized",
+                      "properties": {
+                        "error": {
+                          "type": "object",
+                          "properties": {
+                            "code": {
+                              "type": "string",
+                              "title": "Error code",
+                              "description": "The type of error",
+                              "example": "UNAUTHORIZED",
+                              "enum": [
+                                "UNAUTHORIZED"
+                              ]
+                            },
+                            "message": {
+                              "type": "string",
+                              "title": "Error message",
+                              "description": "Describes a message informing a reason for the error",
+                              "example": "Unauthorized"
+                            },
+                            "status_code": {
+                              "type": "number",
+                              "description": "Error status code",
+                              "example": "401"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
           },
           "404": {
-            "$ref": "#/components/responses/NotFound"
+            "description": "Error with types [NotFound, AccountNotFound, ProfileNotFound].",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "title": "Not Found",
+                      "properties": {
+                        "error": {
+                          "type": "object",
+                          "properties": {
+                            "code": {
+                              "type": "string",
+                              "title": "Error code",
+                              "description": "The type of error",
+                              "example": "NOT_FOUND",
+                              "enum": [
+                                "NOT_FOUND"
+                              ]
+                            },
+                            "message": {
+                              "type": "string",
+                              "title": "Error message",
+                              "description": "Describes a message informing a reason for the error",
+                              "example": "Unable to found the requested account"
+                            },
+                            "status_code": {
+                              "type": "number",
+                              "description": "Error status code",
+                              "example": "404"
+                            }
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "title": "Profile Not Found",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "PROFILE_NOT_FOUND",
+                          "enum": [
+                            "PROFILE_NOT_FOUND"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "Profile not found"
+                        },
+                        "status_code": {
+                          "type": "number",
+                          "description": "Error status code",
+                          "example": "404"
+                        }
+                      }
+                    },
+                    {
+                      "title": "Account Not Found",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "ACCOUNT_NOT_FOUND",
+                          "enum": [
+                            "ACCOUNT_NOT_FOUND"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "Account not found"
+                        },
+                        "status_code": {
+                          "type": "number",
+                          "description": "Error status code",
+                          "example": "404"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
           },
           "500": {
-            "$ref": "#/components/responses/InternalServerError"
+            "description": "Error with internal server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "title": "Internal Server Error",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "INTERNAL_SERVER_ERROR",
+                          "enum": [
+                            "INTERNAL_SERVER_ERROR"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "Unexpected error with our service"
+                        },
+                        "status_code": {
+                          "type": "number",
+                          "description": "Error status code",
+                          "example": "500"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
           }
         }
       }
@@ -167,7 +961,15 @@
         ],
         "parameters": [
           {
-            "$ref": "#/components/parameters/AccountIdParam"
+            "name": "account_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "Unique identifier of the account.",
+              "format": "uuid-v4",
+              "example": "6d814c28-fe73-443c-bfe0-48d518aa32fa"
+            }
           },
           {
             "in": "query",
@@ -228,7 +1030,53 @@
                     "data": {
                       "type": "array",
                       "items": {
-                        "$ref": "#/components/schemas/StatementSchema"
+                        "type": "object",
+                        "description": "Describes the properties of an statements.",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "description": "Unique identifier of the statement.",
+                            "format": "uuid-v4",
+                            "example": "e363aa8b-5b4d-48c6-920d-54c1afce2643"
+                          },
+                          "account_id": {
+                            "type": "string",
+                            "description": "Unique identifier of the account.",
+                            "format": "uuid-v4",
+                            "example": "6d814c28-fe73-443c-bfe0-48d518aa32fa"
+                          },
+                          "partner_id": {
+                            "type": "string",
+                            "description": "Unique identifier of partner id.",
+                            "format": "uuid-v4",
+                            "example": "e363aa8b-5b4d-0aba-920d-54c1afce2643"
+                          },
+                          "value": {
+                            "type": "integer",
+                            "description": "Statement value.",
+                            "example": 160
+                          },
+                          "history_code": {
+                            "type": "integer",
+                            "description": "Statement history code.",
+                            "example": 1
+                          },
+                          "reconciliated_at": {
+                            "type": "string",
+                            "description": "Conciliation date of statement.",
+                            "example": "2020-08-06T22:10:00Z"
+                          },
+                          "created_at": {
+                            "type": "string",
+                            "description": "Creation date of statement.",
+                            "example": "2020-08-06T22:10:00Z"
+                          },
+                          "updated_at": {
+                            "type": "string",
+                            "description": "Update date of statement.",
+                            "example": "2021-04-06T22:10:10Z"
+                          }
+                        }
                       }
                     }
                   }
@@ -237,13 +1085,192 @@
             }
           },
           "400": {
-            "$ref": "#/components/responses/BadRequest"
+            "description": "Error with types [BadRequest, UuidError].",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "title": "Bad Request",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "BAD_REQUEST",
+                          "enum": [
+                            "BAD_REQUEST"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "Invalid request params"
+                        },
+                        "status_code": {
+                          "type": "number",
+                          "description": "Error status code",
+                          "example": "400"
+                        }
+                      }
+                    },
+                    {
+                      "title": "Uuid Error",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "UUID_INVALID",
+                          "enum": [
+                            "UUID_INVALID"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "Uuid invalid"
+                        },
+                        "status_code": {
+                          "type": "number",
+                          "description": "Error status code",
+                          "example": "400"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
           },
           "404": {
-            "$ref": "#/components/responses/NotFound"
+            "description": "Error with types [NotFound, AccountNotFound, ProfileNotFound].",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "title": "Not Found",
+                      "properties": {
+                        "error": {
+                          "type": "object",
+                          "properties": {
+                            "code": {
+                              "type": "string",
+                              "title": "Error code",
+                              "description": "The type of error",
+                              "example": "NOT_FOUND",
+                              "enum": [
+                                "NOT_FOUND"
+                              ]
+                            },
+                            "message": {
+                              "type": "string",
+                              "title": "Error message",
+                              "description": "Describes a message informing a reason for the error",
+                              "example": "Unable to found the requested account"
+                            },
+                            "status_code": {
+                              "type": "number",
+                              "description": "Error status code",
+                              "example": "404"
+                            }
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "title": "Profile Not Found",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "PROFILE_NOT_FOUND",
+                          "enum": [
+                            "PROFILE_NOT_FOUND"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "Profile not found"
+                        },
+                        "status_code": {
+                          "type": "number",
+                          "description": "Error status code",
+                          "example": "404"
+                        }
+                      }
+                    },
+                    {
+                      "title": "Account Not Found",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "ACCOUNT_NOT_FOUND",
+                          "enum": [
+                            "ACCOUNT_NOT_FOUND"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "Account not found"
+                        },
+                        "status_code": {
+                          "type": "number",
+                          "description": "Error status code",
+                          "example": "404"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
           },
           "500": {
-            "$ref": "#/components/responses/InternalServerError"
+            "description": "Error with internal server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "title": "Internal Server Error",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "INTERNAL_SERVER_ERROR",
+                          "enum": [
+                            "INTERNAL_SERVER_ERROR"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "Unexpected error with our service"
+                        },
+                        "status_code": {
+                          "type": "number",
+                          "description": "Error status code",
+                          "example": "500"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
           }
         }
       }
@@ -256,319 +1283,6 @@
         "bearerFormat": "JWT",
         "scheme": "bearer",
         "description": "Bearer auth (https://developer.mozilla.org/en-US/docs/Web/HTTP/Authentication)."
-      }
-    },
-    "parameters": {
-      "AccountIdParam": {
-        "name": "account_id",
-        "in": "path",
-        "required": true,
-        "schema": {
-          "$ref": "#/components/schemas/AccountIdSchema"
-        }
-      }
-    },
-    "schemas": {
-      "DocumentSchema": {
-        "type": "object",
-        "description": "Document of the person bound to the account.",
-        "properties": {
-          "type": {
-            "type": "string",
-            "description": "Document's type:\n\n  - `CPF`: Pessoa f\u00edsica (Natural)\n  - `CNPJ`: Pessoa jur\u00eddica (Juridical)\n",
-            "example": "CPF",
-            "enum": [
-              "CPF",
-              "CNPJ"
-            ]
-          },
-          "value": {
-            "type": "string",
-            "description": "Document's value",
-            "example": "12345678901"
-          }
-        }
-      },
-      "AccountIdSchema": {
-        "type": "string",
-        "description": "Unique identifier of the account.",
-        "format": "uuid-v4",
-        "example": "6d814c28-fe73-443c-bfe0-48d518aa32fa"
-      },
-      "IdSchema": {
-        "type": "string",
-        "description": "Unique identifier of the statement.",
-        "format": "uuid-v4",
-        "example": "e363aa8b-5b4d-48c6-920d-54c1afce2643"
-      },
-      "PartnerIdSchema": {
-        "type": "string",
-        "description": "Unique identifier of partner id.",
-        "format": "uuid-v4",
-        "example": "e363aa8b-5b4d-48c6-920d-54c1afce2643"
-      },
-      "AccountSchema": {
-        "type": "object",
-        "description": "Describes the properties of an account.",
-        "properties": {
-          "id": {
-            "$ref": "#/components/schemas/AccountIdSchema"
-          },
-          "application_id": {
-            "type": "string",
-            "description": "Unique identifier of the application which the account is bound.",
-            "format": "uuid-v4",
-            "example": "6d814c28-ff73-443c-bfe0-48d518aa32fa"
-          },
-          "bank_code": {
-            "type": "string",
-            "description": "Code identifying the account's bank.",
-            "example": "160"
-          },
-          "branch": {
-            "type": "string",
-            "description": "Number of the account's branch.",
-            "example": "0001"
-          },
-          "account_number": {
-            "type": "string",
-            "description": "Number of the account.",
-            "example": "123456"
-          },
-          "account_check_digit": {
-            "type": "string",
-            "description": "Number of the account's *check-digit*.",
-            "example": "7"
-          },
-          "status": {
-            "type": "string",
-            "description": "Status of the account.\n[See definitions here](#account_statuses).\n",
-            "enum": [
-              "BLOCKED",
-              "ENABLED",
-              "CANCELED"
-            ],
-            "example": "ENABLED"
-          },
-          "name": {
-            "type": "string",
-            "description": "Name of the person bound to the account.",
-            "example": "Julian Alfred Pankratz"
-          },
-          "document": {
-            "$ref": "#/components/schemas/DocumentSchema"
-          }
-        }
-      },
-      "StatementSchema": {
-        "type": "object",
-        "description": "Describes the properties of an statements.",
-        "properties": {
-          "id": {
-            "$ref": "#/components/schemas/IdSchema"
-          },
-          "account_id": {
-            "$ref": "#/components/schemas/AccountIdSchema"
-          },
-          "partner_id": {
-            "$ref": "#/components/schemas/PartnerIdSchema"
-          },
-          "value": {
-            "type": "integer",
-            "description": "Statement value.",
-            "example": 160
-          },
-          "history_code": {
-            "type": "integer",
-            "description": "Statement history code.",
-            "example": 1
-          },
-          "reconciliated_at": {
-            "type": "string",
-            "description": "Conciliation date of statement.",
-            "example": "2020-08-06T22:10:00Z"
-          },
-          "created_at": {
-            "type": "string",
-            "description": "Creation date of statement.",
-            "example": "2020-08-06T22:10:00Z"
-          },
-          "updated_at": {
-            "type": "string",
-            "description": "Update date of statement.",
-            "example": "2021-04-06T22:10:10Z"
-          }
-        }
-      }
-    },
-    "responses": {
-      "BadRequest": {
-        "description": "Invalid request",
-        "content": {
-          "application/json": {
-            "schema": {
-              "properties": {
-                "code": {
-                  "type": "string",
-                  "title": "Error code",
-                  "description": "The type of error",
-                  "example": "BAD_REQUEST"
-                },
-                "message": {
-                  "type": "string",
-                  "title": "Error message",
-                  "description": "Describes a message informing a reason for the error",
-                  "example": "Invalid request params"
-                },
-                "status_code": {
-                  "type": "number",
-                  "description": "Error status code",
-                  "example": "400"
-                }
-              }
-            }
-          }
-        }
-      },
-      "NotFound": {
-        "description": "Resource not found",
-        "content": {
-          "application/json": {
-            "schema": {
-              "properties": {
-                "code": {
-                  "type": "string",
-                  "title": "Error code",
-                  "description": "The type of error",
-                  "example": "ACCOUNT_NOT_FOUND"
-                },
-                "message": {
-                  "type": "string",
-                  "title": "Error message",
-                  "description": "Describes a message informing a reason for the error",
-                  "example": "Unable to found the requested account"
-                },
-                "status_code": {
-                  "type": "number",
-                  "description": "Error status code",
-                  "example": "404"
-                }
-              }
-            }
-          }
-        }
-      },
-      "InternalServerError": {
-        "description": "Internal server error",
-        "content": {
-          "application/json": {
-            "schema": {
-              "properties": {
-                "code": {
-                  "type": "string",
-                  "title": "Error code",
-                  "description": "The type of error",
-                  "example": "INTERNAL_SERVER_ERROR"
-                },
-                "message": {
-                  "type": "string",
-                  "title": "Error message",
-                  "description": "Describes a message informing a reason for the error",
-                  "example": "Unexpected error with our service"
-                },
-                "status_code": {
-                  "type": "number",
-                  "description": "Error status code",
-                  "example": "500"
-                }
-              }
-            }
-          }
-        }
-      },
-      "AccountNotFound": {
-        "description": "Account Not Found",
-        "content": {
-          "application/json": {
-            "schema": {
-              "properties": {
-                "code": {
-                  "type": "string",
-                  "title": "Error code",
-                  "description": "The type of error",
-                  "example": "ACCOUNT_NOT_FOUND"
-                },
-                "message": {
-                  "type": "string",
-                  "title": "Error message",
-                  "description": "Describes a message informing a reason for the error",
-                  "example": "Account not found"
-                },
-                "status_code": {
-                  "type": "number",
-                  "description": "Error status code",
-                  "example": "400"
-                }
-              }
-            }
-          }
-        }
-      },
-      "ProfileNotFound": {
-        "description": "Profile Not Found",
-        "content": {
-          "application/json": {
-            "schema": {
-              "properties": {
-                "code": {
-                  "type": "string",
-                  "title": "Error code",
-                  "description": "The type of error",
-                  "example": "PROFILE_NOT_FOUND"
-                },
-                "message": {
-                  "type": "string",
-                  "title": "Error message",
-                  "description": "Describes a message informing a reason for the error",
-                  "example": "Profile not found"
-                },
-                "status_code": {
-                  "type": "number",
-                  "description": "Error status code",
-                  "example": "400"
-                }
-              }
-            }
-          }
-        }
-      },
-      "UuidError": {
-        "description": "Uuid Error",
-        "content": {
-          "application/json": {
-            "schema": {
-              "properties": {
-                "code": {
-                  "type": "string",
-                  "title": "Error code",
-                  "description": "The type of error",
-                  "example": "UUID_INVALID"
-                },
-                "message": {
-                  "type": "string",
-                  "title": "Error message",
-                  "description": "Describes a message informing a reason for the error",
-                  "example": "Uuid invalid"
-                },
-                "status_code": {
-                  "type": "number",
-                  "description": "Error status code",
-                  "example": "400"
-                }
-              }
-            }
-          }
-        }
       }
     }
   }
