@@ -16,7 +16,7 @@
     }
   ],
   "paths": {
-    "/transfer": {
+    "/transfers": {
       "post": {
         "summary": "Transfer",
         "operationId": "transfer",
@@ -550,7 +550,7 @@
         }
       }
     },
-    "/transfer/{id}": {
+    "/transfers/{id}": {
       "get": {
         "summary": "Transfer",
         "description": "Retrieves a transfer response for given account id",
