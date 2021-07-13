@@ -94,7 +94,7 @@
                       "account": {
                         "type": "number",
                         "description": "Account number without the digit",
-                        "example": 266305
+                        "example": 1010101
                       },
                       "account_digit": {
                         "type": "number",
@@ -202,7 +202,7 @@
                             "account": {
                               "type": "number",
                               "description": "Account number without the digit",
-                              "example": 266305
+                              "example": 1010101
                             },
                             "account_digit": {
                               "type": "number",
@@ -718,7 +718,7 @@
                             "account": {
                               "type": "number",
                               "description": "Account number without the digit",
-                              "example": 266305
+                              "example": 1010101
                             },
                             "account_digit": {
                               "type": "number",
@@ -1136,7 +1136,7 @@
               "account": {
                 "type": "number",
                 "description": "Account number without the digit",
-                "example": 266305
+                "example": 1010101
               },
               "account_digit": {
                 "type": "number",
