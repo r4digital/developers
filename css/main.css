@@ -21,11 +21,6 @@ a { text-decoration: none; }
 
 .apis-content {
   position: relative;
-  backdrop-filter: saturate(180%) blur(6px);
-  -webkit-backdrop-filter: saturate(180%) blur(6px);
-  background: rgba(54, 54, 54, 0.5);
-  -webkit-box-shadow: 0 0 5px 0 rgba(0,0,0,.6);
-  box-shadow: 0 0 5px 0 rgba(0,0,0,.6);
 }
 
 .apis-content.apis-content-box {
