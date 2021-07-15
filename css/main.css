@@ -21,6 +21,7 @@ a { text-decoration: none; }
 
 .apis-content {
   position: relative;
+  background-color: #fff;
 }
 
 .apis-content.apis-content-box {
