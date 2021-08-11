@@ -1,0 +1,1388 @@
+{
+  "openapi": "3.0.2",
+  "info": {
+    "version": "1.0.0-beta",
+    "title": "Bill Payment",
+    "description": "**Description**: Api responsible for soliciting bill payments\n# Errors\nBill Payment uses [HTTP response status codes](https://en.wikipedia.org/wiki/List_of_HTTP_status_codes) to indicate the success or failure of your API requests.\nIn general, there are three status code ranges you can expect:\n- `2xx` success status codes confirm that your request worked as expected\n- `4xx` error status codes indicate an error because of the information provided (e.g., a required parameter was not provided)\n- `5xx` error status codes are rare and indicate an error with R4's servers\n## HTTP Status code summary\nExtracted from [Stripe API codes](https://stripe.com/docs/api/errors)\n- `200 - OK` - Success for request.\n- `400 - Bad Request` - The server cannot or will not process the request due to an apparent client error.\n- `404 - Not Found` The requested resource doesn't exist.\n- `409 - Conflict` The requested account is inactive or does not exist.\n- `422 - Unprocessable Entity` UUID invalid or another mistake\n- `500, 502, 503, 504 - Server Errors` Something went wrong on R4's end.\n## Error codes\nBelow is a list of possible error codes that can be returned:\n\n  | Code                | Description                                                 |\n  |-------------------- | ------------------------------------------------------------|\n  | `404  - Not Found`  | The resource informed was not found.                        |\n  |-------------------- | ------------------------------------------------------------|\n  | `409  - Conflict`   | The id informed was already processed.                      |\n  |-------------------- | ------------------------------------------------------------|\n  | `422 - Un. Entity`  | UUID invalid                                                |\n  |-------------------- | ------------------------------------------------------------|\n"
+  },
+  "servers": [
+    {
+      "description": "Development",
+      "url": "https://develop.r4digital.cloud/bill-payment"
+    },
+    {
+      "description": "Production",
+      "url": "https://api.r4digital.cloud/bill-payment"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Bill Payment"
+    }
+  ],
+  "paths": {
+    "/bill-payments": {
+      "post": {
+        "tags": [
+          "Bill Payment"
+        ],
+        "description": "Returns information's about a bill payment requested and authorize it.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "format": "uuid"
+                  },
+                  "account_id": {
+                    "type": "string",
+                    "format": "uuid"
+                  },
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      "DIGITABLE",
+                      "BARCODE"
+                    ]
+                  },
+                  "value": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "id",
+                  "account_id",
+                  "type",
+                  "value"
+                ],
+                "example": {
+                  "id": "0683e31a-b8c7-4984-9c6a-fafd36e9ffba",
+                  "account_id": "b24c5c00-b294-4956-8500-705c93ffaee8",
+                  "type": "DIGITABLE",
+                  "value": "34191.79001 01043.510047 91020.150008 6 86470026000"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Payment",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "assignor": {
+                      "type": "string"
+                    },
+                    "document_recipient": {
+                      "type": "string"
+                    },
+                    "document_payer": {
+                      "type": "string"
+                    },
+                    "pay_due_date": {
+                      "type": "string",
+                      "format": "date"
+                    },
+                    "next_business_day": {
+                      "type": "string",
+                      "format": "date"
+                    },
+                    "due_date_register": {
+                      "type": "string",
+                      "format": "date"
+                    },
+                    "allow_change_value": {
+                      "type": "boolean"
+                    },
+                    "recipient": {
+                      "type": "string"
+                    },
+                    "payer": {
+                      "type": "string"
+                    },
+                    "discount_value": {
+                      "type": "number"
+                    },
+                    "interest_value_calculated": {
+                      "type": "number"
+                    },
+                    "max_value": {
+                      "type": "number"
+                    },
+                    "min_value": {
+                      "type": "number"
+                    },
+                    "fine_value_calculated": {
+                      "type": "number"
+                    },
+                    "original_value": {
+                      "type": "number"
+                    },
+                    "total_updated": {
+                      "type": "number"
+                    },
+                    "total_with_discount": {
+                      "type": "number"
+                    },
+                    "total_with_additional": {
+                      "type": "number"
+                    },
+                    "settle_date": {
+                      "type": "string",
+                      "format": "date"
+                    },
+                    "due_date": {
+                      "type": "string",
+                      "format": "date"
+                    },
+                    "end_hour": {
+                      "type": "string"
+                    },
+                    "inite_hour": {
+                      "type": "string"
+                    },
+                    "next_settle": {
+                      "type": "string"
+                    },
+                    "authorize_transaction_id": {
+                      "type": "number"
+                    },
+                    "value": {
+                      "type": "number"
+                    },
+                    "error_code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "string"
+                    },
+                    "type": {
+                      "type": "number"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "status_code": {
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "message",
+                    "status_code"
+                  ],
+                  "example": {
+                    "code": "CONFLICT",
+                    "message": "Conflict",
+                    "status_code": 409
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "status_code": {
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "message",
+                    "status_code"
+                  ],
+                  "example": {
+                    "code": "INTERNAL_SERVER_ERROR",
+                    "message": "Internal Server Error",
+                    "status_code": 500
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Bill Payment"
+        ],
+        "description": "Returns information's about a bill payment requested and cursor from pagination.",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "account_id",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "required": true,
+            "description": "Account Id on database."
+          },
+          {
+            "in": "query",
+            "name": "after",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "before",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Payment",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "cursor": {
+                      "type": "object",
+                      "properties": {
+                        "after": {
+                          "type": "string"
+                        },
+                        "before": {
+                          "type": "string"
+                        },
+                        "limit": {
+                          "type": "number"
+                        }
+                      }
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "assignor": {
+                            "type": "string"
+                          },
+                          "document_recipient": {
+                            "type": "string"
+                          },
+                          "document_payer": {
+                            "type": "string"
+                          },
+                          "pay_due_date": {
+                            "type": "string",
+                            "format": "date"
+                          },
+                          "next_business_day": {
+                            "type": "string",
+                            "format": "date"
+                          },
+                          "due_date_register": {
+                            "type": "string",
+                            "format": "date"
+                          },
+                          "allow_change_value": {
+                            "type": "boolean"
+                          },
+                          "recipient": {
+                            "type": "string"
+                          },
+                          "payer": {
+                            "type": "string"
+                          },
+                          "discount_value": {
+                            "type": "number"
+                          },
+                          "interest_value_calculated": {
+                            "type": "number"
+                          },
+                          "max_value": {
+                            "type": "number"
+                          },
+                          "min_value": {
+                            "type": "number"
+                          },
+                          "fine_value_calculated": {
+                            "type": "number"
+                          },
+                          "original_value": {
+                            "type": "number"
+                          },
+                          "total_updated": {
+                            "type": "number"
+                          },
+                          "total_with_discount": {
+                            "type": "number"
+                          },
+                          "total_with_additional": {
+                            "type": "number"
+                          },
+                          "settle_date": {
+                            "type": "string",
+                            "format": "date"
+                          },
+                          "due_date": {
+                            "type": "string",
+                            "format": "date"
+                          },
+                          "end_hour": {
+                            "type": "string"
+                          },
+                          "inite_hour": {
+                            "type": "string"
+                          },
+                          "next_settle": {
+                            "type": "string"
+                          },
+                          "authorize_transaction_id": {
+                            "type": "number"
+                          },
+                          "value": {
+                            "type": "number"
+                          },
+                          "error_code": {
+                            "type": "string"
+                          },
+                          "message": {
+                            "type": "string"
+                          },
+                          "status": {
+                            "type": "string"
+                          },
+                          "type": {
+                            "type": "number"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "status_code": {
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "message",
+                    "status_code"
+                  ],
+                  "example": {
+                    "code": "CONFLICT",
+                    "message": "Conflict",
+                    "status_code": 409
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "status_code": {
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "message",
+                    "status_code"
+                  ],
+                  "example": {
+                    "code": "INTERNAL_SERVER_ERROR",
+                    "message": "Internal Server Error",
+                    "status_code": 500
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/bill-payments/{id}": {
+      "post": {
+        "tags": [
+          "Bill Payment"
+        ],
+        "description": "Make a payment and return information information about operation.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "required": true,
+            "description": "Transaction ID for authorized bill payment."
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "payer": {
+                    "type": "object",
+                    "properties": {
+                      "document_type": {
+                        "type": "string",
+                        "enum": [
+                          "CPF",
+                          "CNPJ"
+                        ]
+                      },
+                      "document_number": {
+                        "type": "number"
+                      }
+                    }
+                  },
+                  "amount": {
+                    "type": "number",
+                    "format": "float"
+                  }
+                },
+                "required": [
+                  "payer - document_type - document_number",
+                  "amount"
+                ],
+                "example": {
+                  "payer": {
+                    "document_type": "CPF",
+                    "document_number": "1234567890"
+                  },
+                  "amount": 123.48
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Payment information.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "to_do": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The specified resource was not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "status_code": {
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "message",
+                    "status_code"
+                  ],
+                  "example": {
+                    "code": "RESOURCE_NOT_FOUND",
+                    "message": "Resource not found",
+                    "status_code": 404
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "status_code": {
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "message",
+                    "status_code"
+                  ],
+                  "example": {
+                    "code": "INTERNAL_SERVER_ERROR",
+                    "message": "Internal Server Error",
+                    "status_code": 500
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/bill-payments/{payment_guuid}": {
+      "get": {
+        "tags": [
+          "Bill Payment"
+        ],
+        "description": "Get an bill payment by payment guuid.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "payment_guuid",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "required": true,
+            "description": "Bill payment guuid on database."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Payment information.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "to_do": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The specified resource was not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "status_code": {
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "message",
+                    "status_code"
+                  ],
+                  "example": {
+                    "code": "RESOURCE_NOT_FOUND",
+                    "message": "Resource not found",
+                    "status_code": 404
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "status_code": {
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "message",
+                    "status_code"
+                  ],
+                  "example": {
+                    "code": "INTERNAL_SERVER_ERROR",
+                    "message": "Internal Server Error",
+                    "status_code": 500
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "responses": {
+      "NotFound": {
+        "description": "The specified resource was not found",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "code": {
+                  "type": "string"
+                },
+                "message": {
+                  "type": "string"
+                },
+                "status_code": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "code",
+                "message",
+                "status_code"
+              ],
+              "example": {
+                "code": "RESOURCE_NOT_FOUND",
+                "message": "Resource not found",
+                "status_code": 404
+              }
+            }
+          }
+        }
+      },
+      "UnprocessableEntity": {
+        "description": "Unprocessable Entity",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "code": {
+                  "type": "string"
+                },
+                "message": {
+                  "type": "string"
+                },
+                "status_code": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "code",
+                "message",
+                "status_code"
+              ],
+              "example": {
+                "code": "INTERNAL_SERVER_ERROR",
+                "message": "Unprocessable Entity",
+                "status_code": 422
+              }
+            }
+          }
+        }
+      },
+      "InternalServerError": {
+        "description": "Internal Server Error",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "code": {
+                  "type": "string"
+                },
+                "message": {
+                  "type": "string"
+                },
+                "status_code": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "code",
+                "message",
+                "status_code"
+              ],
+              "example": {
+                "code": "INTERNAL_SERVER_ERROR",
+                "message": "Internal Server Error",
+                "status_code": 500
+              }
+            }
+          }
+        }
+      },
+      "Conflict": {
+        "description": "Conflict",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "code": {
+                  "type": "string"
+                },
+                "message": {
+                  "type": "string"
+                },
+                "status_code": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "code",
+                "message",
+                "status_code"
+              ],
+              "example": {
+                "code": "CONFLICT",
+                "message": "Conflict",
+                "status_code": 409
+              }
+            }
+          }
+        }
+      },
+      "PaymentResponse": {
+        "description": "Payment",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "assignor": {
+                  "type": "string"
+                },
+                "document_recipient": {
+                  "type": "string"
+                },
+                "document_payer": {
+                  "type": "string"
+                },
+                "pay_due_date": {
+                  "type": "string",
+                  "format": "date"
+                },
+                "next_business_day": {
+                  "type": "string",
+                  "format": "date"
+                },
+                "due_date_register": {
+                  "type": "string",
+                  "format": "date"
+                },
+                "allow_change_value": {
+                  "type": "boolean"
+                },
+                "recipient": {
+                  "type": "string"
+                },
+                "payer": {
+                  "type": "string"
+                },
+                "discount_value": {
+                  "type": "number"
+                },
+                "interest_value_calculated": {
+                  "type": "number"
+                },
+                "max_value": {
+                  "type": "number"
+                },
+                "min_value": {
+                  "type": "number"
+                },
+                "fine_value_calculated": {
+                  "type": "number"
+                },
+                "original_value": {
+                  "type": "number"
+                },
+                "total_updated": {
+                  "type": "number"
+                },
+                "total_with_discount": {
+                  "type": "number"
+                },
+                "total_with_additional": {
+                  "type": "number"
+                },
+                "settle_date": {
+                  "type": "string",
+                  "format": "date"
+                },
+                "due_date": {
+                  "type": "string",
+                  "format": "date"
+                },
+                "end_hour": {
+                  "type": "string"
+                },
+                "inite_hour": {
+                  "type": "string"
+                },
+                "next_settle": {
+                  "type": "string"
+                },
+                "authorize_transaction_id": {
+                  "type": "number"
+                },
+                "value": {
+                  "type": "number"
+                },
+                "error_code": {
+                  "type": "string"
+                },
+                "message": {
+                  "type": "string"
+                },
+                "status": {
+                  "type": "string"
+                },
+                "type": {
+                  "type": "number"
+                }
+              }
+            }
+          }
+        }
+      },
+      "PaymentWithCursorResponse": {
+        "description": "Payment",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "cursor": {
+                  "type": "object",
+                  "properties": {
+                    "after": {
+                      "type": "string"
+                    },
+                    "before": {
+                      "type": "string"
+                    },
+                    "limit": {
+                      "type": "number"
+                    }
+                  }
+                },
+                "data": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "assignor": {
+                        "type": "string"
+                      },
+                      "document_recipient": {
+                        "type": "string"
+                      },
+                      "document_payer": {
+                        "type": "string"
+                      },
+                      "pay_due_date": {
+                        "type": "string",
+                        "format": "date"
+                      },
+                      "next_business_day": {
+                        "type": "string",
+                        "format": "date"
+                      },
+                      "due_date_register": {
+                        "type": "string",
+                        "format": "date"
+                      },
+                      "allow_change_value": {
+                        "type": "boolean"
+                      },
+                      "recipient": {
+                        "type": "string"
+                      },
+                      "payer": {
+                        "type": "string"
+                      },
+                      "discount_value": {
+                        "type": "number"
+                      },
+                      "interest_value_calculated": {
+                        "type": "number"
+                      },
+                      "max_value": {
+                        "type": "number"
+                      },
+                      "min_value": {
+                        "type": "number"
+                      },
+                      "fine_value_calculated": {
+                        "type": "number"
+                      },
+                      "original_value": {
+                        "type": "number"
+                      },
+                      "total_updated": {
+                        "type": "number"
+                      },
+                      "total_with_discount": {
+                        "type": "number"
+                      },
+                      "total_with_additional": {
+                        "type": "number"
+                      },
+                      "settle_date": {
+                        "type": "string",
+                        "format": "date"
+                      },
+                      "due_date": {
+                        "type": "string",
+                        "format": "date"
+                      },
+                      "end_hour": {
+                        "type": "string"
+                      },
+                      "inite_hour": {
+                        "type": "string"
+                      },
+                      "next_settle": {
+                        "type": "string"
+                      },
+                      "authorize_transaction_id": {
+                        "type": "number"
+                      },
+                      "value": {
+                        "type": "number"
+                      },
+                      "error_code": {
+                        "type": "string"
+                      },
+                      "message": {
+                        "type": "string"
+                      },
+                      "status": {
+                        "type": "string"
+                      },
+                      "type": {
+                        "type": "number"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "schemas": {
+      "InternalServerError": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "status_code": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "code",
+          "message",
+          "status_code"
+        ],
+        "example": {
+          "code": "INTERNAL_SERVER_ERROR",
+          "message": "Internal Server Error",
+          "status_code": 500
+        }
+      },
+      "UnprocessableEntity": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "status_code": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "code",
+          "message",
+          "status_code"
+        ],
+        "example": {
+          "code": "INTERNAL_SERVER_ERROR",
+          "message": "Unprocessable Entity",
+          "status_code": 422
+        }
+      },
+      "ResourceNotFound": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "status_code": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "code",
+          "message",
+          "status_code"
+        ],
+        "example": {
+          "code": "RESOURCE_NOT_FOUND",
+          "message": "Resource not found",
+          "status_code": 404
+        }
+      },
+      "Conflict": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "status_code": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "code",
+          "message",
+          "status_code"
+        ],
+        "example": {
+          "code": "CONFLICT",
+          "message": "Conflict",
+          "status_code": 409
+        }
+      },
+      "PaymentWithCursorResponse": {
+        "type": "object",
+        "properties": {
+          "cursor": {
+            "type": "object",
+            "properties": {
+              "after": {
+                "type": "string"
+              },
+              "before": {
+                "type": "string"
+              },
+              "limit": {
+                "type": "number"
+              }
+            }
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "assignor": {
+                  "type": "string"
+                },
+                "document_recipient": {
+                  "type": "string"
+                },
+                "document_payer": {
+                  "type": "string"
+                },
+                "pay_due_date": {
+                  "type": "string",
+                  "format": "date"
+                },
+                "next_business_day": {
+                  "type": "string",
+                  "format": "date"
+                },
+                "due_date_register": {
+                  "type": "string",
+                  "format": "date"
+                },
+                "allow_change_value": {
+                  "type": "boolean"
+                },
+                "recipient": {
+                  "type": "string"
+                },
+                "payer": {
+                  "type": "string"
+                },
+                "discount_value": {
+                  "type": "number"
+                },
+                "interest_value_calculated": {
+                  "type": "number"
+                },
+                "max_value": {
+                  "type": "number"
+                },
+                "min_value": {
+                  "type": "number"
+                },
+                "fine_value_calculated": {
+                  "type": "number"
+                },
+                "original_value": {
+                  "type": "number"
+                },
+                "total_updated": {
+                  "type": "number"
+                },
+                "total_with_discount": {
+                  "type": "number"
+                },
+                "total_with_additional": {
+                  "type": "number"
+                },
+                "settle_date": {
+                  "type": "string",
+                  "format": "date"
+                },
+                "due_date": {
+                  "type": "string",
+                  "format": "date"
+                },
+                "end_hour": {
+                  "type": "string"
+                },
+                "inite_hour": {
+                  "type": "string"
+                },
+                "next_settle": {
+                  "type": "string"
+                },
+                "authorize_transaction_id": {
+                  "type": "number"
+                },
+                "value": {
+                  "type": "number"
+                },
+                "error_code": {
+                  "type": "string"
+                },
+                "message": {
+                  "type": "string"
+                },
+                "status": {
+                  "type": "string"
+                },
+                "type": {
+                  "type": "number"
+                }
+              }
+            }
+          }
+        }
+      },
+      "PaymentResponse": {
+        "type": "object",
+        "properties": {
+          "assignor": {
+            "type": "string"
+          },
+          "document_recipient": {
+            "type": "string"
+          },
+          "document_payer": {
+            "type": "string"
+          },
+          "pay_due_date": {
+            "type": "string",
+            "format": "date"
+          },
+          "next_business_day": {
+            "type": "string",
+            "format": "date"
+          },
+          "due_date_register": {
+            "type": "string",
+            "format": "date"
+          },
+          "allow_change_value": {
+            "type": "boolean"
+          },
+          "recipient": {
+            "type": "string"
+          },
+          "payer": {
+            "type": "string"
+          },
+          "discount_value": {
+            "type": "number"
+          },
+          "interest_value_calculated": {
+            "type": "number"
+          },
+          "max_value": {
+            "type": "number"
+          },
+          "min_value": {
+            "type": "number"
+          },
+          "fine_value_calculated": {
+            "type": "number"
+          },
+          "original_value": {
+            "type": "number"
+          },
+          "total_updated": {
+            "type": "number"
+          },
+          "total_with_discount": {
+            "type": "number"
+          },
+          "total_with_additional": {
+            "type": "number"
+          },
+          "settle_date": {
+            "type": "string",
+            "format": "date"
+          },
+          "due_date": {
+            "type": "string",
+            "format": "date"
+          },
+          "end_hour": {
+            "type": "string"
+          },
+          "inite_hour": {
+            "type": "string"
+          },
+          "next_settle": {
+            "type": "string"
+          },
+          "authorize_transaction_id": {
+            "type": "number"
+          },
+          "value": {
+            "type": "number"
+          },
+          "error_code": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "type": {
+            "type": "number"
+          }
+        }
+      }
+    }
+  }
+}
