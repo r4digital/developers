@@ -30,6 +30,7 @@ a { text-decoration: none; }
 .apis-content.apis-content-box {
   min-height: 320px;
   background: repeat-y;
+  background-color: #f4f4f4;
   border: 3px solid #cccccc;
 }
 
@@ -81,7 +82,7 @@ a { text-decoration: none; }
   position: absolute;
   left: 0;
   right: 0;
-  background-color: #F73932;
+  background-color: #696060;
   bottom: 0;
   z-index: 5;
 }
