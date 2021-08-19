@@ -86,11 +86,3 @@ a { text-decoration: none; }
   bottom: 0;
   z-index: 5;
 }
-
-.pt-5 {
-  background-color: white!important;
-}
-
-.container pt-5 {
-  background-color: white!important;
-}
