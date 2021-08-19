@@ -86,6 +86,10 @@ a { text-decoration: none; }
   z-index: 5;
 }
 
+.pt-5 {
+  background-color: white!important;
+}
+
 .container pt-5 {
   background-color: white!important;
 }
