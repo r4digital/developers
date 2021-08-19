@@ -1,5 +1,5 @@
 :root {
-  --background: #F73932;
+  --background: white;
 }
 
 body {
@@ -81,7 +81,7 @@ a { text-decoration: none; }
   position: absolute;
   left: 0;
   right: 0;
-  background-color: #000000;
+  background-color: #F73932;
   bottom: 0;
   z-index: 5;
 }
