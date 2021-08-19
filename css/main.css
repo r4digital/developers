@@ -85,3 +85,8 @@ a { text-decoration: none; }
   bottom: 0;
   z-index: 5;
 }
+
+.pt-5 {
+  padding-top: 3rem!important;
+  background-color: white;
+}
