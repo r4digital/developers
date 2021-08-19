@@ -86,7 +86,6 @@ a { text-decoration: none; }
   z-index: 5;
 }
 
-.pt-5 {
-  padding-top: 3rem!important;
-  background-color: white;
+.container pt-5 {
+  background-color: white!important;
 }
