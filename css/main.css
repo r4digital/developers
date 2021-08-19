@@ -1,12 +1,12 @@
 :root {
-  --background: white;
+  --background: #cccccc;
 }
 
 body {
   font-size: 15px;
   font-family: "Segoe UI", "SegoeUI", "Helvetica Neue", Helvetica, Arial, sans-serif;
   min-width: 320px;
-  color: rgb(0, 0, 0);
+  color: #fff;
   background-color: var(--background);
   margin: 0;
   padding: 0;
@@ -29,14 +29,11 @@ a { text-decoration: none; }
 
 .apis-content.apis-content-box {
   min-height: 320px;
-  background: repeat-y;
-  background-color: #f4f4f4;
-  border: 3px solid #cccccc;
 }
 
 .apis-content h2 {
   margin: 0;
-  border-bottom: 1px solid rgb(247 57 50);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   font-size: 25px;
   padding-bottom: 5px;
 }
@@ -45,11 +42,10 @@ a { text-decoration: none; }
   margin: 0;
   white-space: normal;
   text-align: justify;
-  border-bottom: 1px solid #b1b1b1;
 }
 
 .apis-content a {
-  background: rgba(247, 57, 50);
+  background: rgba(255, 255, 255, 0.1);
   padding: 7px;
   display: block;
   text-align: center;
@@ -60,29 +56,11 @@ a { text-decoration: none; }
 .apis-content code {
   display: block;
   padding: 20px;
-  background-color: rgb(234 234 234);
-}
-
-.apis-content a:hover, .apis-content a:active {
-  background: #f7393247;
-  color: var(--background);
-  border: 1px solid;
-  cursor: pointer;
+  background-color: rgba(28, 28, 28, 0.5);
 }
 
 .apis-content a:hover, .apis-content a:active {
   background: #fff;
   color: var(--background);
   cursor: pointer;
-}
-
-.ms-CommandButton.ms-CommandButton--pivot.is-active:before, .ms-CommandButton.ms-CommandButton--pivot:hover:before {
-  content: "";
-  height: 2px;
-  position: absolute;
-  left: 0;
-  right: 0;
-  background-color: #696060;
-  bottom: 0;
-  z-index: 5;
 }
