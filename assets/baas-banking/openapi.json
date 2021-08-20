@@ -33,81 +33,135 @@
             "BearerAuth": []
           }
         ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "after",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Base64 filter to bring only accounts after the provided value",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "before",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Base64 filter to bring only accounts before the provided value",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The numbers of accounts to return. Can be omitted if provided before or after filters with limit embedded in them. If nothing is provided, the default will be 1000 as limit",
+            "required": false
+          }
+        ],
         "responses": {
           "200": {
             "description": "Accounts successfully found.",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "type": "object",
-                    "description": "Describes the properties of an account.",
-                    "properties": {
-                      "id": {
-                        "type": "string",
-                        "description": "Unique identifier of the account.",
-                        "format": "uuid-v4",
-                        "example": "6d814c28-fe73-443c-bfe0-48d518aa32fa"
-                      },
-                      "application_id": {
-                        "type": "string",
-                        "description": "Unique identifier of the application which the account is bound.",
-                        "format": "uuid-v4",
-                        "example": "6d814c28-ff73-443c-bfe0-48d518aa32fa"
-                      },
-                      "bank_code": {
-                        "type": "string",
-                        "description": "Code identifying the account's bank.",
-                        "example": "160"
-                      },
-                      "branch": {
-                        "type": "string",
-                        "description": "Number of the account's branch.",
-                        "example": "0001"
-                      },
-                      "account_number": {
-                        "type": "string",
-                        "description": "Number of the account.",
-                        "example": "123456"
-                      },
-                      "account_check_digit": {
-                        "type": "string",
-                        "description": "Number of the account's *check-digit*.",
-                        "example": "7"
-                      },
-                      "status": {
-                        "type": "string",
-                        "description": "Status of the account. [See definitions here](#account_statuses).\n",
-                        "enum": [
-                          "BLOCKED",
-                          "ENABLED",
-                          "CANCELED"
-                        ],
-                        "example": "ENABLED"
-                      },
-                      "name": {
-                        "type": "string",
-                        "description": "Name of the person bound to the account.",
-                        "example": "Julian Alfred Pankratz"
-                      },
-                      "document": {
+                  "type": "object",
+                  "properties": {
+                    "cursor": {
+                      "type": "object",
+                      "properties": {
+                        "after": {
+                          "type": "string",
+                          "format": "base64",
+                          "description": "cursor pointing at the last item of the list. If no more items exist, the property is removed from the response"
+                        },
+                        "before": {
+                          "type": "string",
+                          "format": "base64",
+                          "description": "cursor pointing at the first item of the list. If its the first available item, the property is removed from the response"
+                        },
+                        "limit": {
+                          "type": "number",
+                          "format": "base64",
+                          "description": "number of items to return."
+                        }
+                      }
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
                         "type": "object",
-                        "description": "Document of the person bound to the account.",
+                        "description": "Describes the properties of an account.",
                         "properties": {
-                          "type": {
+                          "id": {
                             "type": "string",
-                            "description": "Document's type:\n  - `CPF`: Pessoa f\u00edsica (Natural)\n  - `CNPJ`: Pessoa jur\u00eddica (Juridical)\n",
-                            "example": "CPF",
-                            "enum": [
-                              "CPF",
-                              "CNPJ"
-                            ]
+                            "description": "Unique identifier of the account.",
+                            "format": "uuid-v4",
+                            "example": "6d814c28-fe73-443c-bfe0-48d518aa32fa"
                           },
-                          "value": {
+                          "application_id": {
                             "type": "string",
-                            "description": "Document's value",
-                            "example": "12345678901"
+                            "description": "Unique identifier of the application which the account is bound.",
+                            "format": "uuid-v4",
+                            "example": "6d814c28-ff73-443c-bfe0-48d518aa32fa"
+                          },
+                          "bank_code": {
+                            "type": "string",
+                            "description": "Code identifying the account's bank.",
+                            "example": "160"
+                          },
+                          "branch": {
+                            "type": "string",
+                            "description": "Number of the account's branch.",
+                            "example": "0001"
+                          },
+                          "account_number": {
+                            "type": "string",
+                            "description": "Number of the account.",
+                            "example": "123456"
+                          },
+                          "account_check_digit": {
+                            "type": "string",
+                            "description": "Number of the account's *check-digit*.",
+                            "example": "7"
+                          },
+                          "status": {
+                            "type": "string",
+                            "description": "Status of the account. [See definitions here](#account_statuses).\n",
+                            "enum": [
+                              "BLOCKED",
+                              "ENABLED",
+                              "CANCELED"
+                            ],
+                            "example": "ENABLED"
+                          },
+                          "name": {
+                            "type": "string",
+                            "description": "Name of the person bound to the account.",
+                            "example": "Julian Alfred Pankratz"
+                          },
+                          "document": {
+                            "type": "object",
+                            "description": "Document of the person bound to the account.",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "description": "Document's type:\n  - `CPF`: Pessoa f\u00edsica (Natural)\n  - `CNPJ`: Pessoa jur\u00eddica (Juridical)\n",
+                                "example": "CPF",
+                                "enum": [
+                                  "CPF",
+                                  "CNPJ"
+                                ]
+                              },
+                              "value": {
+                                "type": "string",
+                                "description": "Document's value",
+                                "example": "12345678901"
+                              }
+                            }
                           }
                         }
                       }
