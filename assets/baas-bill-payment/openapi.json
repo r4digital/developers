@@ -467,7 +467,7 @@
         }
       }
     },
-    "/bill-payments/{id}": {
+    "/bill-payments/{payment_guuid}": {
       "post": {
         "tags": [
           "Bill Payment"
@@ -476,7 +476,7 @@
         "parameters": [
           {
             "in": "path",
-            "name": "id",
+            "name": "payment_guuid",
             "schema": {
               "type": "string",
               "format": "uuid"
@@ -608,9 +608,7 @@
             }
           }
         }
-      }
-    },
-    "/bill-payments/{payment_guuid}": {
+      },
       "get": {
         "tags": [
           "Bill Payment"
@@ -640,6 +638,103 @@
                       "type": "string"
                     },
                     "status": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The specified resource was not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "status_code": {
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "message",
+                    "status_code"
+                  ],
+                  "example": {
+                    "code": "RESOURCE_NOT_FOUND",
+                    "message": "Resource not found",
+                    "status_code": 404
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "status_code": {
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "message",
+                    "status_code"
+                  ],
+                  "example": {
+                    "code": "INTERNAL_SERVER_ERROR",
+                    "message": "Internal Server Error",
+                    "status_code": 500
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Bill Payment"
+        ],
+        "description": "Cancels a payment and reverse when possible",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "payment_guuid",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "required": true,
+            "description": "Bill payment guuid on database"
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "Operation status information",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
                       "type": "string"
                     }
                   }
