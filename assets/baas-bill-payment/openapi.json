@@ -3,7 +3,7 @@
   "info": {
     "version": "1.0.0-beta",
     "title": "Bill Payment",
-    "description": "**Description**: Api responsible for soliciting bill payments\n# Errors\nBill Payment uses [HTTP response status codes](https://en.wikipedia.org/wiki/List_of_HTTP_status_codes) to indicate the success or failure of your API requests.\nIn general, there are three status code ranges you can expect:\n- `2xx` success status codes confirm that your request worked as expected\n- `4xx` error status codes indicate an error because of the information provided (e.g., a required parameter was not provided)\n- `5xx` error status codes are rare and indicate an error with R4's servers\n## HTTP Status code summary\nExtracted from [Stripe API codes](https://stripe.com/docs/api/errors)\n- `200 - OK` - Success for request.\n- `400 - Bad Request` - The server cannot or will not process the request due to an apparent client error.\n- `404 - Not Found` The requested resource doesn't exist.\n- `409 - Conflict` The requested account is inactive or does not exist.\n- `422 - Unprocessable Entity` UUID invalid or another mistake\n- `500, 502, 503, 504 - Server Errors` Something went wrong on R4's end.\n## Error codes\nBelow is a list of possible error codes that can be returned:\n\n  | Code                | Description                                                 |\n  |-------------------- | ------------------------------------------------------------|\n  | `404  - Not Found`  | The resource informed was not found.                        |\n  |-------------------- | ------------------------------------------------------------|\n  | `409  - Conflict`   | The id informed was already processed.                      |\n  |-------------------- | ------------------------------------------------------------|\n  | `422 - Un. Entity`  | UUID invalid                                                |\n  |-------------------- | ------------------------------------------------------------|\n"
+    "description": "**Description**: Api responsible for soliciting bill payments\nFor a bill payment be successfully completed, the client has to do two requests to the service.  <br/>The first one is for create a payment and get information about bill.  <br/>The second one is for the client provide information about payer and about the amount to pay.  After this steps some back end process will be responsible to confirm with application if the transaction is permitted and if was,  check if client has balance enough to do the operation requested. \n# Status\nTo see how the payment flow is going the client can get information about it and confirm the statuses and occurrences.\n\n  | Status                | Description                                                 |\n  |-------------------- | ------------------------------------------------------------|\n  | `CREATED` | The payment was created with the id provided. |\n  | -------------------- | ------------------------------------------------- ---------- |\n  | `AUTHORIZED` | The customer has authorized the payment and it will be processed. |\n  | -------------------- | ------------------------------------------------- ---------- |\n  | `COFIRMED` | Application confirmed payment. |\n  | -------------------- | ------------------------------------------------- ---------- |\n  | `NOT CONFIRMED` | Application not confirmed payment. |\n  | -------------------- | ------------------------------------------------- ---------- |\n  | `PROCESSING` | Payment has been sent for internal processing |\n  | -------------------- | ------------------------------------------------- ---------- |\n  | `TRANSFERRED` | Payment has been transferred internally and awaits finalization |\n  | -------------------- | ------------------------------------------------- ---------- |\n  | `REJECTED` | Payment has been rejected. |\n  | -------------------- | ------------------------------------------------- ---------- |\n  | `DONE` | Payment has been fully processed.\n  | -------------------- | ------------------------------------------------- ---------- |\n  | `CANCELED` | Payment has been cancelled.                                      |\n  |-------------------- | ------------------------------------------------------------|        \n\n# Errors\nBill Payment uses [HTTP response status codes](https://en.wikipedia.org/wiki/List_of_HTTP_status_codes) to indicate the success or failure of your API requests.\nIn general, there are three status code ranges you can expect:\n- `2xx` success status codes confirm that your request worked as expected\n- `4xx` error status codes indicate an error because of the information provided (e.g., a required parameter was not provided)\n- `5xx` error status codes are rare and indicate an error with R4's servers\n## HTTP Status code summary\nExtracted from [Stripe API codes](https://stripe.com/docs/api/errors)\n- `200 - OK` - Success for request.\n- `400 - Bad Request` - The server cannot or will not process the request due to an apparent client error.\n- `404 - Not Found` The requested resource doesn't exist.\n- `409 - Conflict` The requested account is inactive or does not exist.\n- `422 - Unprocessable Entity` UUID invalid or another mistake\n- `424 - Failed Dependency`  The requested action depended on another action and that action failed\n- `500, 502, 503, 504 - Server Errors` Something went wrong on R4's end.\n## Error codes\nBelow is a list of possible error codes that can be returned:\n\n  | Code                | Description                                                 |\n  |-------------------- | ------------------------------------------------------------|\n  | `404  - Not Found`  | The resource informed was not found.                        |\n  |-------------------- | ------------------------------------------------------------|\n  | `409  - Conflict`   | The id informed was already processed.                      |\n  |-------------------- | ------------------------------------------------------------|\n  | `422 - Un. Entity`  | UUID invalid                                                |\n  |-------------------- | ------------------------------------------------------------|\n  | `424 - Failed Dependency`  | The requested action depended on another action and that action failed                                             |\n  |-------------------- | ------------------------------------------------------------|\n"
   },
   "servers": [
     {
@@ -26,7 +26,7 @@
         "tags": [
           "Bill Payment"
         ],
-        "description": "Returns information's about a bill payment requested and authorize it.",
+        "description": "Returns information's about a bill payment requested and prepare to authorize payment.",
         "requestBody": {
           "content": {
             "application/json": {
@@ -197,7 +197,7 @@
                   ],
                   "example": {
                     "code": "CONFLICT",
-                    "message": "Conflict",
+                    "message": "Requested id already exists",
                     "status_code": 409
                   }
                 }
@@ -241,7 +241,7 @@
         "tags": [
           "Bill Payment"
         ],
-        "description": "Returns information's about a bill payment requested and cursor from pagination.",
+        "description": "Returns information's about a bill payment for a specif account.",
         "parameters": [
           {
             "in": "query",
@@ -426,7 +426,7 @@
                   ],
                   "example": {
                     "code": "CONFLICT",
-                    "message": "Conflict",
+                    "message": "Requested id already exists",
                     "status_code": 409
                   }
                 }
@@ -472,7 +472,7 @@
         "tags": [
           "Bill Payment"
         ],
-        "description": "Make a payment and return information information about operation.",
+        "description": "Authorize a payment by specifying a payment amount and payer information.",
         "parameters": [
           {
             "in": "path",
@@ -530,17 +530,10 @@
           "200": {
             "description": "Payment information.",
             "content": {
-              "application/json": {
+              "text/plain": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "to_do": {
-                      "type": "string"
-                    },
-                    "status": {
-                      "type": "string"
-                    }
-                  }
+                  "type": "string",
+                  "example": "Accepted"
                 }
               }
             }
@@ -613,7 +606,7 @@
         "tags": [
           "Bill Payment"
         ],
-        "description": "Get an bill payment by payment guuid.",
+        "description": "Get payment information by payment guuid.",
         "parameters": [
           {
             "in": "path",
@@ -628,17 +621,128 @@
         ],
         "responses": {
           "200": {
-            "description": "Payment information.",
+            "description": "Payment",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "to_do": {
-                      "type": "string"
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "assignor": {
+                            "type": "string"
+                          },
+                          "document_recipient": {
+                            "type": "string"
+                          },
+                          "document_payer": {
+                            "type": "string"
+                          },
+                          "pay_due_date": {
+                            "type": "string",
+                            "format": "date"
+                          },
+                          "next_business_day": {
+                            "type": "string",
+                            "format": "date"
+                          },
+                          "due_date_register": {
+                            "type": "string",
+                            "format": "date"
+                          },
+                          "allow_change_value": {
+                            "type": "boolean"
+                          },
+                          "recipient": {
+                            "type": "string"
+                          },
+                          "payer": {
+                            "type": "string"
+                          },
+                          "discount_value": {
+                            "type": "number"
+                          },
+                          "interest_value_calculated": {
+                            "type": "number"
+                          },
+                          "max_value": {
+                            "type": "number"
+                          },
+                          "min_value": {
+                            "type": "number"
+                          },
+                          "fine_value_calculated": {
+                            "type": "number"
+                          },
+                          "original_value": {
+                            "type": "number"
+                          },
+                          "total_updated": {
+                            "type": "number"
+                          },
+                          "total_with_discount": {
+                            "type": "number"
+                          },
+                          "total_with_additional": {
+                            "type": "number"
+                          },
+                          "settle_date": {
+                            "type": "string",
+                            "format": "date"
+                          },
+                          "due_date": {
+                            "type": "string",
+                            "format": "date"
+                          },
+                          "end_hour": {
+                            "type": "string"
+                          },
+                          "inite_hour": {
+                            "type": "string"
+                          },
+                          "next_settle": {
+                            "type": "string"
+                          },
+                          "authorize_transaction_id": {
+                            "type": "number"
+                          },
+                          "value": {
+                            "type": "number"
+                          },
+                          "error_code": {
+                            "type": "string"
+                          },
+                          "message": {
+                            "type": "string"
+                          },
+                          "status": {
+                            "type": "string"
+                          },
+                          "type": {
+                            "type": "number"
+                          }
+                        }
+                      }
                     },
-                    "status": {
-                      "type": "string"
+                    "occurrences": {
+                      "type": "array",
+                      "items": {
+                        "properties": {
+                          "code": {
+                            "type": "string"
+                          },
+                          "status": {
+                            "type": "string"
+                          },
+                          "created_at": {
+                            "type": "string",
+                            "format": "date"
+                          }
+                        }
+                      }
                     }
                   }
                 }
@@ -927,7 +1031,7 @@
               ],
               "example": {
                 "code": "CONFLICT",
-                "message": "Conflict",
+                "message": "Requested id already exists",
                 "status_code": 409
               }
             }
@@ -1163,6 +1267,135 @@
             }
           }
         }
+      },
+      "PaymentWithOccurrencesResponse": {
+        "description": "Payment",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "assignor": {
+                        "type": "string"
+                      },
+                      "document_recipient": {
+                        "type": "string"
+                      },
+                      "document_payer": {
+                        "type": "string"
+                      },
+                      "pay_due_date": {
+                        "type": "string",
+                        "format": "date"
+                      },
+                      "next_business_day": {
+                        "type": "string",
+                        "format": "date"
+                      },
+                      "due_date_register": {
+                        "type": "string",
+                        "format": "date"
+                      },
+                      "allow_change_value": {
+                        "type": "boolean"
+                      },
+                      "recipient": {
+                        "type": "string"
+                      },
+                      "payer": {
+                        "type": "string"
+                      },
+                      "discount_value": {
+                        "type": "number"
+                      },
+                      "interest_value_calculated": {
+                        "type": "number"
+                      },
+                      "max_value": {
+                        "type": "number"
+                      },
+                      "min_value": {
+                        "type": "number"
+                      },
+                      "fine_value_calculated": {
+                        "type": "number"
+                      },
+                      "original_value": {
+                        "type": "number"
+                      },
+                      "total_updated": {
+                        "type": "number"
+                      },
+                      "total_with_discount": {
+                        "type": "number"
+                      },
+                      "total_with_additional": {
+                        "type": "number"
+                      },
+                      "settle_date": {
+                        "type": "string",
+                        "format": "date"
+                      },
+                      "due_date": {
+                        "type": "string",
+                        "format": "date"
+                      },
+                      "end_hour": {
+                        "type": "string"
+                      },
+                      "inite_hour": {
+                        "type": "string"
+                      },
+                      "next_settle": {
+                        "type": "string"
+                      },
+                      "authorize_transaction_id": {
+                        "type": "number"
+                      },
+                      "value": {
+                        "type": "number"
+                      },
+                      "error_code": {
+                        "type": "string"
+                      },
+                      "message": {
+                        "type": "string"
+                      },
+                      "status": {
+                        "type": "string"
+                      },
+                      "type": {
+                        "type": "number"
+                      }
+                    }
+                  }
+                },
+                "occurrences": {
+                  "type": "array",
+                  "items": {
+                    "properties": {
+                      "code": {
+                        "type": "string"
+                      },
+                      "status": {
+                        "type": "string"
+                      },
+                      "created_at": {
+                        "type": "string",
+                        "format": "date"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
       }
     },
     "schemas": {
@@ -1258,7 +1491,7 @@
         ],
         "example": {
           "code": "CONFLICT",
-          "message": "Conflict",
+          "message": "Requested id already exists",
           "status_code": 409
         }
       },
@@ -1475,6 +1708,128 @@
           },
           "type": {
             "type": "number"
+          }
+        }
+      },
+      "PaymentWithOccurrencesResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "assignor": {
+                  "type": "string"
+                },
+                "document_recipient": {
+                  "type": "string"
+                },
+                "document_payer": {
+                  "type": "string"
+                },
+                "pay_due_date": {
+                  "type": "string",
+                  "format": "date"
+                },
+                "next_business_day": {
+                  "type": "string",
+                  "format": "date"
+                },
+                "due_date_register": {
+                  "type": "string",
+                  "format": "date"
+                },
+                "allow_change_value": {
+                  "type": "boolean"
+                },
+                "recipient": {
+                  "type": "string"
+                },
+                "payer": {
+                  "type": "string"
+                },
+                "discount_value": {
+                  "type": "number"
+                },
+                "interest_value_calculated": {
+                  "type": "number"
+                },
+                "max_value": {
+                  "type": "number"
+                },
+                "min_value": {
+                  "type": "number"
+                },
+                "fine_value_calculated": {
+                  "type": "number"
+                },
+                "original_value": {
+                  "type": "number"
+                },
+                "total_updated": {
+                  "type": "number"
+                },
+                "total_with_discount": {
+                  "type": "number"
+                },
+                "total_with_additional": {
+                  "type": "number"
+                },
+                "settle_date": {
+                  "type": "string",
+                  "format": "date"
+                },
+                "due_date": {
+                  "type": "string",
+                  "format": "date"
+                },
+                "end_hour": {
+                  "type": "string"
+                },
+                "inite_hour": {
+                  "type": "string"
+                },
+                "next_settle": {
+                  "type": "string"
+                },
+                "authorize_transaction_id": {
+                  "type": "number"
+                },
+                "value": {
+                  "type": "number"
+                },
+                "error_code": {
+                  "type": "string"
+                },
+                "message": {
+                  "type": "string"
+                },
+                "status": {
+                  "type": "string"
+                },
+                "type": {
+                  "type": "number"
+                }
+              }
+            }
+          },
+          "occurrences": {
+            "type": "array",
+            "items": {
+              "properties": {
+                "code": {
+                  "type": "string"
+                },
+                "status": {
+                  "type": "string"
+                },
+                "created_at": {
+                  "type": "string",
+                  "format": "date"
+                }
+              }
+            }
           }
         }
       }
