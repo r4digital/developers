@@ -21,7 +21,7 @@
     }
   ],
   "paths": {
-    "/accounts": {
+    "/v1/accounts": {
       "get": {
         "tags": [
           "Account"
