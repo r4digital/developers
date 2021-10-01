@@ -60,6 +60,15 @@
             },
             "description": "The numbers of accounts to return. Can be omitted if provided before or after filters with limit embedded in them. If nothing is provided, the default will be 1000 as limit",
             "required": false
+          },
+          {
+            "in": "query",
+            "name": "document_number",
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The document number for specific account.",
+            "required": false
           }
         ],
         "responses": {
