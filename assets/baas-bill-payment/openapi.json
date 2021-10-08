@@ -32,6 +32,12 @@
             "application/json": {
               "schema": {
                 "type": "object",
+                "required": [
+                  "id",
+                  "account_id",
+                  "type",
+                  "value"
+                ],
                 "properties": {
                   "id": {
                     "type": "string",
@@ -52,12 +58,6 @@
                     "type": "string"
                   }
                 },
-                "required": [
-                  "id",
-                  "account_id",
-                  "type",
-                  "value"
-                ],
                 "example": {
                   "id": "0683e31a-b8c7-4984-9c6a-fafd36e9ffba",
                   "account_id": "b24c5c00-b294-4956-8500-705c93ffaee8",
@@ -75,6 +75,18 @@
               "application/json": {
                 "schema": {
                   "type": "object",
+                  "required": [
+                    "assignor",
+                    "type",
+                    "settle_date",
+                    "end_hour",
+                    "inite_hour",
+                    "next_settle",
+                    "value",
+                    "authorize_transaction_id",
+                    "error_code",
+                    "status"
+                  ],
                   "properties": {
                     "assignor": {
                       "type": "string"
@@ -108,84 +120,65 @@
                       "type": "string"
                     },
                     "document_recipient": {
-                      "type": "string",
-                      "nullable": true
+                      "type": "string"
                     },
                     "document_payer": {
-                      "type": "string",
-                      "nullable": true
+                      "type": "string"
                     },
                     "pay_due_date": {
                       "type": "string",
-                      "format": "date",
-                      "nullable": true
+                      "format": "date"
                     },
                     "next_business_day": {
                       "type": "string",
-                      "format": "date",
-                      "nullable": true
+                      "format": "date"
                     },
                     "due_date_register": {
                       "type": "string",
-                      "format": "date",
-                      "nullable": true
+                      "format": "date"
                     },
                     "allow_change_value": {
-                      "type": "boolean",
-                      "nullable": true
+                      "type": "boolean"
                     },
                     "recipient": {
-                      "type": "string",
-                      "nullable": true
+                      "type": "string"
                     },
                     "payer": {
-                      "type": "string",
-                      "nullable": true
+                      "type": "string"
                     },
                     "discount_value": {
-                      "type": "number",
-                      "nullable": true
+                      "type": "number"
                     },
                     "interest_value_calculated": {
-                      "type": "number",
-                      "nullable": true
+                      "type": "number"
                     },
                     "max_value": {
-                      "type": "number",
-                      "nullable": true
+                      "type": "number"
                     },
                     "min_value": {
-                      "type": "number",
-                      "nullable": true
+                      "type": "number"
                     },
                     "fine_value_calculated": {
-                      "type": "number",
-                      "nullable": true
+                      "type": "number"
                     },
                     "original_value": {
-                      "type": "number",
-                      "nullable": true
+                      "type": "number"
                     },
                     "total_updated": {
-                      "type": "number",
-                      "nullable": true
+                      "type": "number"
                     },
                     "total_with_discount": {
-                      "type": "number",
-                      "nullable": true
+                      "type": "number"
                     },
                     "total_with_additional": {
-                      "type": "number",
-                      "nullable": true
+                      "type": "number"
                     },
                     "due_date": {
                       "type": "string",
-                      "format": "date",
-                      "nullable": true
+                      "format": "date"
                     },
                     "message": {
-                      "type": "string",
-                      "nullable": true
+                      "type": "string"
                     }
                   }
                 }
@@ -197,6 +190,11 @@
             "content": {
               "application/json": {
                 "schema": {
+                  "example": {
+                    "code": "CONFLICT",
+                    "message": "Requested id already exists",
+                    "status_code": 409
+                  },
                   "type": "object",
                   "properties": {
                     "code": {
@@ -213,12 +211,7 @@
                     "code",
                     "message",
                     "status_code"
-                  ],
-                  "example": {
-                    "code": "CONFLICT",
-                    "message": "Requested id already exists",
-                    "status_code": 409
-                  }
+                  ]
                 }
               }
             }
@@ -228,6 +221,11 @@
             "content": {
               "application/json": {
                 "schema": {
+                  "example": {
+                    "code": "INTERNAL_SERVER_ERROR",
+                    "message": "Internal Server Error",
+                    "status_code": 500
+                  },
                   "type": "object",
                   "properties": {
                     "code": {
@@ -244,12 +242,7 @@
                     "code",
                     "message",
                     "status_code"
-                  ],
-                  "example": {
-                    "code": "INTERNAL_SERVER_ERROR",
-                    "message": "Internal Server Error",
-                    "status_code": 500
-                  }
+                  ]
                 }
               }
             }
@@ -320,6 +313,18 @@
                       "type": "array",
                       "items": {
                         "type": "object",
+                        "required": [
+                          "assignor",
+                          "type",
+                          "settle_date",
+                          "end_hour",
+                          "inite_hour",
+                          "next_settle",
+                          "value",
+                          "authorize_transaction_id",
+                          "error_code",
+                          "status"
+                        ],
                         "properties": {
                           "assignor": {
                             "type": "string"
@@ -353,84 +358,65 @@
                             "type": "string"
                           },
                           "document_recipient": {
-                            "type": "string",
-                            "nullable": true
+                            "type": "string"
                           },
                           "document_payer": {
-                            "type": "string",
-                            "nullable": true
+                            "type": "string"
                           },
                           "pay_due_date": {
                             "type": "string",
-                            "format": "date",
-                            "nullable": true
+                            "format": "date"
                           },
                           "next_business_day": {
                             "type": "string",
-                            "format": "date",
-                            "nullable": true
+                            "format": "date"
                           },
                           "due_date_register": {
                             "type": "string",
-                            "format": "date",
-                            "nullable": true
+                            "format": "date"
                           },
                           "allow_change_value": {
-                            "type": "boolean",
-                            "nullable": true
+                            "type": "boolean"
                           },
                           "recipient": {
-                            "type": "string",
-                            "nullable": true
+                            "type": "string"
                           },
                           "payer": {
-                            "type": "string",
-                            "nullable": true
+                            "type": "string"
                           },
                           "discount_value": {
-                            "type": "number",
-                            "nullable": true
+                            "type": "number"
                           },
                           "interest_value_calculated": {
-                            "type": "number",
-                            "nullable": true
+                            "type": "number"
                           },
                           "max_value": {
-                            "type": "number",
-                            "nullable": true
+                            "type": "number"
                           },
                           "min_value": {
-                            "type": "number",
-                            "nullable": true
+                            "type": "number"
                           },
                           "fine_value_calculated": {
-                            "type": "number",
-                            "nullable": true
+                            "type": "number"
                           },
                           "original_value": {
-                            "type": "number",
-                            "nullable": true
+                            "type": "number"
                           },
                           "total_updated": {
-                            "type": "number",
-                            "nullable": true
+                            "type": "number"
                           },
                           "total_with_discount": {
-                            "type": "number",
-                            "nullable": true
+                            "type": "number"
                           },
                           "total_with_additional": {
-                            "type": "number",
-                            "nullable": true
+                            "type": "number"
                           },
                           "due_date": {
                             "type": "string",
-                            "format": "date",
-                            "nullable": true
+                            "format": "date"
                           },
                           "message": {
-                            "type": "string",
-                            "nullable": true
+                            "type": "string"
                           }
                         }
                       }
@@ -445,6 +431,11 @@
             "content": {
               "application/json": {
                 "schema": {
+                  "example": {
+                    "code": "CONFLICT",
+                    "message": "Requested id already exists",
+                    "status_code": 409
+                  },
                   "type": "object",
                   "properties": {
                     "code": {
@@ -461,12 +452,7 @@
                     "code",
                     "message",
                     "status_code"
-                  ],
-                  "example": {
-                    "code": "CONFLICT",
-                    "message": "Requested id already exists",
-                    "status_code": 409
-                  }
+                  ]
                 }
               }
             }
@@ -476,6 +462,11 @@
             "content": {
               "application/json": {
                 "schema": {
+                  "example": {
+                    "code": "INTERNAL_SERVER_ERROR",
+                    "message": "Internal Server Error",
+                    "status_code": 500
+                  },
                   "type": "object",
                   "properties": {
                     "code": {
@@ -492,12 +483,7 @@
                     "code",
                     "message",
                     "status_code"
-                  ],
-                  "example": {
-                    "code": "INTERNAL_SERVER_ERROR",
-                    "message": "Internal Server Error",
-                    "status_code": 500
-                  }
+                  ]
                 }
               }
             }
@@ -581,6 +567,16 @@
             "content": {
               "application/json": {
                 "schema": {
+                  "required": [
+                    "code",
+                    "message",
+                    "status_code"
+                  ],
+                  "example": {
+                    "code": "RESOURCE_NOT_FOUND",
+                    "message": "Resource not found",
+                    "status_code": 404
+                  },
                   "type": "object",
                   "properties": {
                     "code": {
@@ -592,16 +588,6 @@
                     "status_code": {
                       "type": "number"
                     }
-                  },
-                  "required": [
-                    "code",
-                    "message",
-                    "status_code"
-                  ],
-                  "example": {
-                    "code": "RESOURCE_NOT_FOUND",
-                    "message": "Resource not found",
-                    "status_code": 404
                   }
                 }
               }
@@ -612,6 +598,11 @@
             "content": {
               "application/json": {
                 "schema": {
+                  "example": {
+                    "code": "INTERNAL_SERVER_ERROR",
+                    "message": "Internal Server Error",
+                    "status_code": 500
+                  },
                   "type": "object",
                   "properties": {
                     "code": {
@@ -628,12 +619,7 @@
                     "code",
                     "message",
                     "status_code"
-                  ],
-                  "example": {
-                    "code": "INTERNAL_SERVER_ERROR",
-                    "message": "Internal Server Error",
-                    "status_code": 500
-                  }
+                  ]
                 }
               }
             }
@@ -664,11 +650,28 @@
               "application/json": {
                 "schema": {
                   "type": "object",
+                  "required": [
+                    "code",
+                    "status",
+                    "created_at"
+                  ],
                   "properties": {
                     "data": {
                       "type": "array",
                       "items": {
                         "type": "object",
+                        "required": [
+                          "assignor",
+                          "type",
+                          "settle_date",
+                          "end_hour",
+                          "inite_hour",
+                          "next_settle",
+                          "value",
+                          "authorize_transaction_id",
+                          "error_code",
+                          "status"
+                        ],
                         "properties": {
                           "assignor": {
                             "type": "string"
@@ -702,84 +705,65 @@
                             "type": "string"
                           },
                           "document_recipient": {
-                            "type": "string",
-                            "nullable": true
+                            "type": "string"
                           },
                           "document_payer": {
-                            "type": "string",
-                            "nullable": true
+                            "type": "string"
                           },
                           "pay_due_date": {
                             "type": "string",
-                            "format": "date",
-                            "nullable": true
+                            "format": "date"
                           },
                           "next_business_day": {
                             "type": "string",
-                            "format": "date",
-                            "nullable": true
+                            "format": "date"
                           },
                           "due_date_register": {
                             "type": "string",
-                            "format": "date",
-                            "nullable": true
+                            "format": "date"
                           },
                           "allow_change_value": {
-                            "type": "boolean",
-                            "nullable": true
+                            "type": "boolean"
                           },
                           "recipient": {
-                            "type": "string",
-                            "nullable": true
+                            "type": "string"
                           },
                           "payer": {
-                            "type": "string",
-                            "nullable": true
+                            "type": "string"
                           },
                           "discount_value": {
-                            "type": "number",
-                            "nullable": true
+                            "type": "number"
                           },
                           "interest_value_calculated": {
-                            "type": "number",
-                            "nullable": true
+                            "type": "number"
                           },
                           "max_value": {
-                            "type": "number",
-                            "nullable": true
+                            "type": "number"
                           },
                           "min_value": {
-                            "type": "number",
-                            "nullable": true
+                            "type": "number"
                           },
                           "fine_value_calculated": {
-                            "type": "number",
-                            "nullable": true
+                            "type": "number"
                           },
                           "original_value": {
-                            "type": "number",
-                            "nullable": true
+                            "type": "number"
                           },
                           "total_updated": {
-                            "type": "number",
-                            "nullable": true
+                            "type": "number"
                           },
                           "total_with_discount": {
-                            "type": "number",
-                            "nullable": true
+                            "type": "number"
                           },
                           "total_with_additional": {
-                            "type": "number",
-                            "nullable": true
+                            "type": "number"
                           },
                           "due_date": {
                             "type": "string",
-                            "format": "date",
-                            "nullable": true
+                            "format": "date"
                           },
                           "message": {
-                            "type": "string",
-                            "nullable": true
+                            "type": "string"
                           }
                         }
                       }
@@ -811,6 +795,16 @@
             "content": {
               "application/json": {
                 "schema": {
+                  "required": [
+                    "code",
+                    "message",
+                    "status_code"
+                  ],
+                  "example": {
+                    "code": "RESOURCE_NOT_FOUND",
+                    "message": "Resource not found",
+                    "status_code": 404
+                  },
                   "type": "object",
                   "properties": {
                     "code": {
@@ -822,16 +816,6 @@
                     "status_code": {
                       "type": "number"
                     }
-                  },
-                  "required": [
-                    "code",
-                    "message",
-                    "status_code"
-                  ],
-                  "example": {
-                    "code": "RESOURCE_NOT_FOUND",
-                    "message": "Resource not found",
-                    "status_code": 404
                   }
                 }
               }
@@ -842,6 +826,11 @@
             "content": {
               "application/json": {
                 "schema": {
+                  "example": {
+                    "code": "INTERNAL_SERVER_ERROR",
+                    "message": "Internal Server Error",
+                    "status_code": 500
+                  },
                   "type": "object",
                   "properties": {
                     "code": {
@@ -858,12 +847,7 @@
                     "code",
                     "message",
                     "status_code"
-                  ],
-                  "example": {
-                    "code": "INTERNAL_SERVER_ERROR",
-                    "message": "Internal Server Error",
-                    "status_code": 500
-                  }
+                  ]
                 }
               }
             }
@@ -908,6 +892,16 @@
             "content": {
               "application/json": {
                 "schema": {
+                  "required": [
+                    "code",
+                    "message",
+                    "status_code"
+                  ],
+                  "example": {
+                    "code": "RESOURCE_NOT_FOUND",
+                    "message": "Resource not found",
+                    "status_code": 404
+                  },
                   "type": "object",
                   "properties": {
                     "code": {
@@ -919,16 +913,6 @@
                     "status_code": {
                       "type": "number"
                     }
-                  },
-                  "required": [
-                    "code",
-                    "message",
-                    "status_code"
-                  ],
-                  "example": {
-                    "code": "RESOURCE_NOT_FOUND",
-                    "message": "Resource not found",
-                    "status_code": 404
                   }
                 }
               }
@@ -939,6 +923,11 @@
             "content": {
               "application/json": {
                 "schema": {
+                  "example": {
+                    "code": "INTERNAL_SERVER_ERROR",
+                    "message": "Internal Server Error",
+                    "status_code": 500
+                  },
                   "type": "object",
                   "properties": {
                     "code": {
@@ -955,12 +944,7 @@
                     "code",
                     "message",
                     "status_code"
-                  ],
-                  "example": {
-                    "code": "INTERNAL_SERVER_ERROR",
-                    "message": "Internal Server Error",
-                    "status_code": 500
-                  }
+                  ]
                 }
               }
             }
@@ -976,6 +960,16 @@
         "content": {
           "application/json": {
             "schema": {
+              "required": [
+                "code",
+                "message",
+                "status_code"
+              ],
+              "example": {
+                "code": "RESOURCE_NOT_FOUND",
+                "message": "Resource not found",
+                "status_code": 404
+              },
               "type": "object",
               "properties": {
                 "code": {
@@ -987,16 +981,6 @@
                 "status_code": {
                   "type": "number"
                 }
-              },
-              "required": [
-                "code",
-                "message",
-                "status_code"
-              ],
-              "example": {
-                "code": "RESOURCE_NOT_FOUND",
-                "message": "Resource not found",
-                "status_code": 404
               }
             }
           }
@@ -1007,6 +991,11 @@
         "content": {
           "application/json": {
             "schema": {
+              "example": {
+                "code": "INTERNAL_SERVER_ERROR",
+                "message": "Unprocessable Entity",
+                "status_code": 422
+              },
               "type": "object",
               "properties": {
                 "code": {
@@ -1023,12 +1012,7 @@
                 "code",
                 "message",
                 "status_code"
-              ],
-              "example": {
-                "code": "INTERNAL_SERVER_ERROR",
-                "message": "Unprocessable Entity",
-                "status_code": 422
-              }
+              ]
             }
           }
         }
@@ -1038,6 +1022,11 @@
         "content": {
           "application/json": {
             "schema": {
+              "example": {
+                "code": "INTERNAL_SERVER_ERROR",
+                "message": "Internal Server Error",
+                "status_code": 500
+              },
               "type": "object",
               "properties": {
                 "code": {
@@ -1054,12 +1043,7 @@
                 "code",
                 "message",
                 "status_code"
-              ],
-              "example": {
-                "code": "INTERNAL_SERVER_ERROR",
-                "message": "Internal Server Error",
-                "status_code": 500
-              }
+              ]
             }
           }
         }
@@ -1069,6 +1053,11 @@
         "content": {
           "application/json": {
             "schema": {
+              "example": {
+                "code": "CONFLICT",
+                "message": "Requested id already exists",
+                "status_code": 409
+              },
               "type": "object",
               "properties": {
                 "code": {
@@ -1085,12 +1074,7 @@
                 "code",
                 "message",
                 "status_code"
-              ],
-              "example": {
-                "code": "CONFLICT",
-                "message": "Requested id already exists",
-                "status_code": 409
-              }
+              ]
             }
           }
         }
@@ -1101,6 +1085,18 @@
           "application/json": {
             "schema": {
               "type": "object",
+              "required": [
+                "assignor",
+                "type",
+                "settle_date",
+                "end_hour",
+                "inite_hour",
+                "next_settle",
+                "value",
+                "authorize_transaction_id",
+                "error_code",
+                "status"
+              ],
               "properties": {
                 "assignor": {
                   "type": "string"
@@ -1134,84 +1130,65 @@
                   "type": "string"
                 },
                 "document_recipient": {
-                  "type": "string",
-                  "nullable": true
+                  "type": "string"
                 },
                 "document_payer": {
-                  "type": "string",
-                  "nullable": true
+                  "type": "string"
                 },
                 "pay_due_date": {
                   "type": "string",
-                  "format": "date",
-                  "nullable": true
+                  "format": "date"
                 },
                 "next_business_day": {
                   "type": "string",
-                  "format": "date",
-                  "nullable": true
+                  "format": "date"
                 },
                 "due_date_register": {
                   "type": "string",
-                  "format": "date",
-                  "nullable": true
+                  "format": "date"
                 },
                 "allow_change_value": {
-                  "type": "boolean",
-                  "nullable": true
+                  "type": "boolean"
                 },
                 "recipient": {
-                  "type": "string",
-                  "nullable": true
+                  "type": "string"
                 },
                 "payer": {
-                  "type": "string",
-                  "nullable": true
+                  "type": "string"
                 },
                 "discount_value": {
-                  "type": "number",
-                  "nullable": true
+                  "type": "number"
                 },
                 "interest_value_calculated": {
-                  "type": "number",
-                  "nullable": true
+                  "type": "number"
                 },
                 "max_value": {
-                  "type": "number",
-                  "nullable": true
+                  "type": "number"
                 },
                 "min_value": {
-                  "type": "number",
-                  "nullable": true
+                  "type": "number"
                 },
                 "fine_value_calculated": {
-                  "type": "number",
-                  "nullable": true
+                  "type": "number"
                 },
                 "original_value": {
-                  "type": "number",
-                  "nullable": true
+                  "type": "number"
                 },
                 "total_updated": {
-                  "type": "number",
-                  "nullable": true
+                  "type": "number"
                 },
                 "total_with_discount": {
-                  "type": "number",
-                  "nullable": true
+                  "type": "number"
                 },
                 "total_with_additional": {
-                  "type": "number",
-                  "nullable": true
+                  "type": "number"
                 },
                 "due_date": {
                   "type": "string",
-                  "format": "date",
-                  "nullable": true
+                  "format": "date"
                 },
                 "message": {
-                  "type": "string",
-                  "nullable": true
+                  "type": "string"
                 }
               }
             }
@@ -1243,6 +1220,18 @@
                   "type": "array",
                   "items": {
                     "type": "object",
+                    "required": [
+                      "assignor",
+                      "type",
+                      "settle_date",
+                      "end_hour",
+                      "inite_hour",
+                      "next_settle",
+                      "value",
+                      "authorize_transaction_id",
+                      "error_code",
+                      "status"
+                    ],
                     "properties": {
                       "assignor": {
                         "type": "string"
@@ -1276,84 +1265,65 @@
                         "type": "string"
                       },
                       "document_recipient": {
-                        "type": "string",
-                        "nullable": true
+                        "type": "string"
                       },
                       "document_payer": {
-                        "type": "string",
-                        "nullable": true
+                        "type": "string"
                       },
                       "pay_due_date": {
                         "type": "string",
-                        "format": "date",
-                        "nullable": true
+                        "format": "date"
                       },
                       "next_business_day": {
                         "type": "string",
-                        "format": "date",
-                        "nullable": true
+                        "format": "date"
                       },
                       "due_date_register": {
                         "type": "string",
-                        "format": "date",
-                        "nullable": true
+                        "format": "date"
                       },
                       "allow_change_value": {
-                        "type": "boolean",
-                        "nullable": true
+                        "type": "boolean"
                       },
                       "recipient": {
-                        "type": "string",
-                        "nullable": true
+                        "type": "string"
                       },
                       "payer": {
-                        "type": "string",
-                        "nullable": true
+                        "type": "string"
                       },
                       "discount_value": {
-                        "type": "number",
-                        "nullable": true
+                        "type": "number"
                       },
                       "interest_value_calculated": {
-                        "type": "number",
-                        "nullable": true
+                        "type": "number"
                       },
                       "max_value": {
-                        "type": "number",
-                        "nullable": true
+                        "type": "number"
                       },
                       "min_value": {
-                        "type": "number",
-                        "nullable": true
+                        "type": "number"
                       },
                       "fine_value_calculated": {
-                        "type": "number",
-                        "nullable": true
+                        "type": "number"
                       },
                       "original_value": {
-                        "type": "number",
-                        "nullable": true
+                        "type": "number"
                       },
                       "total_updated": {
-                        "type": "number",
-                        "nullable": true
+                        "type": "number"
                       },
                       "total_with_discount": {
-                        "type": "number",
-                        "nullable": true
+                        "type": "number"
                       },
                       "total_with_additional": {
-                        "type": "number",
-                        "nullable": true
+                        "type": "number"
                       },
                       "due_date": {
                         "type": "string",
-                        "format": "date",
-                        "nullable": true
+                        "format": "date"
                       },
                       "message": {
-                        "type": "string",
-                        "nullable": true
+                        "type": "string"
                       }
                     }
                   }
@@ -1369,11 +1339,28 @@
           "application/json": {
             "schema": {
               "type": "object",
+              "required": [
+                "code",
+                "status",
+                "created_at"
+              ],
               "properties": {
                 "data": {
                   "type": "array",
                   "items": {
                     "type": "object",
+                    "required": [
+                      "assignor",
+                      "type",
+                      "settle_date",
+                      "end_hour",
+                      "inite_hour",
+                      "next_settle",
+                      "value",
+                      "authorize_transaction_id",
+                      "error_code",
+                      "status"
+                    ],
                     "properties": {
                       "assignor": {
                         "type": "string"
@@ -1407,84 +1394,65 @@
                         "type": "string"
                       },
                       "document_recipient": {
-                        "type": "string",
-                        "nullable": true
+                        "type": "string"
                       },
                       "document_payer": {
-                        "type": "string",
-                        "nullable": true
+                        "type": "string"
                       },
                       "pay_due_date": {
                         "type": "string",
-                        "format": "date",
-                        "nullable": true
+                        "format": "date"
                       },
                       "next_business_day": {
                         "type": "string",
-                        "format": "date",
-                        "nullable": true
+                        "format": "date"
                       },
                       "due_date_register": {
                         "type": "string",
-                        "format": "date",
-                        "nullable": true
+                        "format": "date"
                       },
                       "allow_change_value": {
-                        "type": "boolean",
-                        "nullable": true
+                        "type": "boolean"
                       },
                       "recipient": {
-                        "type": "string",
-                        "nullable": true
+                        "type": "string"
                       },
                       "payer": {
-                        "type": "string",
-                        "nullable": true
+                        "type": "string"
                       },
                       "discount_value": {
-                        "type": "number",
-                        "nullable": true
+                        "type": "number"
                       },
                       "interest_value_calculated": {
-                        "type": "number",
-                        "nullable": true
+                        "type": "number"
                       },
                       "max_value": {
-                        "type": "number",
-                        "nullable": true
+                        "type": "number"
                       },
                       "min_value": {
-                        "type": "number",
-                        "nullable": true
+                        "type": "number"
                       },
                       "fine_value_calculated": {
-                        "type": "number",
-                        "nullable": true
+                        "type": "number"
                       },
                       "original_value": {
-                        "type": "number",
-                        "nullable": true
+                        "type": "number"
                       },
                       "total_updated": {
-                        "type": "number",
-                        "nullable": true
+                        "type": "number"
                       },
                       "total_with_discount": {
-                        "type": "number",
-                        "nullable": true
+                        "type": "number"
                       },
                       "total_with_additional": {
-                        "type": "number",
-                        "nullable": true
+                        "type": "number"
                       },
                       "due_date": {
                         "type": "string",
-                        "format": "date",
-                        "nullable": true
+                        "format": "date"
                       },
                       "message": {
-                        "type": "string",
-                        "nullable": true
+                        "type": "string"
                       }
                     }
                   }
@@ -1513,7 +1481,7 @@
       }
     },
     "schemas": {
-      "InternalServerError": {
+      "ErrorProperties": {
         "type": "object",
         "properties": {
           "code": {
@@ -1530,14 +1498,14 @@
           "code",
           "message",
           "status_code"
-        ],
+        ]
+      },
+      "InternalServerError": {
         "example": {
           "code": "INTERNAL_SERVER_ERROR",
           "message": "Internal Server Error",
           "status_code": 500
-        }
-      },
-      "UnprocessableEntity": {
+        },
         "type": "object",
         "properties": {
           "code": {
@@ -1554,14 +1522,14 @@
           "code",
           "message",
           "status_code"
-        ],
+        ]
+      },
+      "UnprocessableEntity": {
         "example": {
           "code": "INTERNAL_SERVER_ERROR",
           "message": "Unprocessable Entity",
           "status_code": 422
-        }
-      },
-      "ResourceNotFound": {
+        },
         "type": "object",
         "properties": {
           "code": {
@@ -1574,6 +1542,13 @@
             "type": "number"
           }
         },
+        "required": [
+          "code",
+          "message",
+          "status_code"
+        ]
+      },
+      "ResourceNotFound": {
         "required": [
           "code",
           "message",
@@ -1583,9 +1558,26 @@
           "code": "RESOURCE_NOT_FOUND",
           "message": "Resource not found",
           "status_code": 404
+        },
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "status_code": {
+            "type": "number"
+          }
         }
       },
       "Conflict": {
+        "example": {
+          "code": "CONFLICT",
+          "message": "Requested id already exists",
+          "status_code": 409
+        },
         "type": "object",
         "properties": {
           "code": {
@@ -1602,12 +1594,7 @@
           "code",
           "message",
           "status_code"
-        ],
-        "example": {
-          "code": "CONFLICT",
-          "message": "Requested id already exists",
-          "status_code": 409
-        }
+        ]
       },
       "PaymentWithCursorResponse": {
         "type": "object",
@@ -1630,6 +1617,18 @@
             "type": "array",
             "items": {
               "type": "object",
+              "required": [
+                "assignor",
+                "type",
+                "settle_date",
+                "end_hour",
+                "inite_hour",
+                "next_settle",
+                "value",
+                "authorize_transaction_id",
+                "error_code",
+                "status"
+              ],
               "properties": {
                 "assignor": {
                   "type": "string"
@@ -1663,84 +1662,65 @@
                   "type": "string"
                 },
                 "document_recipient": {
-                  "type": "string",
-                  "nullable": true
+                  "type": "string"
                 },
                 "document_payer": {
-                  "type": "string",
-                  "nullable": true
+                  "type": "string"
                 },
                 "pay_due_date": {
                   "type": "string",
-                  "format": "date",
-                  "nullable": true
+                  "format": "date"
                 },
                 "next_business_day": {
                   "type": "string",
-                  "format": "date",
-                  "nullable": true
+                  "format": "date"
                 },
                 "due_date_register": {
                   "type": "string",
-                  "format": "date",
-                  "nullable": true
+                  "format": "date"
                 },
                 "allow_change_value": {
-                  "type": "boolean",
-                  "nullable": true
+                  "type": "boolean"
                 },
                 "recipient": {
-                  "type": "string",
-                  "nullable": true
+                  "type": "string"
                 },
                 "payer": {
-                  "type": "string",
-                  "nullable": true
+                  "type": "string"
                 },
                 "discount_value": {
-                  "type": "number",
-                  "nullable": true
+                  "type": "number"
                 },
                 "interest_value_calculated": {
-                  "type": "number",
-                  "nullable": true
+                  "type": "number"
                 },
                 "max_value": {
-                  "type": "number",
-                  "nullable": true
+                  "type": "number"
                 },
                 "min_value": {
-                  "type": "number",
-                  "nullable": true
+                  "type": "number"
                 },
                 "fine_value_calculated": {
-                  "type": "number",
-                  "nullable": true
+                  "type": "number"
                 },
                 "original_value": {
-                  "type": "number",
-                  "nullable": true
+                  "type": "number"
                 },
                 "total_updated": {
-                  "type": "number",
-                  "nullable": true
+                  "type": "number"
                 },
                 "total_with_discount": {
-                  "type": "number",
-                  "nullable": true
+                  "type": "number"
                 },
                 "total_with_additional": {
-                  "type": "number",
-                  "nullable": true
+                  "type": "number"
                 },
                 "due_date": {
                   "type": "string",
-                  "format": "date",
-                  "nullable": true
+                  "format": "date"
                 },
                 "message": {
-                  "type": "string",
-                  "nullable": true
+                  "type": "string"
                 }
               }
             }
@@ -1749,11 +1729,28 @@
       },
       "PaymentWithOccurrencesResponse": {
         "type": "object",
+        "required": [
+          "code",
+          "status",
+          "created_at"
+        ],
         "properties": {
           "data": {
             "type": "array",
             "items": {
               "type": "object",
+              "required": [
+                "assignor",
+                "type",
+                "settle_date",
+                "end_hour",
+                "inite_hour",
+                "next_settle",
+                "value",
+                "authorize_transaction_id",
+                "error_code",
+                "status"
+              ],
               "properties": {
                 "assignor": {
                   "type": "string"
@@ -1787,84 +1784,65 @@
                   "type": "string"
                 },
                 "document_recipient": {
-                  "type": "string",
-                  "nullable": true
+                  "type": "string"
                 },
                 "document_payer": {
-                  "type": "string",
-                  "nullable": true
+                  "type": "string"
                 },
                 "pay_due_date": {
                   "type": "string",
-                  "format": "date",
-                  "nullable": true
+                  "format": "date"
                 },
                 "next_business_day": {
                   "type": "string",
-                  "format": "date",
-                  "nullable": true
+                  "format": "date"
                 },
                 "due_date_register": {
                   "type": "string",
-                  "format": "date",
-                  "nullable": true
+                  "format": "date"
                 },
                 "allow_change_value": {
-                  "type": "boolean",
-                  "nullable": true
+                  "type": "boolean"
                 },
                 "recipient": {
-                  "type": "string",
-                  "nullable": true
+                  "type": "string"
                 },
                 "payer": {
-                  "type": "string",
-                  "nullable": true
+                  "type": "string"
                 },
                 "discount_value": {
-                  "type": "number",
-                  "nullable": true
+                  "type": "number"
                 },
                 "interest_value_calculated": {
-                  "type": "number",
-                  "nullable": true
+                  "type": "number"
                 },
                 "max_value": {
-                  "type": "number",
-                  "nullable": true
+                  "type": "number"
                 },
                 "min_value": {
-                  "type": "number",
-                  "nullable": true
+                  "type": "number"
                 },
                 "fine_value_calculated": {
-                  "type": "number",
-                  "nullable": true
+                  "type": "number"
                 },
                 "original_value": {
-                  "type": "number",
-                  "nullable": true
+                  "type": "number"
                 },
                 "total_updated": {
-                  "type": "number",
-                  "nullable": true
+                  "type": "number"
                 },
                 "total_with_discount": {
-                  "type": "number",
-                  "nullable": true
+                  "type": "number"
                 },
                 "total_with_additional": {
-                  "type": "number",
-                  "nullable": true
+                  "type": "number"
                 },
                 "due_date": {
                   "type": "string",
-                  "format": "date",
-                  "nullable": true
+                  "format": "date"
                 },
                 "message": {
-                  "type": "string",
-                  "nullable": true
+                  "type": "string"
                 }
               }
             }
@@ -1890,6 +1868,18 @@
       },
       "PaymentResponse": {
         "type": "object",
+        "required": [
+          "assignor",
+          "type",
+          "settle_date",
+          "end_hour",
+          "inite_hour",
+          "next_settle",
+          "value",
+          "authorize_transaction_id",
+          "error_code",
+          "status"
+        ],
         "properties": {
           "assignor": {
             "type": "string"
@@ -1923,84 +1913,65 @@
             "type": "string"
           },
           "document_recipient": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           },
           "document_payer": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           },
           "pay_due_date": {
             "type": "string",
-            "format": "date",
-            "nullable": true
+            "format": "date"
           },
           "next_business_day": {
             "type": "string",
-            "format": "date",
-            "nullable": true
+            "format": "date"
           },
           "due_date_register": {
             "type": "string",
-            "format": "date",
-            "nullable": true
+            "format": "date"
           },
           "allow_change_value": {
-            "type": "boolean",
-            "nullable": true
+            "type": "boolean"
           },
           "recipient": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           },
           "payer": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           },
           "discount_value": {
-            "type": "number",
-            "nullable": true
+            "type": "number"
           },
           "interest_value_calculated": {
-            "type": "number",
-            "nullable": true
+            "type": "number"
           },
           "max_value": {
-            "type": "number",
-            "nullable": true
+            "type": "number"
           },
           "min_value": {
-            "type": "number",
-            "nullable": true
+            "type": "number"
           },
           "fine_value_calculated": {
-            "type": "number",
-            "nullable": true
+            "type": "number"
           },
           "original_value": {
-            "type": "number",
-            "nullable": true
+            "type": "number"
           },
           "total_updated": {
-            "type": "number",
-            "nullable": true
+            "type": "number"
           },
           "total_with_discount": {
-            "type": "number",
-            "nullable": true
+            "type": "number"
           },
           "total_with_additional": {
-            "type": "number",
-            "nullable": true
+            "type": "number"
           },
           "due_date": {
             "type": "string",
-            "format": "date",
-            "nullable": true
+            "format": "date"
           },
           "message": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           }
         }
       }
