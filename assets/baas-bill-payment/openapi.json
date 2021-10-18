@@ -117,7 +117,7 @@
                       "type": "string"
                     },
                     "status": {
-                      "type": "integer"
+                      "type": "number"
                     },
                     "document_recipient": {
                       "type": "string"
@@ -355,7 +355,7 @@
                             "type": "string"
                           },
                           "status": {
-                            "type": "integer"
+                            "type": "number"
                           },
                           "document_recipient": {
                             "type": "string"
@@ -702,7 +702,7 @@
                             "type": "string"
                           },
                           "status": {
-                            "type": "integer"
+                            "type": "number"
                           },
                           "document_recipient": {
                             "type": "string"
@@ -1127,7 +1127,7 @@
                   "type": "string"
                 },
                 "status": {
-                  "type": "integer"
+                  "type": "number"
                 },
                 "document_recipient": {
                   "type": "string"
@@ -1262,7 +1262,7 @@
                         "type": "string"
                       },
                       "status": {
-                        "type": "integer"
+                        "type": "number"
                       },
                       "document_recipient": {
                         "type": "string"
@@ -1391,7 +1391,7 @@
                         "type": "string"
                       },
                       "status": {
-                        "type": "integer"
+                        "type": "number"
                       },
                       "document_recipient": {
                         "type": "string"
@@ -1659,7 +1659,7 @@
                   "type": "string"
                 },
                 "status": {
-                  "type": "integer"
+                  "type": "number"
                 },
                 "document_recipient": {
                   "type": "string"
@@ -1781,7 +1781,7 @@
                   "type": "string"
                 },
                 "status": {
-                  "type": "integer"
+                  "type": "number"
                 },
                 "document_recipient": {
                   "type": "string"
@@ -1910,7 +1910,7 @@
             "type": "string"
           },
           "status": {
-            "type": "integer"
+            "type": "number"
           },
           "document_recipient": {
             "type": "string"
