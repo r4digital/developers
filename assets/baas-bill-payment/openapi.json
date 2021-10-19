@@ -101,11 +101,6 @@
                       "format": "guid",
                       "example": "abs46bcd-682c-4c07-9264-9e958d400312"
                     },
-                    "ref_id": {
-                      "type": "string",
-                      "format": "guid",
-                      "example": "96046bcd-682c-4c07-9264-9e958d401234"
-                    },
                     "assignor": {
                       "type": "string",
                       "example": "Conta - Segmento Telefone"
@@ -400,11 +395,6 @@
                             "type": "string",
                             "format": "guid",
                             "example": "abs46bcd-682c-4c07-9264-9e958d400312"
-                          },
-                          "ref_id": {
-                            "type": "string",
-                            "format": "guid",
-                            "example": "96046bcd-682c-4c07-9264-9e958d401234"
                           },
                           "assignor": {
                             "type": "string",
@@ -809,11 +799,6 @@
                             "type": "string",
                             "format": "guid",
                             "example": "abs46bcd-682c-4c07-9264-9e958d400312"
-                          },
-                          "ref_id": {
-                            "type": "string",
-                            "format": "guid",
-                            "example": "96046bcd-682c-4c07-9264-9e958d401234"
                           },
                           "assignor": {
                             "type": "string",
@@ -1297,11 +1282,6 @@
                   "format": "guid",
                   "example": "abs46bcd-682c-4c07-9264-9e958d400312"
                 },
-                "ref_id": {
-                  "type": "string",
-                  "format": "guid",
-                  "example": "96046bcd-682c-4c07-9264-9e958d401234"
-                },
                 "assignor": {
                   "type": "string",
                   "example": "Conta - Segmento Telefone"
@@ -1494,11 +1474,6 @@
                         "format": "guid",
                         "example": "abs46bcd-682c-4c07-9264-9e958d400312"
                       },
-                      "ref_id": {
-                        "type": "string",
-                        "format": "guid",
-                        "example": "96046bcd-682c-4c07-9264-9e958d401234"
-                      },
                       "assignor": {
                         "type": "string",
                         "example": "Conta - Segmento Telefone"
@@ -1684,11 +1659,6 @@
                         "type": "string",
                         "format": "guid",
                         "example": "abs46bcd-682c-4c07-9264-9e958d400312"
-                      },
-                      "ref_id": {
-                        "type": "string",
-                        "format": "guid",
-                        "example": "96046bcd-682c-4c07-9264-9e958d401234"
                       },
                       "assignor": {
                         "type": "string",
@@ -2015,11 +1985,6 @@
                   "format": "guid",
                   "example": "abs46bcd-682c-4c07-9264-9e958d400312"
                 },
-                "ref_id": {
-                  "type": "string",
-                  "format": "guid",
-                  "example": "96046bcd-682c-4c07-9264-9e958d401234"
-                },
                 "assignor": {
                   "type": "string",
                   "example": "Conta - Segmento Telefone"
@@ -2198,11 +2163,6 @@
                   "type": "string",
                   "format": "guid",
                   "example": "abs46bcd-682c-4c07-9264-9e958d400312"
-                },
-                "ref_id": {
-                  "type": "string",
-                  "format": "guid",
-                  "example": "96046bcd-682c-4c07-9264-9e958d401234"
                 },
                 "assignor": {
                   "type": "string",
@@ -2389,11 +2349,6 @@
             "type": "string",
             "format": "guid",
             "example": "abs46bcd-682c-4c07-9264-9e958d400312"
-          },
-          "ref_id": {
-            "type": "string",
-            "format": "guid",
-            "example": "96046bcd-682c-4c07-9264-9e958d401234"
           },
           "assignor": {
             "type": "string",
