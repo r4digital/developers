@@ -68,7 +68,6 @@
                     "required": [
                       "name",
                       "bank_code",
-                      "agency",
                       "account",
                       "account_digit",
                       "account_type",
@@ -176,7 +175,6 @@
                           "required": [
                             "name",
                             "bank_code",
-                            "agency",
                             "account",
                             "account_digit",
                             "account_type",
@@ -615,7 +613,6 @@
                           "required": [
                             "name",
                             "bank_code",
-                            "agency",
                             "account",
                             "account_digit",
                             "account_type",
@@ -650,12 +647,13 @@
                             },
                             "account_type": {
                               "type": "string",
-                              "description": "Account Type - `CHECKING_ACCOUNT`: Checking Account Type - `SAVINGS_ACCOUNT`: Savings Account Type - `CONTROL_ACCOUNT`: Control Account Type - `GRAPHIC_ACCOUNT`: Graphic Account Type\n",
+                              "description": "Account Type - `CHECKING_ACCOUNT`: Checking Account Type - `SAVINGS_ACCOUNT`: Savings Account Type - `CONTROL_ACCOUNT`: Control Account Type - `GRAPHIC_ACCOUNT`: Graphic Account Type - `PAYMENT_ACCOUNT`: Payment Account Type\n",
                               "enum": [
                                 "CHECKING_ACCOUNT",
                                 "SAVINGS_ACCOUNT",
                                 "CONTROL_ACCOUNT",
-                                "GRAPHIC_ACCOUNT"
+                                "GRAPHIC_ACCOUNT",
+                                "PAYMENT_ACCOUNT"
                               ]
                             },
                             "document_type": {
@@ -679,7 +677,6 @@
                           "required": [
                             "name",
                             "bank_code",
-                            "agency",
                             "account",
                             "account_digit",
                             "account_type",
@@ -714,12 +711,13 @@
                             },
                             "account_type": {
                               "type": "string",
-                              "description": "Account Type - `CHECKING_ACCOUNT`: Checking Account Type - `SAVINGS_ACCOUNT`: Savings Account Type - `CONTROL_ACCOUNT`: Control Account Type - `GRAPHIC_ACCOUNT`: Graphic Account Type\n",
+                              "description": "Account Type - `CHECKING_ACCOUNT`: Checking Account Type - `SAVINGS_ACCOUNT`: Savings Account Type - `CONTROL_ACCOUNT`: Control Account Type - `GRAPHIC_ACCOUNT`: Graphic Account Type - `PAYMENT_ACCOUNT`: Payment Account Type\n",
                               "enum": [
                                 "CHECKING_ACCOUNT",
                                 "SAVINGS_ACCOUNT",
                                 "CONTROL_ACCOUNT",
-                                "GRAPHIC_ACCOUNT"
+                                "GRAPHIC_ACCOUNT",
+                                "PAYMENT_ACCOUNT"
                               ]
                             },
                             "document_type": {
@@ -839,7 +837,6 @@
                                 "required": [
                                   "name",
                                   "bank_code",
-                                  "agency",
                                   "account",
                                   "account_digit",
                                   "account_type",
@@ -874,12 +871,13 @@
                                   },
                                   "account_type": {
                                     "type": "string",
-                                    "description": "Account Type - `CHECKING_ACCOUNT`: Checking Account Type - `SAVINGS_ACCOUNT`: Savings Account Type - `CONTROL_ACCOUNT`: Control Account Type - `GRAPHIC_ACCOUNT`: Graphic Account Type\n",
+                                    "description": "Account Type - `CHECKING_ACCOUNT`: Checking Account Type - `SAVINGS_ACCOUNT`: Savings Account Type - `CONTROL_ACCOUNT`: Control Account Type - `GRAPHIC_ACCOUNT`: Graphic Account Type - `PAYMENT_ACCOUNT`: Payment Account Type\n",
                                     "enum": [
                                       "CHECKING_ACCOUNT",
                                       "SAVINGS_ACCOUNT",
                                       "CONTROL_ACCOUNT",
-                                      "GRAPHIC_ACCOUNT"
+                                      "GRAPHIC_ACCOUNT",
+                                      "PAYMENT_ACCOUNT"
                                     ]
                                   },
                                   "document_type": {
@@ -903,7 +901,6 @@
                                 "required": [
                                   "name",
                                   "bank_code",
-                                  "agency",
                                   "account",
                                   "account_digit",
                                   "account_type",
@@ -938,12 +935,13 @@
                                   },
                                   "account_type": {
                                     "type": "string",
-                                    "description": "Account Type - `CHECKING_ACCOUNT`: Checking Account Type - `SAVINGS_ACCOUNT`: Savings Account Type - `CONTROL_ACCOUNT`: Control Account Type - `GRAPHIC_ACCOUNT`: Graphic Account Type\n",
+                                    "description": "Account Type - `CHECKING_ACCOUNT`: Checking Account Type - `SAVINGS_ACCOUNT`: Savings Account Type - `CONTROL_ACCOUNT`: Control Account Type - `GRAPHIC_ACCOUNT`: Graphic Account Type - `PAYMENT_ACCOUNT`: Payment Account Type\n",
                                     "enum": [
                                       "CHECKING_ACCOUNT",
                                       "SAVINGS_ACCOUNT",
                                       "CONTROL_ACCOUNT",
-                                      "GRAPHIC_ACCOUNT"
+                                      "GRAPHIC_ACCOUNT",
+                                      "PAYMENT_ACCOUNT"
                                     ]
                                   },
                                   "document_type": {
@@ -1266,7 +1264,6 @@
                           "required": [
                             "name",
                             "bank_code",
-                            "agency",
                             "account",
                             "account_digit",
                             "account_type",
@@ -1301,10 +1298,11 @@
                             },
                             "account_type": {
                               "type": "string",
-                              "description": "Account Type - `CHECKING_ACCOUNT`: Checking Account Type - `SAVINGS_ACCOUNT`: Savings Account Type\n",
+                              "description": "Account Type - `CHECKING_ACCOUNT`: Checking Account Type - `SAVINGS_ACCOUNT`: Savings Account Type - `PAYMENT_ACCOUNT`: Payment Account Type\n",
                               "enum": [
                                 "CHECKING_ACCOUNT",
-                                "SAVINGS_ACCOUNT"
+                                "SAVINGS_ACCOUNT",
+                                "PAYMENT_ACCOUNT"
                               ]
                             },
                             "document_type": {
@@ -1328,7 +1326,6 @@
                           "required": [
                             "name",
                             "bank_code",
-                            "agency",
                             "account",
                             "account_digit",
                             "account_type",
@@ -1363,10 +1360,11 @@
                             },
                             "account_type": {
                               "type": "string",
-                              "description": "Account Type - `CHECKING_ACCOUNT`: Checking Account Type - `SAVINGS_ACCOUNT`: Savings Account Type\n",
+                              "description": "Account Type - `CHECKING_ACCOUNT`: Checking Account Type - `SAVINGS_ACCOUNT`: Savings Account Type - `PAYMENT_ACCOUNT`: Payment Account Type\n",
                               "enum": [
                                 "CHECKING_ACCOUNT",
-                                "SAVINGS_ACCOUNT"
+                                "SAVINGS_ACCOUNT",
+                                "PAYMENT_ACCOUNT"
                               ]
                             },
                             "document_type": {
@@ -1746,7 +1744,6 @@
             "required": [
               "name",
               "bank_code",
-              "agency",
               "account",
               "account_digit",
               "account_type",
