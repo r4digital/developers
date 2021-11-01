@@ -1,0 +1,101 @@
+{
+  "openapi": "3.0.2",
+  "info": {
+    "version": "0.0.1",
+    "title": "Baas Profile",
+    "description": "**Description**: Baas Profile\n"
+  },
+  "servers": [
+    {
+      "description": "Development",
+      "url": "https://api.dev.xpto.com"
+    },
+    {
+      "description": "Production",
+      "url": "https://api.xpto.com"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Profile"
+    }
+  ],
+  "paths": {
+    "/profiles": {
+      "get": {
+        "tags": [
+          "Profile"
+        ],
+        "summary": "To be defined",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "To be defined",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error with internal server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "title": "Internal Server Error",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "INTERNAL_SERVER_ERROR",
+                          "enum": [
+                            "INTERNAL_SERVER_ERROR"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "Unexpected error with our service"
+                        },
+                        "status_code": {
+                          "type": "number",
+                          "description": "Error status code",
+                          "example": "500"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "bearerFormat": "JWT",
+        "scheme": "bearer",
+        "description": "Bearer auth (https://developer.mozilla.org/en-US/docs/Web/HTTP/Authentication)."
+      }
+    }
+  }
+}
