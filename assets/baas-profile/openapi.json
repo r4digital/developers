@@ -21,6 +21,179 @@
     }
   ],
   "paths": {
+    "/jobs": {
+      "get": {
+        "tags": [
+          "Jobs"
+        ],
+        "summary": "List of jobs",
+        "description": "Returns a list of jobs. If no jobs are found, you can call the API tagged **OUTROS**.",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "name",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Name from jobs",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The numbers of jobs to return",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The page of jobs from search.",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Jobs successfully found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "limit": {
+                      "type": "number",
+                      "description": "Limit from get job.",
+                      "example": 100
+                    },
+                    "page": {
+                      "type": "number",
+                      "description": "Page from get job.",
+                      "example": 2
+                    },
+                    "count": {
+                      "type": "number",
+                      "description": "Number page from get job.",
+                      "example": 1
+                    },
+                    "jobs": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "description": "Describes the properties of a job.",
+                        "properties": {
+                          "cbo_code": {
+                            "type": "string",
+                            "description": "Code identifying of the job.",
+                            "example": "084"
+                          },
+                          "abbreviation": {
+                            "type": "string",
+                            "description": "Name abbreviation of the job.",
+                            "example": "PROGR.DE COMPUTADOR"
+                          },
+                          "name": {
+                            "type": "string",
+                            "description": "Full name of the job.",
+                            "example": "PROGRAMADOR DE COMPUTADOR"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Error with types [Unauthorized].",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "title": "Unauthorized",
+                      "properties": {
+                        "error": {
+                          "type": "object",
+                          "properties": {
+                            "code": {
+                              "type": "string",
+                              "title": "Error code",
+                              "description": "The type of error",
+                              "example": "UNAUTHORIZED",
+                              "enum": [
+                                "UNAUTHORIZED"
+                              ]
+                            },
+                            "message": {
+                              "type": "string",
+                              "title": "Error message",
+                              "description": "Describes a message informing a reason for the error",
+                              "example": "Unauthorized"
+                            },
+                            "status_code": {
+                              "type": "number",
+                              "description": "Error status code",
+                              "example": "401"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error with internal server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "title": "Internal Server Error",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "INTERNAL_SERVER_ERROR",
+                          "enum": [
+                            "INTERNAL_SERVER_ERROR"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "Unexpected error with our service"
+                        },
+                        "status_code": {
+                          "type": "number",
+                          "description": "Error status code",
+                          "example": "500"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/profiles": {
       "get": {
         "tags": [
