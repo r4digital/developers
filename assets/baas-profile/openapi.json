@@ -21,7 +21,7 @@
     }
   ],
   "paths": {
-    "/person": {
+    "/persons": {
       "post": {
         "tags": [
           "Person"
