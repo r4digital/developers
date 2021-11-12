@@ -453,6 +453,47 @@
               }
             }
           },
+          "409": {
+            "description": "Error with types [Conflict].",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "title": "Conflict",
+                      "properties": {
+                        "error": {
+                          "type": "object",
+                          "properties": {
+                            "code": {
+                              "type": "string",
+                              "title": "Error code",
+                              "description": "The type of error",
+                              "example": "CONFLICT",
+                              "enum": [
+                                "CONFLICT"
+                              ]
+                            },
+                            "message": {
+                              "type": "string",
+                              "title": "Error message",
+                              "description": "Describes a message informing a reason for the error",
+                              "example": "The request could not be completed due to a conflict with the current state of the target resource"
+                            },
+                            "status_code": {
+                              "type": "number",
+                              "description": "Error status code",
+                              "example": "409"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
           "500": {
             "description": "Error with internal server error.",
             "content": {
