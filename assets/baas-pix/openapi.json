@@ -1,0 +1,522 @@
+{
+  "openapi": "3.0.2",
+  "info": {
+    "version": "1.0.0",
+    "title": "Baas Pix",
+    "description": "**Description**: Api responsible to managing pix keys and pix transfers\n\n  <a name=\"key_kind\"></a>\n\n  ## Key kind\n\n  <table>\n    <tr>\n      <td>Kind</td>\n      <td>Description</td>\n    </tr>\n    <tr>\n      <td>`CELLPHONE`</td>\n      <td>Cellphone number.</td>\n    </tr>\n    <tr>\n      <td>`CPF`</td>\n      <td>CPF number.</td>\n    </tr>\n    <tr>\n      <td>`CNPJ`</td>\n      <td>CNPJ number.</td>\n    </tr>\n    <tr>\n      <td>`EMAIL`</td>\n      <td>E-mail address.</td>\n    </tr>\n    <tr>\n      <td>`VIRTUAL`</td>\n      <td>Random key.</td>\n    </tr>\n  </table>\n\n# Errors\nAccount Middleware uses [HTTP response status codes](https://en.wikipedia.org/wiki/List_of_HTTP_status_codes) to indicate the success or failure of your API requests.\nIn general, there are three status code ranges you can expect:\n- `2xx` success status codes confirm that your request worked as expected\n- `4xx` error status codes indicate an error because of the information provided (e.g., a required parameter was not provided)\n- `5xx` error status codes are rare and indicate an error with R4's servers\n\n## HTTP Status code summary\nExtracted from [Stripe API codes](https://stripe.com/docs/api/errors)\n- `200 - OK` Everything worked as expected.\n- `400 - Bad Request` The request was unacceptable, often due to missing a required parameter.\n- `401 - Unauthorized` No valid API key provided.\n- `403 - Forbidden` The API key doesn't have permissions to perform the request.\n- `404 - Not Found` The requested resource doesn't exist.\n- `429 - Too Many Requests` Too many requests hit the API too quickly. We recommend an exponential backoff of your requests.\n- `500, 502, 503, 504 - Server Errors` Something went wrong on R4's end.\n## Error codes\nBelow is a list of possible error codes that can be returned:\n<table>\n  <tr>\n    <td>Code</td>\n    <td>Description</td>\n  </tr>\n  <tr>\n    <td>`ACCOUNT_NOT_FOUND`</td>\n    <td>The account informed was not found.</td>\n  </tr>\n  <tr>\n    <td>`INVALID_CELLPHONE`</td>\n    <td>The provided cellphone is not valid.</td>\n  </tr>\n  <tr>\n    <td>`INVALID_CNPJ`</td>\n    <td>The provided CNPJ is not valid.</td>\n  </tr>\n  <tr>\n    <td>`INVALID_CPF`</td>\n    <td>The provided CPF is not valid.</td>\n  </tr>\n  <tr>\n    <td>`INVALID_EMAIL`</td>\n    <td>The provided email is not valid.</td>\n  </tr>\n</table>\n"
+  },
+  "servers": [
+    {
+      "description": "Development",
+      "url": "https://api.dev.xpto.com"
+    },
+    {
+      "description": "Production",
+      "url": "https://api.xpto.com"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Keys"
+    }
+  ],
+  "paths": {
+    "/pix/keys": {
+      "post": {
+        "tags": [
+          "Keys"
+        ],
+        "summary": "Create a new key",
+        "description": "Returns a created key",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "description": "Describes the properties of pix key.",
+                "required": [
+                  "kind",
+                  "account_id"
+                ],
+                "properties": {
+                  "kind": {
+                    "type": "string",
+                    "description": "Kind of key. [See definitions here](#key_kind).\n",
+                    "enum": [
+                      "CELLPHONE",
+                      "CPF",
+                      "CNPJ",
+                      "EMAIL",
+                      "VIRTUAL"
+                    ],
+                    "example": "CELLPHONE"
+                  },
+                  "key": {
+                    "type": "string",
+                    "description": "Value of pix key.",
+                    "example": "51981706022"
+                  },
+                  "account_id": {
+                    "type": "string",
+                    "description": "Unique identifier of the account.",
+                    "format": "uuid-v4",
+                    "example": "6d814c28-fe73-443c-bfe0-48d518aa32fa"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successfully created key.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "description": "Describes the properties of pix key.",
+                  "required": [
+                    "key",
+                    "created_at",
+                    "ownership_start_date",
+                    "claim_opening_date"
+                  ],
+                  "properties": {
+                    "key": {
+                      "type": "string",
+                      "description": "Value of pix key.",
+                      "example": "51981706022"
+                    },
+                    "created_at": {
+                      "type": "string",
+                      "description": "Pix key creation date.",
+                      "example": "2021-10-31T12:56:23.123Z"
+                    },
+                    "ownership_start_date": {
+                      "type": "string",
+                      "description": "Ownership start date.",
+                      "example": "2021-10-31T12:56:23.123Z"
+                    },
+                    "claim_opening_date": {
+                      "type": "string",
+                      "description": "Claim opening date.",
+                      "example": "2021-10-31T12:56:23.123Z"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Error with types [BadRequest, InvalidCPF, InvalidCNPJ, InvalidCellPhone, InvalidEmail].",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "title": "Bad Request",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "BAD_REQUEST",
+                          "enum": [
+                            "BAD_REQUEST"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "Invalid request params"
+                        },
+                        "status_code": {
+                          "type": "number",
+                          "description": "Error status code",
+                          "example": "400"
+                        }
+                      }
+                    },
+                    {
+                      "title": "Invalid CPF",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "INVALID_CPF",
+                          "enum": [
+                            "INVALID_CPF"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "The provided CPF is not valid."
+                        }
+                      }
+                    },
+                    {
+                      "title": "Invalid CNPJ",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "INVALID_CNPJ",
+                          "enum": [
+                            "INVALID_CNPJ"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "The provided CNPJ is not valid."
+                        }
+                      }
+                    },
+                    {
+                      "title": "Invalid Cellphone",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "INVALID_CELLPHONE",
+                          "enum": [
+                            "INVALID_CELLPHONE"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "The provided cellphone is not valid."
+                        }
+                      }
+                    },
+                    {
+                      "title": "Invalid Email",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "INVALID_EMAIL",
+                          "enum": [
+                            "INVALID_EMAIL"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "The provided email is not valid."
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Error with types [Unauthorized].",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Unauthorized",
+                  "properties": {
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "UNAUTHORIZED",
+                          "enum": [
+                            "UNAUTHORIZED"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "Unauthorized"
+                        },
+                        "status_code": {
+                          "type": "number",
+                          "description": "Error status code",
+                          "example": "401"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Error with types [MissingProduct].",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "title": "Missing Product Permission",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "MISSING_PRODUCT_PERMISSION",
+                          "enum": [
+                            "MISSING_PRODUCT_PERMISSION"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "Missing product permission."
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Error with types [AccountNotFound].",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Account Not Found",
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "title": "Error code",
+                      "description": "The type of error",
+                      "example": "ACCOUNT_NOT_FOUND",
+                      "enum": [
+                        "ACCOUNT_NOT_FOUND"
+                      ]
+                    },
+                    "message": {
+                      "type": "string",
+                      "title": "Error message",
+                      "description": "Describes a message informing a reason for the error",
+                      "example": "Account not found"
+                    },
+                    "status_code": {
+                      "type": "number",
+                      "description": "Error status code",
+                      "example": "404"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error with internal server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Internal Server Error",
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "title": "Error code",
+                      "description": "The type of error",
+                      "example": "INTERNAL_SERVER_ERROR",
+                      "enum": [
+                        "INTERNAL_SERVER_ERROR"
+                      ]
+                    },
+                    "message": {
+                      "type": "string",
+                      "title": "Error message",
+                      "description": "Describes a message informing a reason for the error",
+                      "example": "Unexpected error with our service"
+                    },
+                    "status_code": {
+                      "type": "number",
+                      "description": "Error status code",
+                      "example": "500"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/pix/keys/{key}": {
+      "delete": {
+        "tags": [
+          "Keys"
+        ],
+        "summary": "Delete a key",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "key",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "A key to be deleted"
+          }
+        ],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "description": "Describes the properties to remove a key.",
+                "required": [
+                  "reason"
+                ],
+                "properties": {
+                  "reason": {
+                    "type": "string",
+                    "description": "Reason to remove a key.\n",
+                    "enum": [
+                      "CUSTOMER_REQUEST",
+                      "INACTIVITY",
+                      "FRAUD",
+                      "RECONCILIATION"
+                    ],
+                    "example": "CUSTOMER_REQUEST"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Successfully deleted key."
+          },
+          "403": {
+            "description": "Error with types [MissingProduct].",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "title": "Missing Product Permission",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "MISSING_PRODUCT_PERMISSION",
+                          "enum": [
+                            "MISSING_PRODUCT_PERMISSION"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "Missing product permission."
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Error with types [ApplicationProductNotFound].",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Application product not found",
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "title": "Error code",
+                      "description": "The type of error",
+                      "example": "APPLICATION_PRODUCT_NOT_FOUND",
+                      "enum": [
+                        "APPLICATION_PRODUCT_NOT_FOUND"
+                      ]
+                    },
+                    "message": {
+                      "type": "string",
+                      "title": "Error message",
+                      "description": "Describes a message informing a reason for the error",
+                      "example": "Product not found for given application id."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error with internal server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Internal Server Error",
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "title": "Error code",
+                      "description": "The type of error",
+                      "example": "INTERNAL_SERVER_ERROR",
+                      "enum": [
+                        "INTERNAL_SERVER_ERROR"
+                      ]
+                    },
+                    "message": {
+                      "type": "string",
+                      "title": "Error message",
+                      "description": "Describes a message informing a reason for the error",
+                      "example": "Unexpected error with our service"
+                    },
+                    "status_code": {
+                      "type": "number",
+                      "description": "Error status code",
+                      "example": "500"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "bearerFormat": "JWT",
+        "scheme": "bearer",
+        "description": "Bearer auth (https://developer.mozilla.org/en-US/docs/Web/HTTP/Authentication)."
+      }
+    }
+  }
+}
