@@ -50,7 +50,6 @@
                     "type": "object",
                     "required": [
                       "full_name",
-                      "client_code",
                       "document_type",
                       "document_number",
                       "uf",
@@ -68,11 +67,6 @@
                         "type": "string",
                         "description": "Name from person.",
                         "example": "Jonh"
-                      },
-                      "client_code": {
-                        "type": "number",
-                        "description": "Code provided by the bank.",
-                        "example": 123456789
                       },
                       "document_type": {
                         "type": "string",
