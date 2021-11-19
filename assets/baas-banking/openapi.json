@@ -560,6 +560,31 @@
                           "example": "400"
                         }
                       }
+                    },
+                    {
+                      "title": "Invalid registration data",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "INVALID_REGISTRATION_DATA",
+                          "enum": [
+                            "INVALID_REGISTRATION_DATA"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "Invalid registration data."
+                        },
+                        "status_code": {
+                          "type": "number",
+                          "description": "Error status code",
+                          "example": "400"
+                        }
+                      }
                     }
                   ]
                 }
