@@ -506,7 +506,7 @@
             }
           },
           "400": {
-            "description": "Error with types [BadRequest, FailedToCreateAccountBalanceError].",
+            "description": "Error with types [BadRequest, FailedToCreateAccountBalanceError, AccountTypeInvalid].",
             "content": {
               "application/json": {
                 "schema": {
@@ -578,6 +578,31 @@
                           "title": "Error message",
                           "description": "Describes a message informing a reason for the error",
                           "example": "Invalid registration data."
+                        },
+                        "status_code": {
+                          "type": "number",
+                          "description": "Error status code",
+                          "example": "400"
+                        }
+                      }
+                    },
+                    {
+                      "title": "Account Type Invalid",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "ACCOUNT_TYPE_INVALID",
+                          "enum": [
+                            "ACCOUNT_TYPE_INVALID"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "Account type invalid."
                         },
                         "status_code": {
                           "type": "number",
