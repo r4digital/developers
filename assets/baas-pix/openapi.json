@@ -361,6 +361,231 @@
             }
           }
         }
+      },
+      "get": {
+        "tags": [
+          "Keys"
+        ],
+        "summary": "List keys",
+        "description": "Returns a list of keys belonging to the account",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "account_id",
+            "required": true,
+            "schema": {
+              "description": "Unique identifier of the account.",
+              "type": "string",
+              "format": "uuid-v4",
+              "example": "6d814c28-fe73-443c-bfe0-48d518aa32fa"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully list keys.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "description": "Describes the properties of pix key.",
+                    "required": [
+                      "key",
+                      "name",
+                      "created_at",
+                      "ownership_start_date"
+                    ],
+                    "properties": {
+                      "key": {
+                        "type": "string",
+                        "description": "Value of pix key.",
+                        "example": "51981706022"
+                      },
+                      "name": {
+                        "type": "string",
+                        "description": "Trade Name of pix key owner.",
+                        "example": "John Doe"
+                      },
+                      "nickname": {
+                        "type": "string",
+                        "description": "Name of pix key owner.",
+                        "example": "John"
+                      },
+                      "created_at": {
+                        "type": "string",
+                        "description": "Pix key creation date.",
+                        "example": "2021-10-31T12:56:23.123Z"
+                      },
+                      "ownership_start_date": {
+                        "type": "string",
+                        "description": "Ownership start date.",
+                        "example": "2021-10-31T12:56:23.123Z"
+                      },
+                      "claim_opening_date": {
+                        "type": "string",
+                        "description": "Claim opening date.",
+                        "example": "2021-10-31T12:56:23.123Z"
+                      },
+                      "claim": {
+                        "type": "string",
+                        "enum": [
+                          "POSSESSION",
+                          "PORTABILITY"
+                        ],
+                        "description": "Claim reason.",
+                        "example": "PORTABILITY"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Error with types [BadRequest].",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "title": "Bad Request",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "BAD_REQUEST",
+                          "enum": [
+                            "BAD_REQUEST"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "Invalid request params"
+                        },
+                        "status_code": {
+                          "type": "number",
+                          "description": "Error status code",
+                          "example": "400"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Error with types [Unauthorized].",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Unauthorized",
+                  "properties": {
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "UNAUTHORIZED",
+                          "enum": [
+                            "UNAUTHORIZED"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "Unauthorized"
+                        },
+                        "status_code": {
+                          "type": "number",
+                          "description": "Error status code",
+                          "example": "401"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Error with types [AccountNotFound].",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Account Not Found",
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "title": "Error code",
+                      "description": "The type of error",
+                      "example": "ACCOUNT_NOT_FOUND",
+                      "enum": [
+                        "ACCOUNT_NOT_FOUND"
+                      ]
+                    },
+                    "message": {
+                      "type": "string",
+                      "title": "Error message",
+                      "description": "Describes a message informing a reason for the error",
+                      "example": "Account not found"
+                    },
+                    "status_code": {
+                      "type": "number",
+                      "description": "Error status code",
+                      "example": "404"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error with internal server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Internal Server Error",
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "title": "Error code",
+                      "description": "The type of error",
+                      "example": "INTERNAL_SERVER_ERROR",
+                      "enum": [
+                        "INTERNAL_SERVER_ERROR"
+                      ]
+                    },
+                    "message": {
+                      "type": "string",
+                      "title": "Error message",
+                      "description": "Describes a message informing a reason for the error",
+                      "example": "Unexpected error with our service"
+                    },
+                    "status_code": {
+                      "type": "number",
+                      "description": "Error status code",
+                      "example": "500"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
       }
     },
     "/pix/keys/{key}": {
