@@ -429,13 +429,18 @@
                   "client_code": {
                     "type": "number",
                     "example": 12345
+                  },
+                  "document_number": {
+                    "type": "string",
+                    "example": "55605714074"
                   }
                 },
                 "required": [
                   "name",
                   "account_type",
                   "document_type",
-                  "client_code"
+                  "client_code",
+                  "document_number"
                 ]
               }
             }
