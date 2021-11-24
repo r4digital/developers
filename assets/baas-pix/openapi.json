@@ -436,7 +436,7 @@
                       "claim": {
                         "type": "string",
                         "enum": [
-                          "POSSESSION",
+                          "OWNERSHIP",
                           "PORTABILITY"
                         ],
                         "description": "Claim reason.",
