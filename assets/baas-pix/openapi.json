@@ -763,7 +763,7 @@
                           "ispb": {
                             "type": "number",
                             "description": "ISPB of partner",
-                            "example": 88
+                            "example": 11476673
                           },
                           "name": {
                             "type": "string",
@@ -826,6 +826,167 @@
           },
           "404": {
             "description": "Error with types [PartnerNotFound].",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Partners Not Found",
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "title": "Error code",
+                      "description": "The type of error",
+                      "example": "PARTNERS_NOT_FOUND",
+                      "enum": [
+                        "PARTNERS_NOT_FOUND"
+                      ]
+                    },
+                    "message": {
+                      "type": "string",
+                      "title": "Error message",
+                      "description": "Describes a message informing a reason for the error",
+                      "example": "Partners not found."
+                    },
+                    "status_code": {
+                      "type": "number",
+                      "description": "Error status code",
+                      "example": "404"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error with internal server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Internal Server Error",
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "title": "Error code",
+                      "description": "The type of error",
+                      "example": "INTERNAL_SERVER_ERROR",
+                      "enum": [
+                        "INTERNAL_SERVER_ERROR"
+                      ]
+                    },
+                    "message": {
+                      "type": "string",
+                      "title": "Error message",
+                      "description": "Describes a message informing a reason for the error",
+                      "example": "Unexpected error with our service"
+                    },
+                    "status_code": {
+                      "type": "number",
+                      "description": "Error status code",
+                      "example": "500"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/partners/{ispb}": {
+      "get": {
+        "tags": [
+          "Partners"
+        ],
+        "summary": "Get specific PSP partner",
+        "description": "Return a specific PSP partner registered on service provider",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "ispb",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Partner ISPB"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A list of PSP partners",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "description": "Describes the properties of partner",
+                  "required": [
+                    "ispb",
+                    "nickname",
+                    "kind",
+                    "status"
+                  ],
+                  "properties": {
+                    "ispb": {
+                      "type": "number",
+                      "description": "ISPB of partner",
+                      "example": 11476673
+                    },
+                    "name": {
+                      "type": "string",
+                      "description": "Name of partner.",
+                      "example": "R4 Digital"
+                    },
+                    "nickname": {
+                      "type": "string",
+                      "description": "nickname of partner",
+                      "example": "R4"
+                    },
+                    "kind": {
+                      "type": "string",
+                      "description": "Kind of partner",
+                      "enum": [
+                        "DIRECT,",
+                        "INDIRECT,"
+                      ],
+                      "example": "DIRECT"
+                    },
+                    "modality": {
+                      "type": "string",
+                      "description": "Modality of partner.",
+                      "enum": [
+                        "TRANSACTION_ACCOUNT_PROVIDER",
+                        "GOVERNMENT_ENTITY",
+                        "SPECIAL_LIQUIDATOR"
+                      ],
+                      "example": "GOVERNMENT_ENTITY"
+                    },
+                    "started_at": {
+                      "type": "string",
+                      "format": "Date",
+                      "description": "Date and time of initial partner registration",
+                      "example": "2021-10-31T12:56:23.123Z"
+                    },
+                    "ended_at": {
+                      "type": "string",
+                      "description": "Date and time of end partner registration",
+                      "example": "2021-10-31T12:56:23.123Z"
+                    },
+                    "status": {
+                      "type": "string",
+                      "description": "Status of partner.",
+                      "enum": [
+                        "ACTIVE",
+                        "INACTIVE",
+                        "WAITING_ACTIVATION",
+                        "ACTIVATION_FAILED"
+                      ],
+                      "example": "ACTIVE"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Error with types [PartnersNotFound].",
             "content": {
               "application/json": {
                 "schema": {
