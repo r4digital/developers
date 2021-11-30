@@ -32,7 +32,7 @@
           "Person"
         ],
         "summary": "Create person",
-        "description": "Create a person..",
+        "description": "Create a person.",
         "security": [
           {
             "BearerAuth": []
@@ -55,16 +55,15 @@
                     "type": "object",
                     "required": [
                       "full_name",
-                      "document_type",
                       "document_number",
+                      "secondary_document_number",
+                      "secondary_document_type",
                       "uf",
                       "city",
                       "marital_status",
                       "nationality",
                       "birth_date",
-                      "politically_exposed",
-                      "issuing_agency",
-                      "document_issue_date"
+                      "politically_exposed"
                     ],
                     "description": "Account holder details.\n",
                     "properties": {
@@ -73,18 +72,23 @@
                         "description": "Name from person.",
                         "example": "Jonh"
                       },
-                      "document_type": {
-                        "type": "string",
-                        "description": "The Type of Document.",
-                        "enum": [
-                          "CPF",
-                          "CNH"
-                        ]
-                      },
                       "document_number": {
                         "type": "string",
                         "description": "The value of document.",
                         "example": "81893643085"
+                      },
+                      "secondary_document_number": {
+                        "type": "string",
+                        "description": "The value of the secondary document.",
+                        "example": "5256856547"
+                      },
+                      "secondary_document_type": {
+                        "type": "string",
+                        "description": "The Type of the secondary document.",
+                        "enum": [
+                          "CNH",
+                          "RG"
+                        ]
                       },
                       "uf": {
                         "type": "string",
@@ -95,17 +99,6 @@
                         "type": "string",
                         "description": "The city of the document.",
                         "example": "S\u00e3o Paulo"
-                      },
-                      "issuing_agency": {
-                        "type": "string",
-                        "description": "Issuing agency from document.",
-                        "example": "SSP"
-                      },
-                      "document_issue_date": {
-                        "type": "string",
-                        "format": "date",
-                        "example": "2000-01-01",
-                        "description": "Issuing document date."
                       },
                       "marital_status": {
                         "type": "string",
@@ -146,7 +139,8 @@
                       "name",
                       "nationality",
                       "document_number",
-                      "type"
+                      "type",
+                      "politically_exposed"
                     ],
                     "description": "Parent account holder details.\n",
                     "properties": {
@@ -174,6 +168,10 @@
                           "PARTNERSHIP",
                           "PARTNERSHIP_BACEN"
                         ]
+                      },
+                      "politically_exposed": {
+                        "type": "boolean",
+                        "description": "If the parent is politically exposed."
                       }
                     }
                   },
