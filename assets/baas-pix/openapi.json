@@ -688,7 +688,7 @@
             }
           },
           "404": {
-            "description": "Error with types [AccountNotFound, KeyNotFound].",
+            "description": "Error with types [AccountNotFound, KeyNotFound, ApplicationNotFound].",
             "content": {
               "application/json": {
                 "schema": {
@@ -719,7 +719,7 @@
                       }
                     },
                     {
-                      "title": "Internal Server Error",
+                      "title": "Key Not Found",
                       "properties": {
                         "code": {
                           "type": "string",
@@ -734,7 +734,12 @@
                           "type": "string",
                           "title": "Error message",
                           "description": "Describes a message informing a reason for the error",
-                          "example": "The provided key is not found or does not exist"
+                          "example": "Key not found."
+                        },
+                        "status_code": {
+                          "type": "number",
+                          "description": "Error status code",
+                          "example": "404"
                         }
                       }
                     },
@@ -1039,7 +1044,7 @@
                       }
                     },
                     {
-                      "title": "Internal Server Error",
+                      "title": "Key Not Found",
                       "properties": {
                         "code": {
                           "type": "string",
@@ -1054,7 +1059,12 @@
                           "type": "string",
                           "title": "Error message",
                           "description": "Describes a message informing a reason for the error",
-                          "example": "The provided key is not found or does not exist"
+                          "example": "Key not found."
+                        },
+                        "status_code": {
+                          "type": "number",
+                          "description": "Error status code",
+                          "example": "404"
                         }
                       }
                     }
@@ -1071,6 +1081,382 @@
                     "value": {
                       "code": "KEY_NOT_FOUND",
                       "message": "The provided key is not found or does not exist"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error with internal server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Internal Server Error",
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "title": "Error code",
+                      "description": "The type of error",
+                      "example": "INTERNAL_SERVER_ERROR",
+                      "enum": [
+                        "INTERNAL_SERVER_ERROR"
+                      ]
+                    },
+                    "message": {
+                      "type": "string",
+                      "title": "Error message",
+                      "description": "Describes a message informing a reason for the error",
+                      "example": "Unexpected error with our service"
+                    }
+                  }
+                },
+                "examples": {
+                  "Example 1 - InternalServerError": {
+                    "value": {
+                      "code": "INTERNAL_SERVER_ERROR",
+                      "message": "Unexpected error with our service"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Keys"
+        ],
+        "summary": "Get an Pix Key",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "key",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The key to be find."
+          }
+        ],
+        "description": "Get Pix Key data",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Pix Key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "description": "Describes the properties of pix key",
+                  "required": [
+                    "reason"
+                  ],
+                  "properties": {
+                    "kind": {
+                      "type": "string",
+                      "description": "Kind of the key.",
+                      "enum": [
+                        "CELLPHONE",
+                        "CPF",
+                        "CNPJ",
+                        "EMAIL",
+                        "VIRTUAL"
+                      ],
+                      "example": "CELLPHONE"
+                    },
+                    "key": {
+                      "type": "string",
+                      "description": "Value of pix key.",
+                      "example": "+5551981706022"
+                    },
+                    "agency_number": {
+                      "type": "number",
+                      "description": "Owner's agency number"
+                    },
+                    "account_type": {
+                      "type": "string",
+                      "description": "Owner's account type",
+                      "enum": [
+                        "CHECKING_ACCOUNT",
+                        "SALARY_ACCOUNT",
+                        "SAVINGS_ACCOUNT",
+                        "PAYMENT_ACCOUNT"
+                      ]
+                    },
+                    "account_number": {
+                      "type": "number",
+                      "description": "Owner's account number"
+                    },
+                    "account_digit": {
+                      "type": "number",
+                      "description": "Owner's account digit"
+                    },
+                    "account_opening_date": {
+                      "type": "string",
+                      "description": "Owner's account opening date"
+                    },
+                    "document_type": {
+                      "type": "string",
+                      "description": "Owner's document type",
+                      "enum": [
+                        "CPF",
+                        "CNPJ"
+                      ]
+                    },
+                    "document_number": {
+                      "type": "number",
+                      "description": "Owner's document number"
+                    },
+                    "name": {
+                      "type": "string",
+                      "description": "Owner's name"
+                    },
+                    "nickname": {
+                      "type": "string",
+                      "description": "Owner's nickname"
+                    },
+                    "created_at": {
+                      "type": "string",
+                      "description": "Date and time of inclusion",
+                      "example": "2021-07-23T16:58:27.000Z"
+                    },
+                    "ownership_start_date": {
+                      "type": "number",
+                      "description": "Ownership start date",
+                      "example": "2021-07-23T16:58:27.000Z"
+                    },
+                    "claim_opening_date": {
+                      "type": "number",
+                      "description": "When informed, it indicates the date and time of the start of the process of claim or portability of the key.",
+                      "example": "2021-07-23T16:58:27.000Z"
+                    },
+                    "end_to_end_id": {
+                      "type": "string",
+                      "description": "Unique identifier of the payment transaction"
+                    },
+                    "statistics": {
+                      "type": "object",
+                      "description": "Statistical data related to key, owner or account",
+                      "properties": {
+                        "anti_fraud_updated_at": {
+                          "type": "string",
+                          "description": "Latest anti-fraud update"
+                        },
+                        "counters": {
+                          "type": "array",
+                          "description": "Event counter",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "kind": {
+                                "type": "string",
+                                "description": "Accountant type",
+                                "enum": [
+                                  "TRANSACTIONS",
+                                  "FRAUD_REPORT",
+                                  "FRAUD_CONFIRMATION"
+                                ]
+                              },
+                              "aggregator": {
+                                "type": "string",
+                                "description": "Counter aggregation type",
+                                "enum": [
+                                  "KEY",
+                                  "OWNER",
+                                  "ACCOUNT"
+                                ]
+                              },
+                              "d3": {
+                                "type": "number",
+                                "description": "Value for the last 3 days"
+                              },
+                              "d30": {
+                                "type": "number",
+                                "description": "Value for the last 30 days"
+                              },
+                              "m6": {
+                                "type": "number",
+                                "description": "Value for the last 6 months"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "examples": {
+                  "example": {
+                    "value": {
+                      "kind": "CELLPHONE",
+                      "key": "+5547989991111",
+                      "agency_number": 1234,
+                      "account_type": "CHECKING_ACCOUNT",
+                      "account_number": 1234,
+                      "account_digit": 1,
+                      "account_opening_date": "2021-10-31T12:56:23.123Z",
+                      "document_type": "CPF",
+                      "document_number": 13700618034,
+                      "name": "Owner Name",
+                      "nickname": "Owner Nickname",
+                      "created_at": "2021-10-31T12:56:23.123Z",
+                      "ownership_start_date": "2021-10-31T12:56:23.123Z",
+                      "claim_opening_date": "2021-10-31T12:56:23.123Z",
+                      "end_to_end_id": "77e94883474e4dfd867624f222aabc5b",
+                      "statistics": {
+                        "anti_fraud_updated_at": "2021-10-31T12:56:23.123Z",
+                        "counters": {}
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Error with types [AuthenticationError].",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Authentication error",
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "title": "Error code",
+                      "description": "The type of error",
+                      "example": "AUTHENTICATION_FAILED",
+                      "enum": [
+                        "AUTHENTICATION_FAILED"
+                      ]
+                    },
+                    "message": {
+                      "type": "string",
+                      "title": "Error message",
+                      "description": "Describes a message informing a reason for the error",
+                      "example": "Authentication failed."
+                    }
+                  }
+                },
+                "examples": {
+                  "Example 1 - AuthenticationError": {
+                    "value": {
+                      "code": "AUTHENTICATION_FAILED",
+                      "message": "Authentication failed."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Error with types [MissingProduct].",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "title": "Missing Product Permission",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "MISSING_PRODUCT_PERMISSION",
+                          "enum": [
+                            "MISSING_PRODUCT_PERMISSION"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "Missing product permission."
+                        }
+                      }
+                    }
+                  ]
+                },
+                "examples": {
+                  "Example 1 - MissingProductError": {
+                    "value": {
+                      "code": "MISSING_PRODUCT_PERMISSION",
+                      "message": "Missing product permission."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Error with types [ApplicationProductNotFound, KeyNotFound].",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "title": "Application product not found",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "APPLICATION_PRODUCT_NOT_FOUND",
+                          "enum": [
+                            "APPLICATION_PRODUCT_NOT_FOUND"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "Product not found for given application id."
+                        }
+                      }
+                    },
+                    {
+                      "title": "Key Not Found",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "KEY_NOT_FOUND",
+                          "enum": [
+                            "KEY_NOT_FOUND"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "Key not found."
+                        },
+                        "status_code": {
+                          "type": "number",
+                          "description": "Error status code",
+                          "example": "404"
+                        }
+                      }
+                    }
+                  ]
+                },
+                "examples": {
+                  "Example 1 - ApplicationNotFound": {
+                    "value": {
+                      "code": "APPLICATION_PRODUCT_NOT_FOUND",
+                      "message": "Product not found for given application id."
+                    }
+                  },
+                  "Example 2 - KeyNotFound": {
+                    "value": {
+                      "code": "KEY_NOT_FOUND",
+                      "message": "Key not found."
                     }
                   }
                 }
@@ -1281,7 +1667,7 @@
             }
           },
           "404": {
-            "description": "Error with types [ApplicationProductNotFound, KeyNotFound].",
+            "description": "Error with types [ApplicationProductNotFound, PartnersNotFound].",
             "content": {
               "application/json": {
                 "schema": {
@@ -1511,45 +1897,6 @@
                     "value": {
                       "code": "AUTHENTICATION_FAILED",
                       "message": "Authentication failed."
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Error with types [MissingProduct].",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "oneOf": [
-                    {
-                      "title": "Missing Product Permission",
-                      "properties": {
-                        "code": {
-                          "type": "string",
-                          "title": "Error code",
-                          "description": "The type of error",
-                          "example": "MISSING_PRODUCT_PERMISSION",
-                          "enum": [
-                            "MISSING_PRODUCT_PERMISSION"
-                          ]
-                        },
-                        "message": {
-                          "type": "string",
-                          "title": "Error message",
-                          "description": "Describes a message informing a reason for the error",
-                          "example": "Missing product permission."
-                        }
-                      }
-                    }
-                  ]
-                },
-                "examples": {
-                  "Example 1 - MissingProductError": {
-                    "value": {
-                      "code": "MISSING_PRODUCT_PERMISSION",
-                      "message": "Missing product permission."
                     }
                   }
                 }
