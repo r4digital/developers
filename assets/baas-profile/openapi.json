@@ -53,7 +53,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Create a person successfully.",
+            "description": "Get person successfully.",
             "content": {
               "application/json": {
                 "schema": {
@@ -506,7 +506,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Create a person successfully.",
+            "description": "Get person by document successfully.",
             "content": {
               "application/json": {
                 "schema": {
