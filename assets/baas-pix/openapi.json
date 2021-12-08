@@ -1996,6 +1996,371 @@
                       "example": "Unexpected error with our service"
                     }
                   }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/pix/claims": {
+      "post": {
+        "tags": [
+          "Claim"
+        ],
+        "summary": "Create a claim",
+        "description": "It Returns the created claim",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "description": "Describes the properties of claim.",
+                "required": [
+                  "kind",
+                  "account_id"
+                ],
+                "properties": {
+                  "kind": {
+                    "type": "string",
+                    "description": "Kind of key. [See definitions here](#key_kind).\n",
+                    "enum": [
+                      "CELLPHONE",
+                      "CPF",
+                      "CNPJ",
+                      "EMAIL",
+                      "VIRTUAL"
+                    ],
+                    "example": "CELLPHONE"
+                  },
+                  "key": {
+                    "type": "string",
+                    "description": "Value of pix key.",
+                    "example": "51981706022"
+                  },
+                  "claim": {
+                    "type": "string",
+                    "description": "Key claim.\n",
+                    "enum": [
+                      "PORTABILITY",
+                      "OWNERSHIP"
+                    ],
+                    "example": "PORTABILITY"
+                  },
+                  "account_id": {
+                    "type": "string",
+                    "description": "Unique identifier of the account.",
+                    "format": "uuid-v4",
+                    "example": "6d814c28-fe73-443c-bfe0-48d518aa32fa"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "A new claim",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "description": "Describes the properties of claim.",
+                  "required": [
+                    "claim_id",
+                    "resolved_at",
+                    "updated_at"
+                  ],
+                  "properties": {
+                    "claim_id": {
+                      "type": "string",
+                      "description": "Claim id.",
+                      "example": "d630c863-bfa4-4546-ada0-3b501c3a1572"
+                    },
+                    "confirmation_reason": {
+                      "type": "string",
+                      "description": "Confirmation reason",
+                      "enum": [
+                        "CUSTOMER_REQUEST",
+                        "ENDING_ACCOUNT",
+                        "FRAUD",
+                        "ANSWER_DEFAULT"
+                      ],
+                      "example": "CUSTOMER_REQUEST"
+                    },
+                    "cancelation_reason": {
+                      "type": "string",
+                      "description": "Cancelation reason",
+                      "enum": [
+                        "CUSTOMER_REQUEST",
+                        "ENDING_ACCOUNT",
+                        "FRAUD",
+                        "ANSWER_DEFAULT",
+                        "RECONCILIATION"
+                      ],
+                      "example": "CUSTOMER_REQUEST"
+                    },
+                    "canceled_by": {
+                      "type": "string",
+                      "description": "The canlatio origin",
+                      "enum": [
+                        "GRANTOR",
+                        "CLAIMER"
+                      ],
+                      "example": "CLAIMER"
+                    },
+                    "resolved_at": {
+                      "type": "string",
+                      "description": "Claim resolution date.",
+                      "example": "2021-10-31T12:56:23.123Z"
+                    },
+                    "concluded_at": {
+                      "type": "string",
+                      "description": "Claim conclusion date.",
+                      "example": "2021-10-31T12:56:23.123Z"
+                    },
+                    "updated_at": {
+                      "type": "string",
+                      "description": "Claim update date.",
+                      "example": "2021-10-31T12:56:23.123Z"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "title": "Invalid Claim",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "INVALID_CLAIM",
+                          "enum": [
+                            "INVALID_CLAIM"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "There are an invalid field at creation of the claim"
+                        }
+                      }
+                    },
+                    {
+                      "title": "Inconsistent claim type",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "INCONSISTENT_CLAIM_TYPE",
+                          "enum": [
+                            "INCONSISTENT_CLAIM_TYPE"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "The requested claim type is inconsistent"
+                        }
+                      }
+                    },
+                    {
+                      "title": "Claim already exists",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "CLAIM_ALREADY_EXIST_FOR_KEY",
+                          "enum": [
+                            "CLAIM_ALREADY_EXIST_FOR_KEY"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "There is some claim with status different of done or cancelled for the revindicated key"
+                        }
+                      }
+                    }
+                  ]
+                },
+                "examples": {
+                  "Example 1 - InvalidClaimError": {
+                    "value": {
+                      "code": "INVALID_CLAIM",
+                      "message": "There are an invalid field at creation of the claim"
+                    }
+                  },
+                  "Example 2 - InconsistentClaimTypeError": {
+                    "value": {
+                      "code": "INCONSISTENT_CLAIM_TYPE",
+                      "message": "The requested claim type is inconsistent"
+                    }
+                  },
+                  "Example 3 - InconsistentClaimTypeError": {
+                    "value": {
+                      "code": "CLAIM_ALREADY_EXIST_FOR_KEY",
+                      "message": "There is some claim with status different of done or cancelled for the revindicated key"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Error with types [AuthenticationError].",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Authentication error",
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "title": "Error code",
+                      "description": "The type of error",
+                      "example": "AUTHENTICATION_FAILED",
+                      "enum": [
+                        "AUTHENTICATION_FAILED"
+                      ]
+                    },
+                    "message": {
+                      "type": "string",
+                      "title": "Error message",
+                      "description": "Describes a message informing a reason for the error",
+                      "example": "Authentication failed."
+                    }
+                  }
+                },
+                "examples": {
+                  "Example 1 - AuthenticationError": {
+                    "value": {
+                      "code": "AUTHENTICATION_FAILED",
+                      "message": "Authentication failed."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Error with types [MissingProduct].",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "title": "Missing Product Permission",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "MISSING_PRODUCT_PERMISSION",
+                          "enum": [
+                            "MISSING_PRODUCT_PERMISSION"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "Missing product permission."
+                        }
+                      }
+                    }
+                  ]
+                },
+                "examples": {
+                  "Example 1 - MissingProductError": {
+                    "value": {
+                      "code": "MISSING_PRODUCT_PERMISSION",
+                      "message": "Missing product permission."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Error with types [ApplicationProductNotFound].",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "title": "Application product not found",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "APPLICATION_PRODUCT_NOT_FOUND",
+                          "enum": [
+                            "APPLICATION_PRODUCT_NOT_FOUND"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "Product not found for given application id."
+                        }
+                      }
+                    }
+                  ]
+                },
+                "examples": {
+                  "Example 1 - ApplicationNotFound": {
+                    "value": {
+                      "code": "APPLICATION_PRODUCT_NOT_FOUND",
+                      "message": "Product not found for given application id."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error with internal server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Internal Server Error",
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "title": "Error code",
+                      "description": "The type of error",
+                      "example": "INTERNAL_SERVER_ERROR",
+                      "enum": [
+                        "INTERNAL_SERVER_ERROR"
+                      ]
+                    },
+                    "message": {
+                      "type": "string",
+                      "title": "Error message",
+                      "description": "Describes a message informing a reason for the error",
+                      "example": "Unexpected error with our service"
+                    }
+                  }
                 },
                 "examples": {
                   "Example 1 - InternalServerError": {
@@ -2009,9 +2374,7 @@
             }
           }
         }
-      }
-    },
-    "/pix/claims": {
+      },
       "get": {
         "tags": [
           "Claims"
@@ -2356,6 +2719,31 @@
                           "example": "Product not found for given application id."
                         }
                       }
+                    },
+                    {
+                      "title": "Key Not Found",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "KEY_NOT_FOUND",
+                          "enum": [
+                            "KEY_NOT_FOUND"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "Key not found."
+                        },
+                        "status_code": {
+                          "type": "number",
+                          "description": "Error status code",
+                          "example": "404"
+                        }
+                      }
                     }
                   ]
                 },
@@ -2364,6 +2752,12 @@
                     "value": {
                       "code": "APPLICATION_PRODUCT_NOT_FOUND",
                       "message": "Product not found for given application id."
+                    }
+                  },
+                  "Example 2 - KeyNotFound": {
+                    "value": {
+                      "code": "KEY_NOT_FOUND",
+                      "message": "The provided key is not found or does not exist"
                     }
                   }
                 }
