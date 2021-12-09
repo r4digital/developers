@@ -3211,6 +3211,276 @@
           }
         }
       }
+    },
+    "/pix/check-keys": {
+      "post": {
+        "tags": [
+          "Keys"
+        ],
+        "summary": "Check for pix keys",
+        "description": "Returns key verification result",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "description": "Describes the properties.",
+                "required": [
+                  "keys"
+                ],
+                "properties": {
+                  "keys": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "Pix keys",
+                    "example": [
+                      "+5547989991111"
+                    ]
+                  }
+                }
+              },
+              "examples": {
+                "example": {
+                  "value": {
+                    "keys": [
+                      "+556584811516",
+                      "example@email.com"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Verification result.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "description": "Describes the properties of key verification.",
+                  "required": [
+                    "keys"
+                  ],
+                  "properties": {
+                    "correlation_id": {
+                      "type": "string",
+                      "description": "ID for suport",
+                      "example": "r29b389283r98h12echuhy23r48u23"
+                    },
+                    "keys": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "key": {
+                            "type": "string",
+                            "example": "+556584811516"
+                          },
+                          "exists": {
+                            "type": "boolean",
+                            "example": false
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Error with types [ValidationFailed].",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Invalid request data",
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "title": "Error code",
+                      "description": "The type of error",
+                      "example": "VALIDATION_FAILED"
+                    },
+                    "message": {
+                      "type": "string",
+                      "title": "Error message",
+                      "description": "Describes a message informing a reason for the error",
+                      "example": "Invalid request data."
+                    },
+                    "details": {
+                      "type": "array",
+                      "title": "Error details",
+                      "description": "Informs error details",
+                      "example": "Invalid request data."
+                    }
+                  }
+                },
+                "examples": {
+                  "Example 1 - ValidationFailed": {
+                    "value": {
+                      "code": "VALIDATION_FAILED",
+                      "message": "Invalid request data."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Error with types [AuthenticationError].",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Authentication error",
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "title": "Error code",
+                      "description": "The type of error",
+                      "example": "AUTHENTICATION_FAILED",
+                      "enum": [
+                        "AUTHENTICATION_FAILED"
+                      ]
+                    },
+                    "message": {
+                      "type": "string",
+                      "title": "Error message",
+                      "description": "Describes a message informing a reason for the error",
+                      "example": "Authentication failed."
+                    }
+                  }
+                },
+                "examples": {
+                  "Example 1 - AuthenticationError": {
+                    "value": {
+                      "code": "AUTHENTICATION_FAILED",
+                      "message": "Authentication failed."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Error with types [MissingProduct].",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "title": "Missing Product Permission",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "MISSING_PRODUCT_PERMISSION",
+                          "enum": [
+                            "MISSING_PRODUCT_PERMISSION"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "Missing product permission."
+                        }
+                      }
+                    }
+                  ]
+                },
+                "examples": {
+                  "Example 1 - MissingProductError": {
+                    "value": {
+                      "code": "MISSING_PRODUCT_PERMISSION",
+                      "message": "Missing product permission."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Error with types [ApplicationProductNotFound].",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Application product not found",
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "title": "Error code",
+                      "description": "The type of error",
+                      "example": "APPLICATION_PRODUCT_NOT_FOUND",
+                      "enum": [
+                        "APPLICATION_PRODUCT_NOT_FOUND"
+                      ]
+                    },
+                    "message": {
+                      "type": "string",
+                      "title": "Error message",
+                      "description": "Describes a message informing a reason for the error",
+                      "example": "Product not found for given application id."
+                    }
+                  }
+                },
+                "examples": {
+                  "Example 2 - ApplicationNotFound": {
+                    "value": {
+                      "code": "APPLICATION_PRODUCT_NOT_FOUND",
+                      "message": "Product not found for given application id."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error with internal server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Internal Server Error",
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "title": "Error code",
+                      "description": "The type of error",
+                      "example": "INTERNAL_SERVER_ERROR",
+                      "enum": [
+                        "INTERNAL_SERVER_ERROR"
+                      ]
+                    },
+                    "message": {
+                      "type": "string",
+                      "title": "Error message",
+                      "description": "Describes a message informing a reason for the error",
+                      "example": "Unexpected error with our service"
+                    }
+                  }
+                },
+                "examples": {
+                  "Example 1 - InternalServerError": {
+                    "value": {
+                      "code": "INTERNAL_SERVER_ERROR",
+                      "message": "Unexpected error with our service"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
