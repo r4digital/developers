@@ -2374,13 +2374,15 @@
             }
           }
         }
-      },
+      }
+    },
+    "/pix/pending-claims": {
       "get": {
         "tags": [
           "Claims"
         ],
-        "summary": "It returns a list of key claims",
-        "description": "It returns a list of key claims",
+        "summary": "It returns a list of pending claims",
+        "description": "It returns a list of pending claims",
         "parameters": [
           {
             "in": "query",
@@ -2443,7 +2445,7 @@
         ],
         "responses": {
           "200": {
-            "description": "The list of key claims",
+            "description": "The list of key pending claims",
             "content": {
               "application/json": {
                 "schema": {
@@ -2511,6 +2513,16 @@
                             "type": "object",
                             "description": "Grantor's data",
                             "properties": {
+                              "agency_number": {
+                                "type": "number",
+                                "description": "Grantor's agency number",
+                                "example": 1
+                              },
+                              "account_number": {
+                                "type": "string",
+                                "description": "Grantor's account number",
+                                "example": "12345"
+                              },
                               "account_type": {
                                 "type": "string",
                                 "description": "Grantor's account type",
@@ -2576,9 +2588,9 @@
                             ],
                             "example": "CUSTOMER_REQUEST"
                           },
-                          "cancelation_reason": {
+                          "cancellation_reason": {
                             "type": "string",
-                            "description": "Cancelation reason",
+                            "description": "Cancellation reason",
                             "enum": [
                               "CUSTOMER_REQUEST",
                               "ENDING_ACCOUNT",
@@ -2588,9 +2600,9 @@
                             ],
                             "example": "CUSTOMER_REQUEST"
                           },
-                          "canceled_by": {
+                          "cancelled_by": {
                             "type": "string",
-                            "description": "Canceled by",
+                            "description": "Cancelled by",
                             "enum": [
                               "CLAIMER",
                               "GRANTOR"
