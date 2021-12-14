@@ -3110,7 +3110,7 @@
                                 "example": 1
                               },
                               "account_number": {
-                                "type": "string",
+                                "type": "number",
                                 "description": "Grantor's account number",
                                 "example": "12345"
                               },
