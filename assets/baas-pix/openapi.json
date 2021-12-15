@@ -2006,7 +2006,7 @@
     "/pix/claims": {
       "post": {
         "tags": [
-          "Claim"
+          "Claims"
         ],
         "summary": "Create a claim",
         "description": "It Returns the created claim",
@@ -2377,7 +2377,7 @@
       },
       "get": {
         "tags": [
-          "Claim"
+          "Claims"
         ],
         "summary": "Get a list of claims",
         "description": "Get a list of claims for a specific account",
@@ -3030,7 +3030,6 @@
             "schema": {
               "type": "number"
             },
-            "required": true,
             "description": "The register limit"
           }
         ],
