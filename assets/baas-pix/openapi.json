@@ -2093,6 +2093,18 @@
                       ],
                       "example": "CUSTOMER_REQUEST"
                     },
+                    "status": {
+                      "type": "string",
+                      "description": "Status of claim",
+                      "example": "OPEN",
+                      "enum": [
+                        "OPEN",
+                        "WAITING_RESOLUTION",
+                        "CONFIRMED",
+                        "CANCELED",
+                        "COMPLETED"
+                      ]
+                    },
                     "cancellation_reason": {
                       "type": "string",
                       "description": "Cancellation reason",
