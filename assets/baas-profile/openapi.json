@@ -1084,7 +1084,6 @@
                   "address": {
                     "type": "object",
                     "required": [
-                      "type",
                       "uf",
                       "city",
                       "district",
@@ -1099,13 +1098,6 @@
                     ],
                     "description": "Address from holder details.\n",
                     "properties": {
-                      "type": {
-                        "type": "string",
-                        "enum": [
-                          "RESIDENTIAL",
-                          "MAILING"
-                        ]
-                      },
                       "uf": {
                         "type": "string",
                         "description": "The state of the person.",
