@@ -863,7 +863,6 @@
                     "description": "Reason to remove a key.\n",
                     "enum": [
                       "CUSTOMER_REQUEST",
-                      "INACTIVITY",
                       "FRAUD",
                       "RECONCILIATION"
                     ],
