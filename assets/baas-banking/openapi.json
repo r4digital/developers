@@ -403,10 +403,6 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "name": {
-                    "type": "string",
-                    "example": "Jos\u00e9 Silva"
-                  },
                   "account_type": {
                     "type": "string",
                     "enum": [
@@ -418,14 +414,6 @@
                     ],
                     "example": "PAYMENT_ACCOUNT"
                   },
-                  "document_type": {
-                    "type": "string",
-                    "enum": [
-                      "CPF",
-                      "CNPJ"
-                    ],
-                    "example": "CPF"
-                  },
                   "client_code": {
                     "type": "number",
                     "example": 12345
@@ -436,9 +424,7 @@
                   }
                 },
                 "required": [
-                  "name",
                   "account_type",
-                  "document_type",
                   "client_code",
                   "document_number"
                 ]
