@@ -139,11 +139,6 @@
                               "type": "string",
                               "example": "Marie"
                             },
-                            "nationality": {
-                              "type": "string",
-                              "description": "The nationality of the parent.",
-                              "example": "Brasileiro"
-                            },
                             "document_number": {
                               "type": "string",
                               "description": "The value of Document.",
@@ -591,11 +586,6 @@
                             "name": {
                               "type": "string",
                               "example": "Marie"
-                            },
-                            "nationality": {
-                              "type": "string",
-                              "description": "The nationality of the parent.",
-                              "example": "Brasileiro"
                             },
                             "document_number": {
                               "type": "string",
@@ -1053,11 +1043,6 @@
                       "name": {
                         "type": "string",
                         "example": "Marie"
-                      },
-                      "nationality": {
-                        "type": "string",
-                        "description": "The nationality of the parent.",
-                        "example": "Brasileiro"
                       },
                       "document_number": {
                         "type": "string",
