@@ -2609,6 +2609,11 @@
                                 "description": "Owner's account number",
                                 "example": 531
                               },
+                              "account_digit": {
+                                "type": "number",
+                                "description": "Owner's account digit",
+                                "example": 1
+                              },
                               "account_opening_date": {
                                 "type": "number",
                                 "description": "Account opening date",
@@ -2661,8 +2666,13 @@
                                   },
                                   "account_number": {
                                     "type": "number",
-                                    "description": "Owner's account number",
+                                    "description": "Grantor's account number",
                                     "example": 2314
+                                  },
+                                  "account_digit": {
+                                    "type": "number",
+                                    "description": "Grantor's account digit",
+                                    "example": 1
                                   },
                                   "account_opening_date": {
                                     "type": "number",
@@ -3075,7 +3085,7 @@
                       "items": {
                         "type": "object",
                         "properties": {
-                          "claim": {
+                          "reason": {
                             "type": "string",
                             "description": "Claim's type",
                             "enum": [
@@ -3110,6 +3120,42 @@
                             ],
                             "example": "CPF"
                           },
+                          "ispb": {
+                            "type": "number",
+                            "description": "ISPB number",
+                            "example": 11476673
+                          },
+                          "agency_number": {
+                            "type": "number",
+                            "description": "Owner's agency number",
+                            "example": 23
+                          },
+                          "account_number": {
+                            "type": "number",
+                            "description": "Owner's account number",
+                            "example": 2451
+                          },
+                          "account_digit": {
+                            "type": "number",
+                            "description": "Owner's account digit",
+                            "example": 0
+                          },
+                          "account_type": {
+                            "type": "string",
+                            "description": "Grantor's account type",
+                            "enum": [
+                              "CHECKING_ACCOUNT",
+                              "SALARY_ACCOUNT",
+                              "SAVINGS_ACCOUNT",
+                              "PAYMENT_ACCOUNT"
+                            ],
+                            "example": "PAYMENT_ACCOUNT"
+                          },
+                          "account_opening_date": {
+                            "type": "string",
+                            "description": "Owner's account opening date",
+                            "example": "2021-12-01T19:15:11.006Z"
+                          },
                           "document_type": {
                             "type": "string",
                             "enum": [
@@ -3124,6 +3170,11 @@
                             "description": "Owner's document number",
                             "example": "31851631097"
                           },
+                          "grantor_ispb": {
+                            "type": "number",
+                            "description": "ISPB Grantor",
+                            "example": 12421
+                          },
                           "grantor": {
                             "type": "object",
                             "description": "Grantor's data",
@@ -3136,7 +3187,12 @@
                               "account_number": {
                                 "type": "number",
                                 "description": "Grantor's account number",
-                                "example": "12345"
+                                "example": 12345
+                              },
+                              "account_digit": {
+                                "type": "number",
+                                "description": "Grantor's account digit",
+                                "example": 1
                               },
                               "account_type": {
                                 "type": "string",
@@ -3205,7 +3261,7 @@
                           },
                           "cancellation_reason": {
                             "type": "string",
-                            "description": "Cancellation reason",
+                            "description": "Cancelation reason",
                             "enum": [
                               "CUSTOMER_REQUEST",
                               "ENDING_ACCOUNT",
@@ -3585,6 +3641,11 @@
                           "type": "number",
                           "description": "Owner's account number",
                           "example": 91092
+                        },
+                        "account_digit": {
+                          "type": "number",
+                          "description": "Owner's account digit",
+                          "example": 1
                         },
                         "account_opening_date": {
                           "type": "number",
