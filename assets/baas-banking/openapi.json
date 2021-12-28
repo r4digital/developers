@@ -1781,9 +1781,15 @@
                             "example": "e363aa8b-5b4d-0aba-920d-54c1afce2643"
                           },
                           "value": {
-                            "type": "integer",
+                            "type": "number",
                             "description": "Statement value.",
                             "example": 160
+                          },
+                          "current_balance": {
+                            "type": "number",
+                            "nullable": true,
+                            "description": "Balance value after transaction.",
+                            "example": 840
                           },
                           "history_code": {
                             "type": "integer",
