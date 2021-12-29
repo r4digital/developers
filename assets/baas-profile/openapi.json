@@ -954,8 +954,6 @@
                       "document_number",
                       "secondary_document_number",
                       "secondary_document_type",
-                      "uf",
-                      "city",
                       "marital_status",
                       "nationality",
                       "birth_date",
@@ -985,16 +983,6 @@
                           "CNH",
                           "RG"
                         ]
-                      },
-                      "uf": {
-                        "type": "string",
-                        "description": "The state of the document.",
-                        "example": "SP"
-                      },
-                      "city": {
-                        "type": "string",
-                        "description": "The city of the document.",
-                        "example": "S\u00e3o Paulo"
                       },
                       "marital_status": {
                         "type": "string",
