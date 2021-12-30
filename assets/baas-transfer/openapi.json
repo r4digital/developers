@@ -7,7 +7,7 @@
   },
   "tags": [
     {
-      "name": "transfer"
+      "name": "Transfer"
     }
   ],
   "security": [
@@ -22,7 +22,7 @@
         "operationId": "transfer",
         "description": "Request for transfer from a baas account to an external bank account",
         "tags": [
-          "transfer"
+          "Transfer"
         ],
         "requestBody": {
           "description": "Send Transfer payload",
@@ -261,32 +261,121 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "error": {
-                      "type": "object",
+                  "oneOf": [
+                    {
+                      "title": "Business Day Only",
                       "properties": {
-                        "code": {
-                          "type": "string",
-                          "title": "Error code",
-                          "example": "VALIDATION_FAILED",
-                          "enum": [
-                            "VALIDATION_FAILED"
-                          ]
-                        },
-                        "message": {
-                          "type": "string",
-                          "title": "Error message",
-                          "description": "Bad Request"
-                        },
-                        "status_code": {
-                          "type": "number",
-                          "description": "400",
-                          "example": "400"
+                        "error": {
+                          "type": "object",
+                          "properties": {
+                            "code": {
+                              "type": "string",
+                              "title": "Error code",
+                              "example": "BUSINESS_DAY_ONLY_ERROR",
+                              "enum": [
+                                "BUSINESS_DAY_ONLY_ERROR"
+                              ]
+                            },
+                            "message": {
+                              "type": "string",
+                              "title": "Error message",
+                              "description": "The current day is not a business day"
+                            },
+                            "status_code": {
+                              "type": "number",
+                              "description": "400",
+                              "example": "400"
+                            }
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "title": "Time Out of Range",
+                      "properties": {
+                        "error": {
+                          "type": "object",
+                          "properties": {
+                            "code": {
+                              "type": "string",
+                              "title": "Error code",
+                              "example": "TIME_OUT_OF_RANGE",
+                              "enum": [
+                                "TIME_OUT_OF_RANGE"
+                              ]
+                            },
+                            "message": {
+                              "type": "string",
+                              "title": "Error message",
+                              "description": "The current time is out of range"
+                            },
+                            "status_code": {
+                              "type": "number",
+                              "description": "400",
+                              "example": "400"
+                            }
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "title": "Invalid Recipient Information",
+                      "properties": {
+                        "error": {
+                          "type": "object",
+                          "properties": {
+                            "code": {
+                              "type": "string",
+                              "title": "Error code",
+                              "example": "INVALID_RECIPIENT_INFORMATION",
+                              "enum": [
+                                "INVALID_RECIPIENT_INFORMATION"
+                              ]
+                            },
+                            "message": {
+                              "type": "string",
+                              "title": "Error message",
+                              "description": "Divergence in recipient's document number"
+                            },
+                            "status_code": {
+                              "type": "number",
+                              "description": "400",
+                              "example": "400"
+                            }
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "title": "Bad Request",
+                      "properties": {
+                        "error": {
+                          "type": "object",
+                          "properties": {
+                            "code": {
+                              "type": "string",
+                              "title": "Error code",
+                              "example": "VALIDATION_FAILED",
+                              "enum": [
+                                "VALIDATION_FAILED"
+                              ]
+                            },
+                            "message": {
+                              "type": "string",
+                              "title": "Error message",
+                              "description": "Bad Request",
+                              "example": "Bad Request"
+                            },
+                            "status_code": {
+                              "type": "number",
+                              "description": "400",
+                              "example": "400"
+                            }
+                          }
                         }
                       }
                     }
-                  }
+                  ]
                 }
               }
             }
@@ -552,7 +641,7 @@
         "operationId": "transfers",
         "description": "Request for get all transfers from a baas-transfer without occurrences and with cursor.",
         "tags": [
-          "transfer"
+          "Transfer"
         ],
         "requestBody": {
           "description": "All Transfer and cursor in payload",
@@ -1006,7 +1095,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
+                  "title": "Bad Request",
                   "properties": {
                     "error": {
                       "type": "object",
@@ -1022,7 +1111,8 @@
                         "message": {
                           "type": "string",
                           "title": "Error message",
-                          "description": "Bad Request"
+                          "description": "Bad Request",
+                          "example": "Bad Request"
                         },
                         "status_code": {
                           "type": "number",
@@ -1189,7 +1279,7 @@
         "summary": "Transfer/id",
         "description": "Retrieves a transfer response for given account id",
         "tags": [
-          "transfer"
+          "Transfer"
         ],
         "security": [
           {
@@ -1474,7 +1564,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
+                  "title": "Bad Request",
                   "properties": {
                     "error": {
                       "type": "object",
@@ -1490,7 +1580,8 @@
                         "message": {
                           "type": "string",
                           "title": "Error message",
-                          "description": "Bad Request"
+                          "description": "Bad Request",
+                          "example": "Bad Request"
                         },
                         "status_code": {
                           "type": "number",
@@ -1833,7 +1924,7 @@
         "content": {
           "application/json": {
             "schema": {
-              "type": "object",
+              "title": "Bad Request",
               "properties": {
                 "error": {
                   "type": "object",
@@ -1849,7 +1940,8 @@
                     "message": {
                       "type": "string",
                       "title": "Error message",
-                      "description": "Bad Request"
+                      "description": "Bad Request",
+                      "example": "Bad Request"
                     },
                     "status_code": {
                       "type": "number",
