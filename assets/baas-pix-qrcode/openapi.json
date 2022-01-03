@@ -1,0 +1,53 @@
+{
+  "openapi": "3.0.2",
+  "info": {
+    "version": "0.0.1",
+    "title": "Baas Pix QR Code",
+    "description": "<h1> Baas Pix QR Code </h1>\n\nPix QR Code API\n"
+  },
+  "servers": [
+    {
+      "description": "Development",
+      "url": "https://develop.r4digital.cloud/pix-qrcode"
+    },
+    {
+      "description": "Production",
+      "url": "https://api.r4digital.cloud/pix-qrcode"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Pix QR Code"
+    }
+  ],
+  "security": [
+    {
+      "BearerAuth": []
+    }
+  ],
+  "paths": {
+    "/status": {
+      "get": {
+        "tags": [
+          "Pix QR Code"
+        ],
+        "summary": "Health check",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "bearerFormat": "JWT",
+        "scheme": "bearer",
+        "description": "Bearer auth (https://developer.mozilla.org/en-US/docs/Web/HTTP/Authentication)."
+      }
+    }
+  }
+}
