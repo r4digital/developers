@@ -2080,8 +2080,8 @@
                   "description": "Describes the properties of claim.",
                   "required": [
                     "claim_id",
-                    "resolved_at",
-                    "updated_at"
+                    "resolution_limit",
+                    "completion_limit"
                   ],
                   "properties": {
                     "claim_id": {
@@ -2133,9 +2133,9 @@
                       ],
                       "example": "CLAIMER"
                     },
-                    "resolved_at": {
+                    "resolution_limit": {
                       "type": "string",
-                      "description": "Claim resolution date.",
+                      "description": "Claim resolution date limit.",
                       "example": "2021-10-31T12:56:23.123Z"
                     },
                     "concluded_at": {
@@ -2143,9 +2143,9 @@
                       "description": "Claim conclusion date.",
                       "example": "2021-10-31T12:56:23.123Z"
                     },
-                    "updated_at": {
+                    "completion_limit": {
                       "type": "string",
-                      "description": "Claim update date.",
+                      "description": "Claim completion date limit.",
                       "example": "2021-10-31T12:56:23.123Z"
                     }
                   }
@@ -2547,8 +2547,8 @@
                               "ispb_grantor",
                               "claim_id",
                               "status",
-                              "resolved_at",
-                              "updated_at"
+                              "resolution_limit",
+                              "completion_limit"
                             ],
                             "properties": {
                               "reason": {
@@ -2759,20 +2759,20 @@
                                   "CLAIMER"
                                 ]
                               },
-                              "resolved_at": {
+                              "resolution_limit": {
                                 "type": "string",
-                                "description": "Claim resolved date",
-                                "example": "2021-07-23T16:58:27.000Z"
+                                "description": "Claim resolution date limit.",
+                                "example": "2021-10-31T12:56:23.123Z"
                               },
                               "concluded_at": {
                                 "type": "string",
-                                "description": "Claim conclusion date;",
-                                "example": "2021-07-23T16:58:27.000Z"
+                                "description": "Claim conclusion date.",
+                                "example": "2021-10-31T12:56:23.123Z"
                               },
-                              "updated_at": {
+                              "completion_limit": {
                                 "type": "string",
-                                "description": "Claim modified date",
-                                "example": "2021-07-23T16:58:27.000Z"
+                                "description": "Claim completion date limit.",
+                                "example": "2021-10-31T12:56:23.123Z"
                               }
                             }
                           }
@@ -3280,20 +3280,20 @@
                             ],
                             "example": "CLAIMER"
                           },
-                          "resolved_at": {
+                          "resolution_limit": {
                             "type": "string",
-                            "description": "Resolution date",
-                            "example": "2021-12-01T19:15:11.006Z"
+                            "description": "Claim resolution date limit.",
+                            "example": "2021-10-31T12:56:23.123Z"
                           },
                           "concluded_at": {
                             "type": "string",
-                            "description": "Conclusion date",
-                            "example": "2021-12-01T19:15:11.006Z"
+                            "description": "Claim conclusion date.",
+                            "example": "2021-10-31T12:56:23.123Z"
                           },
-                          "updated_at": {
+                          "completion_limit": {
                             "type": "string",
-                            "description": "Last updated date",
-                            "example": "2021-12-01T19:15:11.006Z"
+                            "description": "Claim completion date limit.",
+                            "example": "2021-10-31T12:56:23.123Z"
                           }
                         }
                       }
@@ -3530,8 +3530,8 @@
                     "ispb_grantor",
                     "claim_id",
                     "status",
-                    "resolved_at",
-                    "updated_at"
+                    "resolution_limit",
+                    "completion_limit"
                   ],
                   "properties": {
                     "reason": {
@@ -3732,20 +3732,20 @@
                       ],
                       "example": "GRANTOR"
                     },
-                    "resolved_at": {
+                    "resolution_limit": {
                       "type": "string",
-                      "description": "Claim resolved date",
-                      "example": "2021-07-23T16:58:27.000Z"
+                      "description": "Claim resolution date limit.",
+                      "example": "2021-10-31T12:56:23.123Z"
                     },
                     "concluded_at": {
                       "type": "string",
-                      "description": "Claim conclusion date;",
-                      "example": "2021-07-23T16:58:27.000Z"
+                      "description": "Claim conclusion date.",
+                      "example": "2021-10-31T12:56:23.123Z"
                     },
-                    "updated_at": {
+                    "completion_limit": {
                       "type": "string",
-                      "description": "Claim modified date",
-                      "example": "2021-07-23T16:58:27.000Z"
+                      "description": "Claim completion date limit.",
+                      "example": "2021-10-31T12:56:23.123Z"
                     }
                   }
                 }
@@ -3933,8 +3933,8 @@
                   "description": "Describes the properties of claim.",
                   "required": [
                     "claim_id",
-                    "resolved_at",
-                    "updated_at"
+                    "resolution_limit",
+                    "completion_limit"
                   ],
                   "properties": {
                     "claim_id": {
@@ -3986,9 +3986,9 @@
                       ],
                       "example": "CLAIMER"
                     },
-                    "resolved_at": {
+                    "resolution_limit": {
                       "type": "string",
-                      "description": "Claim resolution date.",
+                      "description": "Claim resolution date limit.",
                       "example": "2021-10-31T12:56:23.123Z"
                     },
                     "concluded_at": {
@@ -3996,9 +3996,9 @@
                       "description": "Claim conclusion date.",
                       "example": "2021-10-31T12:56:23.123Z"
                     },
-                    "updated_at": {
+                    "completion_limit": {
                       "type": "string",
-                      "description": "Claim update date.",
+                      "description": "Claim completion date limit.",
                       "example": "2021-10-31T12:56:23.123Z"
                     }
                   }
