@@ -3,7 +3,7 @@
   "info": {
     "version": "1.0.0",
     "title": "Baas Pix",
-    "description": "**Description**: Api responsible to managing pix keys and pix transfers\n\n  <a name=\"key_kind\"></a>\n\n  ## Key kind\n\n  <table>\n    <tr>\n      <td>Kind</td>\n      <td>Description</td>\n    </tr>\n    <tr>\n      <td>`CELLPHONE`</td>\n      <td>Cellphone number.</td>\n    </tr>\n    <tr>\n      <td>`CPF`</td>\n      <td>CPF number.</td>\n    </tr>\n    <tr>\n      <td>`CNPJ`</td>\n      <td>CNPJ number.</td>\n    </tr>\n    <tr>\n      <td>`EMAIL`</td>\n      <td>E-mail address.</td>\n    </tr>\n    <tr>\n      <td>`VIRTUAL`</td>\n      <td>Random key.</td>\n    </tr>\n  </table>\n\n# Errors\nAccount Middleware uses [HTTP response status codes](https://en.wikipedia.org/wiki/List_of_HTTP_status_codes) to indicate the success or failure of your API requests.\nIn general, there are three status code ranges you can expect:\n- `2xx` success status codes confirm that your request worked as expected\n- `4xx` error status codes indicate an error because of the information provided (e.g., a required parameter was not provided)\n- `5xx` error status codes are rare and indicate an error with R4's servers\n\n## HTTP Status code summary\nExtracted from [Stripe API codes](https://stripe.com/docs/api/errors)\n- `200 - OK` Everything worked as expected.\n- `400 - Bad Request` The request was unacceptable, often due to missing a required parameter.\n- `401 - Unauthorized` No valid API key provided.\n- `403 - Forbidden` The API key doesn't have permissions to perform the request.\n- `404 - Not Found` The requested resource doesn't exist.\n- `429 - Too Many Requests` Too many requests hit the API too quickly. We recommend an exponential backoff of your requests.\n- `500, 502, 503, 504 - Server Errors` Something went wrong on R4's end.\n## Error codes\nBelow is a list of possible error codes that can be returned:\n<table>\n  <tr>\n    <td>Code</td>\n    <td>Description</td>\n  </tr>\n  <tr>\n    <td>`ACCOUNT_NOT_FOUND`</td>\n    <td>The account informed was not found.</td>\n  </tr>\n  <tr>\n    <td>`PARTNERS_NOT_FOUND`</td>\n    <td>Partners was not found.</td>\n  </tr>\n  <tr>\n    <td>`INVALID_CELLPHONE`</td>\n    <td>The provided cellphone is not valid.</td>\n  </tr>\n  <tr>\n    <td>`INVALID_CNPJ`</td>\n    <td>The provided CNPJ is not valid.</td>\n  </tr>\n  <tr>\n    <td>`INVALID_CPF`</td>\n    <td>The provided CPF is not valid.</td>\n  </tr>\n  <tr>\n    <td>`INVALID_EMAIL`</td>\n    <td>The provided email is not valid.</td>\n  </tr>\n</table>\n"
+    "description": "**Description**: Api responsible to managing pix keys and pix transfers\n\n  <a name=\"key_kind\"></a>\n\n  ## Key kind\n\n  <table>\n    <tr>\n      <td>Kind</td>\n      <td>Description</td>\n    </tr>\n    <tr>\n      <td>`CELLPHONE`</td>\n      <td>Cellphone number.</td>\n    </tr>\n    <tr>\n      <td>`CPF`</td>\n      <td>CPF number.</td>\n    </tr>\n    <tr>\n      <td>`CNPJ`</td>\n      <td>CNPJ number.</td>\n    </tr>\n    <tr>\n      <td>`EMAIL`</td>\n      <td>E-mail address.</td>\n    </tr>\n    <tr>\n      <td>`VIRTUAL`</td>\n      <td>Random key.</td>\n    </tr>\n  </table>\n\n# Errors\nAccount Middleware uses [HTTP response status codes](https://en.wikipedia.org/wiki/List_of_HTTP_status_codes) to indicate the success or failure of your API requests.\nIn general, there are three status code ranges you can expect:\n- `2xx` success status codes confirm that your request worked as expected\n- `4xx` error status codes indicate an error because of the information provided (e.g., a required parameter was not provided)\n- `5xx` error status codes are rare and indicate an error with R4's servers\n\n## HTTP Status code summary\nExtracted from [Stripe API codes](https://stripe.com/docs/api/errors)\n- `200 - OK` Everything worked as expected.\n- `400 - Bad Request` The request was unacceptable, often due to missing a required parameter.\n- `401 - Unauthorized` No valid API key provided.\n- `403 - Forbidden` The API key doesn't have permissions to perform the request.\n- `404 - Not Found` The requested resource doesn't exist.\n- `429 - Too Many Requests` Too many requests hit the API too quickly. We recommend an exponential backoff of your requests.\n- `500, 502, 503, 504 - Server Errors` Something went wrong on R4's end.\n## Error codes\nBelow is a list of possible error codes that can be returned:\n<table>\n  <tr>\n    <td>Code</td>\n    <td>Description</td>\n  </tr>\n  <tr>\n    <td>`ACCOUNT_NOT_FOUND`</td>\n    <td>The account informed was not found.</td>\n  </tr>\n  <tr>\n    <td>`PARTNERS_NOT_FOUND`</td>\n    <td>Partners was not found.</td>\n  </tr>\n  <tr>\n    <td>`INVALID_CELLPHONE`</td>\n    <td>The provided cellphone is not valid.</td>\n  </tr>\n  <tr>\n    <td>`INVALID_CNPJ`</td>\n    <td>The provided CNPJ is not valid.</td>\n  </tr>\n  <tr>\n    <td>`INVALID_CPF`</td>\n    <td>The provided CPF is not valid.</td>\n  </tr>\n  <tr>\n    <td>`INVALID_EMAIL`</td>\n    <td>The provided email is not valid.</td>\n  </tr>\n  <tr>\n    <td>`ENTRY_LOCKED_BY_CLAIM`</td>\n    <td>There is a claim with a status other than completed or canceled for the key.</td>\n  </tr>\n</table>\n"
   },
   "tags": [
     {
@@ -108,7 +108,7 @@
             }
           },
           "400": {
-            "description": "Error with types [InvalidCPF, InvalidCNPJ, InvalidCellPhone, InvalidEmail, KeyAlreadyExists, InvalidKey, InvalidData].",
+            "description": "Error with types [InvalidCPF, InvalidCNPJ, InvalidCellPhone, InvalidEmail, KeyAlreadyExists, InvalidKey, InvalidData, EntryLockedByClaim].",
             "content": {
               "application/json": {
                 "schema": {
@@ -252,6 +252,26 @@
                           "example": "The data provided has an invalid format"
                         }
                       }
+                    },
+                    {
+                      "title": "There is a claim locking the given key",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "ENTRY_LOCKED_BY_CLAIM",
+                          "enum": [
+                            "ENTRY_LOCKED_BY_CLAIM"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "There is a claim with a status other than completed or canceled for the key"
+                        }
+                      }
                     }
                   ]
                 },
@@ -296,6 +316,12 @@
                     "value": {
                       "code": "INVALID_DATA",
                       "message": "The data provided has an invalid format"
+                    }
+                  },
+                  "Example 8 - EntryLockedByClaimError": {
+                    "value": {
+                      "code": "ENTRY_LOCKED_BY_CLAIM",
+                      "message": "There is a claim with a status other than completed or canceled for the key"
                     }
                   }
                 }
@@ -873,7 +899,7 @@
             "description": "Successfully deleted key."
           },
           "400": {
-            "description": "Error with types [InvalidDataError, InvalidKey].",
+            "description": "Error with types [InvalidDataError, InvalidKey, EntryLockedByClaim].",
             "content": {
               "application/json": {
                 "schema": {
@@ -917,6 +943,26 @@
                           "example": "There are invalid fields."
                         }
                       }
+                    },
+                    {
+                      "title": "There is a claim locking the given key",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "ENTRY_LOCKED_BY_CLAIM",
+                          "enum": [
+                            "ENTRY_LOCKED_BY_CLAIM"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "There is a claim with a status other than completed or canceled for the key"
+                        }
+                      }
                     }
                   ]
                 },
@@ -931,6 +977,12 @@
                     "value": {
                       "code": "INVALID_KEY",
                       "message": "There are invalid fields"
+                    }
+                  },
+                  "Example 3 - EntryLockedByClaim": {
+                    "value": {
+                      "code": "ENTRY_LOCKED_BY_CLAIM",
+                      "message": "There is a claim with a status other than completed or canceled for the key"
                     }
                   }
                 }
