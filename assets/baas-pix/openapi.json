@@ -2133,7 +2133,7 @@
                   "required": [
                     "claim_id",
                     "resolution_limit",
-                    "completion_limit"
+                    "updated_at"
                   ],
                   "properties": {
                     "claim_id": {
@@ -2190,14 +2190,14 @@
                       "description": "Claim resolution date limit.",
                       "example": "2021-10-31T12:56:23.123Z"
                     },
-                    "concluded_at": {
-                      "type": "string",
-                      "description": "Claim conclusion date.",
-                      "example": "2021-10-31T12:56:23.123Z"
-                    },
                     "completion_limit": {
                       "type": "string",
-                      "description": "Claim completion date limit.",
+                      "description": "Claim conclusion date limit.",
+                      "example": "2021-10-31T12:56:23.123Z"
+                    },
+                    "updated_at": {
+                      "type": "string",
+                      "description": "Claim update date.",
                       "example": "2021-10-31T12:56:23.123Z"
                     }
                   }
@@ -2600,7 +2600,7 @@
                               "claim_id",
                               "status",
                               "resolution_limit",
-                              "completion_limit"
+                              "updated_at"
                             ],
                             "properties": {
                               "reason": {
@@ -2816,14 +2816,14 @@
                                 "description": "Claim resolution date limit.",
                                 "example": "2021-10-31T12:56:23.123Z"
                               },
-                              "concluded_at": {
-                                "type": "string",
-                                "description": "Claim conclusion date.",
-                                "example": "2021-10-31T12:56:23.123Z"
-                              },
                               "completion_limit": {
                                 "type": "string",
-                                "description": "Claim completion date limit.",
+                                "description": "Claim conclusion date limit.",
+                                "example": "2021-10-31T12:56:23.123Z"
+                              },
+                              "updated_at": {
+                                "type": "string",
+                                "description": "Claim update date.",
                                 "example": "2021-10-31T12:56:23.123Z"
                               }
                             }
@@ -3337,14 +3337,14 @@
                             "description": "Claim resolution date limit.",
                             "example": "2021-10-31T12:56:23.123Z"
                           },
-                          "concluded_at": {
-                            "type": "string",
-                            "description": "Claim conclusion date.",
-                            "example": "2021-10-31T12:56:23.123Z"
-                          },
                           "completion_limit": {
                             "type": "string",
-                            "description": "Claim completion date limit.",
+                            "description": "Claim conclusion date limit.",
+                            "example": "2021-10-31T12:56:23.123Z"
+                          },
+                          "updated_at": {
+                            "type": "string",
+                            "description": "Claim update date.",
                             "example": "2021-10-31T12:56:23.123Z"
                           }
                         }
@@ -3537,7 +3537,7 @@
         }
       }
     },
-    "/claims/{id}": {
+    "/claims/{claim_id}": {
       "get": {
         "tags": [
           "Claims"
@@ -3552,7 +3552,7 @@
         "parameters": [
           {
             "in": "path",
-            "name": "id",
+            "name": "claim_id",
             "schema": {
               "type": "string"
             },
@@ -3583,23 +3583,15 @@
                     "claim_id",
                     "status",
                     "resolution_limit",
-                    "completion_limit"
+                    "updated_at"
                   ],
                   "properties": {
-                    "reason": {
-                      "type": "string",
-                      "description": "Claim reason type",
-                      "example": "PORTABILITY",
-                      "enum": [
-                        "PORTABILITY",
-                        "OWNERSHIP"
-                      ]
-                    },
                     "participation_flow": {
                       "type": "string",
                       "description": "Date and time of inclusion",
                       "example": "CLAIMER",
                       "enum": [
+                        "PORTABILITY",
                         "CLAIMER",
                         "GRANTOR"
                       ]
@@ -3789,14 +3781,14 @@
                       "description": "Claim resolution date limit.",
                       "example": "2021-10-31T12:56:23.123Z"
                     },
-                    "concluded_at": {
-                      "type": "string",
-                      "description": "Claim conclusion date.",
-                      "example": "2021-10-31T12:56:23.123Z"
-                    },
                     "completion_limit": {
                       "type": "string",
-                      "description": "Claim completion date limit.",
+                      "description": "Claim conclusion date limit.",
+                      "example": "2021-10-31T12:56:23.123Z"
+                    },
+                    "updated_at": {
+                      "type": "string",
+                      "description": "Claim update date.",
                       "example": "2021-10-31T12:56:23.123Z"
                     }
                   }
@@ -3951,7 +3943,7 @@
         }
       }
     },
-    "/pix/claims/{claim_id}/confirm": {
+    "/claims/{claim_id}/confirm": {
       "post": {
         "tags": [
           "Claims"
@@ -3986,7 +3978,7 @@
                   "required": [
                     "claim_id",
                     "resolution_limit",
-                    "completion_limit"
+                    "updated_at"
                   ],
                   "properties": {
                     "claim_id": {
@@ -4043,14 +4035,339 @@
                       "description": "Claim resolution date limit.",
                       "example": "2021-10-31T12:56:23.123Z"
                     },
-                    "concluded_at": {
+                    "completion_limit": {
                       "type": "string",
-                      "description": "Claim conclusion date.",
+                      "description": "Claim conclusion date limit.",
+                      "example": "2021-10-31T12:56:23.123Z"
+                    },
+                    "updated_at": {
+                      "type": "string",
+                      "description": "Claim update date.",
+                      "example": "2021-10-31T12:56:23.123Z"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Error with types [ValidationFailed].",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Invalid request data",
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "title": "Error code",
+                      "description": "The type of error",
+                      "example": "VALIDATION_FAILED"
+                    },
+                    "message": {
+                      "type": "string",
+                      "title": "Error message",
+                      "description": "Describes a message informing a reason for the error",
+                      "example": "Invalid request data."
+                    },
+                    "details": {
+                      "type": "array",
+                      "title": "Error details",
+                      "description": "Informs error details",
+                      "example": "Invalid request data."
+                    }
+                  }
+                },
+                "examples": {
+                  "Example 1 - ValidationFailed": {
+                    "value": {
+                      "code": "VALIDATION_FAILED",
+                      "message": "Invalid request data."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Error with types [AuthenticationError].",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Authentication error",
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "title": "Error code",
+                      "description": "The type of error",
+                      "example": "AUTHENTICATION_FAILED",
+                      "enum": [
+                        "AUTHENTICATION_FAILED"
+                      ]
+                    },
+                    "message": {
+                      "type": "string",
+                      "title": "Error message",
+                      "description": "Describes a message informing a reason for the error",
+                      "example": "Authentication failed."
+                    }
+                  }
+                },
+                "examples": {
+                  "Example 1 - AuthenticationError": {
+                    "value": {
+                      "code": "AUTHENTICATION_FAILED",
+                      "message": "Authentication failed."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Error with types [MissingProduct].",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "title": "Missing Product Permission",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "MISSING_PRODUCT_PERMISSION",
+                          "enum": [
+                            "MISSING_PRODUCT_PERMISSION"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "Missing product permission."
+                        }
+                      }
+                    }
+                  ]
+                },
+                "examples": {
+                  "Example 1 - MissingProductError": {
+                    "value": {
+                      "code": "MISSING_PRODUCT_PERMISSION",
+                      "message": "Missing product permission."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Error with types [ApplicationProductNotFound].",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Application product not found",
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "title": "Error code",
+                      "description": "The type of error",
+                      "example": "APPLICATION_PRODUCT_NOT_FOUND",
+                      "enum": [
+                        "APPLICATION_PRODUCT_NOT_FOUND"
+                      ]
+                    },
+                    "message": {
+                      "type": "string",
+                      "title": "Error message",
+                      "description": "Describes a message informing a reason for the error",
+                      "example": "Product not found for given application id."
+                    }
+                  }
+                },
+                "examples": {
+                  "Example 2 - ApplicationNotFound": {
+                    "value": {
+                      "code": "APPLICATION_PRODUCT_NOT_FOUND",
+                      "message": "Product not found for given application id."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error with internal server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Internal Server Error",
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "title": "Error code",
+                      "description": "The type of error",
+                      "example": "INTERNAL_SERVER_ERROR",
+                      "enum": [
+                        "INTERNAL_SERVER_ERROR"
+                      ]
+                    },
+                    "message": {
+                      "type": "string",
+                      "title": "Error message",
+                      "description": "Describes a message informing a reason for the error",
+                      "example": "Unexpected error with our service"
+                    }
+                  }
+                },
+                "examples": {
+                  "Example 1 - InternalServerError": {
+                    "value": {
+                      "code": "INTERNAL_SERVER_ERROR",
+                      "message": "Unexpected error with our service"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/claims/{claim_id}/cancel": {
+      "post": {
+        "tags": [
+          "Claims"
+        ],
+        "summary": "Cancel claim",
+        "description": "Returns the cancel claim",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "claim_id",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "UUID of the claim.",
+            "example": "4af9af0f-4935-454e-b3ee-af5b9d85c914"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "description": "Describes the properties to cancel the claim.",
+                "required": [
+                  "claimer",
+                  "reason"
+                ],
+                "properties": {
+                  "reason": {
+                    "type": "string",
+                    "description": "Cancellation reason.",
+                    "enum": [
+                      "CUSTOMER_REQUEST",
+                      "ENDING_ACCOUNT",
+                      "FRAUD",
+                      "ANSWER_DEFAULT",
+                      "RECONCILIATION"
+                    ],
+                    "example": "CUSTOMER_REQUEST"
+                  },
+                  "claimer": {
+                    "type": "boolean",
+                    "description": "Define if the user is a claimer",
+                    "example": true
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Cancelled claim.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "description": "Describes the properties of claim.",
+                  "required": [
+                    "claim_id",
+                    "resolution_limit",
+                    "updated_at"
+                  ],
+                  "properties": {
+                    "claim_id": {
+                      "type": "string",
+                      "description": "Claim id.",
+                      "example": "d630c863-bfa4-4546-ada0-3b501c3a1572"
+                    },
+                    "confirmation_reason": {
+                      "type": "string",
+                      "description": "Confirmation reason",
+                      "enum": [
+                        "CUSTOMER_REQUEST",
+                        "ENDING_ACCOUNT",
+                        "FRAUD",
+                        "ANSWER_DEFAULT"
+                      ],
+                      "example": "CUSTOMER_REQUEST"
+                    },
+                    "status": {
+                      "type": "string",
+                      "description": "Status of claim",
+                      "example": "CANCELLED",
+                      "enum": [
+                        "OPEN",
+                        "WAITING_RESOLUTION",
+                        "CONFIRMED",
+                        "CANCELED",
+                        "COMPLETED"
+                      ]
+                    },
+                    "cancellation_reason": {
+                      "type": "string",
+                      "description": "Cancellation reason",
+                      "enum": [
+                        "CUSTOMER_REQUEST",
+                        "ENDING_ACCOUNT",
+                        "FRAUD",
+                        "ANSWER_DEFAULT",
+                        "RECONCILIATION"
+                      ],
+                      "example": "CUSTOMER_REQUEST"
+                    },
+                    "cancelled_by": {
+                      "type": "string",
+                      "description": "The cancellation origin",
+                      "enum": [
+                        "GRANTOR",
+                        "CLAIMER"
+                      ],
+                      "example": "CLAIMER"
+                    },
+                    "resolution_limit": {
+                      "type": "string",
+                      "description": "Claim resolution date.",
                       "example": "2021-10-31T12:56:23.123Z"
                     },
                     "completion_limit": {
                       "type": "string",
-                      "description": "Claim completion date limit.",
+                      "description": "Claim conclusion date.",
+                      "example": "2021-10-31T12:56:23.123Z"
+                    },
+                    "updated_at": {
+                      "type": "string",
+                      "description": "Claim update date.",
                       "example": "2021-10-31T12:56:23.123Z"
                     }
                   }
