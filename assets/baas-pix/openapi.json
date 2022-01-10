@@ -1378,6 +1378,45 @@
               }
             }
           },
+          "400": {
+            "description": "Error with types [InvalidDataError].",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "title": "Invalid data",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "INVALID_DATA",
+                          "enum": [
+                            "INVALID_DATA"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "The data provided has an invalid format"
+                        }
+                      }
+                    }
+                  ]
+                },
+                "examples": {
+                  "Example 1 - InvalidCPFError": {
+                    "value": {
+                      "code": "INVALID_DATA",
+                      "message": "The data provided has an invalid format"
+                    }
+                  }
+                }
+              }
+            }
+          },
           "401": {
             "description": "Error with types [AuthenticationError].",
             "content": {
