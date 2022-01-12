@@ -145,14 +145,14 @@
                     "example": "6d814c28-fe73-443c-bfe0-48d518aa32fa"
                   },
                   "format": {
-                    "type": "integer",
+                    "type": "string",
                     "enum": [
-                      0,
-                      1,
-                      2
+                      "IMAGE",
+                      "PAYLOAD_BASE_64",
+                      "IMAGE_AND_PAYLOAD_BASE_64"
                     ],
-                    "description": "Sets request return format:\n* Format 0: Static QR Code image\n* Format 1: Static QR Code payload\n* Format 2: Static QR Code image and payload\n",
-                    "example": 2
+                    "description": "Sets request return format:\n* IMAGE: Static QR Code image\n* PAYLOAD_BASE_64: Static QR Code payload\n* IMAGE_AND_PAYLOAD_BASE_64: Static QR Code image and payload\n",
+                    "example": "IMAGE_AND_PAYLOAD_BASE_64"
                   },
                   "key": {
                     "type": "string",
