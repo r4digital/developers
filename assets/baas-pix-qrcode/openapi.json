@@ -26,6 +26,807 @@
     }
   ],
   "paths": {
+    "/decode": {
+      "post": {
+        "tags": [
+          "Decode QR Code"
+        ],
+        "summary": "Decode QR Code",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "description": "Params to decode a QR Code",
+                "required": [
+                  "payload",
+                  "document_number"
+                ],
+                "properties": {
+                  "payload": {
+                    "type": "string",
+                    "description": "Payload decode from QR Code.",
+                    "format": "base64",
+                    "example": "MDAwMjAxMjYzMzAwMTRici5nb3YuYmNiLnBpeDAxMTE5MDIyNjM5NTA5MDUyMDQwMDAwNTMwMzk4NjU0MDQyLjAwNTgwMkJSNTkxM0Z1bGFubyBkZSBUYWw2MDEyUE9SVE8gQUxFR1JFNjIwNzA1MDMqKio2MzA0RDNDQg"
+                  },
+                  "document_number": {
+                    "type": "string",
+                    "maxLength": 50,
+                    "example": "30937116068"
+                  },
+                  "city_code": {
+                    "type": "string",
+                    "minLength": 5,
+                    "example": "string"
+                  },
+                  "intended_payment_date": {
+                    "type": "string",
+                    "example": "2021-01-31",
+                    "format": "yyyy-mm-dd"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Static QR Code successfully created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "type": "object",
+                      "description": "Dynamic QR Code",
+                      "required": [
+                        "end_to_end_id",
+                        "qr_code"
+                      ],
+                      "properties": {
+                        "end_to_end_id": {
+                          "type": "string",
+                          "maxLength": 32
+                        },
+                        "qr_code": {
+                          "type": "object",
+                          "description": "Decoded QR code properties",
+                          "required": [
+                            "type",
+                            "key",
+                            "review",
+                            "recipient",
+                            "original_value",
+                            "city",
+                            "created_at",
+                            "scanned_at",
+                            "status"
+                          ],
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "enum": [
+                                "STATIC",
+                                "DYNAMIC",
+                                "DYNAMIC_WITH_DUE_DATE"
+                              ]
+                            },
+                            "key": {
+                              "type": "string",
+                              "description": "Pix key",
+                              "minLength": 5,
+                              "maxLength": 77,
+                              "example": "30937116068"
+                            },
+                            "category_code": {
+                              "type": "string",
+                              "description": "Recipient category code",
+                              "maxLength": 4,
+                              "default": "0000",
+                              "example": "0000"
+                            },
+                            "city": {
+                              "type": "string",
+                              "maxLength": 15,
+                              "example": "RIO DE JANEIRO"
+                            },
+                            "zip_code": {
+                              "type": "string",
+                              "minLength": 5,
+                              "maxLength": 10,
+                              "example": "90485-075"
+                            },
+                            "review": {
+                              "type": "integer",
+                              "maxLength": 5
+                            },
+                            "original_value": {
+                              "type": "number",
+                              "format": "double",
+                              "description": "Transaction value",
+                              "example": 4587.92
+                            },
+                            "allow_value_alteration": {
+                              "type": "boolean"
+                            },
+                            "text_to_payer": {
+                              "type": "string",
+                              "maxLength": 140
+                            },
+                            "recipient": {
+                              "type": "object",
+                              "required": [
+                                "ispb",
+                                "type",
+                                "account_type",
+                                "account_number"
+                              ],
+                              "properties": {
+                                "ispb": {
+                                  "type": "integer",
+                                  "maxLength": 8
+                                },
+                                "name": {
+                                  "type": "string",
+                                  "maxLength": 25
+                                },
+                                "type": {
+                                  "type": "string",
+                                  "enum": [
+                                    "NATURAL",
+                                    "LEGAL"
+                                  ]
+                                },
+                                "document_number": {
+                                  "type": "string",
+                                  "maxLength": 14
+                                },
+                                "conciliation_id": {
+                                  "type": "string",
+                                  "maxLength": 25
+                                },
+                                "agency_number": {
+                                  "type": "string",
+                                  "maxLength": 4
+                                },
+                                "account_number": {
+                                  "type": "string",
+                                  "maxLength": 20
+                                },
+                                "account_type": {
+                                  "type": "string",
+                                  "enum": [
+                                    "CHECKING_ACCOUNT",
+                                    "SALARY_ACCOUNT",
+                                    "SAVINGS_ACCOUNT",
+                                    "PAYMENT_ACCOUNT"
+                                  ]
+                                }
+                              }
+                            },
+                            "payer": {
+                              "type": "object",
+                              "properties": {
+                                "name": {
+                                  "type": "string",
+                                  "maxLength": 25
+                                },
+                                "document_number": {
+                                  "type": "string",
+                                  "maxLength": 14
+                                }
+                              }
+                            },
+                            "modality": {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string",
+                                  "enum": [
+                                    "WITHDRAW",
+                                    "CHANGE"
+                                  ]
+                                },
+                                "value": {
+                                  "type": "number",
+                                  "format": "double",
+                                  "example": 4587.92
+                                },
+                                "allow_value_alteration": {
+                                  "type": "boolean"
+                                },
+                                "ispb_pss": {
+                                  "type": "integer",
+                                  "description": "Service provider",
+                                  "maxLength": 8,
+                                  "example": "44568458"
+                                },
+                                "agent": {
+                                  "type": "string",
+                                  "enum": [
+                                    "WITHDRAW_SERVICE_PROVIDER",
+                                    "COMMERCIAL_ESTABLISHMENT",
+                                    "ANY_OTHER_TYPE_OF_LEGAL_PERSON"
+                                  ]
+                                }
+                              }
+                            },
+                            "additional_data": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "name": {
+                                    "type": "string",
+                                    "maxLength": 100
+                                  },
+                                  "value": {
+                                    "type": "string",
+                                    "maxLength": 400
+                                  }
+                                }
+                              }
+                            },
+                            "qr_code_expiration_time": {
+                              "type": "integer",
+                              "maxLength": 10,
+                              "default": 86400
+                            },
+                            "created_at": {
+                              "type": "string",
+                              "example": "2021-01-31T15:33:17.000Z"
+                            },
+                            "scanned_at": {
+                              "type": "string",
+                              "example": "2021-02-05T10:25:47.000Z"
+                            },
+                            "psp_recipient_url": {
+                              "type": "string",
+                              "maxLength": 124
+                            },
+                            "reusable": {
+                              "type": "boolean"
+                            },
+                            "status": {
+                              "type": "string",
+                              "enum": [
+                                "ACTIVE",
+                                "DONE",
+                                "REMOVED_BY_RECIPIENT",
+                                "REMOVED_BY_PSP"
+                              ]
+                            }
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "description": "Dynamic QR Code with due date",
+                      "required": [
+                        "end_to_end_id",
+                        "qr_code"
+                      ],
+                      "properties": {
+                        "end_to_end_id": {
+                          "type": "string",
+                          "maxLength": 32
+                        },
+                        "qr_code": {
+                          "type": "object",
+                          "description": "Decoded QR code properties",
+                          "required": [
+                            "type",
+                            "key",
+                            "review",
+                            "recipient",
+                            "final_value",
+                            "due_date",
+                            "days_after_due_date",
+                            "created_at",
+                            "scanned_at",
+                            "status"
+                          ],
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "enum": [
+                                "STATIC",
+                                "DYNAMIC",
+                                "DYNAMIC_WITH_DUE_DATE"
+                              ]
+                            },
+                            "key": {
+                              "type": "string",
+                              "description": "Pix key",
+                              "minLength": 5,
+                              "maxLength": 77,
+                              "example": "30937116068"
+                            },
+                            "category_code": {
+                              "type": "string",
+                              "description": "Recipient category code",
+                              "maxLength": 4,
+                              "default": "0000",
+                              "example": "0000"
+                            },
+                            "review": {
+                              "type": "integer",
+                              "maxLength": 5
+                            },
+                            "original_value": {
+                              "type": "number",
+                              "format": "double",
+                              "description": "Transaction value",
+                              "example": 500
+                            },
+                            "text_to_payer": {
+                              "type": "string",
+                              "maxLength": 140
+                            },
+                            "recipient": {
+                              "type": "object",
+                              "properties": {
+                                "ispb": {
+                                  "type": "integer",
+                                  "maxLength": 8
+                                },
+                                "name": {
+                                  "type": "string",
+                                  "maxLength": 25
+                                },
+                                "document_number": {
+                                  "type": "string",
+                                  "maxLength": 14
+                                },
+                                "business_name": {
+                                  "type": "string",
+                                  "maxLength": 100
+                                },
+                                "address": {
+                                  "type": "string",
+                                  "maxLength": 150
+                                },
+                                "city": {
+                                  "type": "string",
+                                  "maxLength": 15,
+                                  "example": "RIO DE JANEIRO"
+                                },
+                                "state": {
+                                  "type": "string",
+                                  "maxLength": 2
+                                },
+                                "zip_code": {
+                                  "type": "string",
+                                  "minLength": 5,
+                                  "maxLength": 10,
+                                  "example": "90485-075"
+                                },
+                                "conciliation_id": {
+                                  "type": "string",
+                                  "maxLength": 25
+                                },
+                                "agency_number": {
+                                  "type": "string",
+                                  "maxLength": 4
+                                },
+                                "account_number": {
+                                  "type": "string",
+                                  "maxLength": 20
+                                },
+                                "account_type": {
+                                  "type": "string",
+                                  "enum": [
+                                    "CHECKING_ACCOUNT",
+                                    "SALARY_ACCOUNT",
+                                    "SAVINGS_ACCOUNT",
+                                    "PAYMENT_ACCOUNT"
+                                  ]
+                                }
+                              }
+                            },
+                            "payer": {
+                              "type": "object",
+                              "properties": {
+                                "name": {
+                                  "type": "string",
+                                  "maxLength": 25
+                                },
+                                "document_number": {
+                                  "type": "string",
+                                  "maxLength": 14
+                                }
+                              }
+                            },
+                            "deduction": {
+                              "type": "number",
+                              "format": "double",
+                              "example": 5
+                            },
+                            "discount": {
+                              "type": "number",
+                              "format": "double",
+                              "example": 50
+                            },
+                            "interest": {
+                              "type": "number",
+                              "format": "double",
+                              "example": 0.5
+                            },
+                            "fine": {
+                              "type": "number",
+                              "format": "double",
+                              "example": 10
+                            },
+                            "final_value": {
+                              "type": "number",
+                              "format": "double",
+                              "description": "Value after deduction, discount, interest and fine",
+                              "example": 350.59
+                            },
+                            "due_date": {
+                              "type": "string",
+                              "example": "2021-01-31"
+                            },
+                            "days_after_due_date": {
+                              "type": "integer",
+                              "maxLength": 6,
+                              "example": 5
+                            },
+                            "additional_data": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "name": {
+                                    "type": "string",
+                                    "maxLength": 100
+                                  },
+                                  "value": {
+                                    "type": "string",
+                                    "maxLength": 400
+                                  }
+                                }
+                              }
+                            },
+                            "created_at": {
+                              "type": "string",
+                              "example": "2021-01-31T15:33:17.000Z"
+                            },
+                            "scanned_at": {
+                              "type": "string",
+                              "example": "2021-02-05T10:25:47.000Z"
+                            },
+                            "psp_recipient_url": {
+                              "type": "string",
+                              "maxLength": 124
+                            },
+                            "reusable": {
+                              "type": "boolean"
+                            },
+                            "status": {
+                              "type": "string",
+                              "enum": [
+                                "ACTIVE",
+                                "DONE",
+                                "REMOVED_BY_RECIPIENT",
+                                "REMOVED_BY_PSP"
+                              ]
+                            }
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "description": "Static QR Code",
+                      "required": [
+                        "end_to_end_id",
+                        "qr_code"
+                      ],
+                      "properties": {
+                        "end_to_end_id": {
+                          "type": "string",
+                          "maxLength": 32
+                        },
+                        "qr_code": {
+                          "type": "object",
+                          "description": "Decoded QR code properties",
+                          "required": [
+                            "type",
+                            "key",
+                            "city",
+                            "recipient"
+                          ],
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "enum": [
+                                "STATIC",
+                                "DYNAMIC",
+                                "DYNAMIC_WITH_DUE_DATE"
+                              ]
+                            },
+                            "key": {
+                              "type": "string",
+                              "description": "Pix key",
+                              "minLength": 5,
+                              "maxLength": 77,
+                              "example": "30937116068"
+                            },
+                            "category_code": {
+                              "type": "string",
+                              "description": "Recipient category code",
+                              "maxLength": 4,
+                              "default": "0000",
+                              "example": "0000"
+                            },
+                            "city": {
+                              "type": "string",
+                              "maxLength": 15,
+                              "example": "RIO DE JANEIRO"
+                            },
+                            "zip_code": {
+                              "type": "string",
+                              "minLength": 5,
+                              "maxLength": 10,
+                              "example": "90485-075"
+                            },
+                            "value": {
+                              "type": "number",
+                              "format": "double",
+                              "description": "Transaction value",
+                              "example": 4587.92
+                            },
+                            "ispb_pss": {
+                              "type": "string",
+                              "description": "ISPB from PSS. When provided it means the QR code is for \"Pix Saque\".",
+                              "maxLength": 8,
+                              "example": "44568458"
+                            },
+                            "additional_data": {
+                              "type": "string"
+                            },
+                            "recipient": {
+                              "type": "object",
+                              "required": [
+                                "ispb",
+                                "type",
+                                "account_type",
+                                "account_number"
+                              ],
+                              "properties": {
+                                "ispb": {
+                                  "type": "integer",
+                                  "maxLength": 8
+                                },
+                                "name": {
+                                  "type": "string",
+                                  "maxLength": 25
+                                },
+                                "type": {
+                                  "type": "string",
+                                  "enum": [
+                                    "NATURAL",
+                                    "LEGAL"
+                                  ]
+                                },
+                                "document_number": {
+                                  "type": "string",
+                                  "maxLength": 14
+                                },
+                                "conciliation_id": {
+                                  "type": "string",
+                                  "maxLength": 25
+                                },
+                                "agency_number": {
+                                  "type": "string",
+                                  "maxLength": 4
+                                },
+                                "account_number": {
+                                  "type": "string",
+                                  "maxLength": 20
+                                },
+                                "account_type": {
+                                  "type": "string",
+                                  "enum": [
+                                    "CHECKING_ACCOUNT",
+                                    "SALARY_ACCOUNT",
+                                    "SAVINGS_ACCOUNT",
+                                    "PAYMENT_ACCOUNT"
+                                  ]
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                },
+                "examples": {
+                  "Decoded Static QR Code": {
+                    "value": {
+                      "end_to_end_id": "E1476673020220111130052626644038",
+                      "qr_code": {
+                        "type": "STATIC",
+                        "category_code": "0000",
+                        "city": "PORTO ALEGRE",
+                        "key": "90226395090",
+                        "recipient": {
+                          "account_number": "3786",
+                          "account_type": "PAYMENT_ACCOUNT",
+                          "agency_number": "1",
+                          "conciliation_id": "_**",
+                          "document_number": "90226395090",
+                          "ispb": 11476673,
+                          "name": "Testes Automatizados",
+                          "type": "NATURAL"
+                        },
+                        "value": 2.44,
+                        "zip_code": "90480-002"
+                      }
+                    }
+                  },
+                  "Decoded Dynamic QR Code": {
+                    "value": {
+                      "end_to_end_id": "E1476673020220111130052626644038",
+                      "qr_code": {
+                        "type": "DYNAMIC",
+                        "category_code": "0000",
+                        "city": "PORTO ALEGRE",
+                        "zip_code": "90480-002",
+                        "key": "90226395090",
+                        "original_value": 2.44,
+                        "recipient": {
+                          "account_number": "3786",
+                          "account_type": "PAYMENT_ACCOUNT",
+                          "agency_number": "1",
+                          "conciliation_id": "_**",
+                          "document_number": "90226395090",
+                          "ispb": 11476673,
+                          "name": "Testes Automatizados",
+                          "type": "NATURAL"
+                        },
+                        "payer": {
+                          "name": "Jorge Silva",
+                          "document_number": "72909231038"
+                        },
+                        "modality": {
+                          "agent": "ANY_OTHER_TYPE_OF_LEGAL_PERSON",
+                          "allow_value_alteration": false,
+                          "ispb_pss": 145,
+                          "type": "WITHDRAW",
+                          "value": 5
+                        },
+                        "psp_recipient_url": "http://placeholder.com",
+                        "reusable": true,
+                        "review": 5456,
+                        "created_at": "2021-01-31T15:33:17.000Z",
+                        "scanned_at": "2021-02-05T10:25:47.000Z",
+                        "status": "ACTIVE",
+                        "text_to_payer": "lorem ipsum",
+                        "qr_code_expiration_time": 43200
+                      }
+                    }
+                  },
+                  "Decoded Dynamic QR Code With Due Date": {
+                    "value": {
+                      "end_to_end_id": "E1476673020220111130052626644038",
+                      "qr_code": {
+                        "type": "DYNAMIC_WITH_DUE_DATE",
+                        "category_code": "0000",
+                        "days_after_due_date": 5,
+                        "deduction": 0.31,
+                        "discount": 0.48,
+                        "due_date": "2021-01-31",
+                        "final_value": 255.57,
+                        "fine": 10.05,
+                        "interest": 1.55,
+                        "key": "90226395090",
+                        "original_value": 254.57,
+                        "payer": {
+                          "document_number": "72909231038",
+                          "name": "Jorge Silva"
+                        },
+                        "recipient": {
+                          "account_number": "3786",
+                          "account_type": "PAYMENT_ACCOUNT",
+                          "address": "1o de Maio",
+                          "agency_number": "1131",
+                          "conciliation_id": "_**",
+                          "document_number": "27600504081",
+                          "ispb": 11476673,
+                          "name": "Testes Automatizados",
+                          "city": "PORTO ALEGRE",
+                          "state": "RS",
+                          "zip_code": "90480-002"
+                        },
+                        "review": 5456,
+                        "created_at": "2021-01-31T09:28:03.000Z",
+                        "scanned_at": "2021-01-31T15:33:17.000Z",
+                        "status": "DONE",
+                        "text_to_payer": "lorem ipsum",
+                        "psp_recipient_url": "http://placeholder.com"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Bad Request",
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "title": "Error code",
+                      "description": "The type of error",
+                      "example": "BAD_REQUEST",
+                      "enum": [
+                        "BAD_REQUEST"
+                      ]
+                    },
+                    "message": {
+                      "type": "string",
+                      "title": "Error message",
+                      "description": "Describes a message informing a reason for the error",
+                      "example": "Invalid request params"
+                    },
+                    "status_code": {
+                      "type": "number",
+                      "description": "Error status code",
+                      "example": "400"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Internal Server Error",
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "title": "Error code",
+                      "description": "The type of error",
+                      "example": "INTERNAL_SERVER_ERROR",
+                      "enum": [
+                        "INTERNAL_SERVER_ERROR"
+                      ]
+                    },
+                    "message": {
+                      "type": "string",
+                      "title": "Error message",
+                      "description": "Describes a message informing a reason for the error",
+                      "example": "Unexpected error with our service"
+                    },
+                    "status_code": {
+                      "type": "number",
+                      "description": "Error status code",
+                      "example": "500"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/status": {
       "get": {
         "tags": [
