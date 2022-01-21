@@ -2308,6 +2308,106 @@
                 "schema": {
                   "oneOf": [
                     {
+                      "title": "Invalid data",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "INVALID_DATA",
+                          "enum": [
+                            "INVALID_DATA"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "The data provided has an invalid format"
+                        }
+                      }
+                    },
+                    {
+                      "title": "Invalid CPF",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "INVALID_CPF",
+                          "enum": [
+                            "INVALID_CPF"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "The provided CPF is not valid."
+                        }
+                      }
+                    },
+                    {
+                      "title": "Invalid CNPJ",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "INVALID_CNPJ",
+                          "enum": [
+                            "INVALID_CNPJ"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "The provided CNPJ is not valid."
+                        }
+                      }
+                    },
+                    {
+                      "title": "Invalid Email",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "INVALID_EMAIL",
+                          "enum": [
+                            "INVALID_EMAIL"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "The provided email is not valid."
+                        }
+                      }
+                    },
+                    {
+                      "title": "Invalid Cellphone",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "INVALID_CELLPHONE",
+                          "enum": [
+                            "INVALID_CELLPHONE"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "The provided cellphone is not valid."
+                        }
+                      }
+                    },
+                    {
                       "title": "Invalid Claim",
                       "properties": {
                         "code": {
@@ -2370,19 +2470,49 @@
                   ]
                 },
                 "examples": {
-                  "Example 1 - InvalidClaimError": {
+                  "Example 1 - InvalidDataError": {
+                    "value": {
+                      "code": "INVALID_DATA",
+                      "message": "The data provided has an invalid format"
+                    }
+                  },
+                  "Example 2 - InvalidCPFError": {
+                    "value": {
+                      "code": "INVALID_CPF",
+                      "message": "The provided CPF is not valid."
+                    }
+                  },
+                  "Example 3 - InvalidCNPJError": {
+                    "value": {
+                      "code": "INVALID_CNPJ",
+                      "message": "The provided CNPJ is not valid."
+                    }
+                  },
+                  "Example 4 - InvalidEmailError": {
+                    "value": {
+                      "code": "INVALID_EMAIL",
+                      "message": "The provided email is not valid."
+                    }
+                  },
+                  "Example 5 - InvalidCellPhoneError": {
+                    "value": {
+                      "code": "INVALID_CELLPHONE",
+                      "message": "The provided cellphone is not valid."
+                    }
+                  },
+                  "Example 6 - InvalidClaimError": {
                     "value": {
                       "code": "INVALID_CLAIM",
                       "message": "There are an invalid field at creation of the claim"
                     }
                   },
-                  "Example 2 - InconsistentClaimTypeError": {
+                  "Example 7 - InconsistentClaimTypeError": {
                     "value": {
                       "code": "INCONSISTENT_CLAIM_TYPE",
                       "message": "The requested claim type is inconsistent"
                     }
                   },
-                  "Example 3 - InconsistentClaimTypeError": {
+                  "Example 8 - ClaimAlreadyExistForKey": {
                     "value": {
                       "code": "CLAIM_ALREADY_EXIST_FOR_KEY",
                       "message": "There is some claim with status different of done or cancelled for the revindicated key"
