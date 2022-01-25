@@ -4445,6 +4445,308 @@
         }
       }
     },
+    "/claims/{claim_id}/complete": {
+      "post": {
+        "tags": [
+          "Claims"
+        ],
+        "summary": "Complete claim",
+        "description": "Returns the completed claim",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "claim_id",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "UUID of the claim.",
+            "example": "4af9af0f-4935-454e-b3ee-af5b9d85c914"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Completed claim.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "claim_id",
+                    "status",
+                    "resolution_limit",
+                    "updated_at"
+                  ],
+                  "properties": {
+                    "claim_id": {
+                      "type": "string",
+                      "description": "Id of claim",
+                      "example": "4af9af0f-4935-454e-b3ee-af5b9d85c914"
+                    },
+                    "status": {
+                      "type": "string",
+                      "description": "Status of claim",
+                      "example": "DONE",
+                      "enum": [
+                        "OPEN",
+                        "WAITING_RESOLUTION",
+                        "CONFIRMED",
+                        "CANCELED",
+                        "DONE"
+                      ]
+                    },
+                    "confirmation_reason": {
+                      "type": "string",
+                      "description": "Reason for confirmation",
+                      "example": "CUSTOMER_REQUEST",
+                      "enum": [
+                        "CUSTOMER_REQUEST",
+                        "ENDING_ACCOUNT",
+                        "FRAUD",
+                        "ANSWER_DEFAULT"
+                      ]
+                    },
+                    "cancellation_reason": {
+                      "type": "string",
+                      "description": "Reason for cancellation",
+                      "example": "CUSTOMER_REQUEST",
+                      "enum": [
+                        "CUSTOMER_REQUEST",
+                        "ENDING_ACCOUNT",
+                        "FRAUD",
+                        "ANSWER_DEFAULT",
+                        "RECONCILIATION"
+                      ]
+                    },
+                    "cancelled_by": {
+                      "type": "string",
+                      "description": "Canceled by",
+                      "example": "GRANTOR",
+                      "enum": [
+                        "GRANTOR",
+                        "CLAIMER"
+                      ]
+                    },
+                    "created_at": {
+                      "type": "string",
+                      "description": "Date and time of inclusion",
+                      "example": "2021-07-23T16:58:27.000Z"
+                    },
+                    "ownership_start_date": {
+                      "type": "number",
+                      "description": "Ownership start date",
+                      "example": "2021-07-23T16:58:27.000Z"
+                    },
+                    "resolution_limit": {
+                      "type": "string",
+                      "description": "Resolution date limit",
+                      "example": "2021-10-31T12:56:23.123Z"
+                    },
+                    "completion_limit": {
+                      "type": "string",
+                      "description": "Completion date limit",
+                      "example": "2021-10-31T12:56:23.123Z"
+                    },
+                    "updated_at": {
+                      "type": "string",
+                      "description": "Claim modified date",
+                      "example": "2021-07-23T16:58:27.000Z"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Error with types [ValidationFailed].",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Invalid request data",
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "title": "Error code",
+                      "description": "The type of error",
+                      "example": "VALIDATION_FAILED"
+                    },
+                    "message": {
+                      "type": "string",
+                      "title": "Error message",
+                      "description": "Describes a message informing a reason for the error",
+                      "example": "Invalid request data."
+                    },
+                    "details": {
+                      "type": "array",
+                      "title": "Error details",
+                      "description": "Informs error details",
+                      "example": "Invalid request data."
+                    }
+                  }
+                },
+                "examples": {
+                  "Example 1 - ValidationFailed": {
+                    "value": {
+                      "code": "VALIDATION_FAILED",
+                      "message": "Invalid request data."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Error with types [AuthenticationError].",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Authentication error",
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "title": "Error code",
+                      "description": "The type of error",
+                      "example": "AUTHENTICATION_FAILED",
+                      "enum": [
+                        "AUTHENTICATION_FAILED"
+                      ]
+                    },
+                    "message": {
+                      "type": "string",
+                      "title": "Error message",
+                      "description": "Describes a message informing a reason for the error",
+                      "example": "Authentication failed."
+                    }
+                  }
+                },
+                "examples": {
+                  "Example 1 - AuthenticationError": {
+                    "value": {
+                      "code": "AUTHENTICATION_FAILED",
+                      "message": "Authentication failed."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Error with types [MissingProduct].",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "title": "Missing Product Permission",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "MISSING_PRODUCT_PERMISSION",
+                          "enum": [
+                            "MISSING_PRODUCT_PERMISSION"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "Missing product permission."
+                        }
+                      }
+                    }
+                  ]
+                },
+                "examples": {
+                  "Example 1 - MissingProductError": {
+                    "value": {
+                      "code": "MISSING_PRODUCT_PERMISSION",
+                      "message": "Missing product permission."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Error with types [ApplicationProductNotFound].",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Application product not found",
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "title": "Error code",
+                      "description": "The type of error",
+                      "example": "APPLICATION_PRODUCT_NOT_FOUND",
+                      "enum": [
+                        "APPLICATION_PRODUCT_NOT_FOUND"
+                      ]
+                    },
+                    "message": {
+                      "type": "string",
+                      "title": "Error message",
+                      "description": "Describes a message informing a reason for the error",
+                      "example": "Product not found for given application id."
+                    }
+                  }
+                },
+                "examples": {
+                  "Example 2 - ApplicationNotFound": {
+                    "value": {
+                      "code": "APPLICATION_PRODUCT_NOT_FOUND",
+                      "message": "Product not found for given application id."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error with internal server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Internal Server Error",
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "title": "Error code",
+                      "description": "The type of error",
+                      "example": "INTERNAL_SERVER_ERROR",
+                      "enum": [
+                        "INTERNAL_SERVER_ERROR"
+                      ]
+                    },
+                    "message": {
+                      "type": "string",
+                      "title": "Error message",
+                      "description": "Describes a message informing a reason for the error",
+                      "example": "Unexpected error with our service"
+                    }
+                  }
+                },
+                "examples": {
+                  "Example 1 - InternalServerError": {
+                    "value": {
+                      "code": "INTERNAL_SERVER_ERROR",
+                      "message": "Unexpected error with our service"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/claims/{claim_id}/cancel": {
       "post": {
         "tags": [
