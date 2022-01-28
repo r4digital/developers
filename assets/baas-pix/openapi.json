@@ -3,7 +3,7 @@
   "info": {
     "version": "1.0.0",
     "title": "Baas Pix",
-    "description": "**Description**: Api responsible to managing pix keys and pix transfers\n\n  <a name=\"key_kind\"></a>\n\n  ## Key kind\n\n  <table>\n    <tr>\n      <td>Kind</td>\n      <td>Description</td>\n    </tr>\n    <tr>\n      <td>`CELLPHONE`</td>\n      <td>Cellphone number.</td>\n    </tr>\n    <tr>\n      <td>`CPF`</td>\n      <td>CPF number.</td>\n    </tr>\n    <tr>\n      <td>`CNPJ`</td>\n      <td>CNPJ number.</td>\n    </tr>\n    <tr>\n      <td>`EMAIL`</td>\n      <td>E-mail address.</td>\n    </tr>\n    <tr>\n      <td>`VIRTUAL`</td>\n      <td>Random key.</td>\n    </tr>\n  </table>\n\n# Errors\nAccount Middleware uses [HTTP response status codes](https://en.wikipedia.org/wiki/List_of_HTTP_status_codes) to indicate the success or failure of your API requests.\nIn general, there are three status code ranges you can expect:\n- `2xx` success status codes confirm that your request worked as expected\n- `4xx` error status codes indicate an error because of the information provided (e.g., a required parameter was not provided)\n- `5xx` error status codes are rare and indicate an error with R4's servers\n\n## HTTP Status code summary\nExtracted from [Stripe API codes](https://stripe.com/docs/api/errors)\n- `200 - OK` Everything worked as expected.\n- `400 - Bad Request` The request was unacceptable, often due to missing a required parameter.\n- `401 - Unauthorized` No valid API key provided.\n- `403 - Forbidden` The API key doesn't have permissions to perform the request.\n- `404 - Not Found` The requested resource doesn't exist.\n- `429 - Too Many Requests` Too many requests hit the API too quickly. We recommend an exponential backoff of your requests.\n- `500, 502, 503, 504 - Server Errors` Something went wrong on R4's end.\n## Error codes\nBelow is a list of possible error codes that can be returned:\n<table>\n  <tr>\n    <td>Code</td>\n    <td>Description</td>\n  </tr>\n  <tr>\n    <td>`INVALID_DATA`</td>\n    <td>The data provided has an invalid format.</td>\n  </tr>\n  <tr>\n    <td>`ACCOUNT_NOT_FOUND`</td>\n    <td>The account informed was not found.</td>\n  </tr>\n  <tr>\n    <td>`PARTNERS_NOT_FOUND`</td>\n    <td>Partners was not found.</td>\n  </tr>\n  <tr>\n    <td>`INVALID_CELLPHONE`</td>\n    <td>The provided cellphone is not valid.</td>\n  </tr>\n  <tr>\n    <td>`INVALID_CNPJ`</td>\n    <td>The provided CNPJ is not valid.</td>\n  </tr>\n  <tr>\n    <td>`INVALID_CPF`</td>\n    <td>The provided CPF is not valid.</td>\n  </tr>\n  <tr>\n    <td>`INVALID_EMAIL`</td>\n    <td>The provided email is not valid.</td>\n  </tr>\n  <tr>\n    <td>`ENTRY_LOCKED_BY_CLAIM`</td>\n    <td>There is a claim with a status other than completed or canceled for the key.</td>\n  </tr>\n  <tr>\n    <td>`KEY_IN_CUSTODY_OF_DIFFERENT_PARTICIPANT`</td>\n    <td>There is already a bond for this key with other participant and owner. It is indicated a claim of ownership.</td>\n  </tr>\n  <tr>\n    <td>`CLAIM_KEY_NOT_FOUND`</td>\n    <td>There is no registered bond to the key being claimed.</td>\n  </tr>\n</table>\n"
+    "description": "**Description**: Api responsible to managing pix keys and pix transfers\n\n  <a name=\"key_kind\"></a>\n\n  ## Key kind\n\n  <table>\n    <tr>\n      <td>Kind</td>\n      <td>Description</td>\n    </tr>\n    <tr>\n      <td>`CELLPHONE`</td>\n      <td>Cellphone number.</td>\n    </tr>\n    <tr>\n      <td>`CPF`</td>\n      <td>CPF number.</td>\n    </tr>\n    <tr>\n      <td>`CNPJ`</td>\n      <td>CNPJ number.</td>\n    </tr>\n    <tr>\n      <td>`EMAIL`</td>\n      <td>E-mail address.</td>\n    </tr>\n    <tr>\n      <td>`VIRTUAL`</td>\n      <td>Random key.</td>\n    </tr>\n  </table>\n\n# Errors\nAccount Middleware uses [HTTP response status codes](https://en.wikipedia.org/wiki/List_of_HTTP_status_codes) to indicate the success or failure of your API requests.\nIn general, there are three status code ranges you can expect:\n- `2xx` success status codes confirm that your request worked as expected\n- `4xx` error status codes indicate an error because of the information provided (e.g., a required parameter was not provided)\n- `5xx` error status codes are rare and indicate an error with R4's servers\n\n## HTTP Status code summary\nExtracted from [Stripe API codes](https://stripe.com/docs/api/errors)\n- `200 - OK` Everything worked as expected.\n- `400 - Bad Request` The request was unacceptable, often due to missing a required parameter.\n- `401 - Unauthorized` No valid API key provided.\n- `403 - Forbidden` The API key doesn't have permissions to perform the request.\n- `404 - Not Found` The requested resource doesn't exist.\n- `429 - Too Many Requests` Too many requests hit the API too quickly. We recommend an exponential backoff of your requests.\n- `500, 502, 503, 504 - Server Errors` Something went wrong on R4's end.\n## Error codes\nBelow is a list of possible error codes that can be returned:\n\n  | Code                | Description                                                 |\n  |-------------------- | ------------------------------------------------------------|\n  | `ACCOUNT_NOT_FOUND` | Account not found |\n  | `APPLICATION_PRODUCT_NOT_FOUND` | Product not found for given application id |\n  | `AUTHENTICATION_FAILED` | Authentication failed |\n  | `CLAIM_ALREADY_BELONGS_TO_CLIENT` | The key already belongs to the client |\n  | `CLAIM_ALREADY_DONE` | Claim was already completed |\n  | `CLAIM_ALREADY_OPEN` | There is some claim with status different of done or cancelled for the revindicated key |\n  | `CLAIM_CANCELATION_REASON_INVALID` | The reason to cancel your claim is not valid |\n  | `CLAIM_CANNOT_BE_CANCELLED` | The status of your claim does not allow for its cancellation |\n  | `CLAIM_CANNOT_BE_COMPLETED_BY_GRANTOR` | Claim cannot be completed by grantor |\n  | `CLAIM_CANNOT_BE_CONFIRMED_BY_CLAIMER` | The claim cannot be confirmed by claimer |\n  | `CLAIM_CANNOT_COMPLETE` | The status of your claim does not allow for its conclusion |\n  | `CLAIM_INVALID` | There are an invalid field at creation of the claim |\n  | `CLAIM_KEY_NOT_FOUND` | There is no registered bond to the key being claimed |\n  | `CLAIM_NOT_FOUND` | The provided claim was not found or does not exist |\n  | `CLAIM_TYPE_INCONSISTENT` | The requested claim type is inconsistent |\n  | `ENTRY_LOCKED_BY_CLAIM` | There is a claim with a status other than completed or canceled for the key |\n  | `INTERNAL_SERVER_ERROR` | Unexpected error with our service |\n  | `INVALID_CELLPHONE` | The provided cellphone is not valid |\n  | `INVALID_CNPJ` | The provided CNPJ is not valid |\n  | `INVALID_CPF` | The provided CPF is not valid |\n  | `INVALID_DATA` | The data provided has an invalid format |\n  | `INVALID_EMAIL` | The provided email is not valid |\n  | `KEY_ALREADY_EXISTS` | There is already a bond for this key with the same participant and owner |\n  | `KEY_DATA_INCOMPLETE` | Incomplete data for key change. Inform \"account type, account number and date and time of opening of the new account\" and/or \"name and nickname\" |\n  | `KEY_IN_CUSTODY_OF_DIFFERENT_PARTICIPANT` | There is already a bond for this key with other participant and owner. It is indicated a claim of ownership |\n  | `KEY_MISSING_ACCOUNT_OR_CUSTOMER` | It is necessary to inform a new account and/or customer name to change the address key |\n  | `KEY_NICKNAME_INVALID` | The key to be changed does not accept nickname, as it is associated with the individual person type |\n  | `KEY_NOT_FOUND` | The provided key is not found or does not exist |\n  | `KEY_SAME_DOCUMENT_DIFFERENT_PSP` | This key is already linked to this document number, but in another PSP. Portability is recommended |\n  | `KEY_WITH_DIFFERENT_ACCOUNT` | There is already a link for this key on with the same owner and other account information. A key change is indicated |\n  | `KEY_WITH_SAME_DATA_INFORMED` | Data informed for key change is the same as the current data |\n  | `MISSING_PRODUCT_PERMISSION` | Missing product permission |\n  | `NO_KEY_LINKED_TO_ACCOUNT` | There arent key linked to the account informed |\n  | `NO_KEY_LINKED_TO_DOCUMENT_NUMBER` | There arent key linked to the document number informed |\n  | `PARTNERS_NOT_FOUND` | Partners was not found |\n  | `RECEIVED_CLAIM_CANCELATION_RASON_INVALID` | The reason to cancel the claim you received is not valid |\n  | `RECEIVED_CLAIM_CANNOT_BE_CANCELLED` | The status of the ownership claim you received does not allow for its cancellation |\n  | `RECEIVED_CLAIM_CANNOT_BE_CONFIRMED` | The status of the claim you received, does not allow confirmation |\n  | `RECEIVED_CLAIM_CONFIRM_REASON_INVALID` | The reason for confirming the claim you received is not valid |\n  | `RECEIVED_OWNERSHIP_CANNOT_BE_CANCELLED` | The portability status you received does not allow its cancellation |\n  | `UNAUTHORIZED` | Unauthorized |\n  | `UNEXPECTED_ERROR` | Unexpected error with our service |\n  | `VALIDATION_FAILED` | Invalid request data |\n"
   },
   "security": [
     {
@@ -103,7 +103,7 @@
             }
           },
           "400": {
-            "description": "Error with types [InvalidCPF, InvalidCNPJ, InvalidCellPhone, InvalidEmail, KeyAlreadyExists, InvalidKey, InvalidData, EntryLockedByClaim, KeyInCustodyOfDifferentParticipantError].",
+            "description": "Error with types [InvalidCPF, InvalidCNPJ, InvalidCellPhone, InvalidEmail, KeyAlreadyExists, EntryLockedByClaim, KeyInCustodyOfDifferentParticipant, KeyWithDifferentAccount, KeyNicknameInvalid, KeyDataIncomplete, KeySameDocumentDifferentPSP].",
             "content": {
               "application/json": {
                 "schema": {
@@ -209,46 +209,6 @@
                       }
                     },
                     {
-                      "title": "Invalid key",
-                      "properties": {
-                        "code": {
-                          "type": "string",
-                          "title": "Error code",
-                          "description": "The type of error",
-                          "example": "INVALID_KEY",
-                          "enum": [
-                            "INVALID_KEY"
-                          ]
-                        },
-                        "message": {
-                          "type": "string",
-                          "title": "Error message",
-                          "description": "Describes a message informing a reason for the error",
-                          "example": "There are invalid fields."
-                        }
-                      }
-                    },
-                    {
-                      "title": "Invalid data",
-                      "properties": {
-                        "code": {
-                          "type": "string",
-                          "title": "Error code",
-                          "description": "The type of error",
-                          "example": "INVALID_DATA",
-                          "enum": [
-                            "INVALID_DATA"
-                          ]
-                        },
-                        "message": {
-                          "type": "string",
-                          "title": "Error message",
-                          "description": "Describes a message informing a reason for the error",
-                          "example": "The data provided has an invalid format"
-                        }
-                      }
-                    },
-                    {
                       "title": "There is a claim locking the given key",
                       "properties": {
                         "code": {
@@ -287,6 +247,86 @@
                           "example": "There is already a bond for this key with other participant and owner. It is indicated a claim of ownership"
                         }
                       }
+                    },
+                    {
+                      "title": "Key with different account",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "KEY_WITH_DIFFERENT_ACCOUNT",
+                          "enum": [
+                            "KEY_WITH_DIFFERENT_ACCOUNT"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "There is already a link for this key on with the same owner and other account information. A key change is indicated"
+                        }
+                      }
+                    },
+                    {
+                      "title": "The key to be changed does not accept nickname",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "KEY_NICKNAME_INVALID",
+                          "enum": [
+                            "KEY_NICKNAME_INVALID"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "The key to be changed does not accept nickname, as it is associated with the individual person type"
+                        }
+                      }
+                    },
+                    {
+                      "title": "Invalid data",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "KEY_DATA_INCOMPLETE",
+                          "enum": [
+                            "KEY_DATA_INCOMPLETE"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "Incomplete data for key change. Inform \"account type, account number and date and time of opening of the new account\" and/or \"name and nickname\""
+                        }
+                      }
+                    },
+                    {
+                      "title": "This key is already linked to this document, but in another PSP",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "KEY_SAME_DOCUMENT_DIFFERENT_PSP",
+                          "enum": [
+                            "KEY_SAME_DOCUMENT_DIFFERENT_PSP"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "This key is already linked to this document number, but in another PSP. Portability is recommended"
+                        }
+                      }
                     }
                   ]
                 },
@@ -309,7 +349,7 @@
                       "message": "The provided cellphone is not valid."
                     }
                   },
-                  "Example 4 - InvalidCPFError": {
+                  "Example 4 - InvalidEmailError": {
                     "value": {
                       "code": "INVALID_EMAIL",
                       "message": "The provided email is not valid."
@@ -321,28 +361,40 @@
                       "message": "There is already a bond for this key with the same participant and owner"
                     }
                   },
-                  "Example 6 - EntryInvalidError": {
-                    "value": {
-                      "code": "INVALID_KEY",
-                      "message": "There are invalid fields"
-                    }
-                  },
-                  "Example 7 - InvalidDataError": {
-                    "value": {
-                      "code": "INVALID_DATA",
-                      "message": "The data provided has an invalid format"
-                    }
-                  },
-                  "Example 8 - EntryLockedByClaimError": {
+                  "Example 6 - EntryLockedByClaimError": {
                     "value": {
                       "code": "ENTRY_LOCKED_BY_CLAIM",
                       "message": "There is a claim with a status other than completed or canceled for the key"
                     }
                   },
-                  "Example 9 - KeyInCustodyOfDifferentParticipantError": {
+                  "Example 7 - KeyInCustodyOfDifferentParticipantError": {
                     "value": {
                       "code": "KEY_IN_CUSTODY_OF_DIFFERENT_PARTICIPANT",
                       "message": "There is already a bond for this key with other participant and owner. It is indicated a claim of ownership"
+                    }
+                  },
+                  "Example 8 - KeyWithDifferentAccount": {
+                    "value": {
+                      "code": "KEY_WITH_DIFFERENT_ACCOUNT",
+                      "message": "There is already a link for this key on with the same owner and other account information. A key change is indicated"
+                    }
+                  },
+                  "Example 9 - KeyNicknameInvalid": {
+                    "value": {
+                      "code": "KEY_NICKNAME_INVALID",
+                      "message": "The key to be changed does not accept nickname, as it is associated with the individual person type"
+                    }
+                  },
+                  "Example 10 - KeyDataIncomplete": {
+                    "value": {
+                      "code": "KEY_DATA_INCOMPLETE",
+                      "message": "Incomplete data for key change. Inform \"account type, account number and date and time of opening of the new account\" and/or \"name and nickname\""
+                    }
+                  },
+                  "Example 11 - KeySameDocumentDifferentPSP": {
+                    "value": {
+                      "code": "KEY_SAME_DOCUMENT_DIFFERENT_PSP",
+                      "message": "This key is already linked to this document number, but in another PSP. Portability is recommended"
                     }
                   }
                 }
@@ -616,45 +668,6 @@
               }
             }
           },
-          "400": {
-            "description": "Error with types [InvalidDataError].",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "oneOf": [
-                    {
-                      "title": "Invalid data",
-                      "properties": {
-                        "code": {
-                          "type": "string",
-                          "title": "Error code",
-                          "description": "The type of error",
-                          "example": "INVALID_DATA",
-                          "enum": [
-                            "INVALID_DATA"
-                          ]
-                        },
-                        "message": {
-                          "type": "string",
-                          "title": "Error message",
-                          "description": "Describes a message informing a reason for the error",
-                          "example": "The data provided has an invalid format"
-                        }
-                      }
-                    }
-                  ]
-                },
-                "examples": {
-                  "Example 1 - InvalidDataError": {
-                    "value": {
-                      "code": "INVALID_DATA",
-                      "message": "The data provided has an invalid format"
-                    }
-                  }
-                }
-              }
-            }
-          },
           "401": {
             "description": "Error with types [AuthenticationError].",
             "content": {
@@ -730,7 +743,7 @@
             }
           },
           "404": {
-            "description": "Error with types [AccountNotFound, KeyNotFound, ApplicationNotFound].",
+            "description": "Error with types [AccountNotFound].",
             "content": {
               "application/json": {
                 "schema": {
@@ -759,51 +772,6 @@
                           "example": "404"
                         }
                       }
-                    },
-                    {
-                      "title": "Key Not Found",
-                      "properties": {
-                        "code": {
-                          "type": "string",
-                          "title": "Error code",
-                          "description": "The type of error",
-                          "example": "KEY_NOT_FOUND",
-                          "enum": [
-                            "KEY_NOT_FOUND"
-                          ]
-                        },
-                        "message": {
-                          "type": "string",
-                          "title": "Error message",
-                          "description": "Describes a message informing a reason for the error",
-                          "example": "Key not found."
-                        },
-                        "status_code": {
-                          "type": "number",
-                          "description": "Error status code",
-                          "example": "404"
-                        }
-                      }
-                    },
-                    {
-                      "title": "Application product not found",
-                      "properties": {
-                        "code": {
-                          "type": "string",
-                          "title": "Error code",
-                          "description": "The type of error",
-                          "example": "APPLICATION_PRODUCT_NOT_FOUND",
-                          "enum": [
-                            "APPLICATION_PRODUCT_NOT_FOUND"
-                          ]
-                        },
-                        "message": {
-                          "type": "string",
-                          "title": "Error message",
-                          "description": "Describes a message informing a reason for the error",
-                          "example": "Product not found for given application id."
-                        }
-                      }
                     }
                   ]
                 },
@@ -812,18 +780,6 @@
                     "value": {
                       "code": "ACCOUNT_NOT_FOUND",
                       "message": "Account not found"
-                    }
-                  },
-                  "Example 2 - KeyNotFound": {
-                    "value": {
-                      "code": "KEY_NOT_FOUND",
-                      "message": "The provided key is not found or does not exist"
-                    }
-                  },
-                  "Example 3 - ApplicationNotFound": {
-                    "value": {
-                      "code": "APPLICATION_PRODUCT_NOT_FOUND",
-                      "message": "Product not found for given application id."
                     }
                   }
                 }
@@ -926,46 +882,6 @@
                 "schema": {
                   "oneOf": [
                     {
-                      "title": "Invalid data",
-                      "properties": {
-                        "code": {
-                          "type": "string",
-                          "title": "Error code",
-                          "description": "The type of error",
-                          "example": "INVALID_DATA",
-                          "enum": [
-                            "INVALID_DATA"
-                          ]
-                        },
-                        "message": {
-                          "type": "string",
-                          "title": "Error message",
-                          "description": "Describes a message informing a reason for the error",
-                          "example": "The data provided has an invalid format"
-                        }
-                      }
-                    },
-                    {
-                      "title": "Invalid key",
-                      "properties": {
-                        "code": {
-                          "type": "string",
-                          "title": "Error code",
-                          "description": "The type of error",
-                          "example": "INVALID_KEY",
-                          "enum": [
-                            "INVALID_KEY"
-                          ]
-                        },
-                        "message": {
-                          "type": "string",
-                          "title": "Error message",
-                          "description": "Describes a message informing a reason for the error",
-                          "example": "There are invalid fields."
-                        }
-                      }
-                    },
-                    {
                       "title": "There is a claim locking the given key",
                       "properties": {
                         "code": {
@@ -988,19 +904,7 @@
                   ]
                 },
                 "examples": {
-                  "Example 1 - InvalidCPFError": {
-                    "value": {
-                      "code": "INVALID_DATA",
-                      "message": "The data provided has an invalid format"
-                    }
-                  },
-                  "Example 2 - EntryInvalidError": {
-                    "value": {
-                      "code": "INVALID_KEY",
-                      "message": "There are invalid fields"
-                    }
-                  },
-                  "Example 3 - EntryLockedByClaim": {
+                  "Example 1 - EntryLockedByClaim": {
                     "value": {
                       "code": "ENTRY_LOCKED_BY_CLAIM",
                       "message": "There is a claim with a status other than completed or canceled for the key"
@@ -1399,45 +1303,6 @@
               }
             }
           },
-          "400": {
-            "description": "Error with types [InvalidDataError].",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "oneOf": [
-                    {
-                      "title": "Invalid data",
-                      "properties": {
-                        "code": {
-                          "type": "string",
-                          "title": "Error code",
-                          "description": "The type of error",
-                          "example": "INVALID_DATA",
-                          "enum": [
-                            "INVALID_DATA"
-                          ]
-                        },
-                        "message": {
-                          "type": "string",
-                          "title": "Error message",
-                          "description": "Describes a message informing a reason for the error",
-                          "example": "The data provided has an invalid format"
-                        }
-                      }
-                    }
-                  ]
-                },
-                "examples": {
-                  "Example 1 - 'InvalidDataError": {
-                    "value": {
-                      "code": "INVALID_DATA",
-                      "message": "The data provided has an invalid format"
-                    }
-                  }
-                }
-              }
-            }
-          },
           "401": {
             "description": "Error with types [AuthenticationError].",
             "content": {
@@ -1513,7 +1378,7 @@
             }
           },
           "404": {
-            "description": "Error with types [ApplicationProductNotFound, KeyNotFound].",
+            "description": "Error with types [ApplicationProductNotFound, KeyNotFound, NoKeyLinkedToDocumentNumber].",
             "content": {
               "application/json": {
                 "schema": {
@@ -1587,6 +1452,26 @@
                           "example": "404"
                         }
                       }
+                    },
+                    {
+                      "title": "There arent key linked to the document number informed",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "NO_KEY_LINKED_TO_DOCUMENT_NUMBER",
+                          "enum": [
+                            "NO_KEY_LINKED_TO_DOCUMENT_NUMBER"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "There arent key linked to the document number informed"
+                        }
+                      }
                     }
                   ]
                 },
@@ -1607,6 +1492,12 @@
                     "value": {
                       "code": "ACCOUNT_NOT_FOUND",
                       "message": "Account not found."
+                    }
+                  },
+                  "Example 4 - NoKeyLinkedToDocumentNumber": {
+                    "value": {
+                      "code": "NO_KEY_LINKED_TO_DOCUMENT_NUMBER",
+                      "message": "There arent key linked to the document number informed"
                     }
                   }
                 }
@@ -2297,7 +2188,7 @@
             }
           },
           "400": {
-            "description": "Bad request",
+            "description": "Error with types [InvalidData, InvalidCPF, InvalidCNPJ, InvalidEmail, InvalidCellPhone, ClaimInvalid, ClaimTypeInconsistent, ClaimAlreadyExistForKey, ClaimAlreadyBelongsToClient, ClaimAlreadyOpen]",
             "content": {
               "application/json": {
                 "schema": {
@@ -2409,9 +2300,9 @@
                           "type": "string",
                           "title": "Error code",
                           "description": "The type of error",
-                          "example": "INVALID_CLAIM",
+                          "example": "CLAIM_INVALID",
                           "enum": [
-                            "INVALID_CLAIM"
+                            "CLAIM_INVALID"
                           ]
                         },
                         "message": {
@@ -2429,9 +2320,9 @@
                           "type": "string",
                           "title": "Error code",
                           "description": "The type of error",
-                          "example": "INCONSISTENT_CLAIM_TYPE",
+                          "example": "CLAIM_TYPE_INCONSISTENT",
                           "enum": [
-                            "INCONSISTENT_CLAIM_TYPE"
+                            "CLAIM_TYPE_INCONSISTENT"
                           ]
                         },
                         "message": {
@@ -2459,6 +2350,46 @@
                           "title": "Error message",
                           "description": "Describes a message informing a reason for the error",
                           "example": "There is some claim with status different of done or cancelled for the revindicated key"
+                        }
+                      }
+                    },
+                    {
+                      "title": "The key already belongs to the client",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "CLAIM_ALREADY_BELONGS_TO_CLIENT",
+                          "enum": [
+                            "CLAIM_ALREADY_BELONGS_TO_CLIENT"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "The key already belongs to the client"
+                        }
+                      }
+                    },
+                    {
+                      "title": "Claim already exists",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "CLAIM_ALREADY_OPEN",
+                          "enum": [
+                            "CLAIM_ALREADY_OPEN"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "There is already an open claim for the key"
                         }
                       }
                     }
@@ -2495,15 +2426,15 @@
                       "message": "The provided cellphone is not valid."
                     }
                   },
-                  "Example 6 - InvalidClaimError": {
+                  "Example 6 - ClaimInvalidError": {
                     "value": {
-                      "code": "INVALID_CLAIM",
+                      "code": "CLAIM_INVALID",
                       "message": "There are an invalid field at creation of the claim"
                     }
                   },
-                  "Example 7 - InconsistentClaimTypeError": {
+                  "Example 7 - ClaimTypeInconsistentError": {
                     "value": {
-                      "code": "INCONSISTENT_CLAIM_TYPE",
+                      "code": "CLAIM_TYPE_INCONSISTENT",
                       "message": "The requested claim type is inconsistent"
                     }
                   },
@@ -2511,6 +2442,18 @@
                     "value": {
                       "code": "CLAIM_ALREADY_EXIST_FOR_KEY",
                       "message": "There is some claim with status different of done or cancelled for the revindicated key"
+                    }
+                  },
+                  "Example 9 - ClaimAlreadyBelongsToClient": {
+                    "value": {
+                      "code": "CLAIM_ALREADY_BELONGS_TO_CLIENT",
+                      "message": "The key already belongs to the client"
+                    }
+                  },
+                  "Example 10 - ClaimAlreadyOpen": {
+                    "value": {
+                      "code": "CLAIM_ALREADY_EXIST_FOR_KEY",
+                      "message": "There is already an open claim for the key"
                     }
                   }
                 }
@@ -2592,7 +2535,7 @@
             }
           },
           "404": {
-            "description": "Error with types [ApplicationProductNotFound, ClaimKeyNotFoundError].",
+            "description": "Error with types [ApplicationProductNotFound, ClaimKeyNotFoundError, AccountNotFoundError].",
             "content": {
               "application/json": {
                 "schema": {
@@ -2636,6 +2579,31 @@
                           "example": "There is no registered bond to the key being claimed"
                         }
                       }
+                    },
+                    {
+                      "title": "Account Not Found",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "ACCOUNT_NOT_FOUND",
+                          "enum": [
+                            "ACCOUNT_NOT_FOUND"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "Account not found"
+                        },
+                        "status_code": {
+                          "type": "number",
+                          "description": "Error status code",
+                          "example": "404"
+                        }
+                      }
                     }
                   ]
                 },
@@ -2650,6 +2618,12 @@
                     "value": {
                       "code": "CLAIM_KEY_NOT_FOUND",
                       "message": "There is no registered bond to the key being claimed"
+                    }
+                  },
+                  "Example 3 - AccountNotFoundError": {
+                    "value": {
+                      "code": "ACCOUNT_NOT_FOUND",
+                      "message": "Account not found"
                     }
                   }
                 }
@@ -3306,7 +3280,7 @@
         "tags": [
           "Claims"
         ],
-        "summary": "It returns a list of pending claims",
+        "summary": "Get a list of pending claims",
         "description": "It returns a list of pending claims",
         "parameters": [
           {
@@ -3332,7 +3306,7 @@
         ],
         "responses": {
           "200": {
-            "description": "The list of key pending claims",
+            "description": "The list of pending claims",
             "content": {
               "application/json": {
                 "schema": {
@@ -3342,6 +3316,16 @@
                     "data"
                   ],
                   "properties": {
+                    "consulted_at": {
+                      "type": "string",
+                      "description": "Requested at",
+                      "example": "2021-07-23T16:58:27.000Z"
+                    },
+                    "has_more_items": {
+                      "type": "boolean",
+                      "description": "Has more items to list",
+                      "example": false
+                    },
                     "data": {
                       "type": "array",
                       "items": {
@@ -4081,34 +4065,64 @@
             }
           },
           "404": {
-            "description": "Error with types [ApplicationProductNotFound].",
+            "description": "Error with types [ApplicationProductNotFound, ClaimNotFound].",
             "content": {
               "application/json": {
                 "schema": {
-                  "title": "Application product not found",
-                  "properties": {
-                    "code": {
-                      "type": "string",
-                      "title": "Error code",
-                      "description": "The type of error",
-                      "example": "APPLICATION_PRODUCT_NOT_FOUND",
-                      "enum": [
-                        "APPLICATION_PRODUCT_NOT_FOUND"
-                      ]
+                  "oneOf": [
+                    {
+                      "title": "Application product not found",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "APPLICATION_PRODUCT_NOT_FOUND",
+                          "enum": [
+                            "APPLICATION_PRODUCT_NOT_FOUND"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "Product not found for given application id."
+                        }
+                      }
                     },
-                    "message": {
-                      "type": "string",
-                      "title": "Error message",
-                      "description": "Describes a message informing a reason for the error",
-                      "example": "Product not found for given application id."
+                    {
+                      "title": "Claim not found",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "CLAIM_NOT_FOUND",
+                          "enum": [
+                            "CLAIM_NOT_FOUND"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "Claim was not found or does not exist"
+                        }
+                      }
                     }
-                  }
+                  ]
                 },
                 "examples": {
                   "Example 1 - ApplicationNotFound": {
                     "value": {
                       "code": "APPLICATION_PRODUCT_NOT_FOUND",
                       "message": "Product not found for given application id."
+                    }
+                  },
+                  "Example 1 - ClaimNotFound": {
+                    "value": {
+                      "code": "CLAIM_NOT_FOUND",
+                      "message": "Claim was not found or does not exist"
                     }
                   }
                 }
@@ -4265,33 +4279,112 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "title": "Invalid request data",
-                  "properties": {
-                    "code": {
-                      "type": "string",
-                      "title": "Error code",
-                      "description": "The type of error",
-                      "example": "VALIDATION_FAILED"
+                  "oneOf": [
+                    {
+                      "title": "The claim cannot be confirmed by claimer",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "CLAIM_CANNOT_BE_CONFIRMED_BY_CLAIMER",
+                          "enum": [
+                            "CLAIM_CANNOT_BE_CONFIRMED_BY_CLAIMER"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "The claim cannot be confirmed by claimer"
+                        }
+                      }
                     },
-                    "message": {
-                      "type": "string",
-                      "title": "Error message",
-                      "description": "Describes a message informing a reason for the error",
-                      "example": "Invalid request data."
+                    {
+                      "title": "The claim status does not allow confirmation",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "RECEIVED_CLAIM_CANNOT_BE_CONFIRMED",
+                          "enum": [
+                            "RECEIVED_CLAIM_CANNOT_BE_CONFIRMED"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "The status of the claim you received, does not allow confirmation"
+                        }
+                      }
                     },
-                    "details": {
-                      "type": "array",
-                      "title": "Error details",
-                      "description": "Informs error details",
-                      "example": "Invalid request data."
+                    {
+                      "title": "The reason for confirming the claim you received is not valid",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "RECEIVED_CLAIM_CONFIRM_REASON_INVALID",
+                          "enum": [
+                            "RECEIVED_CLAIM_CONFIRM_REASON_INVALID"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "The reason for confirming the claim you received is not valid"
+                        }
+                      }
+                    },
+                    {
+                      "title": "Claim was already completed",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "CLAIM_ALREADY_DONE",
+                          "enum": [
+                            "CLAIM_ALREADY_DONE"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "Claim was already completed"
+                        }
+                      }
                     }
-                  }
+                  ]
                 },
                 "examples": {
-                  "Example 1 - ValidationFailed": {
+                  "Example 1 - ClaimCannotBeConfirmedByClaimer": {
                     "value": {
-                      "code": "VALIDATION_FAILED",
-                      "message": "Invalid request data."
+                      "code": "CLAIM_CANNOT_BE_CONFIRMED_BY_CLAIMER",
+                      "message": "The claim cannot be confirmed by claimer"
+                    }
+                  },
+                  "Example 2 - ReceivedClaimCannotBeConfirmed": {
+                    "value": {
+                      "code": "RECEIVED_CLAIM_CANNOT_BE_CONFIRMED",
+                      "message": "The status of the claim you received, does not allow confirmation"
+                    }
+                  },
+                  "Example 3 - ReceivedClaimConfirmReasonInvalid": {
+                    "value": {
+                      "code": "RECEIVED_CLAIM_CONFIRM_REASON_INVALID",
+                      "message": "The reason for confirming the claim you received is not valid"
+                    }
+                  },
+                  "Example 4 - ClaimAlreadyDone": {
+                    "value": {
+                      "code": "CLAIM_ALREADY_DONE",
+                      "message": "Claim was already completed"
                     }
                   }
                 }
@@ -4373,34 +4466,64 @@
             }
           },
           "404": {
-            "description": "Error with types [ApplicationProductNotFound].",
+            "description": "Error with types [ApplicationProductNotFound, ClaimNotFound].",
             "content": {
               "application/json": {
                 "schema": {
-                  "title": "Application product not found",
-                  "properties": {
-                    "code": {
-                      "type": "string",
-                      "title": "Error code",
-                      "description": "The type of error",
-                      "example": "APPLICATION_PRODUCT_NOT_FOUND",
-                      "enum": [
-                        "APPLICATION_PRODUCT_NOT_FOUND"
-                      ]
+                  "oneOf": [
+                    {
+                      "title": "Application product not found",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "APPLICATION_PRODUCT_NOT_FOUND",
+                          "enum": [
+                            "APPLICATION_PRODUCT_NOT_FOUND"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "Product not found for given application id."
+                        }
+                      }
                     },
-                    "message": {
-                      "type": "string",
-                      "title": "Error message",
-                      "description": "Describes a message informing a reason for the error",
-                      "example": "Product not found for given application id."
+                    {
+                      "title": "Claim not found",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "CLAIM_NOT_FOUND",
+                          "enum": [
+                            "CLAIM_NOT_FOUND"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "Claim was not found or does not exist"
+                        }
+                      }
                     }
-                  }
+                  ]
                 },
                 "examples": {
-                  "Example 2 - ApplicationNotFound": {
+                  "Example 1 - ApplicationNotFound": {
                     "value": {
                       "code": "APPLICATION_PRODUCT_NOT_FOUND",
                       "message": "Product not found for given application id."
+                    }
+                  },
+                  "Example 2 - ClaimNotFound": {
+                    "value": {
+                      "code": "CLAIM_NOT_FOUND",
+                      "message": "Claim was not found or does not exist"
                     }
                   }
                 }
@@ -4567,33 +4690,86 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "title": "Invalid request data",
-                  "properties": {
-                    "code": {
-                      "type": "string",
-                      "title": "Error code",
-                      "description": "The type of error",
-                      "example": "VALIDATION_FAILED"
+                  "oneOf": [
+                    {
+                      "title": "Claim not found",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "CLAIM_CANNOT_BE_COMPLETED_BY_GRANTOR",
+                          "enum": [
+                            "CLAIM_CANNOT_BE_COMPLETED_BY_GRANTOR"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "Claim cannot be completed by grantor"
+                        }
+                      }
                     },
-                    "message": {
-                      "type": "string",
-                      "title": "Error message",
-                      "description": "Describes a message informing a reason for the error",
-                      "example": "Invalid request data."
+                    {
+                      "title": "The status of your claim does not allow for its conclusion",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "CLAIM_CANNOT_COMPLETE",
+                          "enum": [
+                            "CLAIM_CANNOT_COMPLETE"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "The status of your claim does not allow for its conclusion"
+                        }
+                      }
                     },
-                    "details": {
-                      "type": "array",
-                      "title": "Error details",
-                      "description": "Informs error details",
-                      "example": "Invalid request data."
+                    {
+                      "title": "Claim was already completed",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "CLAIM_ALREADY_DONE",
+                          "enum": [
+                            "CLAIM_ALREADY_DONE"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "Claim was already completed"
+                        }
+                      }
                     }
-                  }
+                  ]
                 },
                 "examples": {
-                  "Example 1 - ValidationFailed": {
+                  "Example 1 - ClaimCannotBeCompletedByGrantor": {
                     "value": {
-                      "code": "VALIDATION_FAILED",
-                      "message": "Invalid request data."
+                      "code": "CLAIM_CANNOT_BE_COMPLETED_BY_GRANTOR",
+                      "message": "Claim cannot be completed by grantor"
+                    }
+                  },
+                  "Example 2 - ClaimCannotComplete": {
+                    "value": {
+                      "code": "CLAIM_CANNOT_COMPLETE",
+                      "message": "The status of your claim does not allow for its conclusion"
+                    }
+                  },
+                  "Example 3 - ClaimAlreadyDone": {
+                    "value": {
+                      "code": "CLAIM_ALREADY_DONE",
+                      "message": "Claim was already completed"
                     }
                   }
                 }
@@ -4675,34 +4851,64 @@
             }
           },
           "404": {
-            "description": "Error with types [ApplicationProductNotFound].",
+            "description": "Error with types [ApplicationProductNotFound, ClaimNotFound].",
             "content": {
               "application/json": {
                 "schema": {
-                  "title": "Application product not found",
-                  "properties": {
-                    "code": {
-                      "type": "string",
-                      "title": "Error code",
-                      "description": "The type of error",
-                      "example": "APPLICATION_PRODUCT_NOT_FOUND",
-                      "enum": [
-                        "APPLICATION_PRODUCT_NOT_FOUND"
-                      ]
+                  "oneOf": [
+                    {
+                      "title": "Application product not found",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "APPLICATION_PRODUCT_NOT_FOUND",
+                          "enum": [
+                            "APPLICATION_PRODUCT_NOT_FOUND"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "Product not found for given application id."
+                        }
+                      }
                     },
-                    "message": {
-                      "type": "string",
-                      "title": "Error message",
-                      "description": "Describes a message informing a reason for the error",
-                      "example": "Product not found for given application id."
+                    {
+                      "title": "Claim not found",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "CLAIM_NOT_FOUND",
+                          "enum": [
+                            "CLAIM_NOT_FOUND"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "Claim was not found or does not exist"
+                        }
+                      }
                     }
-                  }
+                  ]
                 },
                 "examples": {
-                  "Example 2 - ApplicationNotFound": {
+                  "Example 1 - ApplicationNotFound": {
                     "value": {
                       "code": "APPLICATION_PRODUCT_NOT_FOUND",
                       "message": "Product not found for given application id."
+                    }
+                  },
+                  "Example 2 - ClaimNotFound": {
+                    "value": {
+                      "code": "CLAIM_NOT_FOUND",
+                      "message": "Claim was not found or does not exist"
                     }
                   }
                 }
@@ -4892,30 +5098,161 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "title": "Invalid request data",
-                  "properties": {
-                    "code": {
-                      "type": "string",
-                      "title": "Error code",
-                      "description": "The type of error",
-                      "example": "VALIDATION_FAILED"
+                  "oneOf": [
+                    {
+                      "title": "The status of your claim does not allow for its cancellation",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "CLAIM_CANNOT_BE_CANCELLED",
+                          "enum": [
+                            "CLAIM_CANNOT_BE_CANCELLED"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "The status of your claim does not allow for its cancellation"
+                        }
+                      }
                     },
-                    "message": {
-                      "type": "string",
-                      "title": "Error message",
-                      "description": "Describes a message informing a reason for the error",
-                      "example": "Invalid request data."
+                    {
+                      "title": "The reason to cancel your claim is not valid",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "CLAIM_CANCELATION_REASON_INVALID",
+                          "enum": [
+                            "CLAIM_CANCELATION_REASON_INVALID"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "The reason to cancel your claim is not valid"
+                        }
+                      }
                     },
-                    "details": {
-                      "type": "array",
-                      "title": "Error details",
-                      "description": "Informs error details",
-                      "example": "Invalid request data."
+                    {
+                      "title": "The status of the ownership claim you received does not allow for its cancellation",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "RECEIVED_CLAIM_CANNOT_BE_CANCELLED",
+                          "enum": [
+                            "RECEIVED_CLAIM_CANNOT_BE_CANCELLED"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "The status of the ownership claim you received does not allow for its cancellation"
+                        }
+                      }
+                    },
+                    {
+                      "title": "The portability status you received does not allow its cancellation",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "RECEIVED_OWNERSHIP_CANNOT_BE_CANCELLED",
+                          "enum": [
+                            "RECEIVED_OWNERSHIP_CANNOT_BE_CANCELLED"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "The portability status you received does not allow its cancellation"
+                        }
+                      }
+                    },
+                    {
+                      "title": "The reason to cancel the claim you received is not valid",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "RECEIVED_CLAIM_CANCELATION_RASON_INVALID",
+                          "enum": [
+                            "RECEIVED_CLAIM_CANCELATION_RASON_INVALID"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "The reason to cancel the claim you received is not valid"
+                        }
+                      }
+                    },
+                    {
+                      "title": "Claim was already completed",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "CLAIM_ALREADY_DONE",
+                          "enum": [
+                            "CLAIM_ALREADY_DONE"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "Claim was already completed"
+                        }
+                      }
                     }
-                  }
+                  ]
                 },
                 "examples": {
-                  "Example 1 - ValidationFailed": {
+                  "Example 1 - ClaimCannotBeCancelled": {
+                    "value": {
+                      "code": "CLAIM_CANNOT_BE_CANCELLED",
+                      "message": "The status of your claim does not allow for its cancellation"
+                    }
+                  },
+                  "Example 2 - ClaimCancelationReasonInvalid": {
+                    "value": {
+                      "code": "CLAIM_CANCELATION_REASON_INVALID",
+                      "message": "The reason to cancel your claim is not valid"
+                    }
+                  },
+                  "Example 3 - ReceivedClaimCannotBeCancelled": {
+                    "value": {
+                      "code": "RECEIVED_CLAIM_CANNOT_BE_CANCELLED",
+                      "message": "The status of the ownership claim you received does not allow for its cancellation"
+                    }
+                  },
+                  "Example 4 - ReceivedOwnershipCannotBeCancelled": {
+                    "value": {
+                      "code": "RECEIVED_OWNERSHIP_CANNOT_BE_CANCELLED",
+                      "message": "The portability status you received does not allow its cancellation"
+                    }
+                  },
+                  "Example 5 - ReceivedClaimCancelationRasonInvalid": {
+                    "value": {
+                      "code": "RECEIVED_CLAIM_CANCELATION_RASON_INVALID",
+                      "message": "The reason to cancel the claim you received is not valid"
+                    }
+                  },
+                  "Example 6 - ClaimAlreadyDone": {
                     "value": {
                       "code": "VALIDATION_FAILED",
                       "message": "Invalid request data."
@@ -5000,34 +5337,64 @@
             }
           },
           "404": {
-            "description": "Error with types [ApplicationProductNotFound].",
+            "description": "Error with types [ApplicationProductNotFound, ClaimNotFound].",
             "content": {
               "application/json": {
                 "schema": {
-                  "title": "Application product not found",
-                  "properties": {
-                    "code": {
-                      "type": "string",
-                      "title": "Error code",
-                      "description": "The type of error",
-                      "example": "APPLICATION_PRODUCT_NOT_FOUND",
-                      "enum": [
-                        "APPLICATION_PRODUCT_NOT_FOUND"
-                      ]
+                  "oneOf": [
+                    {
+                      "title": "Application product not found",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "APPLICATION_PRODUCT_NOT_FOUND",
+                          "enum": [
+                            "APPLICATION_PRODUCT_NOT_FOUND"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "Product not found for given application id."
+                        }
+                      }
                     },
-                    "message": {
-                      "type": "string",
-                      "title": "Error message",
-                      "description": "Describes a message informing a reason for the error",
-                      "example": "Product not found for given application id."
+                    {
+                      "title": "Claim not found",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "CLAIM_NOT_FOUND",
+                          "enum": [
+                            "CLAIM_NOT_FOUND"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "Claim was not found or does not exist"
+                        }
+                      }
                     }
-                  }
+                  ]
                 },
                 "examples": {
-                  "Example 2 - ApplicationNotFound": {
+                  "Example 1 - ApplicationNotFound": {
                     "value": {
                       "code": "APPLICATION_PRODUCT_NOT_FOUND",
                       "message": "Product not found for given application id."
+                    }
+                  },
+                  "Example 2 - ClaimNotFound": {
+                    "value": {
+                      "code": "CLAIM_NOT_FOUND",
+                      "message": "Claim was not found or does not exist"
                     }
                   }
                 }
