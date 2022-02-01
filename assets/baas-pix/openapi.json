@@ -3753,6 +3753,16 @@
             "required": true,
             "description": "UUID of the claim to get.",
             "example": "4af9af0f-4935-454e-b3ee-af5b9d85c914"
+          },
+          {
+            "in": "query",
+            "name": "claimer",
+            "schema": {
+              "type": "boolean"
+            },
+            "required": true,
+            "description": "Indicates whether the user is the claimer",
+            "example": true
           }
         ],
         "responses": {
