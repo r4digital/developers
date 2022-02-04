@@ -3,7 +3,7 @@
   "info": {
     "version": "0.0.1",
     "title": "BaaS Pix QR Code",
-    "description": "<h1> BaaS Pix QR Code </h1>\n"
+    "description": "<h1> BaaS Pix QR Code </h1>\n<h5>Concepts:</h5>\n<section>\n<h3>Idempotence-Key</h3>\n<p>\n  To ensure that communication failures/interruptions do not result in accidental data loss or duplication, such as making a duplicate payment, the APIs are designed so that each request is executed \u201cexactly once\u201d. For this, the concept of Idempotence was implemented.\n</p>\n<p>  \n  The Client System must generate a new key for each request, guaranteeing that each operation will be executed only once.\n  In case you do not receive a response to a request, it can be sent again with the same key to obtain the response. If a new key is generated, we will understand that it is a new operation and will be executed a second time.\n</p>\n<p>  \n  The idempotence key must be in GUID (v4) format, i.e. 32 hexadecimal digits, in an 8-4-4-4-12 array. </br>\n  Example: <strong>'69F963C6-7487-4363-9406-A1DE2A9636D4'</strong></br>\n  The Key-Idempotencia will be stored in the API cache for a period of 24 hours.\n</p>\n</section>\n"
   },
   "servers": [
     {
@@ -35,6 +35,19 @@
         "security": [
           {
             "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Idempotence-Key",
+            "description": "Switch to, in case of failures/interruptions in communication not result in accidental data loss or duplication.",
+            "schema": {
+              "example": "69F963C6-7487-4363-9406-A1DE2A9636D4",
+              "type": "string",
+              "format": "uuid"
+            },
+            "required": true
           }
         ],
         "requestBody": {
@@ -924,6 +937,19 @@
         "security": [
           {
             "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Idempotence-Key",
+            "description": "Switch to, in case of failures/interruptions in communication not result in accidental data loss or duplication.",
+            "schema": {
+              "example": "69F963C6-7487-4363-9406-A1DE2A9636D4",
+              "type": "string",
+              "format": "uuid"
+            },
+            "required": true
           }
         ],
         "requestBody": {
