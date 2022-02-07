@@ -832,6 +832,15 @@
         "summary": "Delete a key",
         "parameters": [
           {
+            "in": "header",
+            "name": "Idempotence-Key",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "required": true
+          },
+          {
             "in": "path",
             "name": "key",
             "schema": {
@@ -876,7 +885,7 @@
             "description": "Successfully deleted key."
           },
           "400": {
-            "description": "Error with types [InvalidDataError, InvalidKey, EntryLockedByClaim].",
+            "description": "Error with types [EntryLockedByClaim, InvalidIdempotenceKey].",
             "content": {
               "application/json": {
                 "schema": {
@@ -900,6 +909,26 @@
                           "example": "There is a claim with a status other than completed or canceled for the key"
                         }
                       }
+                    },
+                    {
+                      "title": "Invalid Idempotence Key",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "INVALID_IDEMPOTENCE_KEY",
+                          "enum": [
+                            "INVALID_IDEMPOTENCE_KEY"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "Idempotence Key is missing or is not a valid uuid."
+                        }
+                      }
                     }
                   ]
                 },
@@ -908,6 +937,12 @@
                     "value": {
                       "code": "ENTRY_LOCKED_BY_CLAIM",
                       "message": "There is a claim with a status other than completed or canceled for the key"
+                    }
+                  },
+                  "Example 2 - InvalidIdempotenceKeyError": {
+                    "value": {
+                      "code": "INVALID_IDEMPOTENCE_KEY",
+                      "message": "Idempotence Key is missing or is not a valid uuid."
                     }
                   }
                 }
