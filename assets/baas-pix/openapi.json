@@ -4740,6 +4740,15 @@
         ],
         "parameters": [
           {
+            "in": "header",
+            "name": "Idempotence-Key",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "required": true
+          },
+          {
             "in": "path",
             "name": "claim_id",
             "schema": {
@@ -4844,7 +4853,7 @@
             }
           },
           "400": {
-            "description": "Error with types [ValidationFailed].",
+            "description": "Error with types [ValidationFailed, InvalidIdempotenceKey, ClaimCannotBeCompletedByGrantor, ClaimCannotComplete, ClaimAlreadyDone, InvalidIdempotenceKey].",
             "content": {
               "application/json": {
                 "schema": {
@@ -4908,6 +4917,26 @@
                           "example": "Claim was already completed"
                         }
                       }
+                    },
+                    {
+                      "title": "Invalid Idempotence Key",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "INVALID_IDEMPOTENCE_KEY",
+                          "enum": [
+                            "INVALID_IDEMPOTENCE_KEY"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "Idempotence Key is missing or is not a valid uuid."
+                        }
+                      }
                     }
                   ]
                 },
@@ -4928,6 +4957,12 @@
                     "value": {
                       "code": "CLAIM_ALREADY_DONE",
                       "message": "Claim was already completed"
+                    }
+                  },
+                  "Example 4 - InvalidIdempotenceKeyError": {
+                    "value": {
+                      "code": "INVALID_IDEMPOTENCE_KEY",
+                      "message": "Idempotence Key is missing or is not a valid uuid."
                     }
                   }
                 }
