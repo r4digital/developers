@@ -67,10 +67,11 @@
                     "format": "base64",
                     "example": "MDAwMjAxMjYzMzAwMTRici5nb3YuYmNiLnBpeDAxMTE5MDIyNjM5NTA5MDUyMDQwMDAwNTMwMzk4NjU0MDQyLjAwNTgwMkJSNTkxM0Z1bGFubyBkZSBUYWw2MDEyUE9SVE8gQUxFR1JFNjIwNzA1MDMqKio2MzA0RDNDQg"
                   },
-                  "document_number": {
+                  "account_id": {
                     "type": "string",
-                    "maxLength": 50,
-                    "example": "30937116068"
+                    "description": "Unique identifier of the account.",
+                    "format": "uuid-v4",
+                    "example": "6d814c28-fe73-443c-bfe0-48d518aa32fa"
                   },
                   "city_code": {
                     "type": "string",
