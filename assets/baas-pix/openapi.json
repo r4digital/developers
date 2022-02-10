@@ -2375,7 +2375,7 @@
             }
           },
           "400": {
-            "description": "Error with types [InvalidData, InvalidCPF, InvalidCNPJ, InvalidEmail, InvalidCellPhone, ClaimInvalid, ClaimTypeInconsistent, ClaimAlreadyExistForKey, ClaimAlreadyBelongsToClient, ClaimAlreadyOpen, InvalidIdempotenceKey, IdempotenceKeyConflict, AccountDisabled]",
+            "description": "Error with types [InvalidData, InvalidCPF, InvalidCNPJ, InvalidEmail, InvalidCellPhone, ClaimInvalid, ClaimTypeInconsistent, ClaimAlreadyExistForKey, ClaimAlreadyBelongsToClient, ClaimAlreadyOpen, InvalidIdempotenceKey, IdempotenceKeyConflict, AccountDisabled, KeyLimitExceeded]",
             "content": {
               "application/json": {
                 "schema": {
@@ -2639,6 +2639,26 @@
                           "example": "The provided account has been disabled."
                         }
                       }
+                    },
+                    {
+                      "title": "Key Limit exceeded",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "KEY_LIMIT_EXCEEDED",
+                          "enum": [
+                            "KEY_LIMIT_EXCEEDED"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "Number of links associated with transactional account exceeded maximum limit."
+                        }
+                      }
                     }
                   ]
                 },
@@ -2719,6 +2739,12 @@
                     "value": {
                       "code": "ACCOUNT_DISABLED",
                       "message": "The provided account has been disabled."
+                    }
+                  },
+                  "Example 14 - KeyLimitExceededError": {
+                    "value": {
+                      "code": "KEY_LIMIT_EXCEEDED",
+                      "message": "Number of links associated with transactional account exceeded maximum limit."
                     }
                   }
                 }
