@@ -398,6 +398,26 @@
                           "example": "Number of links associated with transactional account exceeded maximum limit."
                         }
                       }
+                    },
+                    {
+                      "title": "Invalid data",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "INVALID_DATA",
+                          "enum": [
+                            "INVALID_DATA"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "The data provided has an invalid format"
+                        }
+                      }
                     }
                   ]
                 },
@@ -484,6 +504,12 @@
                     "value": {
                       "code": "KEY_LIMIT_EXCEEDED",
                       "message": "Number of links associated with transactional account exceeded maximum limit."
+                    }
+                  },
+                  "Example 15 - InvalidDataError": {
+                    "value": {
+                      "code": "INVALID_DATA",
+                      "message": "The data provided has an invalid format"
                     }
                   }
                 }
