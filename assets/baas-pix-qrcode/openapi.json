@@ -1159,6 +1159,38 @@
               }
             }
           },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Conflict",
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "title": "Error code",
+                      "description": "The type of error",
+                      "example": "CONFLICT",
+                      "enum": [
+                        "CONFLICT"
+                      ]
+                    },
+                    "message": {
+                      "type": "string",
+                      "title": "Error message",
+                      "description": "Describes a message informing a reason for the error",
+                      "example": "Conflict"
+                    },
+                    "status_code": {
+                      "type": "number",
+                      "description": "Error status code",
+                      "example": "409"
+                    }
+                  }
+                }
+              }
+            }
+          },
           "500": {
             "description": "Internal server error.",
             "content": {
