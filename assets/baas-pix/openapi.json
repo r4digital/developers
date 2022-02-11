@@ -114,7 +114,7 @@
             }
           },
           "400": {
-            "description": "Error with types [InvalidCPF, InvalidCNPJ, InvalidCellPhone, InvalidEmail, KeyAlreadyExists, EntryLockedByClaim, KeyInCustodyOfDifferentParticipant, KeyWithDifferentAccount, KeyNicknameInvalid, KeyDataIncomplete, KeySameDocumentDifferentPSP, InvalidIdempotenceKey, IdempotenceKeyConflict].",
+            "description": "Error with types [InvalidCPF, InvalidCNPJ, InvalidCellPhone, InvalidEmail, KeyAlreadyExists, EntryLockedByClaim, KeyInCustodyOfDifferentParticipant, KeyWithDifferentAccount, KeyNicknameInvalid, KeyDataIncomplete, KeySameDocumentDifferentPSP, InvalidIdempotenceKey, IdempotenceKeyConflict, AccountDisabledError].",
             "content": {
               "application/json": {
                 "schema": {
@@ -418,6 +418,26 @@
                           "example": "The data provided has an invalid format"
                         }
                       }
+                    },
+                    {
+                      "title": "Account Disabled",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "ACCOUNT_DISABLED",
+                          "enum": [
+                            "ACCOUNT_DISABLED"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "The provided account has been disabled."
+                        }
+                      }
                     }
                   ]
                 },
@@ -510,6 +530,12 @@
                     "value": {
                       "code": "INVALID_DATA",
                       "message": "The data provided has an invalid format"
+                    }
+                  },
+                  "Example 16 - AccountDisabledError": {
+                    "value": {
+                      "code": "ACCOUNT_DISABLED",
+                      "message": "The provided account has been disabled."
                     }
                   }
                 }
@@ -783,6 +809,45 @@
               }
             }
           },
+          "400": {
+            "description": "Error with types [AccountDisabled]",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "title": "Account Disabled",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "ACCOUNT_DISABLED",
+                          "enum": [
+                            "ACCOUNT_DISABLED"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "The provided account has been disabled."
+                        }
+                      }
+                    }
+                  ]
+                },
+                "examples": {
+                  "Example 1 - AccountDisabledError": {
+                    "value": {
+                      "code": "ACCOUNT_DISABLED",
+                      "message": "The provided account has been disabled."
+                    }
+                  }
+                }
+              }
+            }
+          },
           "401": {
             "description": "Error with types [AuthenticationError].",
             "content": {
@@ -1000,7 +1065,7 @@
             "description": "Successfully deleted key."
           },
           "400": {
-            "description": "Error with types [EntryLockedByClaim, InvalidIdempotenceKey, IdempotenceKeyConflict].",
+            "description": "Error with types [EntryLockedByClaim, InvalidIdempotenceKey, IdempotenceKeyConflict, AccountDisabled].",
             "content": {
               "application/json": {
                 "schema": {
@@ -1064,6 +1129,26 @@
                           "example": "Two different contents have been sent with the same idempotence key"
                         }
                       }
+                    },
+                    {
+                      "title": "Account Disabled",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "ACCOUNT_DISABLED",
+                          "enum": [
+                            "ACCOUNT_DISABLED"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "The provided account has been disabled."
+                        }
+                      }
                     }
                   ]
                 },
@@ -1084,6 +1169,12 @@
                     "value": {
                       "code": "IDEMPOTENCE_KEY_CONFLICT",
                       "message": "Two different contents have been sent with the same idempotence key"
+                    }
+                  },
+                  "Example 4 - AccountDisabledError": {
+                    "value": {
+                      "code": "ACCOUNT_DISABLED",
+                      "message": "The provided account has been disabled."
                     }
                   }
                 }
@@ -3388,6 +3479,45 @@
               }
             }
           },
+          "400": {
+            "description": "Error with types [AccountDisabledError].",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "title": "Account Disabled",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "ACCOUNT_DISABLED",
+                          "enum": [
+                            "ACCOUNT_DISABLED"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "The provided account has been disabled."
+                        }
+                      }
+                    }
+                  ]
+                },
+                "examples": {
+                  "Example 1 - AccountDisabledError": {
+                    "value": {
+                      "code": "ACCOUNT_DISABLED",
+                      "message": "The provided account has been disabled."
+                    }
+                  }
+                }
+              }
+            }
+          },
           "401": {
             "description": "Error with types [AuthenticationError].",
             "content": {
@@ -3844,6 +3974,45 @@
               }
             }
           },
+          "400": {
+            "description": "Error with types [AccountDisabled]",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "title": "Account Disabled",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "ACCOUNT_DISABLED",
+                          "enum": [
+                            "ACCOUNT_DISABLED"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "The provided account has been disabled."
+                        }
+                      }
+                    }
+                  ]
+                },
+                "examples": {
+                  "Example 1 - AccountDisabledError": {
+                    "value": {
+                      "code": "ACCOUNT_DISABLED",
+                      "message": "The provided account has been disabled."
+                    }
+                  }
+                }
+              }
+            }
+          },
           "401": {
             "description": "Error with types [AuthenticationError].",
             "content": {
@@ -4289,6 +4458,45 @@
                       "type": "string",
                       "description": "Claim update date.",
                       "example": "2021-10-31T12:56:23.123Z"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Error with types [AccountDisabled]",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "title": "Account Disabled",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "ACCOUNT_DISABLED",
+                          "enum": [
+                            "ACCOUNT_DISABLED"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "The provided account has been disabled."
+                        }
+                      }
+                    }
+                  ]
+                },
+                "examples": {
+                  "Example 13 - AccountDisabledError": {
+                    "value": {
+                      "code": "ACCOUNT_DISABLED",
+                      "message": "The provided account has been disabled."
                     }
                   }
                 }
