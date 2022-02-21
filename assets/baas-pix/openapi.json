@@ -2421,7 +2421,7 @@
                         "WAITING_RESOLUTION",
                         "CONFIRMED",
                         "CANCELED",
-                        "COMPLETED"
+                        "DONE"
                       ]
                     },
                     "cancellation_reason": {
@@ -4752,7 +4752,7 @@
                         "WAITING_RESOLUTION",
                         "CONFIRMED",
                         "CANCELED",
-                        "COMPLETED"
+                        "DONE"
                       ]
                     },
                     "cancellation_reason": {
@@ -5693,7 +5693,7 @@
                         "WAITING_RESOLUTION",
                         "CONFIRMED",
                         "CANCELED",
-                        "COMPLETED"
+                        "DONE"
                       ]
                     },
                     "cancellation_reason": {
