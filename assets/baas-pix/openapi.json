@@ -753,55 +753,60 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "type": "object",
-                    "description": "Describes the properties of pix key.",
-                    "required": [
-                      "key",
-                      "name",
-                      "created_at",
-                      "ownership_start_date"
-                    ],
-                    "properties": {
-                      "key": {
-                        "type": "string",
-                        "description": "Value of pix key.",
-                        "example": "51981706022"
-                      },
-                      "name": {
-                        "type": "string",
-                        "description": "Trade Name of pix key owner.",
-                        "example": "John Doe"
-                      },
-                      "nickname": {
-                        "type": "string",
-                        "description": "Name of pix key owner.",
-                        "example": "John"
-                      },
-                      "created_at": {
-                        "type": "string",
-                        "description": "Pix key creation date.",
-                        "example": "2021-10-31T12:56:23.123Z"
-                      },
-                      "ownership_start_date": {
-                        "type": "string",
-                        "description": "Ownership start date.",
-                        "example": "2021-10-31T12:56:23.123Z"
-                      },
-                      "claim_opening_date": {
-                        "type": "string",
-                        "description": "Claim opening date.",
-                        "example": "2021-10-31T12:56:23.123Z"
-                      },
-                      "claim": {
-                        "type": "string",
-                        "enum": [
-                          "OWNERSHIP",
-                          "PORTABILITY"
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "description": "Describes the properties of pix key.",
+                        "required": [
+                          "key",
+                          "name",
+                          "created_at",
+                          "ownership_start_date"
                         ],
-                        "description": "Claim reason.",
-                        "example": "PORTABILITY"
+                        "properties": {
+                          "key": {
+                            "type": "string",
+                            "description": "Value of pix key.",
+                            "example": "51981706022"
+                          },
+                          "name": {
+                            "type": "string",
+                            "description": "Trade Name of pix key owner.",
+                            "example": "John Doe"
+                          },
+                          "nickname": {
+                            "type": "string",
+                            "description": "Name of pix key owner.",
+                            "example": "John"
+                          },
+                          "created_at": {
+                            "type": "string",
+                            "description": "Pix key creation date.",
+                            "example": "2021-10-31T12:56:23.123Z"
+                          },
+                          "ownership_start_date": {
+                            "type": "string",
+                            "description": "Ownership start date.",
+                            "example": "2021-10-31T12:56:23.123Z"
+                          },
+                          "claim_opening_date": {
+                            "type": "string",
+                            "description": "Claim opening date.",
+                            "example": "2021-10-31T12:56:23.123Z"
+                          },
+                          "claim": {
+                            "type": "string",
+                            "enum": [
+                              "OWNERSHIP",
+                              "PORTABILITY"
+                            ],
+                            "description": "Claim reason.",
+                            "example": "PORTABILITY"
+                          }
+                        }
                       }
                     }
                   }
