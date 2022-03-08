@@ -972,6 +972,45 @@
               }
             }
           },
+          "409": {
+            "description": "Error with types [PaymentAlreadyExists].",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "title": "Bad Request",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "PAYMENT_ALREADY_EXISTS",
+                          "enum": [
+                            "PAYMENT_ALREADY_EXISTS"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "Payment already exists."
+                        }
+                      }
+                    }
+                  ]
+                },
+                "examples": {
+                  "Example 1 - PaymentAlreadyExists": {
+                    "value": {
+                      "code": "PAYMENT_ALREADY_EXISTS",
+                      "message": "Payment already exists."
+                    }
+                  }
+                }
+              }
+            }
+          },
           "500": {
             "description": "Internal server error.",
             "content": {
