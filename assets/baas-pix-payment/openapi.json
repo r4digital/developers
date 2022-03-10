@@ -286,12 +286,6 @@
                     "description": "The payment's id.",
                     "example": "2aa17b9e-32ba-40fe-9ddd-a01632737759"
                   },
-                  "application_id": {
-                    "type": "string",
-                    "format": "uuid-v4",
-                    "description": "Unique identifier of application.",
-                    "example": "6d814c28-fe73-443c-bfe0-48d518aa1234"
-                  },
                   "account_id": {
                     "type": "string",
                     "description": "Unique identifier of the account.",
@@ -299,7 +293,7 @@
                     "example": "6d814c28-fe73-443c-bfe0-48d518aa32fa"
                   },
                   "document_payment_initiator": {
-                    "type": "string",
+                    "type": "number",
                     "example": 37650221000115,
                     "description": "The CNPJ of the payment initiator institution.\n\n* This field is required when the kind property to be equal PAYMENT_TRANSACTION_SERVICE.\n"
                   },
@@ -330,7 +324,7 @@
                     "enum": [
                       "SCHEDULED_PAYMENT",
                       "PRIORITY_PAYMENT",
-                      "FRAUD_ANALISYS_PAYMENT"
+                      "FRAUD_ANALYSIS_PAYMENT"
                     ],
                     "example": "PRIORITY_PAYMENT"
                   },
@@ -385,7 +379,7 @@
                         "example": "CPF"
                       },
                       "document_number": {
-                        "type": "string",
+                        "type": "number",
                         "description": "The recipient's document number.",
                         "example": 18612366038
                       },
@@ -557,7 +551,7 @@
                       "enum": [
                         "SCHEDULED_PAYMENT",
                         "PRIORITY_PAYMENT",
-                        "FRAUD_ANALISYS_PAYMENT"
+                        "FRAUD_ANALYSIS_PAYMENT"
                       ],
                       "description": "Indicate if this is a priority transaction or not.",
                       "example": "PRIORITY_PAYMENT"
