@@ -422,7 +422,7 @@
                     "description": "The payment's value",
                     "example": 10.99
                   },
-                  "details_value": {
+                  "value_details": {
                     "type": "array",
                     "description": "The element group used to break down payment amounts\n\n* If the goal to be equal `BUY_OR_TRANSFER` dont inform this field.\n* If the goal to be equal `CHANGE` is mandatory inform two different\ngroups, one with the kind equal to `PURCHASE_AMOUNT` and another with\nthe kind equal to `AVAILABLE_CASH`.\n* If the goal to be equal `WITHDRAW` is mandatory inform one group with\nthe kind equal to `AVAILABLE_CASH`.\n",
                     "items": {
