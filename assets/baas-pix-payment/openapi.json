@@ -462,7 +462,7 @@
                   "conciliation_id": {
                     "type": "string",
                     "description": "Recipient conciliation identifier.\n\n* When the kind to be equal `DINAMIC_QRCODE`, `PAYER_QRCODE` or `PAYMENT_TRANSACTION_SERVICE` this field is mandatory.\n* When the kind to be equal `STATIC_QRCODE` this field is optional.\n* When the kind to be equal `MANUAL` OR 'KEY' dont inform this field.\n",
-                    "example": "f3336183-8172-4988-bec9-4b4a6b294b80"
+                    "example": "PI2020010300000000000000000000001"
                   }
                 }
               }
@@ -706,7 +706,7 @@
                     "conciliation_id": {
                       "type": "string",
                       "description": "The payment's conciliation id",
-                      "example": "8a565c43-7db0-4808-a1c9-aca65f5ec8e3"
+                      "example": "PI2020010300000000000000000000001"
                     },
                     "end_to_end_id": {
                       "type": "string",
@@ -1273,7 +1273,7 @@
                   "conciliation_id": {
                     "type": "string",
                     "description": "Recipient conciliation identifier.\n\n* When the kind to be equal `DINAMIC_QRCODE`, `PAYER_QRCODE` or `PAYMENT_TRANSACTION_SERVICE` this field is mandatory.\n* When the kind to be equal `STATIC_QRCODE` this field is optional.\n* When the kind to be equal `MANUAL` OR 'KEY' dont inform this field.\n",
-                    "example": "f3336183-8172-4988-bec9-4b4a6b294b80"
+                    "example": "PI2020010300000000000000000000001"
                   }
                 }
               }
