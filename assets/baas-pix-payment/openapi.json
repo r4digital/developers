@@ -385,7 +385,8 @@
                       "name": {
                         "type": "string",
                         "description": "Recipient's name",
-                        "example": "Recipient name"
+                        "example": "Recipient name",
+                        "maxLength": 140
                       },
                       "agency_number": {
                         "type": "number",
@@ -450,17 +451,14 @@
                   "key": {
                     "type": "string",
                     "description": "Key to identify the transactional account\n\n* Dont provide this field when kind to be equal `MANUAL`.\n",
-                    "example": "85801860055"
+                    "example": "85801860055",
+                    "maxLength": 77
                   },
                   "description": {
                     "type": "string",
                     "description": "The payment's description.",
-                    "example": "Pagamento do Churrasco"
-                  },
-                  "conciliation_id": {
-                    "type": "string",
-                    "description": "Recipient conciliation identifier.\n\n* When the kind to be equal `DINAMIC_QRCODE`, `PAYER_QRCODE` or `PAYMENT_TRANSACTION_SERVICE` this field is mandatory.\n* When the kind to be equal `STATIC_QRCODE` this field is optional.\n* When the kind to be equal `MANUAL` OR 'KEY' dont inform this field.\n",
-                    "example": "PI2020010300000000000000000000001"
+                    "example": "Pagamento do Churrasco",
+                    "maxLength": 140
                   }
                 }
               }
@@ -667,7 +665,8 @@
                         "name": {
                           "type": "string",
                           "description": "Recipient's name",
-                          "example": "Recipient name"
+                          "example": "Recipient name",
+                          "maxLength": 140
                         },
                         "agency_number": {
                           "type": "number",
@@ -711,11 +710,6 @@
                       "type": "string",
                       "description": "The payment's description",
                       "example": "Pagamento do churrasco"
-                    },
-                    "conciliation_id": {
-                      "type": "string",
-                      "description": "The payment's conciliation id",
-                      "example": "PI2020010300000000000000000000001"
                     },
                     "end_to_end_id": {
                       "type": "string",
@@ -1438,7 +1432,8 @@
                               "name": {
                                 "type": "string",
                                 "description": "Recipient's name",
-                                "example": "Recipient name"
+                                "example": "Recipient name",
+                                "maxLength": 140
                               },
                               "agency_number": {
                                 "type": "number",
@@ -2701,7 +2696,8 @@
                         "name": {
                           "type": "string",
                           "description": "Recipient's name",
-                          "example": "Recipient name"
+                          "example": "Recipient name",
+                          "maxLength": 140
                         },
                         "agency_number": {
                           "type": "number",
