@@ -303,7 +303,7 @@
                       "MANUAL",
                       "KEY",
                       "STATIC_QRCODE",
-                      "DINAMIC_QRCODE",
+                      "DYNAMIC_QRCODE",
                       "PAYMENT_TRANSACTION_SERVICE"
                     ],
                     "description": "The type of mecanism used to start the payment",
@@ -459,6 +459,11 @@
                     "description": "The payment's description.",
                     "example": "Pagamento do Churrasco",
                     "maxLength": 140
+                  },
+                  "conciliation_id": {
+                    "type": "string",
+                    "description": "Recipient conciliation identifier.\n\n* When the kind to be equal `DYNAMIC_QRCODE`, `PAYER_QRCODE` or `PAYMENT_TRANSACTION_SERVICE` this field is mandatory.\n* When the kind to be equal `STATIC_QRCODE` this field is optional.\n* When the kind to be equal `MANUAL` OR 'KEY' dont inform this field.\n",
+                    "example": "PI2020010300000000000000000000001"
                   }
                 }
               }
@@ -514,7 +519,7 @@
                         "MANUAL",
                         "KEY",
                         "STATIC_QRCODE",
-                        "DINAMIC_QRCODE",
+                        "DYNAMIC_QRCODE",
                         "PAYMENT_TRANSACTION_SERVICE",
                         "PAYER_QRCODE"
                       ],
@@ -1230,7 +1235,7 @@
                               "MANUAL",
                               "KEY",
                               "STATIC_QRCODE",
-                              "DINAMIC_QRCODE",
+                              "DYNAMIC_QRCODE",
                               "PAYMENT_TRANSACTION_SERVICE",
                               "PAYER_QRCODE"
                             ],
@@ -1868,7 +1873,7 @@
                       "MANUAL",
                       "KEY",
                       "STATIC_QRCODE",
-                      "DINAMIC_QRCODE",
+                      "DYNAMIC_QRCODE",
                       "PAYMENT_TRANSACTION_SERVICE"
                     ],
                     "description": "The type of mecanism used to start the payment",
@@ -2037,7 +2042,7 @@
                   },
                   "conciliation_id": {
                     "type": "string",
-                    "description": "Recipient conciliation identifier.\n\n* When the kind to be equal `DINAMIC_QRCODE`, `PAYER_QRCODE` or `PAYMENT_TRANSACTION_SERVICE` this field is mandatory.\n* When the kind to be equal `STATIC_QRCODE` this field is optional.\n* When the kind to be equal `MANUAL` OR 'KEY' dont inform this field.\n",
+                    "description": "Recipient conciliation identifier.\n\n* When the kind to be equal `DYNAMIC_QRCODE`, `PAYER_QRCODE` or `PAYMENT_TRANSACTION_SERVICE` this field is mandatory.\n* When the kind to be equal `STATIC_QRCODE` this field is optional.\n* When the kind to be equal `MANUAL` OR 'KEY' dont inform this field.\n",
                     "example": "PI2020010300000000000000000000001"
                   }
                 }
@@ -2494,7 +2499,7 @@
                         "MANUAL",
                         "KEY",
                         "STATIC_QRCODE",
-                        "DINAMIC_QRCODE",
+                        "DYNAMIC_QRCODE",
                         "PAYMENT_TRANSACTION_SERVICE",
                         "PAYER_QRCODE"
                       ],
