@@ -1133,6 +1133,689 @@
             }
           }
         }
+      },
+      "get": {
+        "tags": [
+          "Payments"
+        ],
+        "summary": "should return a list of payments",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "after",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Base64 filter to bring only accounts after the provided value",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "before",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Base64 filter to bring only accounts before the provided value",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The numbers of accounts to return. Can be omitted if provided before or after filters with limit embedded in them. If nothing is provided, the default will be 1000 as limit",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "account_id",
+            "schema": {
+              "type": "string"
+            },
+            "description": "The id from specific account.",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns pix payment with success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "description": "Describes the properties of the pix payments list.",
+                  "required": [
+                    "data",
+                    "cursor"
+                  ],
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "description": "Describes the properties of pix payment.",
+                        "required": [
+                          "id",
+                          "account_id",
+                          "application_id",
+                          "operation",
+                          "kind",
+                          "payment_priority",
+                          "type_payment_priority",
+                          "goala",
+                          "payer",
+                          "recipient",
+                          "value",
+                          "description",
+                          "status",
+                          "created_at",
+                          "updated_at"
+                        ],
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "description": "The payment's id",
+                            "example": "f3336183-8172-4988-bec9-4b4a6b294b80"
+                          },
+                          "application_id": {
+                            "type": "string",
+                            "format": "uuid-v4",
+                            "description": "Unique identifier of application.",
+                            "example": "6d814c28-fe73-443c-bfe0-48d518aa1234"
+                          },
+                          "account_id": {
+                            "type": "string",
+                            "description": "Unique identifier of the account.",
+                            "format": "uuid-v4",
+                            "example": "6d814c28-fe73-443c-bfe0-48d518aa32fa"
+                          },
+                          "kind": {
+                            "type": "string",
+                            "enum": [
+                              "MANUAL",
+                              "KEY",
+                              "STATIC_QRCODE",
+                              "DINAMIC_QRCODE",
+                              "PAYMENT_TRANSACTION_SERVICE",
+                              "PAYER_QRCODE"
+                            ],
+                            "description": "The type of mecanism used to start the payment",
+                            "example": "KEY"
+                          },
+                          "payment_priority": {
+                            "type": "string",
+                            "enum": [
+                              "SCHEDULED",
+                              "IMMEDIATE"
+                            ],
+                            "description": "The property indicate if the liquidation is priority or not.",
+                            "example": "IMMEDIATE"
+                          },
+                          "type_payment_priority": {
+                            "type": "string",
+                            "enum": [
+                              "SCHEDULED_PAYMENT",
+                              "PRIORITY_PAYMENT",
+                              "FRAUD_ANALYSIS_PAYMENT"
+                            ],
+                            "description": "Indicate if this is a priority transaction or not.",
+                            "example": "PRIORITY_PAYMENT"
+                          },
+                          "goal": {
+                            "type": "string",
+                            "description": "The payment's goal.",
+                            "enum": [
+                              "CHANGE",
+                              "WITHDRAW",
+                              "BUY_OR_TRANSFER"
+                            ],
+                            "example": "BUY_OR_TRANSFER"
+                          },
+                          "agent_modality": {
+                            "type": "string",
+                            "description": "The agent modality of the withdraw.",
+                            "enum": [
+                              "WITHDRAW_SERVICE_AGENT",
+                              "COMMERCIAL_ESTABLISHMENT_AGENT",
+                              "AGENT_OR_OTHER_LEGAL_ENTITY"
+                            ],
+                            "example": "COMMERCIAL_ESTABLISHMENT_AGENT"
+                          },
+                          "withdraw_ispb": {
+                            "type": "number",
+                            "description": "Withdrawal service provider ISBP.",
+                            "example": 11476673
+                          },
+                          "document_payment_initiator": {
+                            "type": "number",
+                            "example": 37650221000115,
+                            "description": "The CNPJ of the payment initiator institution."
+                          },
+                          "value": {
+                            "type": "number",
+                            "description": "The payment's value",
+                            "example": 10.99
+                          },
+                          "key": {
+                            "type": "string",
+                            "description": "The recipient's key",
+                            "example": 85801560025
+                          },
+                          "description": {
+                            "type": "string",
+                            "description": "The payment's description",
+                            "example": "Payment description"
+                          },
+                          "conciliation_id": {
+                            "type": "string",
+                            "description": "The payment's conciliation id",
+                            "example": "PI2020010300000000000000000000001"
+                          },
+                          "end_to_end_id": {
+                            "type": "string",
+                            "description": "The payment's end to end id",
+                            "example": "8a565c43-7db0-4808-a1c9-aca65f5ec8e3"
+                          },
+                          "status": {
+                            "type": "string",
+                            "description": "The payment's status",
+                            "enum": [
+                              "CREATED",
+                              "CONFIRMING",
+                              "CONFIRMED",
+                              "NOT_CONFIRMED",
+                              "PROCESSING",
+                              "PROCESSED",
+                              "REJECTED",
+                              "ERROR",
+                              "DONE"
+                            ],
+                            "example": "CREATED"
+                          },
+                          "created_at": {
+                            "type": "string",
+                            "description": "The payment's created at",
+                            "example": "2022-01-13T13:53:01.463Z"
+                          },
+                          "updated_at": {
+                            "type": "string",
+                            "description": "The payment's updated at",
+                            "example": "2022-01-13T13:53:01.463Z"
+                          },
+                          "payer": {
+                            "type": "object",
+                            "description": "Describes properties of payer",
+                            "required": [
+                              "ispb",
+                              "document_type",
+                              "document_number",
+                              "name",
+                              "account_type",
+                              "account_number",
+                              "account_digit"
+                            ],
+                            "properties": {
+                              "ispb": {
+                                "type": "number",
+                                "description": "Payer's ISPB number",
+                                "example": 11476673
+                              },
+                              "document_type": {
+                                "type": "string",
+                                "description": "Payer's document type",
+                                "enum": [
+                                  "CPF",
+                                  "CNPJ"
+                                ]
+                              },
+                              "document_number": {
+                                "type": "number",
+                                "description": "Payer's document number"
+                              },
+                              "name": {
+                                "type": "string",
+                                "description": "Payer's name",
+                                "example": "Payer name"
+                              },
+                              "agency_number": {
+                                "type": "number",
+                                "description": "Payer's agency number"
+                              },
+                              "account_type": {
+                                "type": "string",
+                                "description": "Payer's account type",
+                                "enum": [
+                                  "CHECKING_ACCOUNT",
+                                  "SAVINGS_ACCOUNT",
+                                  "CONTROL_ACCOUNT",
+                                  "GRAPHIC_ACCOUNT",
+                                  "PAYMENT_ACCOUNT",
+                                  "SALARY_ACCOUNT"
+                                ]
+                              },
+                              "account_number": {
+                                "type": "number",
+                                "description": "Payer's account number",
+                                "example": 12319
+                              },
+                              "account_digit": {
+                                "type": "number",
+                                "description": "Payer's account digit",
+                                "example": 1
+                              }
+                            }
+                          },
+                          "recipient": {
+                            "type": "object",
+                            "description": "Describes properties of recipient",
+                            "required": [
+                              "ispb",
+                              "document_type",
+                              "document_number",
+                              "account_type",
+                              "account_number",
+                              "account_digit"
+                            ],
+                            "properties": {
+                              "ispb": {
+                                "type": "number",
+                                "description": "Recipient's ISPB number",
+                                "example": 11476673
+                              },
+                              "document_type": {
+                                "type": "string",
+                                "description": "Recipient's document type",
+                                "enum": [
+                                  "CPF",
+                                  "CNPJ"
+                                ]
+                              },
+                              "document_number": {
+                                "type": "number",
+                                "description": "Recipient's document number"
+                              },
+                              "name": {
+                                "type": "string",
+                                "description": "Recipient's name",
+                                "example": "Recipient name"
+                              },
+                              "agency_number": {
+                                "type": "number",
+                                "description": "Recipient's agency number"
+                              },
+                              "account_type": {
+                                "type": "string",
+                                "description": "Recipient's account type",
+                                "enum": [
+                                  "CHECKING_ACCOUNT",
+                                  "SAVINGS_ACCOUNT",
+                                  "CONTROL_ACCOUNT",
+                                  "GRAPHIC_ACCOUNT",
+                                  "PAYMENT_ACCOUNT",
+                                  "SALARY_ACCOUNT"
+                                ]
+                              },
+                              "account_number": {
+                                "type": "number",
+                                "description": "Recipient's account number",
+                                "example": 12319
+                              },
+                              "account_digit": {
+                                "type": "number",
+                                "description": "Recipient's account digit",
+                                "example": 1
+                              }
+                            }
+                          },
+                          "value_details": {
+                            "type": "array",
+                            "description": "The element group used to break down payment amounts\n\n* If the goal is equal to `BUY_OR_TRANSFER` do not inform this field.\n* If the goal is equal to `CHANGE` is mandatory to inform two different\ngroups, one with the kind equal to `PURCHASE_AMOUNT` and another with\nthe kind equal to `AVAILABLE_CASH`.\n* If the goal is equal to `WITHDRAW` is mandatory to inform one group with\nthe kind equal to `AVAILABLE_CASH`.\n",
+                            "items": {
+                              "type": "object",
+                              "required": [
+                                "kind",
+                                "value"
+                              ],
+                              "properties": {
+                                "kind": {
+                                  "type": "string",
+                                  "enum": [
+                                    "PURCHASE_AMOUNT",
+                                    "AVAILABLE_CASH"
+                                  ],
+                                  "description": "The value kind.\n\n* `PURCHASE_AMOUNT`: The purchase amount\n* `AVAILABLE_CASH`: Value of the resource in kind provided.\n",
+                                  "example": "AVAILABLE_CASH"
+                                },
+                                "value": {
+                                  "type": "number",
+                                  "description": "The purchase value or the value of the resource in kind provided\n",
+                                  "example": 10.99
+                                }
+                              }
+                            }
+                          },
+                          "occurrences": {
+                            "type": "array",
+                            "items": {
+                              "required": [
+                                "code",
+                                "status"
+                              ],
+                              "properties": {
+                                "id": {
+                                  "type": "string",
+                                  "description": "The occurrence id",
+                                  "example": "f3336183-8172-4988-bec9-4b4a6b294b80"
+                                },
+                                "code": {
+                                  "type": "string",
+                                  "example": "PIX0001",
+                                  "description": "Occurrence pix code. Should be:\n\nPIX0001 - Created  \nPIX0002 - Confirmed \nPIX0003 - Not Confirmed  \nPIX0004 - Rejected\nPIX0005 - Processed  \nPIX0006 - Cancelled  \nPIX0007 - Insufficient balance\n"
+                                },
+                                "status": {
+                                  "type": "string",
+                                  "example": "CREATED",
+                                  "enum": [
+                                    "CREATED",
+                                    "CONFIRMED",
+                                    "NOT_CONFIRMED",
+                                    "PROCESSED",
+                                    "REJECTED",
+                                    "ERROR",
+                                    "DONE",
+                                    "VALID",
+                                    "INVALID"
+                                  ]
+                                },
+                                "reason": {
+                                  "type": "string",
+                                  "enum": [
+                                    "ACCOUNT_BLOCKED",
+                                    "INCONSISTENT_DOCUMENT_NUMBER",
+                                    "ACCOUNT_LIMIT_VALUE_EXCEEDED",
+                                    "INVALID_RECIPIENT_DOCUMENT_NUMBER",
+                                    "RECIPIENT_ACCOUNT_NOT_FOUND_OR_INVALID",
+                                    "INACTIVE_RECIPIENT_ACCOUNT",
+                                    "TRANSACTION_SUSPENDED",
+                                    "ORDER_REJECTED",
+                                    "PAYMENT_PROCESSING_ERROR",
+                                    "RETURN_PERIOD_EXCEEDS_LIMIT",
+                                    "TOTAL_RETURN_VALUE_EXCEEDED_ORIGINAL_VALUE",
+                                    "ORIGINAL_PAYMENT_GOAL_MISMATCH"
+                                  ]
+                                },
+                                "created_at": {
+                                  "type": "string",
+                                  "format": "date",
+                                  "example": "2022-01-13T13:53:01.463Z"
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "cursor": {
+                      "type": "object",
+                      "properties": {
+                        "after": {
+                          "type": "string",
+                          "format": "base64",
+                          "description": "cursor pointing at the last item of the list. If no more items exist, the property is removed from the response"
+                        },
+                        "before": {
+                          "type": "string",
+                          "format": "base64",
+                          "description": "cursor pointing at the first item of the list. If its the first available item, the property is removed from the response"
+                        },
+                        "limit": {
+                          "type": "number",
+                          "format": "base64",
+                          "description": "number of items to return."
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Error with types [ValidationFailed].",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "title": "Invalid request data",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "VALIDATION_FAILED"
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "Invalid request data."
+                        },
+                        "details": {
+                          "type": "array",
+                          "title": "Error details",
+                          "description": "Informs error details",
+                          "example": "Invalid request data."
+                        }
+                      }
+                    }
+                  ]
+                },
+                "examples": {
+                  "Example 1 - ValidationFailed": {
+                    "value": {
+                      "code": "VALIDATION_FAILED",
+                      "message": "Invalid request data."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Error with types [AuthenticationError].",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Authentication error",
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "title": "Error code",
+                      "description": "The type of error",
+                      "example": "AUTHENTICATION_FAILED",
+                      "enum": [
+                        "AUTHENTICATION_FAILED"
+                      ]
+                    },
+                    "message": {
+                      "type": "string",
+                      "title": "Error message",
+                      "description": "Describes a message informing a reason for the error",
+                      "example": "Authentication failed."
+                    }
+                  }
+                },
+                "examples": {
+                  "Example 1 - AuthenticationError": {
+                    "value": {
+                      "code": "AUTHENTICATION_FAILED",
+                      "message": "Authentication failed."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Error with types [MissingProduct, ProductDisabledError, ApplicationNotFound, ProfileNotFound].",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "title": "Missing Product Permission",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "MISSING_PRODUCT_PERMISSION",
+                          "enum": [
+                            "MISSING_PRODUCT_PERMISSION"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "Missing product permission."
+                        }
+                      }
+                    },
+                    {
+                      "title": "Bad Request",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "PRODUCT_DISABLED",
+                          "enum": [
+                            "PRODUCT_DISABLED"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "Product is not enabled."
+                        }
+                      }
+                    },
+                    {
+                      "title": "Application product not found",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "APPLICATION_PRODUCT_NOT_FOUND",
+                          "enum": [
+                            "APPLICATION_PRODUCT_NOT_FOUND"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "Product not found for given application id."
+                        }
+                      }
+                    },
+                    {
+                      "title": "Bad Request",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "PROFILE_NOT_FOUND",
+                          "enum": [
+                            "PROFILE_NOT_FOUND"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "Profile not found."
+                        }
+                      }
+                    }
+                  ]
+                },
+                "examples": {
+                  "Example 1 - MissingProduct": {
+                    "value": {
+                      "code": "MISSING_PRODUCT_PERMISSION",
+                      "message": "Missing product permission."
+                    }
+                  },
+                  "Example 2 - ProductDisabledError": {
+                    "value": {
+                      "code": "PRODUCT_DISABLED",
+                      "message": "Product is not enabled."
+                    }
+                  },
+                  "Example 3 - ApplicationNotFound": {
+                    "value": {
+                      "code": "APPLICATION_PRODUCT_NOT_FOUND",
+                      "message": "Product not found for given application id."
+                    }
+                  },
+                  "Example 3 - ProfileNotFound": {
+                    "value": {
+                      "code": "PROFILE_NOT_FOUND",
+                      "message": "Profile not found."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Internal Server Error",
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "title": "Error code",
+                      "description": "The type of error",
+                      "example": "INTERNAL_SERVER_ERROR",
+                      "enum": [
+                        "INTERNAL_SERVER_ERROR"
+                      ]
+                    },
+                    "message": {
+                      "type": "string",
+                      "title": "Error message",
+                      "description": "Describes a message informing a reason for the error",
+                      "example": "Unexpected error with our service"
+                    },
+                    "status_code": {
+                      "type": "number",
+                      "description": "Error status code",
+                      "example": "500"
+                    }
+                  }
+                },
+                "examples": {
+                  "Example 1 - InternalServerError": {
+                    "value": {
+                      "code": "INTERNAL_SERVER_ERROR",
+                      "message": "Unexpected error with our service"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
       }
     },
     "/payments/{payment_id}/returns": {
