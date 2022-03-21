@@ -464,6 +464,12 @@
                     "type": "string",
                     "description": "Recipient conciliation identifier.\n\n* When the kind to be equal `DYNAMIC_QRCODE`, `PAYER_QRCODE` or `PAYMENT_TRANSACTION_SERVICE` this field is mandatory.\n* When the kind to be equal `STATIC_QRCODE` this field is optional.\n* When the kind to be equal `MANUAL` OR 'KEY' dont inform this field.\n",
                     "example": "PI2020010300000000000000000000001"
+                  },
+                  "end_to_end_id": {
+                    "type": "string",
+                    "description": "The payment's end to end id.\n\nRequired when kind is equal to KEY, DYNAMIC_QRCODE, STATIC_QRCODE or PAYER_QRCODE\n",
+                    "example": "8a565c43-7db0-4808-a1c9-aca65f5ec8e3",
+                    "maxLength": 32
                   }
                 }
               }
