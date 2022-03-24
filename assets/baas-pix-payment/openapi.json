@@ -45,8 +45,7 @@
                 "schema": {
                   "type": "object",
                   "required": [
-                    "data",
-                    "cursor"
+                    "data"
                   ],
                   "properties": {
                     "data": {
@@ -56,7 +55,7 @@
                           "return_code": {
                             "type": "string",
                             "description": "Code from return.\n",
-                            "example": "BE08"
+                            "example": "OPERATIONAL_FAIL"
                           },
                           "description": {
                             "type": "string",
