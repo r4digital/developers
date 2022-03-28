@@ -1178,7 +1178,7 @@
               "type": "string"
             },
             "description": "The id from specific account.",
-            "required": true
+            "required": false
           }
         ],
         "responses": {
