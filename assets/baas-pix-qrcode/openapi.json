@@ -111,7 +111,7 @@
                           "type": "object",
                           "description": "Decoded QR code properties",
                           "required": [
-                            "type",
+                            "kind",
                             "key",
                             "review",
                             "recipient",
@@ -122,7 +122,7 @@
                             "status"
                           ],
                           "properties": {
-                            "type": {
+                            "kind": {
                               "type": "string",
                               "enum": [
                                 "STATIC",
@@ -176,7 +176,7 @@
                               "type": "object",
                               "required": [
                                 "ispb",
-                                "type",
+                                "document_type",
                                 "account_type",
                                 "account_number"
                               ],
@@ -189,15 +189,15 @@
                                   "type": "string",
                                   "maxLength": 25
                                 },
-                                "type": {
+                                "document_type": {
                                   "type": "string",
                                   "enum": [
-                                    "NATURAL",
-                                    "LEGAL"
+                                    "CPF",
+                                    "CNPJ"
                                   ]
                                 },
                                 "document_number": {
-                                  "type": "string",
+                                  "type": "number",
                                   "maxLength": 14
                                 },
                                 "conciliation_id": {
@@ -205,12 +205,16 @@
                                   "maxLength": 25
                                 },
                                 "agency_number": {
-                                  "type": "string",
+                                  "type": "number",
                                   "maxLength": 4
                                 },
                                 "account_number": {
-                                  "type": "string",
+                                  "type": "number",
                                   "maxLength": 20
+                                },
+                                "account_digit": {
+                                  "type": "number",
+                                  "maxLength": 5
                                 },
                                 "account_type": {
                                   "type": "string",
@@ -231,7 +235,7 @@
                                   "maxLength": 25
                                 },
                                 "document_number": {
-                                  "type": "string",
+                                  "type": "number",
                                   "maxLength": 14
                                 }
                               }
@@ -239,7 +243,7 @@
                             "modality": {
                               "type": "object",
                               "properties": {
-                                "type": {
+                                "goal": {
                                   "type": "string",
                                   "enum": [
                                     "WITHDRAW",
@@ -254,7 +258,7 @@
                                 "allow_value_alteration": {
                                   "type": "boolean"
                                 },
-                                "ispb_pss": {
+                                "withdraw_ispb": {
                                   "type": "integer",
                                   "description": "Service provider",
                                   "maxLength": 8,
@@ -263,9 +267,9 @@
                                 "agent": {
                                   "type": "string",
                                   "enum": [
-                                    "WITHDRAW_SERVICE_PROVIDER",
-                                    "COMMERCIAL_ESTABLISHMENT",
-                                    "ANY_OTHER_TYPE_OF_LEGAL_PERSON"
+                                    "WITHDRAW_SERVICE_AGENT",
+                                    "COMMERCIAL_ESTABLISHMENT_AGENT",
+                                    "AGENT_OR_OTHER_LEGAL_ENTITY"
                                   ]
                                 }
                               }
@@ -286,7 +290,7 @@
                                 }
                               }
                             },
-                            "qr_code_expiration_time": {
+                            "expires_in": {
                               "type": "integer",
                               "maxLength": 10,
                               "default": 86400
@@ -335,7 +339,7 @@
                           "type": "object",
                           "description": "Decoded QR code properties",
                           "required": [
-                            "type",
+                            "kind",
                             "key",
                             "review",
                             "recipient",
@@ -347,7 +351,7 @@
                             "status"
                           ],
                           "properties": {
-                            "type": {
+                            "kind": {
                               "type": "string",
                               "enum": [
                                 "STATIC",
@@ -395,10 +399,10 @@
                                   "maxLength": 25
                                 },
                                 "document_number": {
-                                  "type": "string",
+                                  "type": "number",
                                   "maxLength": 14
                                 },
-                                "business_name": {
+                                "nickname": {
                                   "type": "string",
                                   "maxLength": 100
                                 },
@@ -426,12 +430,16 @@
                                   "maxLength": 25
                                 },
                                 "agency_number": {
-                                  "type": "string",
+                                  "type": "number",
                                   "maxLength": 4
                                 },
                                 "account_number": {
-                                  "type": "string",
+                                  "type": "number",
                                   "maxLength": 20
+                                },
+                                "account_digit": {
+                                  "type": "number",
+                                  "maxLength": 5
                                 },
                                 "account_type": {
                                   "type": "string",
@@ -452,7 +460,7 @@
                                   "maxLength": 25
                                 },
                                 "document_number": {
-                                  "type": "string",
+                                  "type": "number",
                                   "maxLength": 14
                                 }
                               }
@@ -552,13 +560,13 @@
                           "type": "object",
                           "description": "Decoded QR code properties",
                           "required": [
-                            "type",
+                            "kind",
                             "key",
                             "city",
                             "recipient"
                           ],
                           "properties": {
-                            "type": {
+                            "kind": {
                               "type": "string",
                               "enum": [
                                 "STATIC",
@@ -597,7 +605,7 @@
                               "description": "Transaction value",
                               "example": 4587.92
                             },
-                            "ispb_pss": {
+                            "withdraw_ispb": {
                               "type": "string",
                               "description": "ISPB from PSS. When provided it means the QR code is for \"Pix Saque\".",
                               "maxLength": 8,
@@ -610,7 +618,7 @@
                               "type": "object",
                               "required": [
                                 "ispb",
-                                "type",
+                                "document_type",
                                 "account_type",
                                 "account_number"
                               ],
@@ -623,15 +631,15 @@
                                   "type": "string",
                                   "maxLength": 25
                                 },
-                                "type": {
+                                "document_type": {
                                   "type": "string",
                                   "enum": [
-                                    "NATURAL",
-                                    "LEGAL"
+                                    "CPF",
+                                    "CNPJ"
                                   ]
                                 },
                                 "document_number": {
-                                  "type": "string",
+                                  "type": "number",
                                   "maxLength": 14
                                 },
                                 "conciliation_id": {
@@ -639,12 +647,16 @@
                                   "maxLength": 25
                                 },
                                 "agency_number": {
-                                  "type": "string",
+                                  "type": "number",
                                   "maxLength": 4
                                 },
                                 "account_number": {
-                                  "type": "string",
+                                  "type": "number",
                                   "maxLength": 20
+                                },
+                                "account_digit": {
+                                  "type": "number",
+                                  "maxLength": 5
                                 },
                                 "account_type": {
                                   "type": "string",
@@ -668,19 +680,20 @@
                     "value": {
                       "end_to_end_id": "E1476673020220111130052626644038",
                       "qr_code": {
-                        "type": "STATIC",
+                        "kind": "STATIC",
                         "category_code": "0000",
                         "city": "PORTO ALEGRE",
                         "key": "90226395090",
                         "recipient": {
-                          "account_number": "3786",
+                          "account_number": 378,
+                          "account_digit": 6,
                           "account_type": "PAYMENT_ACCOUNT",
-                          "agency_number": "1",
+                          "agency_number": 1,
                           "conciliation_id": "_**",
-                          "document_number": "90226395090",
+                          "document_number": 90226395090,
                           "ispb": 11476673,
                           "name": "Testes Automatizados",
-                          "type": "NATURAL"
+                          "document_type": "CPF"
                         },
                         "value": 2.44,
                         "zip_code": "90480-002"
@@ -691,31 +704,32 @@
                     "value": {
                       "end_to_end_id": "E1476673020220111130052626644038",
                       "qr_code": {
-                        "type": "DYNAMIC",
+                        "kind": "DYNAMIC",
                         "category_code": "0000",
                         "city": "PORTO ALEGRE",
                         "zip_code": "90480-002",
                         "key": "90226395090",
                         "original_value": 2.44,
                         "recipient": {
-                          "account_number": "3786",
+                          "account_number": 378,
+                          "account_digit": 6,
                           "account_type": "PAYMENT_ACCOUNT",
-                          "agency_number": "1",
+                          "agency_number": 1,
                           "conciliation_id": "_**",
-                          "document_number": "90226395090",
+                          "document_number": 90226395090,
                           "ispb": 11476673,
                           "name": "Testes Automatizados",
-                          "type": "NATURAL"
+                          "document_type": "CPF"
                         },
                         "payer": {
                           "name": "Jorge Silva",
-                          "document_number": "72909231038"
+                          "document_number": 72909231038
                         },
                         "modality": {
-                          "agent": "ANY_OTHER_TYPE_OF_LEGAL_PERSON",
+                          "agent": "AGENT_OR_OTHER_LEGAL_ENTITY",
                           "allow_value_alteration": false,
-                          "ispb_pss": 145,
-                          "type": "WITHDRAW",
+                          "withdraw_ispb": 145,
+                          "goal": "WITHDRAW",
                           "value": 5
                         },
                         "psp_recipient_url": "http://placeholder.com",
@@ -725,7 +739,7 @@
                         "scanned_at": "2021-02-05T10:25:47.000Z",
                         "status": "ACTIVE",
                         "text_to_payer": "lorem ipsum",
-                        "qr_code_expiration_time": 43200
+                        "expires_in": 43200
                       }
                     }
                   },
@@ -733,7 +747,7 @@
                     "value": {
                       "end_to_end_id": "E1476673020220111130052626644038",
                       "qr_code": {
-                        "type": "DYNAMIC_WITH_DUE_DATE",
+                        "kind": "DYNAMIC_WITH_DUE_DATE",
                         "category_code": "0000",
                         "days_after_due_date": 5,
                         "deduction": 0.31,
@@ -745,16 +759,18 @@
                         "key": "90226395090",
                         "original_value": 254.57,
                         "payer": {
-                          "document_number": "72909231038",
+                          "document_number": 72909231038,
                           "name": "Jorge Silva"
                         },
                         "recipient": {
-                          "account_number": "3786",
+                          "account_number": 378,
+                          "account_digit": 6,
                           "account_type": "PAYMENT_ACCOUNT",
                           "address": "1o de Maio",
-                          "agency_number": "1131",
+                          "agency_number": 1131,
                           "conciliation_id": "_**",
-                          "document_number": "27600504081",
+                          "document_number": 27600504081,
+                          "document_type": "CPF",
                           "ispb": 11476673,
                           "name": "Testes Automatizados",
                           "city": "PORTO ALEGRE",
@@ -1021,7 +1037,7 @@
                     "type": "string",
                     "maxLength": 64
                   },
-                  "ispb_pss": {
+                  "withdraw_ispb": {
                     "type": "string",
                     "description": "ISPB from PSS. When provided it means the QR code is for \"Pix Saque\".",
                     "maxLength": 8,
