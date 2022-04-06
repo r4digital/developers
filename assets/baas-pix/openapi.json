@@ -67,6 +67,12 @@
                     "description": "Unique identifier of the account.",
                     "format": "uuid-v4",
                     "example": "6d814c28-fe73-443c-bfe0-48d518aa32fa"
+                  },
+                  "key_ownership_elapsed_time": {
+                    "type": "number",
+                    "format": "float",
+                    "description": "Number of seconds it took the client to trigger the key ownership confirmation email/sms.\nRequired if kind: [CELLPHONE, EMAIL]\n",
+                    "example": 1.5
                   }
                 }
               }
