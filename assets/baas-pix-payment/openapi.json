@@ -276,7 +276,8 @@
                   "type_payment_priority",
                   "goal",
                   "recipient",
-                  "value"
+                  "value",
+                  "anti_fraud_status"
                 ],
                 "properties": {
                   "id": {
@@ -305,7 +306,7 @@
                       "DYNAMIC_QRCODE",
                       "PAYMENT_TRANSACTION_SERVICE"
                     ],
-                    "description": "The type of mecanism used to start the payment",
+                    "description": "The type of mechanism used to start the payment",
                     "example": "KEY"
                   },
                   "payment_priority": {
@@ -339,7 +340,7 @@
                   },
                   "agent_modality": {
                     "type": "string",
-                    "description": "The agent modality of the withdraw.\n\n* When the goal to be equal `CHANGE` or `WITHDRAW` this field is required.\n* When the goal to be equal `BUY_OR_TRANSFER` you dont inform this field.\n",
+                    "description": "The agent modality of the withdraw.\n\n* When the goal to be equal `CHANGE` or `WITHDRAW` this field is required.\n* When the goal to be equal `BUY_OR_TRANSFER` you don't inform this field.\n",
                     "enum": [
                       "WITHDRAW_SERVICE_AGENT",
                       "COMMERCIAL_ESTABLISHMENT_AGENT",
@@ -349,7 +350,7 @@
                   },
                   "withdraw_ispb": {
                     "type": "number",
-                    "description": "Withdrawal service provider ISBP.\n\n* When the goal to be equal `CHANGE` or `WITHDRAW` this property is required.\n* When the goal to be equal BUY_OR_TRANSFER you dont inform this field.\n",
+                    "description": "Withdrawal service provider ISBP.\n\n* When the goal to be equal `CHANGE` or `WITHDRAW` this property is required.\n* When the goal to be equal BUY_OR_TRANSFER you don't inform this field.\n",
                     "example": 11476673
                   },
                   "recipient": {
@@ -422,7 +423,7 @@
                   },
                   "value_details": {
                     "type": "array",
-                    "description": "The element group used to break down payment amounts\n\n* If the goal to be equal `BUY_OR_TRANSFER` dont inform this field.\n* If the goal to be equal `CHANGE` is mandatory inform two different\ngroups, one with the kind equal to `PURCHASE_AMOUNT` and another with\nthe kind equal to `AVAILABLE_CASH`.\n* If the goal to be equal `WITHDRAW` is mandatory inform one group with\nthe kind equal to `AVAILABLE_CASH`.\n",
+                    "description": "The element group used to break down payment amounts\n\n* If the goal to be equal `BUY_OR_TRANSFER` don't inform this field.\n* If the goal to be equal `CHANGE` is mandatory inform two different\ngroups, one with the kind equal to `PURCHASE_AMOUNT` and another with\nthe kind equal to `AVAILABLE_CASH`.\n* If the goal to be equal `WITHDRAW` is mandatory inform one group with\nthe kind equal to `AVAILABLE_CASH`.\n",
                     "items": {
                       "type": "object",
                       "required": [
@@ -449,7 +450,7 @@
                   },
                   "key": {
                     "type": "string",
-                    "description": "Key to identify the transactional account\n\n* Dont provide this field when kind to be equal `MANUAL`.\n",
+                    "description": "Key to identify the transactional account\n\n* Don't provide this field when kind to be equal `MANUAL`.\n",
                     "example": "85801860055",
                     "maxLength": 77
                   },
@@ -461,7 +462,7 @@
                   },
                   "conciliation_id": {
                     "type": "string",
-                    "description": "Recipient conciliation identifier.\n\n* When the kind to be equal `DYNAMIC_QRCODE`, `PAYER_QRCODE` or `PAYMENT_TRANSACTION_SERVICE` this field is mandatory.\n* When the kind to be equal `STATIC_QRCODE` this field is optional.\n* When the kind to be equal `MANUAL` OR 'KEY' dont inform this field.\n",
+                    "description": "Recipient conciliation identifier.\n\n* When the kind to be equal `DYNAMIC_QRCODE`, `PAYER_QRCODE` or `PAYMENT_TRANSACTION_SERVICE` this field is mandatory.\n* When the kind to be equal `STATIC_QRCODE` this field is optional.\n* When the kind to be equal `MANUAL` OR 'KEY' don't inform this field.\n",
                     "example": "PI2020010300000000000000000000001"
                   },
                   "end_to_end_id": {
@@ -469,6 +470,15 @@
                     "description": "The payment's end to end id.\n\nRequired when kind is equal to KEY, DYNAMIC_QRCODE, STATIC_QRCODE or PAYER_QRCODE\n",
                     "example": "8a565c43-7db0-4808-a1c9-aca65f5ec8e3",
                     "maxLength": 32
+                  },
+                  "anti_fraud_status": {
+                    "type": "string",
+                    "description": "The property indicates details about the anti-fraud analysis.\n\n* `WITH_SUSPECT`: Anti-fraud engine has detected suspicion.\n* `WITHOUT_SUSPECT`: Anti-fraud engine has not detected suspicion.\n",
+                    "enum": [
+                      "WITH_SUSPECT",
+                      "WITHOUT_SUSPECT"
+                    ],
+                    "example": "WITHOUT_SUSPECT"
                   }
                 }
               }
