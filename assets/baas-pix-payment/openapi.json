@@ -1862,7 +1862,8 @@
                   "id",
                   "value",
                   "code",
-                  "reason"
+                  "reason",
+                  "anti_fraud_status"
                 ],
                 "properties": {
                   "id": {
@@ -1896,6 +1897,15 @@
                     "type": "string",
                     "description": "Pix payment description.",
                     "example": "Payment Description"
+                  },
+                  "anti_fraud_status": {
+                    "type": "string",
+                    "description": "The property indicates details about the anti-fraud analysis.\n\n* `WITH_SUSPECT`: Anti-fraud engine has detected suspicion.\n* `WITHOUT_SUSPECT`: Anti-fraud engine has not detected suspicion.\n",
+                    "enum": [
+                      "WITH_SUSPECT",
+                      "WITHOUT_SUSPECT"
+                    ],
+                    "example": "WITHOUT_SUSPECT"
                   }
                 }
               }
