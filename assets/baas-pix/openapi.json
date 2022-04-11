@@ -1377,7 +1377,7 @@
         "tags": [
           "Keys"
         ],
-        "summary": "Get an Pix Key",
+        "summary": "Get a Pix Key",
         "parameters": [
           {
             "in": "path",
@@ -1386,7 +1386,7 @@
               "type": "string"
             },
             "required": true,
-            "description": "The key to be find."
+            "description": "The key to be found."
           },
           {
             "in": "query",
