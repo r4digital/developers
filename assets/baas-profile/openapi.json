@@ -964,7 +964,6 @@
                       "document_number",
                       "secondary_document_number",
                       "secondary_document_type",
-                      "marital_status",
                       "nationality",
                       "birth_date",
                       "politically_exposed"
@@ -1031,10 +1030,7 @@
                     "type": "object",
                     "required": [
                       "name",
-                      "nationality",
-                      "document_number",
-                      "type",
-                      "politically_exposed"
+                      "type"
                     ],
                     "description": "Parent account holder details.\n",
                     "properties": {
@@ -1174,10 +1170,7 @@
                       "cbo_code",
                       "description",
                       "remuneration",
-                      "company_name",
-                      "company_document",
-                      "occupation_type",
-                      "admission_date"
+                      "occupation_type"
                     ],
                     "description": "Profession from holder details.\n",
                     "properties": {
