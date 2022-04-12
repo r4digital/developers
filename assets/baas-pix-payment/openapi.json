@@ -479,6 +479,14 @@
                       "WITHOUT_SUSPECT"
                     ],
                     "example": "WITHOUT_SUSPECT"
+                  },
+                  "status": {
+                    "type": "string",
+                    "description": "The property indicates the status of the payment and should only be informed if the payment is `REJECTED` at its origin.\n\n* `REJECTED`: Should create the payment as rejected\n",
+                    "enum": [
+                      "REJECTED"
+                    ],
+                    "example": "REJECTED"
                   }
                 }
               }
