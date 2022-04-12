@@ -791,7 +791,7 @@
             }
           },
           "400": {
-            "description": "Not Found",
+            "description": "Bad request",
             "content": {
               "application/json": {
                 "schema": {
@@ -816,6 +816,38 @@
                       "type": "number",
                       "description": "Error status code",
                       "example": "400"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Account Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Account Not Found",
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "title": "Error code",
+                      "description": "The type of error",
+                      "example": "ACCOUNT_NOT_FOUND",
+                      "enum": [
+                        "ACCOUNT_NOT_FOUND"
+                      ]
+                    },
+                    "message": {
+                      "type": "string",
+                      "title": "Error message",
+                      "description": "Describes a message informing a reason for the error",
+                      "example": "Account not found"
+                    },
+                    "status_code": {
+                      "type": "number",
+                      "description": "Error status code",
+                      "example": "404"
                     }
                   }
                 }
