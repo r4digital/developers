@@ -1038,7 +1038,7 @@
               "type": "string"
             },
             "required": true,
-            "description": "A key to be deleted"
+            "description": "The key to be deleted"
           }
         ],
         "security": [
