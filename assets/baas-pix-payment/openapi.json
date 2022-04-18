@@ -2191,7 +2191,7 @@
             }
           },
           "400": {
-            "description": "Error with types [ValidationFailed, InvalidDataError, PaymentAlreadyReturnedError, InvalidPaymentValueError].",
+            "description": "Error with types [ValidationFailed, InvalidDataError, PaymentAlreadyReturnedError, InvalidPaymentValueError, PaymentIsNotACreditError].",
             "content": {
               "application/json": {
                 "schema": {
@@ -2298,6 +2298,26 @@
                           }
                         }
                       }
+                    },
+                    {
+                      "title": "Bad Request",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "PAYMENT_IS_NOT_A_CREDIT",
+                          "enum": [
+                            "PAYMENT_IS_NOT_A_CREDIT"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "It is not possible to return a debit"
+                        }
+                      }
                     }
                   ]
                 },
@@ -2324,6 +2344,12 @@
                     "value": {
                       "code": "INVALID_PAYMENT_VALUE",
                       "message": "Payment value is not valid"
+                    }
+                  },
+                  "Example 5 - PaymentIsNotACreditError": {
+                    "value": {
+                      "code": "PAYMENT_IS_NOT_A_CREDIT",
+                      "message": "It is not possible to return a debit"
                     }
                   }
                 }
