@@ -1202,7 +1202,15 @@
                       "occupation_type": {
                         "type": "string",
                         "description": "Type occupation from company of the job.",
-                        "example": "TI"
+                        "enum": [
+                          "RETIRED",
+                          "EMPLOYEE",
+                          "SELF_EMPLOYED",
+                          "CO_OWNER",
+                          "FREELANCER",
+                          "OTHERS"
+                        ],
+                        "example": "FREELANCER"
                       },
                       "admission_date": {
                         "type": "string",
