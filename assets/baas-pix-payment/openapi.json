@@ -2498,7 +2498,7 @@
                       "message": "Product not found for given application id."
                     }
                   },
-                  "Example 3 - ProfileNotFound": {
+                  "Example 4 - ProfileNotFound": {
                     "value": {
                       "code": "PROFILE_NOT_FOUND",
                       "message": "Profile not found."
@@ -2509,34 +2509,69 @@
             }
           },
           "404": {
-            "description": "Error with types [PaymentNotFound].",
+            "description": "Error with types [PaymentNotFound, AccountNotFound].",
             "content": {
               "application/json": {
                 "schema": {
-                  "title": "Payment Not Found",
-                  "properties": {
-                    "code": {
-                      "type": "string",
-                      "title": "Error code",
-                      "description": "The type of error",
-                      "example": "PAYMENT_NOT_FOUND",
-                      "enum": [
-                        "PAYMENT_NOT_FOUND"
-                      ]
+                  "oneOf": [
+                    {
+                      "title": "Payment Not Found",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "PAYMENT_NOT_FOUND",
+                          "enum": [
+                            "PAYMENT_NOT_FOUND"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "Payment not found"
+                        }
+                      }
                     },
-                    "message": {
-                      "type": "string",
-                      "title": "Error message",
-                      "description": "Describes a message informing a reason for the error",
-                      "example": "Payment not found"
+                    {
+                      "title": "Account Not Found",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "ACCOUNT_NOT_FOUND",
+                          "enum": [
+                            "ACCOUNT_NOT_FOUND"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "Account not found"
+                        },
+                        "status_code": {
+                          "type": "number",
+                          "description": "Error status code",
+                          "example": "404"
+                        }
+                      }
                     }
-                  }
+                  ]
                 },
                 "examples": {
                   "Example 1 - PaymentNotFound": {
                     "value": {
                       "code": "PAYMENT_NOT_FOUND",
-                      "message": "Payment not found."
+                      "message": "Payment not found"
+                    }
+                  },
+                  "Example 2 - AccountNotFound": {
+                    "value": {
+                      "code": "ACCOUNT_NOT_FOUND",
+                      "message": "Account not found"
                     }
                   }
                 }
