@@ -1435,6 +1435,11 @@
                       "description": "Value of pix key.",
                       "example": "+5551981706022"
                     },
+                    "ispb": {
+                      "type": "number",
+                      "description": "ISPB number",
+                      "example": 11476673
+                    },
                     "agency_number": {
                       "type": "number",
                       "description": "Owner's agency number"
