@@ -41,7 +41,6 @@
           {
             "in": "header",
             "name": "Idempotence-Key",
-            "description": "Switch to, in case of failures/interruptions in communication not result in accidental data loss or duplication.",
             "schema": {
               "example": "69F963C6-7487-4363-9406-A1DE2A9636D4",
               "type": "string",
@@ -90,13 +89,14 @@
         },
         "responses": {
           "200": {
-            "description": "Static QR Code successfully created",
+            "description": "QR Code successfully decoded",
             "content": {
               "application/json": {
                 "schema": {
                   "oneOf": [
                     {
                       "type": "object",
+                      "title": "Dynamic QR Code",
                       "description": "Dynamic QR Code",
                       "required": [
                         "end_to_end_id",
@@ -325,6 +325,7 @@
                     },
                     {
                       "type": "object",
+                      "title": "Dynamic QR Code with due date",
                       "description": "Dynamic QR Code with due date",
                       "required": [
                         "end_to_end_id",
@@ -546,6 +547,7 @@
                     },
                     {
                       "type": "object",
+                      "title": "Static QR Code",
                       "description": "Static QR Code",
                       "required": [
                         "end_to_end_id",
@@ -743,7 +745,7 @@
                       }
                     }
                   },
-                  "Decoded Dynamic QR Code With Due Date": {
+                  "DDecoded Dynamic QR Code With Due Date": {
                     "value": {
                       "end_to_end_id": "E1476673020220111130052626644038",
                       "qr_code": {
@@ -992,7 +994,6 @@
           {
             "in": "header",
             "name": "Idempotence-Key",
-            "description": "Switch to, in case of failures/interruptions in communication not result in accidental data loss or duplication.",
             "schema": {
               "example": "69F963C6-7487-4363-9406-A1DE2A9636D4",
               "type": "string",
