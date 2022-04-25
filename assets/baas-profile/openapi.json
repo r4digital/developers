@@ -84,9 +84,9 @@
                               ]
                             },
                             "document_number": {
-                              "type": "string",
+                              "type": "number",
                               "description": "The value of document.",
-                              "example": "81893643085"
+                              "example": 81893643085
                             },
                             "uf": {
                               "type": "string",
@@ -140,9 +140,9 @@
                               "example": "Marie"
                             },
                             "document_number": {
-                              "type": "string",
+                              "type": "number",
                               "description": "The value of Document.",
-                              "example": "81893643085"
+                              "example": 81893643085
                             },
                             "type": {
                               "type": "string",
@@ -259,9 +259,9 @@
                               "example": "R4"
                             },
                             "company_document": {
-                              "type": "string",
+                              "type": "number",
                               "description": "Document from company of the job.",
-                              "example": "1000"
+                              "example": 123456789
                             },
                             "occupation_type": {
                               "type": "string",
@@ -537,9 +537,9 @@
                               ]
                             },
                             "document_number": {
-                              "type": "string",
+                              "type": "number",
                               "description": "The value of document.",
-                              "example": "81893643085"
+                              "example": 81893643085
                             },
                             "uf": {
                               "type": "string",
@@ -593,9 +593,9 @@
                               "example": "Marie"
                             },
                             "document_number": {
-                              "type": "string",
+                              "type": "number",
                               "description": "The value of Document.",
-                              "example": "81893643085"
+                              "example": 81893643085
                             },
                             "type": {
                               "type": "string",
@@ -712,9 +712,9 @@
                               "example": "R4"
                             },
                             "company_document": {
-                              "type": "string",
+                              "type": "number",
                               "description": "Document from company of the job.",
-                              "example": "1000"
+                              "example": 123456789
                             },
                             "occupation_type": {
                               "type": "string",
@@ -976,9 +976,9 @@
                         "example": "Jonh"
                       },
                       "document_number": {
-                        "type": "string",
+                        "type": "number",
                         "description": "The value of document.",
-                        "example": "81893643085"
+                        "example": 81893643085
                       },
                       "secondary_document_number": {
                         "type": "string",
@@ -1039,9 +1039,9 @@
                         "example": "Marie"
                       },
                       "document_number": {
-                        "type": "string",
+                        "type": "number",
                         "description": "The value of Document.",
-                        "example": "81893643085"
+                        "example": 81893643085
                       },
                       "type": {
                         "type": "string",
@@ -1195,9 +1195,9 @@
                         "example": "R4"
                       },
                       "company_document": {
-                        "type": "string",
+                        "type": "number",
                         "description": "Document from company of the job.",
-                        "example": "1000"
+                        "example": 123456789
                       },
                       "occupation_type": {
                         "type": "string",
