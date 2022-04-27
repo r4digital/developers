@@ -419,8 +419,8 @@
                     "example": 12345
                   },
                   "document_number": {
-                    "type": "string",
-                    "example": "55605714074"
+                    "type": "number",
+                    "example": 55605714074
                   }
                 },
                 "required": [
@@ -485,7 +485,7 @@
                     "account_number": {
                       "type": "number",
                       "description": "Account number without the check digit",
-                      "example": 144
+                      "example": 55605714074
                     },
                     "agency_number": {
                       "type": "number",
