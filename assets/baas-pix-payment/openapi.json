@@ -1928,13 +1928,13 @@
                       "REQUESTED_BY_RECIPIENT",
                       "ORIGINAL_TRANSACTION_IS_NOT_WITHDRAW_OR_CHANGE"
                     ],
-                    "description": "Code from reason.",
-                    "example": "OPERATIONAL_ISSUES"
+                    "description": "Reason obtained from the get reason endpoint.",
+                    "example": "REQUESTED_BY_RECIPIENT"
                   },
                   "reason": {
                     "type": "string",
-                    "description": "Reason obtained from the get reason endpoint.",
-                    "example": "BE08"
+                    "description": "Return reason additional description.",
+                    "example": "Value received by mistake"
                   },
                   "description": {
                     "type": "string",
