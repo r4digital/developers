@@ -3,7 +3,7 @@
   "info": {
     "version": "0.0.1",
     "title": "BaaS Pix Payment",
-    "description": "<h1>BaaS Pix Payment</h1>\n\n<h2>Setup credit order validation</h2>\n- Add a valid url to *pix-credit-order-validation-url* configuration linked to the *application-id*\n- Follow the request/response schema pattern\n\n<h3>Payment Occurrences</h3>\n\n<table>\n  <tr>\n    <td>Code</td>\n    <td>Description</td>\n  </tr>\n  <tr>\n    <td>PIX0001</td>\n    <td>Created</td>\n  </tr>\n  <tr>\n    <td>PIX0002</td>\n    <td>Confirmed</td>\n  </tr>\n  <tr>\n    <td>PIX0003</td>\n    <td>Not Confirmed</td>\n  </tr>\n  <tr>\n    <td>PIX0004</td>\n    <td>Rejected</td>\n  </tr>\n  <tr>\n    <td>PIX0005</td>\n    <td>Done</td>\n  </tr>\n  <tr>\n    <td>PIX0006</td>\n    <td>Cancelled</td>\n  </tr>\n  <tr>\n    <td>PIX0007</td>\n    <td>Insufficient balance</td>\n  </tr>\n  <tr>\n    <td>PIX0008</td>\n    <td>Timeout</td>\n  </tr>\n  <tr>\n    <td>PIX0009</td>\n    <td>Processed</td>\n  </tr>\n</table>\n\n<h3>Request schema</h3>\n\n*Header*\n```json\n  {\n    X-R4-Application: GUID // Application Unique Identifier\n    X-R4-Delivery: GUID // Unique Payment Identifier\n    X-R4-Event: pix_credit_order_validation\n    User-Agent: R4-Hookshot\n  }\n```\n\n*Body*\n```json\n  {\n    \"object_kind\": pix_credit_order_validation,\n    \"object_id\": \"GUID\", // Unique Payment Identifier\n    \"application_id\": \"GUID\", // Application Unique Identifier\n    \"key\": \"56856854748\", // PIX key - Only provided if not MANUAL payment\n    \"original_end_to_end_id\": \"E0435879820200123221500000000001, // Only provided for payment return\n    \"metadata\": {\n      \"id\": // Unique Payment Identifier,\n      value: 185.99,\n      goal: CHANGE | WITHDRAW | BUY_OR_TRANSFER,\n      payer: {\n        name: \"JORGE SILVA\",\n        agency: 1,\n        account_number: 1234567,\n        account_digit: 7,\n        account_type: \"PAYMENT_ACCOUNT\",\n        document_type: \"CPF\",\n        document_number: 15485625874\n      },\n      recipient: {\n        account_id: \"GUID\", // Unique Recipient Account Identifier\n        document_number: 01456258965\n      },\n    }\n  }\n```\n\n<h3>Response schema</h3>\n\n*Success - 200*\n```json\n  {\n    \"operation_validated_at\": \"2020-01-23T22:10:05.025Z\" // [REQUIRED] yyyy-mm-ddTHH:mm:ss.sssZ\n  }\n```\n\n*Error - 400*\n```json\n  {\n    \"operation_validated_at\": \"2020-01-23T22:10:05.025Z\", // [REQUIRED] yyyy-mm-ddTHH:mm:ss.sssZ\n    \"reason\": \"RECIPIENT_ACCOUNT_NOT_FOUND_OR_INVALID\", // [REQUIRED] REASON enum\n    \"description\": \"Recipient account is invalid or was not found\" // [OPTIONAL] (additional error description)\n  }\n```\n\nREASON values:\n\n  - RECIPIENT_PSP_ERROR\n  - RECIPIENT_ACCOUNT_NOT_FOUND_OR_INVALID\n  - RECIPIENT_ACCOUNT_BLOCKED\n  - RECIPIENT_ACCOUNT_CLOSED\n  - RECIPIENT_ACCOUNT_TYPE_INVALID\n  - RECIPIENT_TRANSACTION_TYPE_INVALID\n  - RECIPIENT_ACCOUNT_VALUE_LIMIT_EXCEEDED\n  - RETURN_PAYMENT_VALUE_EXCEEDED\n  - RECIPIENT_DOCUMENT_NUMBER_DIFFERS_FROM_ACCOUNT\n  - RECIPIENT_DOCUMENT_NUMBER_INVALID\n  - REJECTED_BY_RECIPIENT_PARTICIPANT\n  - REJECTED_BY_RECIPIENT_TIMEOUT\n  - RETURN_PAYMENT_DEADLINE_EXCEEDED\n  - PAYER_IS_SANCTIONED_BY_CSNU\n  - PAYMENT_PROCESS_ERROR\n  - ORIGINAL_TRANSACTION_IS_NOT_WITHDRAW_OR_CHANGE\n\n***\n\n<h2>Receive payment (credit order)</h2>\nTo receive the confirmation, its necessary the previous registration of the client url.\nThis object will be sent as an HTTP call with the POST method, of which the client must respond with a 202 status and within 10 seconds.\n\n\n<h3>Confirmation scheme</h3>\n\n*Header*\n```json\n  {\n    X-R4-Application: GUID // Application Unique Identifier\n    X-R4-Delivery: GUID // Attempt Unique Identifier\n    X-R4-Event: pix_done\n    User-Agent: R4-Hookshot\n  }\n```\n\n*Body*\n```json\n  {\n    \"object_kind\": \"pix_done\"\n    \"object_id\": \"GUID\", // Payment Unique Identifier\n    \"account_id\": \"GUID\" // Account Unique Identifier\n    \"application_id\": \"GUID\", // Application Unique Identifier\n  }\n```\n## Error codes\n\nBelow is a list of possible error codes that can be returned:\n\n  | Code                | Description                                                 |\n  |-------------------- | ------------------------------------------------------------|\n  | `ACCOUNT_NOT_FOUND` | Account not found |\n  | `APPLICATION_PRODUCT_NOT_FOUND` | Product not found for given application id |\n  | `AUTHENTICATION_FAILED` | Authentication failed |\n  | `UNAUTHORIZED` | Unauthorized |\n  | `UNEXPECTED_ERROR` | Unexpected error with our service |\n  | `VALIDATION_FAILED` | Invalid request data |\n  | `INVALID_DATA` | The data provided has an invalid format |\n  | `MISSING_PRODUCT_PERMISSION` | Missing product permission. |\n  | `PAYMENT_ALREADY_EXISTS` | Payment already exists. |\n  | `PAYMENT_NOT_FOUND` | Payment not found |\n  | `PRODUCT_DISABLED` | Product is not enabled. |\n  | `PROFILE_NOT_FOUND` | Profile not found. |\n  | `PAYMENT_ALREADY_RETURNED` | The payment has already been returned |\n  | `INVALID_PAYMENT_VALUE` | Payment value is not valid |\n"
+    "description": "Api responsible for managing pix payments, for debit (payment or return) and credit operations\n\nTo see how the payment flow is going, the client can get information about it and confirm the statuses and occurrences.\n\n| Status                | Description                                                 |\n|-------------------- | ------------------------------------------------------------|\n| `CREATED` | Successfully created |\n| `CONFIRMING` | Sent for internal confirmation |\n| `CONFIRMED` | Confirmed by client |\n| `NOT_CONFIRMED` | Not confirmed by client |\n| `PROCESSING` | Sent for internal processing |\n| `PROCESSED` | Successfully processed |\n| `REJECTED` | Pix has been rejected (final) |\n| `ERROR` | Some error has occurred (final) |\n| `DONE` | Pix has been successfully completed (final) |\n| `VALIDATING` | Credit order sent to client validation |\n| `VALID` | Credit order was successfully validated by client |\n\n## Payment Confirmation Call - Credit Order\n\nIn order to receive a credit, a prior confirmation is required.\n\nTo receive the validation request, its necessary the previous registration of the client url.\n\n- Add a valid url to **pix-credit-order-validation-url** configuration linked to the **application-id**\n\nThis object will be sent as a HTTP call with the POST method.\n\n### Request schema\n\n#### *Header*\n```json\n{\n  X-R4-Application: GUID, // Application Unique Identifier\n  X-R4-Delivery: GUID, // Unique Payment Identifier\n  X-R4-Event: pix_credit_order_validation,\n  User-Agent: R4-Hookshot\n}\n```\n\n#### *Body*\n```json\n{\n  \"object_kind\": pix_credit_order_validation,\n  \"object_id\": \"GUID\", // Unique Payment Identifier\n  \"application_id\": \"GUID\", // Application Unique Identifier\n  \"key\": \"56856854748\", // Pix key - Provided only if not a MANUAL payment\n  \"original_end_to_end_id\": \"E0435879820200123221500000000001, // Provided for payment return only\n  \"metadata\": {\n    \"id\": // Unique Payment Identifier,\n    \"value\": 185.99,\n    \"goal\": \"BUY_OR_TRANSFER\", // CHANGE | WITHDRAW | BUY_OR_TRANSFER\n    \"payer\": {\n      \"name\": \"Payer Name\",\n      \"agency\": 1,\n      \"account_number\": 1234567,\n      \"account_digit\": 7,\n      \"account_type\": \"PAYMENT_ACCOUNT\",\n      \"document_type\": \"CPF\",\n      \"document_number\": 15485625874\n    },\n    \"recipient\": {\n      \"account_id\": \"GUID\", // Unique Recipient Account Identifier\n      \"document_number\": 28989915031\n    }\n  }\n}\n```\n\n### Response schema\n\n#### *Success - 200*\n```json\n{\n  \"operation_validated_at\": \"2020-01-23T22:10:05.025Z\" // [REQUIRED] yyyy-mm-ddTHH:mm:ss.sssZ\n}\n```\n\n#### *Error - 400*\n```json\n{\n  \"operation_validated_at\": \"2020-01-23T22:10:05.025Z\", // [REQUIRED] yyyy-mm-ddTHH:mm:ss.sssZ\n  \"reason\": \"RECIPIENT_ACCOUNT_NOT_FOUND_OR_INVALID\", // [REQUIRED] REASON enum\n  \"description\": \"Recipient account is invalid or was not found\" // [OPTIONAL] (additional error description)\n}\n```\n\nAvailable **reason** response values:\n\n| Reason              | Description                                                 |\n|-------------------- | ------------------------------------------------------------|\n| `RECIPIENT_ACCOUNT_BLOCKED` | The specified transactional account is blocked |\n| `RECIPIENT_ACCOUNT_VALUE_LIMIT_EXCEEDED` | Payment/return order in an amount that exceeds the limit allowed for the type of transactional account credited |\n| `RECIPIENT_DOCUMENT_NUMBER_DIFFERS_FROM_ACCOUNT` | CPF/CNPJ of the receiving user is not consistent with the specified transactional account holder |\n| `RECIPIENT_DOCUMENT_NUMBER_INVALID` | Incorrect recipient user's CPF/CNPJ |\n\n## Payment Confirmation Call - Debit Order\n\nIn order to perform a pix payment or return, a prior confirmation is required.\n\nTo receive the confirmation, its necessary the previous registration of the client url.\n\n- Add a valid url to **pix-confirmation-url** configuration linked to the **application-id**\n\nThis object will be sent as a HTTP call with the POST method, of which the client must respond with a 202 status and within 10 seconds.\n\n### Confirmation scheme\n\n#### *Header*\n```json\n{\n  X-R4-Application: GUID, // Application Unique Identifier\n  X-R4-Delivery: GUID, // Payment Unique Identifier\n  X-R4-Event: pix_payment_confirmation,\n  User-Agent: R4-Hookshot\n}\n```\n\n#### *Body*\n```json\n{\n  \"object_kind\": \"pix_payment_confirmation\",\n  \"object_id\": \"GUID\", // Payment Unique Identifier\n  \"application_id\": \"GUID\", // Application Unique Identifier\n  \"account_id\": \"GUID\", // Account Unique Identifier\n  \"original_end_to_end_id\": \"GUID\", // Original Payment Unique Identifier (applied in case of return)\n  \"metadata\": {\n    \"id\": \"GUID\", // Payment Unique Identifier\n    \"value\": 100,\n    \"goal\": \"BUY_OR_TRANSFER\",\n    \"payer\": {\n      \"name\": \"Payer Name\",\n      \"bank_code\": 88,\n      \"agency\": 1,\n      \"account\": 7654321,\n      \"account_digit\": 1,\n      \"account_type\": \"PAYMENT_ACCOUNT\",\n      \"document_type\": \"CPF\",\n      \"document_number\": 67363912025\n    },\n    \"recipient\": {\n      \"name\": \"Recipient Name\",\n      \"bank_code\": 88,\n      \"agency\": 1,\n      \"account\": 1234567,\n      \"account_digit\": 1,\n      \"account_type\": \"PAYMENT_ACCOUNT\",\n      \"document_type\": \"CPF\",\n      \"document_number\": 38623009002\n    }\n  }\n}\n```\n\n## Status Change Notification\n\nSome statuses changes will fire a notification call to the client.\n\nTo receive this notifications, its necessary to request the registration of the service URL which will receive the notification object.\n\nThis object will be sent as a HTTP call with the POST method, of which the client must respond with a 200 status and within 5 seconds.\n\n| Event Type          | Pix Status     |\n|-------------------- | -------------- |\n| `pix_created` | CREATED |\n| `pix_confirmed` | CONFIRMED |\n| `pix_not_confirmed` | NOT_CONFIRMED |\n| `pix_rejected` | REJECTED |\n| `pix_error` | ERROR |\n| `pix_done` | DONE |\n\n### Notification Call Scheme\n\n#### *Header*\n```json\n{\n  X-R4-Application: GUID, // Application Unique Identifier\n  X-R4-Delivery: GUID, // Attempt Unique Identifier\n  X-R4-Event: {event_type}, // Event Type for the Notification (as described in Event Type table)\n  User-Agent: R4-Hookshot\n}\n```\n\n#### *Body*\n```\n{\n  \"object_kind\": \"{event_type}\", // Event Type for the Notification (as described in Event Type table)\n  \"object_id\": \"GUID\", // Payment Unique Identifier\n  \"account_id\": \"GUID\" // Account Unique Identifier\n  \"application_id\": \"GUID\" // Application Unique Identifier\n}\n```\n\n## Errors\n\nThis API uses HTTP response status codes to indicate the success or failure of your API requests. In general, there are three status code ranges you can expect:\n\n- `2xx` success status codes confirm that your request worked as expected\n\n- `4xx` error status codes indicate an error because of the information provided (e.g., a required parameter was not provided)\n\n- `5xx` error status codes are rare and indicate an error with R4's servers\n\n### Error codes\n\nBelow is a list of possible error codes that can be returned:\n\n| Code                | Description                                                 |\n|-------------------- | ------------------------------------------------------------|\n| `ACCOUNT_NOT_FOUND` | Account not found |\n| `APPLICATION_PRODUCT_NOT_FOUND` | Product not found for given application id |\n| `AUTHENTICATION_FAILED` | Authentication failed |\n| `INVALID_DATA` | The data provided has an invalid format |\n| `INVALID_DOCUMENT` | Invalid document number |\n| `INVALID_PAYMENT_VALUE` | Payment value is not valid |\n| `INVALID_UUID` | The provided UUID is not valid |\n| `MISSING_PRODUCT_PERMISSION` | Missing product permission |\n| `PAYMENT_ALREADY_EXISTS` | Payment already exists |\n| `PAYMENT_ALREADY_RETURNED` | The payment has already been returned |\n| `PAYMENT_IS_NOT_A_CREDIT` | It is not possible to return a debit |\n| `PAYMENT_NOT_FOUND` | Payment not found |\n| `PRODUCT_DISABLED` | Product is not enabled |\n| `PROFILE_NOT_FOUND` | Profile not found |\n| `UNAUTHORIZED` | Unauthorized |\n| `UNEXPECTED_ERROR` | Unexpected error with our service |\n| `VALIDATION_FAILED` | Invalid request data |\n"
   },
   "servers": [
     {
@@ -31,7 +31,7 @@
         "tags": [
           "Reason"
         ],
-        "summary": "Return reasons",
+        "summary": "List of return reasons for a payment return",
         "security": [
           {
             "BearerAuth": []
@@ -39,7 +39,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Get return reason successfully.",
+            "description": "A list of return reason successfully returned.",
             "content": {
               "application/json": {
                 "schema": {
@@ -173,7 +173,7 @@
         "tags": [
           "BaaS Pix Payment"
         ],
-        "summary": "Health Check",
+        "summary": "API Health Check",
         "security": [
           {
             "BearerAuth": []
@@ -260,7 +260,7 @@
         "tags": [
           "Payments"
         ],
-        "summary": "Should create and return the created payment",
+        "summary": "Should create a payment",
         "requestBody": {
           "content": {
             "application/json": {
@@ -350,7 +350,7 @@
                   },
                   "withdraw_ispb": {
                     "type": "number",
-                    "description": "Withdrawal service provider ISBP.\n\n* When the goal to be equal `CHANGE` or `WITHDRAW` this property is required.\n* When the goal to be equal BUY_OR_TRANSFER you don't inform this field.\n",
+                    "description": "Withdrawal service provider ISPB.\n\n* When the goal to be equal `CHANGE` or `WITHDRAW` this property is required.\n* When the goal to be equal BUY_OR_TRANSFER you don't inform this field.\n",
                     "example": 11476673
                   },
                   "recipient": {
@@ -503,20 +503,20 @@
                   "description": "Describes the properties of pix payment.",
                   "required": [
                     "id",
-                    "account_id",
                     "application_id",
+                    "account_id",
                     "operation",
                     "kind",
                     "payment_priority",
                     "type_payment_priority",
                     "goal",
-                    "payer",
-                    "recipient",
                     "value",
                     "description",
                     "status",
                     "created_at",
-                    "updated_at"
+                    "updated_at",
+                    "payer",
+                    "recipient"
                   ],
                   "properties": {
                     "id": {
@@ -536,6 +536,15 @@
                       "format": "uuid-v4",
                       "example": "6d814c28-fe73-443c-bfe0-48d518aa32fa"
                     },
+                    "operation": {
+                      "type": "string",
+                      "description": "Payment operation",
+                      "enum": [
+                        "CREDIT",
+                        "DEBIT"
+                      ],
+                      "example": "CREDIT"
+                    },
                     "kind": {
                       "type": "string",
                       "enum": [
@@ -546,7 +555,7 @@
                         "PAYMENT_TRANSACTION_SERVICE",
                         "PAYER_QRCODE"
                       ],
-                      "description": "The type of mecanism used to start the payment",
+                      "description": "The type of mechanism used to start the payment",
                       "example": "KEY"
                     },
                     "payment_priority": {
@@ -590,13 +599,84 @@
                     },
                     "withdraw_ispb": {
                       "type": "number",
-                      "description": "Withdrawal service provider ISBP.",
+                      "description": "Withdrawal service provider ISPB.",
                       "example": 11476673
                     },
                     "document_payment_initiator": {
                       "type": "number",
                       "example": 37650221000115,
                       "description": "The CNPJ of the payment initiator institution."
+                    },
+                    "value": {
+                      "type": "number",
+                      "description": "The payment's value",
+                      "example": 10.99
+                    },
+                    "key": {
+                      "type": "string",
+                      "description": "The recipient's key",
+                      "example": 85801560025
+                    },
+                    "description": {
+                      "type": "string",
+                      "description": "The payment's description",
+                      "example": "Payment description"
+                    },
+                    "conciliation_id": {
+                      "type": "string",
+                      "description": "The payment's conciliation id",
+                      "example": "PI2020010300000000000000000000001"
+                    },
+                    "end_to_end_id": {
+                      "type": "string",
+                      "description": "The payment's end to end id",
+                      "example": "8a565c43-7db0-4808-a1c9-aca65f5ec8e3"
+                    },
+                    "original_end_to_end_id": {
+                      "type": "string",
+                      "description": "The payment's original end to end id",
+                      "example": "8a565c43-7db0-4808-a1c9-aca65f5ec8e3"
+                    },
+                    "statement_id": {
+                      "type": "string",
+                      "description": "The statement's ID generated by the payment",
+                      "example": "8a565c43-7db0-4808-a1c9-aca65f5ec8e3"
+                    },
+                    "external_payment_id": {
+                      "type": "string",
+                      "description": "The external payment id, origin of the CREDIT operation",
+                      "example": "f3336183-8172-4988-bec9-4b4a6b294b80"
+                    },
+                    "operation_validated_at": {
+                      "type": "string",
+                      "description": "validation's timestamp for CREDIT operation",
+                      "example": "2022-01-04T17:14:55.045Z"
+                    },
+                    "status": {
+                      "type": "string",
+                      "description": "The payment's status",
+                      "enum": [
+                        "CREATED",
+                        "CONFIRMING",
+                        "CONFIRMED",
+                        "NOT_CONFIRMED",
+                        "PROCESSING",
+                        "PROCESSED",
+                        "REJECTED",
+                        "ERROR",
+                        "DONE"
+                      ],
+                      "example": "CREATED"
+                    },
+                    "created_at": {
+                      "type": "string",
+                      "description": "The payment's created at",
+                      "example": "2022-01-13T13:53:01.463Z"
+                    },
+                    "updated_at": {
+                      "type": "string",
+                      "description": "The payment's updated at",
+                      "example": "2022-01-13T13:53:01.463Z"
                     },
                     "payer": {
                       "type": "object",
@@ -724,51 +804,32 @@
                         }
                       }
                     },
-                    "value": {
-                      "type": "number",
-                      "description": "The payment's value",
-                      "example": 10.99
-                    },
-                    "key": {
-                      "type": "string",
-                      "description": "The recipient's key",
-                      "example": 85801560025
-                    },
-                    "description": {
-                      "type": "string",
-                      "description": "The payment's description",
-                      "example": "Pagamento do churrasco"
-                    },
-                    "end_to_end_id": {
-                      "type": "string",
-                      "description": "The payment's end to end id",
-                      "example": "8a565c43-7db0-4808-a1c9-aca65f5ec8e3"
-                    },
-                    "status": {
-                      "type": "string",
-                      "description": "The payment's status",
-                      "enum": [
-                        "CREATED",
-                        "CONFIRMING",
-                        "CONFIRMED",
-                        "NOT_CONFIRMED",
-                        "PROCESSING",
-                        "PROCESSED",
-                        "REJECTED",
-                        "ERROR",
-                        "DONE"
-                      ],
-                      "example": "CREATED"
-                    },
-                    "created_at": {
-                      "type": "string",
-                      "description": "The payment's created at",
-                      "example": "2022-01-13T13:53:01.463Z"
-                    },
-                    "updated_at": {
-                      "type": "string",
-                      "description": "The payment's updated at",
-                      "example": "2022-01-13T13:53:01.463Z"
+                    "value_details": {
+                      "type": "array",
+                      "description": "The element group used to break down payment amounts\n\n* If the goal is equal to `BUY_OR_TRANSFER` do not inform this field.\n* If the goal is equal to `CHANGE` is mandatory to inform two different\ngroups, one with the kind equal to `PURCHASE_AMOUNT` and another with\nthe kind equal to `AVAILABLE_CASH`.\n* If the goal is equal to `WITHDRAW` is mandatory to inform one group with\nthe kind equal to `AVAILABLE_CASH`.\n",
+                      "items": {
+                        "type": "object",
+                        "required": [
+                          "kind",
+                          "value"
+                        ],
+                        "properties": {
+                          "kind": {
+                            "type": "string",
+                            "enum": [
+                              "PURCHASE_AMOUNT",
+                              "AVAILABLE_CASH"
+                            ],
+                            "description": "The value kind.\n\n* `PURCHASE_AMOUNT`: The purchase amount\n* `AVAILABLE_CASH`: Value of the resource in kind provided.\n",
+                            "example": "AVAILABLE_CASH"
+                          },
+                          "value": {
+                            "type": "number",
+                            "description": "The purchase value or the value of the resource in kind provided\n",
+                            "example": 10.99
+                          }
+                        }
+                      }
                     }
                   }
                 }
@@ -1160,7 +1221,7 @@
         "tags": [
           "Payments"
         ],
-        "summary": "should return a list of payments",
+        "summary": "Should return a list of payments",
         "parameters": [
           {
             "in": "query",
@@ -1216,308 +1277,345 @@
                       "type": "array",
                       "items": {
                         "type": "object",
-                        "description": "Describes the properties of pix payment.",
-                        "required": [
-                          "id",
-                          "account_id",
-                          "application_id",
-                          "operation",
-                          "kind",
-                          "payment_priority",
-                          "type_payment_priority",
-                          "goala",
-                          "payer",
-                          "recipient",
-                          "value",
-                          "description",
-                          "status",
-                          "created_at",
-                          "updated_at"
-                        ],
-                        "properties": {
-                          "id": {
-                            "type": "string",
-                            "description": "The payment's id",
-                            "example": "f3336183-8172-4988-bec9-4b4a6b294b80"
-                          },
-                          "application_id": {
-                            "type": "string",
-                            "format": "uuid-v4",
-                            "description": "Unique identifier of application.",
-                            "example": "6d814c28-fe73-443c-bfe0-48d518aa1234"
-                          },
-                          "account_id": {
-                            "type": "string",
-                            "description": "Unique identifier of the account.",
-                            "format": "uuid-v4",
-                            "example": "6d814c28-fe73-443c-bfe0-48d518aa32fa"
-                          },
-                          "kind": {
-                            "type": "string",
-                            "enum": [
-                              "MANUAL",
-                              "KEY",
-                              "STATIC_QRCODE",
-                              "DYNAMIC_QRCODE",
-                              "PAYMENT_TRANSACTION_SERVICE",
-                              "PAYER_QRCODE"
-                            ],
-                            "description": "The type of mecanism used to start the payment",
-                            "example": "KEY"
-                          },
-                          "payment_priority": {
-                            "type": "string",
-                            "enum": [
-                              "SCHEDULED",
-                              "IMMEDIATE"
-                            ],
-                            "description": "The property indicate if the liquidation is priority or not.",
-                            "example": "IMMEDIATE"
-                          },
-                          "type_payment_priority": {
-                            "type": "string",
-                            "enum": [
-                              "SCHEDULED_PAYMENT",
-                              "PRIORITY_PAYMENT",
-                              "FRAUD_ANALYSIS_PAYMENT"
-                            ],
-                            "description": "Indicate if this is a priority transaction or not.",
-                            "example": "PRIORITY_PAYMENT"
-                          },
-                          "goal": {
-                            "type": "string",
-                            "description": "The payment's goal.",
-                            "enum": [
-                              "CHANGE",
-                              "WITHDRAW",
-                              "BUY_OR_TRANSFER"
-                            ],
-                            "example": "BUY_OR_TRANSFER"
-                          },
-                          "agent_modality": {
-                            "type": "string",
-                            "description": "The agent modality of the withdraw.",
-                            "enum": [
-                              "WITHDRAW_SERVICE_AGENT",
-                              "COMMERCIAL_ESTABLISHMENT_AGENT",
-                              "AGENT_OR_OTHER_LEGAL_ENTITY"
-                            ],
-                            "example": "COMMERCIAL_ESTABLISHMENT_AGENT"
-                          },
-                          "withdraw_ispb": {
-                            "type": "number",
-                            "description": "Withdrawal service provider ISBP.",
-                            "example": 11476673
-                          },
-                          "document_payment_initiator": {
-                            "type": "number",
-                            "example": 37650221000115,
-                            "description": "The CNPJ of the payment initiator institution."
-                          },
-                          "value": {
-                            "type": "number",
-                            "description": "The payment's value",
-                            "example": 10.99
-                          },
-                          "key": {
-                            "type": "string",
-                            "description": "The recipient's key",
-                            "example": 85801560025
-                          },
-                          "description": {
-                            "type": "string",
-                            "description": "The payment's description",
-                            "example": "Payment description"
-                          },
-                          "conciliation_id": {
-                            "type": "string",
-                            "description": "The payment's conciliation id",
-                            "example": "PI2020010300000000000000000000001"
-                          },
-                          "end_to_end_id": {
-                            "type": "string",
-                            "description": "The payment's end to end id",
-                            "example": "8a565c43-7db0-4808-a1c9-aca65f5ec8e3"
-                          },
-                          "status": {
-                            "type": "string",
-                            "description": "The payment's status",
-                            "enum": [
-                              "CREATED",
-                              "CONFIRMING",
-                              "CONFIRMED",
-                              "NOT_CONFIRMED",
-                              "PROCESSING",
-                              "PROCESSED",
-                              "REJECTED",
-                              "ERROR",
-                              "DONE"
-                            ],
-                            "example": "CREATED"
-                          },
-                          "created_at": {
-                            "type": "string",
-                            "description": "The payment's created at",
-                            "example": "2022-01-13T13:53:01.463Z"
-                          },
-                          "updated_at": {
-                            "type": "string",
-                            "description": "The payment's updated at",
-                            "example": "2022-01-13T13:53:01.463Z"
-                          },
-                          "payer": {
+                        "description": "Describes the properties of pix payment with occurrences.",
+                        "allOf": [
+                          {
                             "type": "object",
-                            "description": "Describes properties of payer",
+                            "description": "Describes the properties of pix payment.",
                             "required": [
-                              "ispb",
-                              "document_type",
-                              "document_number",
-                              "name",
-                              "account_type",
-                              "account_number",
-                              "account_digit"
+                              "id",
+                              "application_id",
+                              "account_id",
+                              "operation",
+                              "kind",
+                              "payment_priority",
+                              "type_payment_priority",
+                              "goal",
+                              "value",
+                              "description",
+                              "status",
+                              "created_at",
+                              "updated_at",
+                              "payer",
+                              "recipient"
                             ],
                             "properties": {
-                              "ispb": {
+                              "id": {
+                                "type": "string",
+                                "description": "The payment's id",
+                                "example": "f3336183-8172-4988-bec9-4b4a6b294b80"
+                              },
+                              "application_id": {
+                                "type": "string",
+                                "format": "uuid-v4",
+                                "description": "Unique identifier of application.",
+                                "example": "6d814c28-fe73-443c-bfe0-48d518aa1234"
+                              },
+                              "account_id": {
+                                "type": "string",
+                                "description": "Unique identifier of the account.",
+                                "format": "uuid-v4",
+                                "example": "6d814c28-fe73-443c-bfe0-48d518aa32fa"
+                              },
+                              "operation": {
+                                "type": "string",
+                                "description": "Payment operation",
+                                "enum": [
+                                  "CREDIT",
+                                  "DEBIT"
+                                ],
+                                "example": "CREDIT"
+                              },
+                              "kind": {
+                                "type": "string",
+                                "enum": [
+                                  "MANUAL",
+                                  "KEY",
+                                  "STATIC_QRCODE",
+                                  "DYNAMIC_QRCODE",
+                                  "PAYMENT_TRANSACTION_SERVICE",
+                                  "PAYER_QRCODE"
+                                ],
+                                "description": "The type of mechanism used to start the payment",
+                                "example": "KEY"
+                              },
+                              "payment_priority": {
+                                "type": "string",
+                                "enum": [
+                                  "SCHEDULED",
+                                  "IMMEDIATE"
+                                ],
+                                "description": "The property indicate if the liquidation is priority or not.",
+                                "example": "IMMEDIATE"
+                              },
+                              "type_payment_priority": {
+                                "type": "string",
+                                "enum": [
+                                  "SCHEDULED_PAYMENT",
+                                  "PRIORITY_PAYMENT",
+                                  "FRAUD_ANALYSIS_PAYMENT"
+                                ],
+                                "description": "Indicate if this is a priority transaction or not.",
+                                "example": "PRIORITY_PAYMENT"
+                              },
+                              "goal": {
+                                "type": "string",
+                                "description": "The payment's goal.",
+                                "enum": [
+                                  "CHANGE",
+                                  "WITHDRAW",
+                                  "BUY_OR_TRANSFER"
+                                ],
+                                "example": "BUY_OR_TRANSFER"
+                              },
+                              "agent_modality": {
+                                "type": "string",
+                                "description": "The agent modality of the withdraw.",
+                                "enum": [
+                                  "WITHDRAW_SERVICE_AGENT",
+                                  "COMMERCIAL_ESTABLISHMENT_AGENT",
+                                  "AGENT_OR_OTHER_LEGAL_ENTITY"
+                                ],
+                                "example": "COMMERCIAL_ESTABLISHMENT_AGENT"
+                              },
+                              "withdraw_ispb": {
                                 "type": "number",
-                                "description": "Payer's ISPB number",
+                                "description": "Withdrawal service provider ISPB.",
                                 "example": 11476673
                               },
-                              "document_type": {
+                              "document_payment_initiator": {
+                                "type": "number",
+                                "example": 37650221000115,
+                                "description": "The CNPJ of the payment initiator institution."
+                              },
+                              "value": {
+                                "type": "number",
+                                "description": "The payment's value",
+                                "example": 10.99
+                              },
+                              "key": {
                                 "type": "string",
-                                "description": "Payer's document type",
+                                "description": "The recipient's key",
+                                "example": 85801560025
+                              },
+                              "description": {
+                                "type": "string",
+                                "description": "The payment's description",
+                                "example": "Payment description"
+                              },
+                              "conciliation_id": {
+                                "type": "string",
+                                "description": "The payment's conciliation id",
+                                "example": "PI2020010300000000000000000000001"
+                              },
+                              "end_to_end_id": {
+                                "type": "string",
+                                "description": "The payment's end to end id",
+                                "example": "8a565c43-7db0-4808-a1c9-aca65f5ec8e3"
+                              },
+                              "original_end_to_end_id": {
+                                "type": "string",
+                                "description": "The payment's original end to end id",
+                                "example": "8a565c43-7db0-4808-a1c9-aca65f5ec8e3"
+                              },
+                              "statement_id": {
+                                "type": "string",
+                                "description": "The statement's ID generated by the payment",
+                                "example": "8a565c43-7db0-4808-a1c9-aca65f5ec8e3"
+                              },
+                              "external_payment_id": {
+                                "type": "string",
+                                "description": "The external payment id, origin of the CREDIT operation",
+                                "example": "f3336183-8172-4988-bec9-4b4a6b294b80"
+                              },
+                              "operation_validated_at": {
+                                "type": "string",
+                                "description": "validation's timestamp for CREDIT operation",
+                                "example": "2022-01-04T17:14:55.045Z"
+                              },
+                              "status": {
+                                "type": "string",
+                                "description": "The payment's status",
                                 "enum": [
-                                  "CPF",
-                                  "CNPJ"
-                                ]
+                                  "CREATED",
+                                  "CONFIRMING",
+                                  "CONFIRMED",
+                                  "NOT_CONFIRMED",
+                                  "PROCESSING",
+                                  "PROCESSED",
+                                  "REJECTED",
+                                  "ERROR",
+                                  "DONE"
+                                ],
+                                "example": "CREATED"
                               },
-                              "document_number": {
-                                "type": "number",
-                                "description": "Payer's document number"
-                              },
-                              "name": {
+                              "created_at": {
                                 "type": "string",
-                                "description": "Payer's name",
-                                "example": "Payer name"
+                                "description": "The payment's created at",
+                                "example": "2022-01-13T13:53:01.463Z"
                               },
-                              "agency_number": {
-                                "type": "number",
-                                "description": "Payer's agency number"
-                              },
-                              "account_type": {
+                              "updated_at": {
                                 "type": "string",
-                                "description": "Payer's account type",
-                                "enum": [
-                                  "CHECKING_ACCOUNT",
-                                  "SAVINGS_ACCOUNT",
-                                  "CONTROL_ACCOUNT",
-                                  "GRAPHIC_ACCOUNT",
-                                  "PAYMENT_ACCOUNT",
-                                  "SALARY_ACCOUNT"
-                                ]
+                                "description": "The payment's updated at",
+                                "example": "2022-01-13T13:53:01.463Z"
                               },
-                              "account_number": {
-                                "type": "number",
-                                "description": "Payer's account number",
-                                "example": 12319
+                              "payer": {
+                                "type": "object",
+                                "description": "Describes properties of payer",
+                                "required": [
+                                  "ispb",
+                                  "document_type",
+                                  "document_number",
+                                  "name",
+                                  "account_type",
+                                  "account_number",
+                                  "account_digit"
+                                ],
+                                "properties": {
+                                  "ispb": {
+                                    "type": "number",
+                                    "description": "Payer's ISPB number",
+                                    "example": 11476673
+                                  },
+                                  "document_type": {
+                                    "type": "string",
+                                    "description": "Payer's document type",
+                                    "enum": [
+                                      "CPF",
+                                      "CNPJ"
+                                    ]
+                                  },
+                                  "document_number": {
+                                    "type": "number",
+                                    "description": "Payer's document number"
+                                  },
+                                  "name": {
+                                    "type": "string",
+                                    "description": "Payer's name",
+                                    "example": "Payer name"
+                                  },
+                                  "agency_number": {
+                                    "type": "number",
+                                    "description": "Payer's agency number"
+                                  },
+                                  "account_type": {
+                                    "type": "string",
+                                    "description": "Payer's account type",
+                                    "enum": [
+                                      "CHECKING_ACCOUNT",
+                                      "SAVINGS_ACCOUNT",
+                                      "CONTROL_ACCOUNT",
+                                      "GRAPHIC_ACCOUNT",
+                                      "PAYMENT_ACCOUNT",
+                                      "SALARY_ACCOUNT"
+                                    ]
+                                  },
+                                  "account_number": {
+                                    "type": "number",
+                                    "description": "Payer's account number",
+                                    "example": 12319
+                                  },
+                                  "account_digit": {
+                                    "type": "number",
+                                    "description": "Payer's account digit",
+                                    "example": 1
+                                  }
+                                }
                               },
-                              "account_digit": {
-                                "type": "number",
-                                "description": "Payer's account digit",
-                                "example": 1
-                              }
-                            }
-                          },
-                          "recipient": {
-                            "type": "object",
-                            "description": "Describes properties of recipient",
-                            "required": [
-                              "ispb",
-                              "document_type",
-                              "document_number",
-                              "account_type",
-                              "account_number",
-                              "account_digit"
-                            ],
-                            "properties": {
-                              "ispb": {
-                                "type": "number",
-                                "description": "Recipient's ISPB number",
-                                "example": 11476673
+                              "recipient": {
+                                "type": "object",
+                                "description": "Describes properties of recipient",
+                                "required": [
+                                  "ispb",
+                                  "document_type",
+                                  "document_number",
+                                  "account_type",
+                                  "account_number",
+                                  "account_digit"
+                                ],
+                                "properties": {
+                                  "ispb": {
+                                    "type": "number",
+                                    "description": "Recipient's ISPB number",
+                                    "example": 11476673
+                                  },
+                                  "document_type": {
+                                    "type": "string",
+                                    "description": "Recipient's document type",
+                                    "enum": [
+                                      "CPF",
+                                      "CNPJ"
+                                    ]
+                                  },
+                                  "document_number": {
+                                    "type": "number",
+                                    "description": "Recipient's document number"
+                                  },
+                                  "name": {
+                                    "type": "string",
+                                    "description": "Recipient's name",
+                                    "example": "Recipient name",
+                                    "maxLength": 140
+                                  },
+                                  "agency_number": {
+                                    "type": "number",
+                                    "description": "Recipient's agency number"
+                                  },
+                                  "account_type": {
+                                    "type": "string",
+                                    "description": "Recipient's account type",
+                                    "enum": [
+                                      "CHECKING_ACCOUNT",
+                                      "SAVINGS_ACCOUNT",
+                                      "CONTROL_ACCOUNT",
+                                      "GRAPHIC_ACCOUNT",
+                                      "PAYMENT_ACCOUNT",
+                                      "SALARY_ACCOUNT"
+                                    ]
+                                  },
+                                  "account_number": {
+                                    "type": "number",
+                                    "description": "Recipient's account number",
+                                    "example": 12319
+                                  },
+                                  "account_digit": {
+                                    "type": "number",
+                                    "description": "Recipient's account digit",
+                                    "example": 1
+                                  }
+                                }
                               },
-                              "document_type": {
-                                "type": "string",
-                                "description": "Recipient's document type",
-                                "enum": [
-                                  "CPF",
-                                  "CNPJ"
-                                ]
-                              },
-                              "document_number": {
-                                "type": "number",
-                                "description": "Recipient's document number"
-                              },
-                              "name": {
-                                "type": "string",
-                                "description": "Recipient's name",
-                                "example": "Recipient name",
-                                "maxLength": 140
-                              },
-                              "agency_number": {
-                                "type": "number",
-                                "description": "Recipient's agency number"
-                              },
-                              "account_type": {
-                                "type": "string",
-                                "description": "Recipient's account type",
-                                "enum": [
-                                  "CHECKING_ACCOUNT",
-                                  "SAVINGS_ACCOUNT",
-                                  "CONTROL_ACCOUNT",
-                                  "GRAPHIC_ACCOUNT",
-                                  "PAYMENT_ACCOUNT",
-                                  "SALARY_ACCOUNT"
-                                ]
-                              },
-                              "account_number": {
-                                "type": "number",
-                                "description": "Recipient's account number",
-                                "example": 12319
-                              },
-                              "account_digit": {
-                                "type": "number",
-                                "description": "Recipient's account digit",
-                                "example": 1
-                              }
-                            }
-                          },
-                          "value_details": {
-                            "type": "array",
-                            "description": "The element group used to break down payment amounts\n\n* If the goal is equal to `BUY_OR_TRANSFER` do not inform this field.\n* If the goal is equal to `CHANGE` is mandatory to inform two different\ngroups, one with the kind equal to `PURCHASE_AMOUNT` and another with\nthe kind equal to `AVAILABLE_CASH`.\n* If the goal is equal to `WITHDRAW` is mandatory to inform one group with\nthe kind equal to `AVAILABLE_CASH`.\n",
-                            "items": {
-                              "type": "object",
-                              "required": [
-                                "kind",
-                                "value"
-                              ],
-                              "properties": {
-                                "kind": {
-                                  "type": "string",
-                                  "enum": [
-                                    "PURCHASE_AMOUNT",
-                                    "AVAILABLE_CASH"
+                              "value_details": {
+                                "type": "array",
+                                "description": "The element group used to break down payment amounts\n\n* If the goal is equal to `BUY_OR_TRANSFER` do not inform this field.\n* If the goal is equal to `CHANGE` is mandatory to inform two different\ngroups, one with the kind equal to `PURCHASE_AMOUNT` and another with\nthe kind equal to `AVAILABLE_CASH`.\n* If the goal is equal to `WITHDRAW` is mandatory to inform one group with\nthe kind equal to `AVAILABLE_CASH`.\n",
+                                "items": {
+                                  "type": "object",
+                                  "required": [
+                                    "kind",
+                                    "value"
                                   ],
-                                  "description": "The value kind.\n\n* `PURCHASE_AMOUNT`: The purchase amount\n* `AVAILABLE_CASH`: Value of the resource in kind provided.\n",
-                                  "example": "AVAILABLE_CASH"
-                                },
-                                "value": {
-                                  "type": "number",
-                                  "description": "The purchase value or the value of the resource in kind provided\n",
-                                  "example": 10.99
+                                  "properties": {
+                                    "kind": {
+                                      "type": "string",
+                                      "enum": [
+                                        "PURCHASE_AMOUNT",
+                                        "AVAILABLE_CASH"
+                                      ],
+                                      "description": "The value kind.\n\n* `PURCHASE_AMOUNT`: The purchase amount\n* `AVAILABLE_CASH`: Value of the resource in kind provided.\n",
+                                      "example": "AVAILABLE_CASH"
+                                    },
+                                    "value": {
+                                      "type": "number",
+                                      "description": "The purchase value or the value of the resource in kind provided\n",
+                                      "example": 10.99
+                                    }
+                                  }
                                 }
                               }
                             }
-                          },
+                          }
+                        ],
+                        "properties": {
                           "occurrences": {
                             "type": "array",
                             "items": {
@@ -1547,8 +1645,7 @@
                                     "REJECTED",
                                     "ERROR",
                                     "DONE",
-                                    "VALID",
-                                    "INVALID"
+                                    "VALID"
                                   ]
                                 },
                                 "reason": {
@@ -1881,16 +1978,16 @@
         }
       }
     },
-    "/payments/{payment_id}/returns": {
+    "/payments/{id}/returns": {
       "post": {
         "tags": [
           "Payments"
         ],
-        "summary": "should return the payment.",
+        "summary": "Should return the payment",
         "parameters": [
           {
             "in": "path",
-            "name": "payment_id",
+            "name": "id",
             "schema": {
               "type": "string",
               "format": "uuid-v4",
@@ -1968,262 +2065,358 @@
                 "schema": {
                   "type": "object",
                   "description": "The return payment created",
+                  "allOf": [
+                    {
+                      "type": "object",
+                      "description": "Describes the properties of pix payment.",
+                      "required": [
+                        "id",
+                        "application_id",
+                        "account_id",
+                        "operation",
+                        "kind",
+                        "payment_priority",
+                        "type_payment_priority",
+                        "goal",
+                        "value",
+                        "description",
+                        "status",
+                        "created_at",
+                        "updated_at",
+                        "payer",
+                        "recipient"
+                      ],
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "description": "The payment's id",
+                          "example": "f3336183-8172-4988-bec9-4b4a6b294b80"
+                        },
+                        "application_id": {
+                          "type": "string",
+                          "format": "uuid-v4",
+                          "description": "Unique identifier of application.",
+                          "example": "6d814c28-fe73-443c-bfe0-48d518aa1234"
+                        },
+                        "account_id": {
+                          "type": "string",
+                          "description": "Unique identifier of the account.",
+                          "format": "uuid-v4",
+                          "example": "6d814c28-fe73-443c-bfe0-48d518aa32fa"
+                        },
+                        "operation": {
+                          "type": "string",
+                          "description": "Payment operation",
+                          "enum": [
+                            "CREDIT",
+                            "DEBIT"
+                          ],
+                          "example": "CREDIT"
+                        },
+                        "kind": {
+                          "type": "string",
+                          "enum": [
+                            "MANUAL",
+                            "KEY",
+                            "STATIC_QRCODE",
+                            "DYNAMIC_QRCODE",
+                            "PAYMENT_TRANSACTION_SERVICE",
+                            "PAYER_QRCODE"
+                          ],
+                          "description": "The type of mechanism used to start the payment",
+                          "example": "KEY"
+                        },
+                        "payment_priority": {
+                          "type": "string",
+                          "enum": [
+                            "SCHEDULED",
+                            "IMMEDIATE"
+                          ],
+                          "description": "The property indicate if the liquidation is priority or not.",
+                          "example": "IMMEDIATE"
+                        },
+                        "type_payment_priority": {
+                          "type": "string",
+                          "enum": [
+                            "SCHEDULED_PAYMENT",
+                            "PRIORITY_PAYMENT",
+                            "FRAUD_ANALYSIS_PAYMENT"
+                          ],
+                          "description": "Indicate if this is a priority transaction or not.",
+                          "example": "PRIORITY_PAYMENT"
+                        },
+                        "goal": {
+                          "type": "string",
+                          "description": "The payment's goal.",
+                          "enum": [
+                            "CHANGE",
+                            "WITHDRAW",
+                            "BUY_OR_TRANSFER"
+                          ],
+                          "example": "BUY_OR_TRANSFER"
+                        },
+                        "agent_modality": {
+                          "type": "string",
+                          "description": "The agent modality of the withdraw.",
+                          "enum": [
+                            "WITHDRAW_SERVICE_AGENT",
+                            "COMMERCIAL_ESTABLISHMENT_AGENT",
+                            "AGENT_OR_OTHER_LEGAL_ENTITY"
+                          ],
+                          "example": "COMMERCIAL_ESTABLISHMENT_AGENT"
+                        },
+                        "withdraw_ispb": {
+                          "type": "number",
+                          "description": "Withdrawal service provider ISPB.",
+                          "example": 11476673
+                        },
+                        "document_payment_initiator": {
+                          "type": "number",
+                          "example": 37650221000115,
+                          "description": "The CNPJ of the payment initiator institution."
+                        },
+                        "value": {
+                          "type": "number",
+                          "description": "The payment's value",
+                          "example": 10.99
+                        },
+                        "key": {
+                          "type": "string",
+                          "description": "The recipient's key",
+                          "example": 85801560025
+                        },
+                        "description": {
+                          "type": "string",
+                          "description": "The payment's description",
+                          "example": "Payment description"
+                        },
+                        "conciliation_id": {
+                          "type": "string",
+                          "description": "The payment's conciliation id",
+                          "example": "PI2020010300000000000000000000001"
+                        },
+                        "end_to_end_id": {
+                          "type": "string",
+                          "description": "The payment's end to end id",
+                          "example": "8a565c43-7db0-4808-a1c9-aca65f5ec8e3"
+                        },
+                        "original_end_to_end_id": {
+                          "type": "string",
+                          "description": "The payment's original end to end id",
+                          "example": "8a565c43-7db0-4808-a1c9-aca65f5ec8e3"
+                        },
+                        "statement_id": {
+                          "type": "string",
+                          "description": "The statement's ID generated by the payment",
+                          "example": "8a565c43-7db0-4808-a1c9-aca65f5ec8e3"
+                        },
+                        "external_payment_id": {
+                          "type": "string",
+                          "description": "The external payment id, origin of the CREDIT operation",
+                          "example": "f3336183-8172-4988-bec9-4b4a6b294b80"
+                        },
+                        "operation_validated_at": {
+                          "type": "string",
+                          "description": "validation's timestamp for CREDIT operation",
+                          "example": "2022-01-04T17:14:55.045Z"
+                        },
+                        "status": {
+                          "type": "string",
+                          "description": "The payment's status",
+                          "enum": [
+                            "CREATED",
+                            "CONFIRMING",
+                            "CONFIRMED",
+                            "NOT_CONFIRMED",
+                            "PROCESSING",
+                            "PROCESSED",
+                            "REJECTED",
+                            "ERROR",
+                            "DONE"
+                          ],
+                          "example": "CREATED"
+                        },
+                        "created_at": {
+                          "type": "string",
+                          "description": "The payment's created at",
+                          "example": "2022-01-13T13:53:01.463Z"
+                        },
+                        "updated_at": {
+                          "type": "string",
+                          "description": "The payment's updated at",
+                          "example": "2022-01-13T13:53:01.463Z"
+                        },
+                        "payer": {
+                          "type": "object",
+                          "description": "Describes properties of payer",
+                          "required": [
+                            "ispb",
+                            "document_type",
+                            "document_number",
+                            "name",
+                            "account_type",
+                            "account_number",
+                            "account_digit"
+                          ],
+                          "properties": {
+                            "ispb": {
+                              "type": "number",
+                              "description": "Payer's ISPB number",
+                              "example": 11476673
+                            },
+                            "document_type": {
+                              "type": "string",
+                              "description": "Payer's document type",
+                              "enum": [
+                                "CPF",
+                                "CNPJ"
+                              ]
+                            },
+                            "document_number": {
+                              "type": "number",
+                              "description": "Payer's document number"
+                            },
+                            "name": {
+                              "type": "string",
+                              "description": "Payer's name",
+                              "example": "Payer name"
+                            },
+                            "agency_number": {
+                              "type": "number",
+                              "description": "Payer's agency number"
+                            },
+                            "account_type": {
+                              "type": "string",
+                              "description": "Payer's account type",
+                              "enum": [
+                                "CHECKING_ACCOUNT",
+                                "SAVINGS_ACCOUNT",
+                                "CONTROL_ACCOUNT",
+                                "GRAPHIC_ACCOUNT",
+                                "PAYMENT_ACCOUNT",
+                                "SALARY_ACCOUNT"
+                              ]
+                            },
+                            "account_number": {
+                              "type": "number",
+                              "description": "Payer's account number",
+                              "example": 12319
+                            },
+                            "account_digit": {
+                              "type": "number",
+                              "description": "Payer's account digit",
+                              "example": 1
+                            }
+                          }
+                        },
+                        "recipient": {
+                          "type": "object",
+                          "description": "Describes properties of recipient",
+                          "required": [
+                            "ispb",
+                            "document_type",
+                            "document_number",
+                            "account_type",
+                            "account_number",
+                            "account_digit"
+                          ],
+                          "properties": {
+                            "ispb": {
+                              "type": "number",
+                              "description": "Recipient's ISPB number",
+                              "example": 11476673
+                            },
+                            "document_type": {
+                              "type": "string",
+                              "description": "Recipient's document type",
+                              "enum": [
+                                "CPF",
+                                "CNPJ"
+                              ]
+                            },
+                            "document_number": {
+                              "type": "number",
+                              "description": "Recipient's document number"
+                            },
+                            "name": {
+                              "type": "string",
+                              "description": "Recipient's name",
+                              "example": "Recipient name",
+                              "maxLength": 140
+                            },
+                            "agency_number": {
+                              "type": "number",
+                              "description": "Recipient's agency number"
+                            },
+                            "account_type": {
+                              "type": "string",
+                              "description": "Recipient's account type",
+                              "enum": [
+                                "CHECKING_ACCOUNT",
+                                "SAVINGS_ACCOUNT",
+                                "CONTROL_ACCOUNT",
+                                "GRAPHIC_ACCOUNT",
+                                "PAYMENT_ACCOUNT",
+                                "SALARY_ACCOUNT"
+                              ]
+                            },
+                            "account_number": {
+                              "type": "number",
+                              "description": "Recipient's account number",
+                              "example": 12319
+                            },
+                            "account_digit": {
+                              "type": "number",
+                              "description": "Recipient's account digit",
+                              "example": 1
+                            }
+                          }
+                        },
+                        "value_details": {
+                          "type": "array",
+                          "description": "The element group used to break down payment amounts\n\n* If the goal is equal to `BUY_OR_TRANSFER` do not inform this field.\n* If the goal is equal to `CHANGE` is mandatory to inform two different\ngroups, one with the kind equal to `PURCHASE_AMOUNT` and another with\nthe kind equal to `AVAILABLE_CASH`.\n* If the goal is equal to `WITHDRAW` is mandatory to inform one group with\nthe kind equal to `AVAILABLE_CASH`.\n",
+                          "items": {
+                            "type": "object",
+                            "required": [
+                              "kind",
+                              "value"
+                            ],
+                            "properties": {
+                              "kind": {
+                                "type": "string",
+                                "enum": [
+                                  "PURCHASE_AMOUNT",
+                                  "AVAILABLE_CASH"
+                                ],
+                                "description": "The value kind.\n\n* `PURCHASE_AMOUNT`: The purchase amount\n* `AVAILABLE_CASH`: Value of the resource in kind provided.\n",
+                                "example": "AVAILABLE_CASH"
+                              },
+                              "value": {
+                                "type": "number",
+                                "description": "The purchase value or the value of the resource in kind provided\n",
+                                "example": 10.99
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ],
                   "properties": {
-                    "id": {
-                      "type": "string",
-                      "description": "The payment's id",
-                      "example": "f3336183-8172-4988-bec9-4b4a6b294b80"
-                    },
-                    "application_id": {
-                      "type": "string",
-                      "format": "uuid-v4",
-                      "description": "Unique identifier of application.",
-                      "example": "6d814c28-fe73-443c-bfe0-48d518aa1234"
-                    },
-                    "account_id": {
-                      "type": "string",
-                      "description": "Unique identifier of the account.",
-                      "format": "uuid-v4",
-                      "example": "6d814c28-fe73-443c-bfe0-48d518aa32fa"
-                    },
-                    "kind": {
+                    "return_code": {
                       "type": "string",
                       "enum": [
-                        "MANUAL",
-                        "KEY",
-                        "STATIC_QRCODE",
-                        "DYNAMIC_QRCODE",
-                        "PAYMENT_TRANSACTION_SERVICE",
-                        "PAYER_QRCODE"
+                        "OPERATIONAL_ISSUES",
+                        "SUSPECTED_FRAUD",
+                        "REQUESTED_BY_RECIPIENT",
+                        "REQUESTED_BY_RECIPIENT_DUE_TO_ERROR_OR_DISAGREEMENT"
                       ],
-                      "description": "The type of mechanism used to start the payment",
-                      "example": "KEY"
+                      "example": "OPERATIONAL_ISSUES"
                     },
-                    "payment_priority": {
+                    "return_reason": {
                       "type": "string",
-                      "enum": [
-                        "SCHEDULED",
-                        "IMMEDIATE"
-                      ],
-                      "description": "The property indicate if the liquidation is priority or not.",
-                      "example": "IMMEDIATE"
-                    },
-                    "type_payment_priority": {
-                      "type": "string",
-                      "enum": [
-                        "SCHEDULED_PAYMENT",
-                        "PRIORITY_PAYMENT",
-                        "FRAUD_ANALYSIS_PAYMENT"
-                      ],
-                      "description": "Indicate if this is a priority transaction or not.",
-                      "example": "PRIORITY_PAYMENT"
-                    },
-                    "goal": {
-                      "type": "string",
-                      "description": "The payment's goal.",
-                      "enum": [
-                        "CHANGE",
-                        "WITHDRAW",
-                        "BUY_OR_TRANSFER"
-                      ],
-                      "example": "BUY_OR_TRANSFER"
-                    },
-                    "agent_modality": {
-                      "type": "string",
-                      "description": "The agent modality of the withdraw.",
-                      "enum": [
-                        "WITHDRAW_SERVICE_AGENT",
-                        "COMMERCIAL_ESTABLISHMENT_AGENT",
-                        "AGENT_OR_OTHER_LEGAL_ENTITY"
-                      ],
-                      "example": "COMMERCIAL_ESTABLISHMENT_AGENT"
-                    },
-                    "withdraw_ispb": {
-                      "type": "number",
-                      "description": "Withdrawal service provider ISBP.",
-                      "example": 11476673
-                    },
-                    "document_payment_initiator": {
-                      "type": "number",
-                      "example": 37650221000115,
-                      "description": "The CNPJ of the payment initiator institution."
-                    },
-                    "value": {
-                      "type": "number",
-                      "description": "The payment's value",
-                      "example": 10.99
-                    },
-                    "key": {
-                      "type": "string",
-                      "description": "The recipient's key",
-                      "example": 85801560025
-                    },
-                    "description": {
-                      "type": "string",
-                      "description": "The payment's description",
-                      "example": "Payment description"
-                    },
-                    "conciliation_id": {
-                      "type": "string",
-                      "description": "The payment's conciliation id",
-                      "example": "PI2020010300000000000000000000001"
-                    },
-                    "end_to_end_id": {
-                      "type": "string",
-                      "description": "The payment's end to end id",
-                      "example": "8a565c43-7db0-4808-a1c9-aca65f5ec8e3"
-                    },
-                    "status": {
-                      "type": "string",
-                      "description": "The payment's status",
-                      "enum": [
-                        "CREATED",
-                        "CONFIRMING",
-                        "CONFIRMED",
-                        "NOT_CONFIRMED",
-                        "PROCESSING",
-                        "PROCESSED",
-                        "REJECTED",
-                        "ERROR",
-                        "DONE"
-                      ],
-                      "example": "CREATED"
-                    },
-                    "created_at": {
-                      "type": "string",
-                      "description": "The payment's created at",
-                      "example": "2022-01-13T13:53:01.463Z"
-                    },
-                    "updated_at": {
-                      "type": "string",
-                      "description": "The payment's updated at",
-                      "example": "2022-01-13T13:53:01.463Z"
-                    },
-                    "payer": {
-                      "type": "object",
-                      "description": "Describes properties of payer",
-                      "required": [
-                        "ispb",
-                        "document_type",
-                        "document_number",
-                        "name",
-                        "account_type",
-                        "account_number",
-                        "account_digit"
-                      ],
-                      "properties": {
-                        "ispb": {
-                          "type": "number",
-                          "description": "Payer's ISPB number",
-                          "example": 11476673
-                        },
-                        "document_type": {
-                          "type": "string",
-                          "description": "Payer's document type",
-                          "enum": [
-                            "CPF",
-                            "CNPJ"
-                          ]
-                        },
-                        "document_number": {
-                          "type": "number",
-                          "description": "Payer's document number"
-                        },
-                        "name": {
-                          "type": "string",
-                          "description": "Payer's name",
-                          "example": "Payer name"
-                        },
-                        "agency_number": {
-                          "type": "number",
-                          "description": "Payer's agency number"
-                        },
-                        "account_type": {
-                          "type": "string",
-                          "description": "Payer's account type",
-                          "enum": [
-                            "CHECKING_ACCOUNT",
-                            "SAVINGS_ACCOUNT",
-                            "CONTROL_ACCOUNT",
-                            "GRAPHIC_ACCOUNT",
-                            "PAYMENT_ACCOUNT",
-                            "SALARY_ACCOUNT"
-                          ]
-                        },
-                        "account_number": {
-                          "type": "number",
-                          "description": "Payer's account number",
-                          "example": 12319
-                        },
-                        "account_digit": {
-                          "type": "number",
-                          "description": "Payer's account digit",
-                          "example": 1
-                        }
-                      }
-                    },
-                    "recipient": {
-                      "type": "object",
-                      "description": "Describes properties of recipient",
-                      "required": [
-                        "ispb",
-                        "document_type",
-                        "document_number",
-                        "account_type",
-                        "account_number",
-                        "account_digit"
-                      ],
-                      "properties": {
-                        "ispb": {
-                          "type": "number",
-                          "description": "Recipient's ISPB number",
-                          "example": 11476673
-                        },
-                        "document_type": {
-                          "type": "string",
-                          "description": "Recipient's document type",
-                          "enum": [
-                            "CPF",
-                            "CNPJ"
-                          ]
-                        },
-                        "document_number": {
-                          "type": "number",
-                          "description": "Recipient's document number"
-                        },
-                        "name": {
-                          "type": "string",
-                          "description": "Recipient's name",
-                          "example": "Recipient name",
-                          "maxLength": 140
-                        },
-                        "agency_number": {
-                          "type": "number",
-                          "description": "Recipient's agency number"
-                        },
-                        "account_type": {
-                          "type": "string",
-                          "description": "Recipient's account type",
-                          "enum": [
-                            "CHECKING_ACCOUNT",
-                            "SAVINGS_ACCOUNT",
-                            "CONTROL_ACCOUNT",
-                            "GRAPHIC_ACCOUNT",
-                            "PAYMENT_ACCOUNT",
-                            "SALARY_ACCOUNT"
-                          ]
-                        },
-                        "account_number": {
-                          "type": "number",
-                          "description": "Recipient's account number",
-                          "example": 12319
-                        },
-                        "account_digit": {
-                          "type": "number",
-                          "description": "Recipient's account digit",
-                          "example": 1
-                        }
-                      }
+                      "description": "Return reason additional description.",
+                      "example": "Value received by mistake"
                     }
                   }
                 }
@@ -2705,7 +2898,7 @@
         "tags": [
           "Payments"
         ],
-        "summary": "should return payment by id.",
+        "summary": "Should return payment by id",
         "parameters": [
           {
             "in": "path",
@@ -2721,313 +2914,350 @@
         ],
         "responses": {
           "200": {
-            "description": "Pix return list of payment",
+            "description": "Pix payment",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "object",
-                  "description": "Describes the properties of pix payment.",
-                  "required": [
-                    "id",
-                    "account_id",
-                    "application_id",
-                    "operation",
-                    "kind",
-                    "payment_priority",
-                    "type_payment_priority",
-                    "goal",
-                    "payer",
-                    "recipient",
-                    "value",
-                    "description",
-                    "status",
-                    "created_at",
-                    "updated_at"
-                  ],
-                  "properties": {
-                    "id": {
-                      "type": "string",
-                      "description": "The payment's id",
-                      "example": "f3336183-8172-4988-bec9-4b4a6b294b80"
-                    },
-                    "application_id": {
-                      "type": "string",
-                      "format": "uuid-v4",
-                      "description": "Unique identifier of application.",
-                      "example": "6d814c28-fe73-443c-bfe0-48d518aa1234"
-                    },
-                    "account_id": {
-                      "type": "string",
-                      "description": "Unique identifier of the account.",
-                      "format": "uuid-v4",
-                      "example": "6d814c28-fe73-443c-bfe0-48d518aa32fa"
-                    },
-                    "kind": {
-                      "type": "string",
-                      "enum": [
-                        "MANUAL",
-                        "KEY",
-                        "STATIC_QRCODE",
-                        "DYNAMIC_QRCODE",
-                        "PAYMENT_TRANSACTION_SERVICE",
-                        "PAYER_QRCODE"
-                      ],
-                      "description": "The type of mecanism used to start the payment",
-                      "example": "KEY"
-                    },
-                    "payment_priority": {
-                      "type": "string",
-                      "enum": [
-                        "SCHEDULED",
-                        "IMMEDIATE"
-                      ],
-                      "description": "The property indicate if the liquidation is priority or not.",
-                      "example": "IMMEDIATE"
-                    },
-                    "type_payment_priority": {
-                      "type": "string",
-                      "enum": [
-                        "SCHEDULED_PAYMENT",
-                        "PRIORITY_PAYMENT",
-                        "FRAUD_ANALYSIS_PAYMENT"
-                      ],
-                      "description": "Indicate if this is a priority transaction or not.",
-                      "example": "PRIORITY_PAYMENT"
-                    },
-                    "goal": {
-                      "type": "string",
-                      "description": "The payment's goal.",
-                      "enum": [
-                        "CHANGE",
-                        "WITHDRAW",
-                        "BUY_OR_TRANSFER"
-                      ],
-                      "example": "BUY_OR_TRANSFER"
-                    },
-                    "agent_modality": {
-                      "type": "string",
-                      "description": "The agent modality of the withdraw.",
-                      "enum": [
-                        "WITHDRAW_SERVICE_AGENT",
-                        "COMMERCIAL_ESTABLISHMENT_AGENT",
-                        "AGENT_OR_OTHER_LEGAL_ENTITY"
-                      ],
-                      "example": "COMMERCIAL_ESTABLISHMENT_AGENT"
-                    },
-                    "withdraw_ispb": {
-                      "type": "number",
-                      "description": "Withdrawal service provider ISBP.",
-                      "example": 11476673
-                    },
-                    "document_payment_initiator": {
-                      "type": "number",
-                      "example": 37650221000115,
-                      "description": "The CNPJ of the payment initiator institution."
-                    },
-                    "value": {
-                      "type": "number",
-                      "description": "The payment's value",
-                      "example": 10.99
-                    },
-                    "key": {
-                      "type": "string",
-                      "description": "The recipient's key",
-                      "example": 85801560025
-                    },
-                    "description": {
-                      "type": "string",
-                      "description": "The payment's description",
-                      "example": "Payment description"
-                    },
-                    "conciliation_id": {
-                      "type": "string",
-                      "description": "The payment's conciliation id",
-                      "example": "PI2020010300000000000000000000001"
-                    },
-                    "end_to_end_id": {
-                      "type": "string",
-                      "description": "The payment's end to end id",
-                      "example": "8a565c43-7db0-4808-a1c9-aca65f5ec8e3"
-                    },
-                    "status": {
-                      "type": "string",
-                      "description": "The payment's status",
-                      "enum": [
-                        "CREATED",
-                        "CONFIRMING",
-                        "CONFIRMED",
-                        "NOT_CONFIRMED",
-                        "PROCESSING",
-                        "PROCESSED",
-                        "REJECTED",
-                        "ERROR",
-                        "DONE"
-                      ],
-                      "example": "CREATED"
-                    },
-                    "created_at": {
-                      "type": "string",
-                      "description": "The payment's created at",
-                      "example": "2022-01-13T13:53:01.463Z"
-                    },
-                    "updated_at": {
-                      "type": "string",
-                      "description": "The payment's updated at",
-                      "example": "2022-01-13T13:53:01.463Z"
-                    },
-                    "payer": {
+                  "description": "Describes the properties of pix payment with occurrences.",
+                  "allOf": [
+                    {
                       "type": "object",
-                      "description": "Describes properties of payer",
+                      "description": "Describes the properties of pix payment.",
                       "required": [
-                        "ispb",
-                        "document_type",
-                        "document_number",
-                        "name",
-                        "account_type",
-                        "account_number",
-                        "account_digit"
+                        "id",
+                        "application_id",
+                        "account_id",
+                        "operation",
+                        "kind",
+                        "payment_priority",
+                        "type_payment_priority",
+                        "goal",
+                        "value",
+                        "description",
+                        "status",
+                        "created_at",
+                        "updated_at",
+                        "payer",
+                        "recipient"
                       ],
                       "properties": {
-                        "ispb": {
+                        "id": {
+                          "type": "string",
+                          "description": "The payment's id",
+                          "example": "f3336183-8172-4988-bec9-4b4a6b294b80"
+                        },
+                        "application_id": {
+                          "type": "string",
+                          "format": "uuid-v4",
+                          "description": "Unique identifier of application.",
+                          "example": "6d814c28-fe73-443c-bfe0-48d518aa1234"
+                        },
+                        "account_id": {
+                          "type": "string",
+                          "description": "Unique identifier of the account.",
+                          "format": "uuid-v4",
+                          "example": "6d814c28-fe73-443c-bfe0-48d518aa32fa"
+                        },
+                        "operation": {
+                          "type": "string",
+                          "description": "Payment operation",
+                          "enum": [
+                            "CREDIT",
+                            "DEBIT"
+                          ],
+                          "example": "CREDIT"
+                        },
+                        "kind": {
+                          "type": "string",
+                          "enum": [
+                            "MANUAL",
+                            "KEY",
+                            "STATIC_QRCODE",
+                            "DYNAMIC_QRCODE",
+                            "PAYMENT_TRANSACTION_SERVICE",
+                            "PAYER_QRCODE"
+                          ],
+                          "description": "The type of mechanism used to start the payment",
+                          "example": "KEY"
+                        },
+                        "payment_priority": {
+                          "type": "string",
+                          "enum": [
+                            "SCHEDULED",
+                            "IMMEDIATE"
+                          ],
+                          "description": "The property indicate if the liquidation is priority or not.",
+                          "example": "IMMEDIATE"
+                        },
+                        "type_payment_priority": {
+                          "type": "string",
+                          "enum": [
+                            "SCHEDULED_PAYMENT",
+                            "PRIORITY_PAYMENT",
+                            "FRAUD_ANALYSIS_PAYMENT"
+                          ],
+                          "description": "Indicate if this is a priority transaction or not.",
+                          "example": "PRIORITY_PAYMENT"
+                        },
+                        "goal": {
+                          "type": "string",
+                          "description": "The payment's goal.",
+                          "enum": [
+                            "CHANGE",
+                            "WITHDRAW",
+                            "BUY_OR_TRANSFER"
+                          ],
+                          "example": "BUY_OR_TRANSFER"
+                        },
+                        "agent_modality": {
+                          "type": "string",
+                          "description": "The agent modality of the withdraw.",
+                          "enum": [
+                            "WITHDRAW_SERVICE_AGENT",
+                            "COMMERCIAL_ESTABLISHMENT_AGENT",
+                            "AGENT_OR_OTHER_LEGAL_ENTITY"
+                          ],
+                          "example": "COMMERCIAL_ESTABLISHMENT_AGENT"
+                        },
+                        "withdraw_ispb": {
                           "type": "number",
-                          "description": "Payer's ISPB number",
+                          "description": "Withdrawal service provider ISPB.",
                           "example": 11476673
                         },
-                        "document_type": {
+                        "document_payment_initiator": {
+                          "type": "number",
+                          "example": 37650221000115,
+                          "description": "The CNPJ of the payment initiator institution."
+                        },
+                        "value": {
+                          "type": "number",
+                          "description": "The payment's value",
+                          "example": 10.99
+                        },
+                        "key": {
                           "type": "string",
-                          "description": "Payer's document type",
+                          "description": "The recipient's key",
+                          "example": 85801560025
+                        },
+                        "description": {
+                          "type": "string",
+                          "description": "The payment's description",
+                          "example": "Payment description"
+                        },
+                        "conciliation_id": {
+                          "type": "string",
+                          "description": "The payment's conciliation id",
+                          "example": "PI2020010300000000000000000000001"
+                        },
+                        "end_to_end_id": {
+                          "type": "string",
+                          "description": "The payment's end to end id",
+                          "example": "8a565c43-7db0-4808-a1c9-aca65f5ec8e3"
+                        },
+                        "original_end_to_end_id": {
+                          "type": "string",
+                          "description": "The payment's original end to end id",
+                          "example": "8a565c43-7db0-4808-a1c9-aca65f5ec8e3"
+                        },
+                        "statement_id": {
+                          "type": "string",
+                          "description": "The statement's ID generated by the payment",
+                          "example": "8a565c43-7db0-4808-a1c9-aca65f5ec8e3"
+                        },
+                        "external_payment_id": {
+                          "type": "string",
+                          "description": "The external payment id, origin of the CREDIT operation",
+                          "example": "f3336183-8172-4988-bec9-4b4a6b294b80"
+                        },
+                        "operation_validated_at": {
+                          "type": "string",
+                          "description": "validation's timestamp for CREDIT operation",
+                          "example": "2022-01-04T17:14:55.045Z"
+                        },
+                        "status": {
+                          "type": "string",
+                          "description": "The payment's status",
                           "enum": [
-                            "CPF",
-                            "CNPJ"
-                          ]
+                            "CREATED",
+                            "CONFIRMING",
+                            "CONFIRMED",
+                            "NOT_CONFIRMED",
+                            "PROCESSING",
+                            "PROCESSED",
+                            "REJECTED",
+                            "ERROR",
+                            "DONE"
+                          ],
+                          "example": "CREATED"
                         },
-                        "document_number": {
-                          "type": "number",
-                          "description": "Payer's document number"
-                        },
-                        "name": {
+                        "created_at": {
                           "type": "string",
-                          "description": "Payer's name",
-                          "example": "Payer name"
+                          "description": "The payment's created at",
+                          "example": "2022-01-13T13:53:01.463Z"
                         },
-                        "agency_number": {
-                          "type": "number",
-                          "description": "Payer's agency number"
-                        },
-                        "account_type": {
+                        "updated_at": {
                           "type": "string",
-                          "description": "Payer's account type",
-                          "enum": [
-                            "CHECKING_ACCOUNT",
-                            "SAVINGS_ACCOUNT",
-                            "CONTROL_ACCOUNT",
-                            "GRAPHIC_ACCOUNT",
-                            "PAYMENT_ACCOUNT",
-                            "SALARY_ACCOUNT"
-                          ]
+                          "description": "The payment's updated at",
+                          "example": "2022-01-13T13:53:01.463Z"
                         },
-                        "account_number": {
-                          "type": "number",
-                          "description": "Payer's account number",
-                          "example": 12319
+                        "payer": {
+                          "type": "object",
+                          "description": "Describes properties of payer",
+                          "required": [
+                            "ispb",
+                            "document_type",
+                            "document_number",
+                            "name",
+                            "account_type",
+                            "account_number",
+                            "account_digit"
+                          ],
+                          "properties": {
+                            "ispb": {
+                              "type": "number",
+                              "description": "Payer's ISPB number",
+                              "example": 11476673
+                            },
+                            "document_type": {
+                              "type": "string",
+                              "description": "Payer's document type",
+                              "enum": [
+                                "CPF",
+                                "CNPJ"
+                              ]
+                            },
+                            "document_number": {
+                              "type": "number",
+                              "description": "Payer's document number"
+                            },
+                            "name": {
+                              "type": "string",
+                              "description": "Payer's name",
+                              "example": "Payer name"
+                            },
+                            "agency_number": {
+                              "type": "number",
+                              "description": "Payer's agency number"
+                            },
+                            "account_type": {
+                              "type": "string",
+                              "description": "Payer's account type",
+                              "enum": [
+                                "CHECKING_ACCOUNT",
+                                "SAVINGS_ACCOUNT",
+                                "CONTROL_ACCOUNT",
+                                "GRAPHIC_ACCOUNT",
+                                "PAYMENT_ACCOUNT",
+                                "SALARY_ACCOUNT"
+                              ]
+                            },
+                            "account_number": {
+                              "type": "number",
+                              "description": "Payer's account number",
+                              "example": 12319
+                            },
+                            "account_digit": {
+                              "type": "number",
+                              "description": "Payer's account digit",
+                              "example": 1
+                            }
+                          }
                         },
-                        "account_digit": {
-                          "type": "number",
-                          "description": "Payer's account digit",
-                          "example": 1
-                        }
-                      }
-                    },
-                    "recipient": {
-                      "type": "object",
-                      "description": "Describes properties of recipient",
-                      "required": [
-                        "ispb",
-                        "document_type",
-                        "document_number",
-                        "account_type",
-                        "account_number",
-                        "account_digit"
-                      ],
-                      "properties": {
-                        "ispb": {
-                          "type": "number",
-                          "description": "Recipient's ISPB number",
-                          "example": 11476673
+                        "recipient": {
+                          "type": "object",
+                          "description": "Describes properties of recipient",
+                          "required": [
+                            "ispb",
+                            "document_type",
+                            "document_number",
+                            "account_type",
+                            "account_number",
+                            "account_digit"
+                          ],
+                          "properties": {
+                            "ispb": {
+                              "type": "number",
+                              "description": "Recipient's ISPB number",
+                              "example": 11476673
+                            },
+                            "document_type": {
+                              "type": "string",
+                              "description": "Recipient's document type",
+                              "enum": [
+                                "CPF",
+                                "CNPJ"
+                              ]
+                            },
+                            "document_number": {
+                              "type": "number",
+                              "description": "Recipient's document number"
+                            },
+                            "name": {
+                              "type": "string",
+                              "description": "Recipient's name",
+                              "example": "Recipient name",
+                              "maxLength": 140
+                            },
+                            "agency_number": {
+                              "type": "number",
+                              "description": "Recipient's agency number"
+                            },
+                            "account_type": {
+                              "type": "string",
+                              "description": "Recipient's account type",
+                              "enum": [
+                                "CHECKING_ACCOUNT",
+                                "SAVINGS_ACCOUNT",
+                                "CONTROL_ACCOUNT",
+                                "GRAPHIC_ACCOUNT",
+                                "PAYMENT_ACCOUNT",
+                                "SALARY_ACCOUNT"
+                              ]
+                            },
+                            "account_number": {
+                              "type": "number",
+                              "description": "Recipient's account number",
+                              "example": 12319
+                            },
+                            "account_digit": {
+                              "type": "number",
+                              "description": "Recipient's account digit",
+                              "example": 1
+                            }
+                          }
                         },
-                        "document_type": {
-                          "type": "string",
-                          "description": "Recipient's document type",
-                          "enum": [
-                            "CPF",
-                            "CNPJ"
-                          ]
-                        },
-                        "document_number": {
-                          "type": "number",
-                          "description": "Recipient's document number"
-                        },
-                        "name": {
-                          "type": "string",
-                          "description": "Recipient's name",
-                          "example": "Recipient name",
-                          "maxLength": 140
-                        },
-                        "agency_number": {
-                          "type": "number",
-                          "description": "Recipient's agency number"
-                        },
-                        "account_type": {
-                          "type": "string",
-                          "description": "Recipient's account type",
-                          "enum": [
-                            "CHECKING_ACCOUNT",
-                            "SAVINGS_ACCOUNT",
-                            "CONTROL_ACCOUNT",
-                            "GRAPHIC_ACCOUNT",
-                            "PAYMENT_ACCOUNT",
-                            "SALARY_ACCOUNT"
-                          ]
-                        },
-                        "account_number": {
-                          "type": "number",
-                          "description": "Recipient's account number",
-                          "example": 12319
-                        },
-                        "account_digit": {
-                          "type": "number",
-                          "description": "Recipient's account digit",
-                          "example": 1
-                        }
-                      }
-                    },
-                    "value_details": {
-                      "type": "array",
-                      "description": "The element group used to break down payment amounts\n\n* If the goal is equal to `BUY_OR_TRANSFER` do not inform this field.\n* If the goal is equal to `CHANGE` is mandatory to inform two different\ngroups, one with the kind equal to `PURCHASE_AMOUNT` and another with\nthe kind equal to `AVAILABLE_CASH`.\n* If the goal is equal to `WITHDRAW` is mandatory to inform one group with\nthe kind equal to `AVAILABLE_CASH`.\n",
-                      "items": {
-                        "type": "object",
-                        "required": [
-                          "kind",
-                          "value"
-                        ],
-                        "properties": {
-                          "kind": {
-                            "type": "string",
-                            "enum": [
-                              "PURCHASE_AMOUNT",
-                              "AVAILABLE_CASH"
+                        "value_details": {
+                          "type": "array",
+                          "description": "The element group used to break down payment amounts\n\n* If the goal is equal to `BUY_OR_TRANSFER` do not inform this field.\n* If the goal is equal to `CHANGE` is mandatory to inform two different\ngroups, one with the kind equal to `PURCHASE_AMOUNT` and another with\nthe kind equal to `AVAILABLE_CASH`.\n* If the goal is equal to `WITHDRAW` is mandatory to inform one group with\nthe kind equal to `AVAILABLE_CASH`.\n",
+                          "items": {
+                            "type": "object",
+                            "required": [
+                              "kind",
+                              "value"
                             ],
-                            "description": "The value kind.\n\n* `PURCHASE_AMOUNT`: The purchase amount\n* `AVAILABLE_CASH`: Value of the resource in kind provided.\n",
-                            "example": "AVAILABLE_CASH"
-                          },
-                          "value": {
-                            "type": "number",
-                            "description": "The purchase value or the value of the resource in kind provided\n",
-                            "example": 10.99
+                            "properties": {
+                              "kind": {
+                                "type": "string",
+                                "enum": [
+                                  "PURCHASE_AMOUNT",
+                                  "AVAILABLE_CASH"
+                                ],
+                                "description": "The value kind.\n\n* `PURCHASE_AMOUNT`: The purchase amount\n* `AVAILABLE_CASH`: Value of the resource in kind provided.\n",
+                                "example": "AVAILABLE_CASH"
+                              },
+                              "value": {
+                                "type": "number",
+                                "description": "The purchase value or the value of the resource in kind provided\n",
+                                "example": 10.99
+                              }
+                            }
                           }
                         }
                       }
-                    },
+                    }
+                  ],
+                  "properties": {
                     "occurrences": {
                       "type": "array",
                       "items": {
@@ -3057,8 +3287,7 @@
                               "REJECTED",
                               "ERROR",
                               "DONE",
-                              "VALID",
-                              "INVALID"
+                              "VALID"
                             ]
                           },
                           "reason": {
