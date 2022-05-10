@@ -1476,9 +1476,9 @@
                       "example": "CPF"
                     },
                     "document_number": {
-                      "type": "string",
+                      "type": "number",
                       "description": "Owner's document number",
-                      "example": "31851631097"
+                      "example": 31851631097
                     },
                     "name": {
                       "type": "string",
@@ -1569,7 +1569,7 @@
                       "account_digit": 1,
                       "account_opening_date": "2021-10-31T12:56:23.123Z",
                       "document_type": "CPF",
-                      "document_number": "13700618034",
+                      "document_number": 13700618034,
                       "name": "Owner Name",
                       "nickname": "Owner Nickname",
                       "created_at": "2021-10-31T12:56:23.123Z",
@@ -3304,9 +3304,9 @@
                                 "example": "CPF"
                               },
                               "document_number": {
-                                "type": "string",
+                                "type": "number",
                                 "description": "Owner's document number",
-                                "example": "39033905000"
+                                "example": 39033905000
                               },
                               "name": {
                                 "type": "string",
@@ -3364,9 +3364,9 @@
                                     "example": "CPF"
                                   },
                                   "document_number": {
-                                    "type": "string",
+                                    "type": "number",
                                     "description": "Owner's document number",
-                                    "example": "39033905000"
+                                    "example": 39033905000
                                   },
                                   "name": {
                                     "type": "string",
@@ -3853,9 +3853,9 @@
                             "example": "CPF"
                           },
                           "document_number": {
-                            "type": "string",
+                            "type": "number",
                             "description": "Owner's document number",
-                            "example": "31851631097"
+                            "example": 31851631097
                           },
                           "grantor_ispb": {
                             "type": "number",
@@ -3902,9 +3902,9 @@
                                 "example": "CPF"
                               },
                               "document_number": {
-                                "type": "string",
+                                "type": "number",
                                 "description": "Grantor's document number",
-                                "example": "31851631097"
+                                "example": 31851631097
                               },
                               "name": {
                                 "type": "string",
@@ -4337,9 +4337,9 @@
                       "example": "CPF"
                     },
                     "document_number": {
-                      "type": "string",
+                      "type": "number",
                       "description": "Owner's document number",
-                      "example": "24093302073"
+                      "example": 24093302073
                     },
                     "ispb_grantor": {
                       "type": "number",
@@ -4390,9 +4390,9 @@
                           "example": "CPF"
                         },
                         "document_number": {
-                          "type": "string",
+                          "type": "number",
                           "description": "Owner's document number",
-                          "example": "39033905000"
+                          "example": 39033905000
                         },
                         "name": {
                           "type": "string",
