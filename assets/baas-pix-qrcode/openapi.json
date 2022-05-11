@@ -3,7 +3,7 @@
   "info": {
     "version": "1.0.0",
     "title": "BaaS Pix QR Code",
-    "description": "<h1> BaaS Pix QR Code </h1>\n<h5>Concepts:</h5>\n<section>\n<h3>Idempotence-Key</h3>\n<p>\n  To ensure that communication failures/interruptions do not result in accidental data loss or duplication, such as making a duplicate payment, the APIs are designed so that each request is executed \u201cexactly once\u201d. For this, the concept of Idempotence was implemented.\n</p>\n<p>  \n  The Client System must generate a new key for each request, guaranteeing that each operation will be executed only once.\n  In case you do not receive a response to a request, it can be sent again with the same key to obtain the response. If a new key is generated, we will understand that it is a new operation and will be executed a second time.\n</p>\n<p>  \n  The idempotence key must be in GUID (v4) format, i.e. 32 hexadecimal digits, in an 8-4-4-4-12 array. </br>\n  Example: <strong>'69F963C6-7487-4363-9406-A1DE2A9636D4'</strong></br>\n  The Key-Idempotencia will be stored in the API cache for a period of 24 hours.\n</p>\n</section>\n"
+    "description": "<h1> BaaS Pix QR Code </h1>\n<h5>Concepts:</h5>\n<section>\n<h3>Idempotence-Key</h3>\n<p>\n  To ensure that communication failures/interruptions do not result in accidental data loss or duplication, such as making a duplicate payment, the APIs are designed so that each request is executed \u201cexactly once\u201d. For this, the concept of Idempotence was implemented.\n</p>\n<p>\n  The Client System must generate a new key for each request, guaranteeing that each operation will be executed only once.\n  In case you do not receive a response to a request, it can be sent again with the same key to obtain the response. If a new key is generated, we will understand that it is a new operation and will be executed a second time.\n</p>\n<p>\n  The idempotence key must be in GUID (v4) format, i.e. 32 hexadecimal digits, in an 8-4-4-4-12 array. </br>\n  Example: <strong>'69F963C6-7487-4363-9406-A1DE2A9636D4'</strong></br>\n  The Idempotence-Key will be stored in the API cache for a period of 24 hours.\n</p>\n</section>\n"
   },
   "servers": [
     {
@@ -793,31 +793,187 @@
             }
           },
           "400": {
-            "description": "Bad request",
+            "description": "Error with types [ValidationFailedError, InvalidDataError, EMVMerchantAccountSizeExceededError, InvalidIdempotenceKeyError, InvalidUUIDError].",
             "content": {
               "application/json": {
                 "schema": {
-                  "title": "Bad Request",
-                  "properties": {
-                    "code": {
-                      "type": "string",
-                      "title": "Error code",
-                      "description": "The type of error",
-                      "example": "BAD_REQUEST",
-                      "enum": [
-                        "BAD_REQUEST"
-                      ]
+                  "oneOf": [
+                    {
+                      "title": "The provided data is invalid",
+                      "properties": {
+                        "error": {
+                          "type": "object",
+                          "properties": {
+                            "code": {
+                              "type": "string",
+                              "title": "Error code",
+                              "description": "The type of error",
+                              "example": "VALIDATION_FAILED",
+                              "enum": [
+                                "VALIDATION_FAILED"
+                              ]
+                            },
+                            "message": {
+                              "type": "string",
+                              "title": "Error message",
+                              "description": "Describes a message informing a reason for the error",
+                              "example": "Invalid request data"
+                            },
+                            "status_code": {
+                              "type": "number",
+                              "description": "Error status code",
+                              "example": "400"
+                            }
+                          }
+                        }
+                      }
                     },
-                    "message": {
-                      "type": "string",
-                      "title": "Error message",
-                      "description": "Describes a message informing a reason for the error",
-                      "example": "Invalid request params"
+                    {
+                      "title": "Invalid Data Error",
+                      "properties": {
+                        "error": {
+                          "type": "object",
+                          "properties": {
+                            "code": {
+                              "type": "string",
+                              "title": "Error code",
+                              "description": "The type of error",
+                              "example": "INVALID_DATA",
+                              "enum": [
+                                "INVALID_DATA"
+                              ]
+                            },
+                            "message": {
+                              "type": "string",
+                              "title": "Error message",
+                              "description": "Describes a message informing a reason for the error",
+                              "example": "The data provided has an invalid format"
+                            },
+                            "status_code": {
+                              "type": "number",
+                              "description": "Error status code",
+                              "example": "400"
+                            }
+                          }
+                        }
+                      }
                     },
-                    "status_code": {
-                      "type": "number",
-                      "description": "Error status code",
-                      "example": "400"
+                    {
+                      "title": "EMV Merchant Account Size Exceeded",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "EMV_MERCHANT_ACCOUNT_SIZE_EXCEEDED",
+                          "enum": [
+                            "EMV_MERCHANT_ACCOUNT_SIZE_EXCEEDED"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "EMV Merchant Account Information field exceeded the maximum size."
+                        },
+                        "status_code": {
+                          "type": "number",
+                          "description": "Error status code",
+                          "example": "400"
+                        }
+                      }
+                    },
+                    {
+                      "title": "Invalid Idempotence Key Error",
+                      "properties": {
+                        "error": {
+                          "type": "object",
+                          "properties": {
+                            "code": {
+                              "type": "string",
+                              "title": "Error code",
+                              "description": "The type of error",
+                              "example": "INVALID_IDEMPOTENCE_KEY",
+                              "enum": [
+                                "INVALID_IDEMPOTENCE_KEY"
+                              ]
+                            },
+                            "message": {
+                              "type": "string",
+                              "title": "Error message",
+                              "description": "Describes a message informing a reason for the error",
+                              "example": "Idempotence Key is missing or is not a valid uuid."
+                            },
+                            "status_code": {
+                              "type": "number",
+                              "description": "Error status code",
+                              "example": "400"
+                            }
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "title": "Invalid uuid",
+                      "properties": {
+                        "error": {
+                          "type": "object",
+                          "properties": {
+                            "code": {
+                              "type": "string",
+                              "title": "Error code",
+                              "description": "The type of error",
+                              "example": "INVALID_UUID",
+                              "enum": [
+                                "INVALID_UUID"
+                              ]
+                            },
+                            "message": {
+                              "type": "string",
+                              "title": "Error message",
+                              "description": "Describes a message informing a reason for the error",
+                              "example": "Invalid uuid"
+                            },
+                            "status_code": {
+                              "type": "number",
+                              "description": "Error status code",
+                              "example": "400"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                },
+                "examples": {
+                  "Example 1 - ValidationFailed": {
+                    "value": {
+                      "code": "VALIDATION_FAILED",
+                      "message": "Invalid request data"
+                    }
+                  },
+                  "Example 2 - InvalidDataError": {
+                    "value": {
+                      "code": "INVALID_DATA",
+                      "message": "The data provided has an invalid format"
+                    }
+                  },
+                  "Example 3 - EMVMerchantAccountSizeExceededError": {
+                    "value": {
+                      "code": "EMV_MERCHANT_ACCOUNT_SIZE_EXCEEDED",
+                      "message": "EMV Merchant Account Information field exceeded the maximum size"
+                    }
+                  },
+                  "Example 4 - InvalidIdempotenceKeyError": {
+                    "value": {
+                      "code": "INVALID_IDEMPOTENCE_KEY",
+                      "message": "Idempotence Key is missing or is not a valid uuid."
+                    }
+                  },
+                  "Example 5 - InvalidUUIDError": {
+                    "value": {
+                      "code": "INVALID_UUID",
+                      "message": "Invalid uuid"
                     }
                   }
                 }
@@ -825,31 +981,114 @@
             }
           },
           "404": {
-            "description": "Account Not Found",
+            "description": "Error with types [KeyNotFoundError, AccountNotFoundError]",
             "content": {
               "application/json": {
                 "schema": {
-                  "title": "Account Not Found",
+                  "oneOf": [
+                    {
+                      "title": "Key Not Found",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "KEY_NOT_FOUND",
+                          "enum": [
+                            "KEY_NOT_FOUND"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "The key provided wasn't found or doesn't exist"
+                        },
+                        "status_code": {
+                          "type": "number",
+                          "description": "Error status code",
+                          "example": "404"
+                        }
+                      }
+                    },
+                    {
+                      "title": "Account Not Found",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "ACCOUNT_NOT_FOUND",
+                          "enum": [
+                            "ACCOUNT_NOT_FOUND"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "Account not found"
+                        },
+                        "status_code": {
+                          "type": "number",
+                          "description": "Error status code",
+                          "example": "404"
+                        }
+                      }
+                    }
+                  ]
+                },
+                "examples": {
+                  "Example 1 - KeyNotFoundError": {
+                    "value": {
+                      "code": "KEY_NOT_FOUND",
+                      "message": "The key provided wasn't found or doesn't exist"
+                    }
+                  },
+                  "Example 2 - AccountNotFoundError": {
+                    "value": {
+                      "code": "ACCOUNT_NOT_FOUND",
+                      "message": "Account not found."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict Error with types [IdempotenceKeyAlreadyExistsError]",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Idempotence Key Already Exists Error",
                   "properties": {
                     "code": {
                       "type": "string",
                       "title": "Error code",
                       "description": "The type of error",
-                      "example": "ACCOUNT_NOT_FOUND",
+                      "example": "IDEMPOTENCE_KEY_ALREADY_EXISTS",
                       "enum": [
-                        "ACCOUNT_NOT_FOUND"
+                        "IDEMPOTENCE_KEY_ALREADY_EXISTS"
                       ]
                     },
                     "message": {
                       "type": "string",
                       "title": "Error message",
                       "description": "Describes a message informing a reason for the error",
-                      "example": "Account not found"
+                      "example": "The idempotence key provided already exists"
                     },
                     "status_code": {
                       "type": "number",
                       "description": "Error status code",
-                      "example": "404"
+                      "example": "409"
+                    }
+                  }
+                },
+                "examples": {
+                  "Example 1 - IdempotenceKeyAlreadyExistsError": {
+                    "value": {
+                      "code": "IDEMPOTENCE_KEY_ALREADY_EXISTS",
+                      "message": "The idempotence key provided already exists"
                     }
                   }
                 }
@@ -1124,29 +1363,88 @@
             }
           },
           "400": {
-            "description": "Bad Request",
+            "description": "Error with types [ValidationFailedError, InvalidDataError, EMVMerchantAccountSizeExceededError, InvalidIdempotenceKeyError, InvalidUUIDError].",
             "content": {
               "application/json": {
                 "schema": {
-                  "title": "Invalid Data Error",
-                  "properties": {
-                    "error": {
-                      "type": "object",
+                  "oneOf": [
+                    {
+                      "title": "The provided data is invalid",
+                      "properties": {
+                        "error": {
+                          "type": "object",
+                          "properties": {
+                            "code": {
+                              "type": "string",
+                              "title": "Error code",
+                              "description": "The type of error",
+                              "example": "VALIDATION_FAILED",
+                              "enum": [
+                                "VALIDATION_FAILED"
+                              ]
+                            },
+                            "message": {
+                              "type": "string",
+                              "title": "Error message",
+                              "description": "Describes a message informing a reason for the error",
+                              "example": "Invalid request data"
+                            },
+                            "status_code": {
+                              "type": "number",
+                              "description": "Error status code",
+                              "example": "400"
+                            }
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "title": "Invalid Data Error",
+                      "properties": {
+                        "error": {
+                          "type": "object",
+                          "properties": {
+                            "code": {
+                              "type": "string",
+                              "title": "Error code",
+                              "description": "The type of error",
+                              "example": "INVALID_DATA",
+                              "enum": [
+                                "INVALID_DATA"
+                              ]
+                            },
+                            "message": {
+                              "type": "string",
+                              "title": "Error message",
+                              "description": "Describes a message informing a reason for the error",
+                              "example": "The data provided has an invalid format"
+                            },
+                            "status_code": {
+                              "type": "number",
+                              "description": "Error status code",
+                              "example": "400"
+                            }
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "title": "EMV Merchant Account Size Exceeded",
                       "properties": {
                         "code": {
                           "type": "string",
                           "title": "Error code",
                           "description": "The type of error",
-                          "example": "INVALID_DATA",
+                          "example": "EMV_MERCHANT_ACCOUNT_SIZE_EXCEEDED",
                           "enum": [
-                            "INVALID_DATA"
+                            "EMV_MERCHANT_ACCOUNT_SIZE_EXCEEDED"
                           ]
                         },
                         "message": {
                           "type": "string",
                           "title": "Error message",
                           "description": "Describes a message informing a reason for the error",
-                          "example": "The data provided has an invalid format"
+                          "example": "EMV Merchant Account Information field exceeded the maximum size."
                         },
                         "status_code": {
                           "type": "number",
@@ -1154,14 +1452,224 @@
                           "example": "400"
                         }
                       }
+                    },
+                    {
+                      "title": "Invalid Idempotence Key Error",
+                      "properties": {
+                        "error": {
+                          "type": "object",
+                          "properties": {
+                            "code": {
+                              "type": "string",
+                              "title": "Error code",
+                              "description": "The type of error",
+                              "example": "INVALID_IDEMPOTENCE_KEY",
+                              "enum": [
+                                "INVALID_IDEMPOTENCE_KEY"
+                              ]
+                            },
+                            "message": {
+                              "type": "string",
+                              "title": "Error message",
+                              "description": "Describes a message informing a reason for the error",
+                              "example": "Idempotence Key is missing or is not a valid uuid."
+                            },
+                            "status_code": {
+                              "type": "number",
+                              "description": "Error status code",
+                              "example": "400"
+                            }
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "title": "Invalid uuid",
+                      "properties": {
+                        "error": {
+                          "type": "object",
+                          "properties": {
+                            "code": {
+                              "type": "string",
+                              "title": "Error code",
+                              "description": "The type of error",
+                              "example": "INVALID_UUID",
+                              "enum": [
+                                "INVALID_UUID"
+                              ]
+                            },
+                            "message": {
+                              "type": "string",
+                              "title": "Error message",
+                              "description": "Describes a message informing a reason for the error",
+                              "example": "Invalid uuid"
+                            },
+                            "status_code": {
+                              "type": "number",
+                              "description": "Error status code",
+                              "example": "400"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                },
+                "examples": {
+                  "Example 1 - ValidationFailed": {
+                    "value": {
+                      "code": "VALIDATION_FAILED",
+                      "message": "Invalid request data"
+                    }
+                  },
+                  "Example 2 - InvalidDataError": {
+                    "value": {
+                      "code": "INVALID_DATA",
+                      "message": "The data provided has an invalid format"
+                    }
+                  },
+                  "Example 3 - EMVMerchantAccountSizeExceededError": {
+                    "value": {
+                      "code": "EMV_MERCHANT_ACCOUNT_SIZE_EXCEEDED",
+                      "message": "EMV Merchant Account Information field exceeded the maximum size"
+                    }
+                  },
+                  "Example 4 - InvalidIdempotenceKeyError": {
+                    "value": {
+                      "code": "INVALID_IDEMPOTENCE_KEY",
+                      "message": "Idempotence Key is missing or is not a valid uuid."
+                    }
+                  },
+                  "Example 5 - InvalidUUIDError": {
+                    "value": {
+                      "code": "INVALID_UUID",
+                      "message": "Invalid uuid"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Error with types [AuthenticationError].",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Authentication error",
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "title": "Error code",
+                      "description": "The type of error",
+                      "example": "AUTHENTICATION_FAILED",
+                      "enum": [
+                        "AUTHENTICATION_FAILED"
+                      ]
+                    },
+                    "message": {
+                      "type": "string",
+                      "title": "Error message",
+                      "description": "Describes a message informing a reason for the error",
+                      "example": "Authentication failed."
                     }
                   }
                 },
                 "examples": {
-                  "Example 1 - InvalidDataError": {
+                  "Example 1 - AuthenticationError": {
                     "value": {
-                      "code": "INVALID_DATA",
-                      "message": "The data provided has an invalid format"
+                      "code": "AUTHENTICATION_FAILED",
+                      "message": "Authentication failed."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Error with types [ProductDisabledError, ApplicationNotFound, ProfileNotFound].",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "title": "Bad Request",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "PRODUCT_DISABLED",
+                          "enum": [
+                            "PRODUCT_DISABLED"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "Product is not enabled."
+                        }
+                      }
+                    },
+                    {
+                      "title": "Application product not found",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "APPLICATION_PRODUCT_NOT_FOUND",
+                          "enum": [
+                            "APPLICATION_PRODUCT_NOT_FOUND"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "Product not found for given application id."
+                        }
+                      }
+                    },
+                    {
+                      "title": "Bad Request",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "PROFILE_NOT_FOUND",
+                          "enum": [
+                            "PROFILE_NOT_FOUND"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "Profile not found."
+                        }
+                      }
+                    }
+                  ]
+                },
+                "examples": {
+                  "Example 1 - ProductDisabledError": {
+                    "value": {
+                      "code": "PRODUCT_DISABLED",
+                      "message": "Product is not enabled."
+                    }
+                  },
+                  "Example 2 - ApplicationNotFound": {
+                    "value": {
+                      "code": "APPLICATION_PRODUCT_NOT_FOUND",
+                      "message": "Product not found for given application id."
+                    }
+                  },
+                  "Example 3 - ProfileNotFound": {
+                    "value": {
+                      "code": "PROFILE_NOT_FOUND",
+                      "message": "Profile not found."
                     }
                   }
                 }
@@ -1169,33 +1677,62 @@
             }
           },
           "404": {
-            "description": "Not Found",
+            "description": "Error with types [KeyNotFoundError, AccountNotFoundError]",
             "content": {
               "application/json": {
                 "schema": {
-                  "title": "Key Not Found",
-                  "properties": {
-                    "code": {
-                      "type": "string",
-                      "title": "Error code",
-                      "description": "The type of error",
-                      "example": "KEY_NOT_FOUND",
-                      "enum": [
-                        "KEY_NOT_FOUND"
-                      ]
+                  "oneOf": [
+                    {
+                      "title": "Key Not Found",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "KEY_NOT_FOUND",
+                          "enum": [
+                            "KEY_NOT_FOUND"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "The key provided wasn't found or doesn't exist"
+                        },
+                        "status_code": {
+                          "type": "number",
+                          "description": "Error status code",
+                          "example": "404"
+                        }
+                      }
                     },
-                    "message": {
-                      "type": "string",
-                      "title": "Error message",
-                      "description": "Describes a message informing a reason for the error",
-                      "example": "The key provided wasn't found or doesn't exist"
-                    },
-                    "status_code": {
-                      "type": "number",
-                      "description": "Error status code",
-                      "example": "404"
+                    {
+                      "title": "Account Not Found",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "ACCOUNT_NOT_FOUND",
+                          "enum": [
+                            "ACCOUNT_NOT_FOUND"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "Account not found"
+                        },
+                        "status_code": {
+                          "type": "number",
+                          "description": "Error status code",
+                          "example": "404"
+                        }
+                      }
                     }
-                  }
+                  ]
                 },
                 "examples": {
                   "Example 1 - KeyNotFoundError": {
@@ -1203,37 +1740,51 @@
                       "code": "KEY_NOT_FOUND",
                       "message": "The key provided wasn't found or doesn't exist"
                     }
+                  },
+                  "Example 2 - AccountNotFoundError": {
+                    "value": {
+                      "code": "ACCOUNT_NOT_FOUND",
+                      "message": "Account not found."
+                    }
                   }
                 }
               }
             }
           },
           "409": {
-            "description": "Conflict",
+            "description": "Conflict Error with types [IdempotenceKeyAlreadyExistsError]",
             "content": {
               "application/json": {
                 "schema": {
-                  "title": "Conflict",
+                  "title": "Idempotence Key Already Exists Error",
                   "properties": {
                     "code": {
                       "type": "string",
                       "title": "Error code",
                       "description": "The type of error",
-                      "example": "CONFLICT",
+                      "example": "IDEMPOTENCE_KEY_ALREADY_EXISTS",
                       "enum": [
-                        "CONFLICT"
+                        "IDEMPOTENCE_KEY_ALREADY_EXISTS"
                       ]
                     },
                     "message": {
                       "type": "string",
                       "title": "Error message",
                       "description": "Describes a message informing a reason for the error",
-                      "example": "Conflict"
+                      "example": "The idempotence key provided already exists"
                     },
                     "status_code": {
                       "type": "number",
                       "description": "Error status code",
                       "example": "409"
+                    }
+                  }
+                },
+                "examples": {
+                  "Example 1 - IdempotenceKeyAlreadyExistsError": {
+                    "value": {
+                      "code": "IDEMPOTENCE_KEY_ALREADY_EXISTS",
+                      "message": "The idempotence key provided already exists"
                     }
                   }
                 }
