@@ -3,7 +3,7 @@
   "info": {
     "version": "1.1.0-beta",
     "title": "Bill Payment",
-    "description": "**Description**: Api responsible for soliciting bill payments\n\n  For a bill payment be successfully completed, the client has to do two requests to the service.\n\n  The first one is for create a payment and get information about bill.\n\n  The second one is for the client provide information about payer and about the amount to pay.\nAfter this steps, some back end process will be responsible to confirm with application if the transaction is permitted and if was, check if client has balance enough to do the operation requested.\n# Status\nTo see how the payment flow is going the client can get information about it and confirm the statuses and occurrences.\n\n  | Status                | Description                                                 |\n  |-------------------- | ------------------------------------------------------------|\n  | `CREATED` | The payment was created with the id provided. |\n  | `AUTHORIZED` | The customer has authorized the payment and it will be processed. |\n  | `CONFIRMING` | Payment has been sent for internal confirmation. |\n  | `COFIRMED` | Application confirmed payment. |\n  | `NOT_CONFIRMED` | Application not confirmed payment. |\n  | `PROCESSING` | Payment has been sent for internal processing |\n  | `TRANSFERRED` | Payment has been transferred internally and awaits finalization. |\n  | `REJECTED` | Payment has been rejected. |\n  | `ERROR` | Some error has ocurred during the process. |\n  | `CANCELED` | Payment has been cancelled. |\n  | `DONE` | Payment has been fully processed. |\n\n# Errors\nBill Payment uses [HTTP response status codes](https://en.wikipedia.org/wiki/List_of_HTTP_status_codes) to indicate the success or failure of your API requests.\nIn general, there are three status code ranges you can expect:\n- `2xx` success status codes confirm that your request worked as expected\n- `4xx` error status codes indicate an error because of the information provided (e.g., a required parameter was not provided)\n- `5xx` error status codes are rare and indicate an error with R4's servers\n## HTTP Status code summary\nExtracted from [Stripe API codes](https://stripe.com/docs/api/errors)\n- `200 - OK` - Success for request.\n- `400 - Bad Request` - The server cannot or will not process the request due to an apparent client error.\n- `404 - Not Found` The requested resource doesn't exist.\n- `409 - Conflict` The requested account is inactive or does not exist.\n- `422 - Unprocessable Entity` UUID invalid or another mistake\n- `424 - Failed Dependency`  The requested action depended on another action and that action failed\n- `500, 502, 503, 504 - Server Errors` Something went wrong on R4's end.\n## Error codes\nBelow is a list of possible error codes that can be returned:\n\n  | Code                | Description                                                 |\n  |-------------------- | ------------------------------------------------------------|\n  | `404  - Not Found`  | The resource informed was not found.                        |\n  | `409  - Conflict`   | The id informed was already processed.                      |\n  | `422 - Un. Entity`  | UUID invalid.                                               |\n  | `424 - Failed Dependency`  | The requested action depended on another action and that action failed. |\n\n## Status Change Notification\nAs described in the status table, some statuses will fire a notification call to the client.\n  To receive this notifications, its necessary to request the registration of the service URL which will receive the notification object.\n  This object will be sent as an HTTP call with the POST method, of which the client must respond with a 200 status and within 5 seconds.\n\n**Notification Call Scheme**\n\n  Headers:\n  ```json\n  {\n    X-R4-Application: GUID // Application Unique Identifier\n    X-R4-Delivery: GUID // Attempt Unique Identifier\n    X-R4-Event: {event_type} // Event Type for the Notification (As describe in the Status Table)\n    User-Agent: R4-Hookshot\n  }\n  ```\n  Body\n  ```json\n  {\n    \"object_kind\": \"{event_type}\", // Event Type for the Notification (As describe in the Status Table)\n    \"object_id\": \"GUID\", // Bill payment Unique Identifier\n    \"application_id\": \"GUID\", // Application Unique Identifier\n    \"account_id\": \"GUID\" // Account Unique Identifier\n  }\n  ```\n## Bill Payment Confirmation Call\nTo receive the confirmation, its necessary the previous registration of the client url.\n  This object will be sent as an HTTP call with the POST method, of which the client must respond with a 202 status and within 10 seconds.\n\n**Bill Payment Confirmation Call Scheme**\n\n  Headers:\n  ```json\n  {\n    X-R4-Application: GUID // Application Unique Identifier\n    X-R4-Delivery: GUID // Attempt Unique Identifier\n    X-R4-Event: bill_payment_confirmation\n    User-Agent: R4-Hookshot\n  }\n  ```\n  Body\n  ```json\n  {\n    \"object_kind\": \"bill_payment_confirmation\", // Kind for the Confirmation Call\n    \"object_id\": \"GUID\", // Bill payment Unique Identifier\n    \"application_id\": \"GUID\", // Application Unique Identifier\n    \"account_id\": \"GUID\", // Account Unique Identifier\n    \"metadata\": { // Bill payment confirmation metadata\n      \"id\": \"GUID\", // Bill payment Unique Identifier\n      \"amount\": number // Amount to be paid\n      \"type\": \"string\" // Bill payment type, \"BARCODE\" or \"DIGITABLE\"\n      \"value\": \"string\" // Bill payment type value\n      \"payer\": {\n        \"document_type\": \"string\" // Payer document type, \"CPF\" or \"CNPJ\"\n        \"document_number\": \"string\" // Payer document number\n      }\n    }\n  }\n  ```\n"
+    "description": "**Description**: Api responsible for soliciting bill payments\n\n  For a bill payment be successfully completed, the client has to do two requests to the service.\n\n  The first one is for create a payment and get information about bill.\n\n  The second one is for the client provide information about payer and about the amount to pay.\nAfter this steps, some back end process will be responsible to confirm with application if the transaction is permitted and if was, check if client has balance enough to do the operation requested.\n# Status\nTo see how the payment flow is going the client can get information about it and confirm the statuses and occurrences.\n\n  | Status                | Description                                                 |\n  |-------------------- | ------------------------------------------------------------|\n  | `CREATED` | The payment was created with the id provided. |\n  | `AUTHORIZED` | The customer has authorized the payment and it will be processed. |\n  | `CONFIRMING` | Payment has been sent for internal confirmation. |\n  | `COFIRMED` | Application confirmed payment. |\n  | `NOT_CONFIRMED` | Application not confirmed payment. |\n  | `PROCESSING` | Payment has been sent for internal processing |\n  | `TRANSFERRED` | Payment has been transferred internally and awaits finalization. |\n  | `REJECTED` | Payment has been rejected. |\n  | `ERROR` | Some error has ocurred during the process. |\n  | `CANCELED` | Payment has been cancelled. |\n  | `DONE` | Payment has been fully processed. |\n\n\n## Status Change Notification\nAs described in the status table, some statuses will fire a notification call to the client.\n  To receive this notifications, its necessary to request the registration of the service URL which will receive the notification object.\n  This object will be sent as an HTTP call with the POST method, of which the client must respond with a 200 status and within 5 seconds.\n\n**Notification Call Scheme**\n\n  Headers:\n  ```json\n  {\n    X-R4-Application: GUID // Application Unique Identifier\n    X-R4-Delivery: GUID // Attempt Unique Identifier\n    X-R4-Event: {event_type} // Event Type for the Notification (As describe in the Status Table)\n    User-Agent: R4-Hookshot\n  }\n  ```\n  Body\n  ```json\n  {\n    \"object_kind\": \"{event_type}\", // Event Type for the Notification (As describe in the Status Table)\n    \"object_id\": \"GUID\", // Bill payment Unique Identifier\n    \"application_id\": \"GUID\", // Application Unique Identifier\n    \"account_id\": \"GUID\" // Account Unique Identifier\n  }\n  ```\n## Bill Payment Confirmation Call\nTo receive the confirmation, its necessary the previous registration of the client url.\n  This object will be sent as an HTTP call with the POST method, of which the client must respond with a 202 status and within 10 seconds.\n\n**Bill Payment Confirmation Call Scheme**\n\n  Headers:\n  ```json\n  {\n    X-R4-Application: GUID // Application Unique Identifier\n    X-R4-Delivery: GUID // Attempt Unique Identifier\n    X-R4-Event: bill_payment_confirmation\n    User-Agent: R4-Hookshot\n  }\n  ```\n  Body\n  ```json\n  {\n    \"object_kind\": \"bill_payment_confirmation\", // Kind for the Confirmation Call\n    \"object_id\": \"GUID\", // Bill payment Unique Identifier\n    \"application_id\": \"GUID\", // Application Unique Identifier\n    \"account_id\": \"GUID\", // Account Unique Identifier\n    \"metadata\": { // Bill payment confirmation metadata\n      \"id\": \"GUID\", // Bill payment Unique Identifier\n      \"amount\": number // Amount to be paid\n      \"type\": \"string\" // Bill payment type, \"BARCODE\" or \"DIGITABLE\"\n      \"value\": \"string\" // Bill payment type value\n      \"payer\": {\n        \"document_type\": \"string\" // Payer document type, \"CPF\" or \"CNPJ\"\n        \"document_number\": \"string\" // Payer document number\n      }\n    }\n  }\n  ```\n# Errors\nBill Payment uses [HTTP response status codes](https://en.wikipedia.org/wiki/List_of_HTTP_status_codes) to indicate the success or failure of your API requests.\nIn general, there are three status code ranges you can expect:\n- `2xx` success status codes confirm that your request worked as expected\n\n- `4xx` error status codes indicate an error because of the information provided (e.g., a required parameter was not provided)\n\n- `5xx` error status codes are rare and indicate an error with R4's servers\n"
   },
   "servers": [
     {
@@ -26,7 +26,7 @@
         "tags": [
           "Bill Payment"
         ],
-        "description": "Returns information's about a bill payment requested and prepare to authorize payment.",
+        "description": "Returns information about a bill payment requested and prepare to authorize payment.",
         "requestBody": {
           "content": {
             "application/json": {
@@ -242,39 +242,420 @@
               }
             }
           },
-          "409": {
-            "description": "Conflict",
+          "400": {
+            "description": "Error with types [ValidationFailed, BadRequest].",
             "content": {
               "application/json": {
                 "schema": {
-                  "allOf": [
+                  "oneOf": [
                     {
+                      "title": "The provided data is invalid",
+                      "properties": {
+                        "error": {
+                          "type": "object",
+                          "properties": {
+                            "code": {
+                              "type": "string",
+                              "title": "Error code",
+                              "description": "The type of error",
+                              "example": "VALIDATION_FAILED",
+                              "enum": [
+                                "VALIDATION_FAILED"
+                              ]
+                            },
+                            "message": {
+                              "type": "string",
+                              "title": "Error message",
+                              "description": "Describes a message informing a reason for the error",
+                              "example": "Invalid request data"
+                            },
+                            "status_code": {
+                              "type": "number",
+                              "description": "Error status code",
+                              "example": "400"
+                            }
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "title": "Bad Request",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "BAD_REQUEST",
+                          "enum": [
+                            "BAD_REQUEST"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "Invalid request params"
+                        },
+                        "status_code": {
+                          "type": "number",
+                          "description": "Error status code",
+                          "example": "400"
+                        }
+                      }
+                    }
+                  ]
+                },
+                "examples": {
+                  "Example 1 - ValidationFailed": {
+                    "value": {
+                      "error": {
+                        "code": "VALIDATION_FAILED",
+                        "message": "Invalid request data",
+                        "status_code": 400
+                      }
+                    }
+                  },
+                  "Example 2 - BadRequest": {
+                    "value": {
+                      "error": {
+                        "code": "BAD_REQUEST",
+                        "message": "Account is not valid",
+                        "status_code": 400
+                      }
+                    }
+                  },
+                  "Example 3 - Account is not valid (BadRequest)": {
+                    "value": {
+                      "error": {
+                        "code": "BAD_REQUEST",
+                        "message": "Account is not valid",
+                        "status_code": 400
+                      }
+                    }
+                  },
+                  "Example 4 - Invalid application uuid (BadRequest)": {
+                    "value": {
+                      "error": {
+                        "code": "BAD_REQUEST",
+                        "message": "Invalid application uuid",
+                        "status_code": 400
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Error with types [AuthenticationError].",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Unauthorized",
+                  "properties": {
+                    "error": {
                       "type": "object",
                       "properties": {
                         "code": {
-                          "type": "string"
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "UNAUTHORIZED_ERROR",
+                          "enum": [
+                            "UNAUTHORIZED_ERROR"
+                          ]
                         },
                         "message": {
-                          "type": "string"
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "Unauthorized request"
                         },
                         "status_code": {
-                          "type": "number"
+                          "type": "number",
+                          "description": "Error status code",
+                          "example": "401"
                         }
-                      },
-                      "required": [
-                        "code",
-                        "message",
-                        "status_code"
-                      ]
+                      }
+                    }
+                  }
+                },
+                "examples": {
+                  "Example 1 - Unauthorized": {
+                    "value": {
+                      "error": {
+                        "code": "UNAUTHORIZED_ERROR",
+                        "message": "Unauthorized request",
+                        "status_code": 401
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Error with types [MissingProductPermission].",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "title": "Missing product permission",
+                      "properties": {
+                        "error": {
+                          "type": "object",
+                          "properties": {
+                            "code": {
+                              "type": "string",
+                              "title": "Error code",
+                              "description": "The type of error",
+                              "example": "MISSING_PRODUCT_PERMISSION",
+                              "enum": [
+                                "MISSING_PRODUCT_PERMISSION"
+                              ]
+                            },
+                            "message": {
+                              "type": "string",
+                              "title": "Error message",
+                              "description": "Describes a message informing a reason for the error",
+                              "example": "Missing product permission"
+                            },
+                            "status_code": {
+                              "type": "number",
+                              "description": "Error status code",
+                              "example": "403"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                },
+                "examples": {
+                  "Example 1 - MissingProductPermission": {
+                    "value": {
+                      "error": {
+                        "code": "MISSING_PRODUCT_PERMISSION",
+                        "message": "Missing product permission",
+                        "status_code": 403
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Error with types [AccountNotFound, NotFound].",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "title": "Account Not Found",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "ACCOUNT_NOT_FOUND",
+                          "enum": [
+                            "ACCOUNT_NOT_FOUND"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "Account not found"
+                        },
+                        "status_code": {
+                          "type": "number",
+                          "description": "Error status code",
+                          "example": "404"
+                        }
+                      }
                     },
                     {
-                      "example": {
+                      "title": "Not Found",
+                      "properties": {
+                        "error": {
+                          "type": "object",
+                          "properties": {
+                            "code": {
+                              "type": "string",
+                              "title": "Error code",
+                              "description": "The type of error",
+                              "example": "NOT_FOUND",
+                              "enum": [
+                                "NOT_FOUND"
+                              ]
+                            },
+                            "message": {
+                              "type": "string",
+                              "title": "Error message",
+                              "description": "Describes a message informing a reason for the error",
+                              "example": "Page not found"
+                            },
+                            "status_code": {
+                              "type": "number",
+                              "description": "Error status code",
+                              "example": "404"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                },
+                "examples": {
+                  "Example 1 - AccountNotFound": {
+                    "value": {
+                      "error": {
+                        "code": "ACCOUNT_NOT_FOUND",
+                        "message": "Account not found",
+                        "status_code": 404
+                      }
+                    }
+                  },
+                  "Example 2 - NotFound": {
+                    "value": {
+                      "error": {
+                        "code": "NOT_FOUND",
+                        "message": "Page not found",
+                        "status_code": 404
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Error with types [Conflict, PaymentAlreadyExists].",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "title": "Conflict",
+                      "properties": {
+                        "error": {
+                          "type": "object",
+                          "properties": {
+                            "code": {
+                              "type": "string",
+                              "title": "Error code",
+                              "description": "The type of error",
+                              "example": "CONFLICT",
+                              "enum": [
+                                "CONFLICT"
+                              ]
+                            },
+                            "message": {
+                              "type": "string",
+                              "title": "Error message",
+                              "description": "Describes a message informing a reason for the error",
+                              "example": "Requested id already exists"
+                            },
+                            "status_code": {
+                              "type": "number",
+                              "description": "Error status code",
+                              "example": "409"
+                            }
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "title": "Payment already exists",
+                      "properties": {
+                        "error": {
+                          "type": "object",
+                          "properties": {
+                            "code": {
+                              "type": "string",
+                              "title": "Error code",
+                              "description": "The type of error",
+                              "example": "PAYMENT_ALREADY_EXISTS",
+                              "enum": [
+                                "PAYMENT_ALREADY_EXISTS"
+                              ]
+                            },
+                            "message": {
+                              "type": "string",
+                              "title": "Error message",
+                              "description": "Describes a message informing a reason for the error",
+                              "example": "Payment already exists"
+                            },
+                            "status_code": {
+                              "type": "number",
+                              "description": "Error status code",
+                              "example": "409"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                },
+                "examples": {
+                  "Example 1 - Conflict": {
+                    "value": {
+                      "error": {
                         "code": "CONFLICT",
                         "message": "Requested id already exists",
                         "status_code": 409
                       }
                     }
-                  ]
+                  },
+                  "Example 2 - PaymentAlreadyExists": {
+                    "value": {
+                      "error": {
+                        "code": "PAYMENT_ALREADY_EXISTS",
+                        "message": "Payment already exists",
+                        "status_code": 409
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "424": {
+            "description": "Failed Dependency",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Failed Dependency",
+                  "properties": {
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "FAILED_DEPENDENCY",
+                          "enum": [
+                            "FAILED_DEPENDENCY"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "The request failed due to failure of a previous request"
+                        },
+                        "status_code": {
+                          "type": "number",
+                          "description": "Error status code",
+                          "example": "424"
+                        }
+                      }
+                    }
+                  }
                 }
               }
             }
@@ -306,9 +687,11 @@
                     },
                     {
                       "example": {
-                        "code": "INTERNAL_SERVER_ERROR",
-                        "message": "Internal Server Error",
-                        "status_code": 500
+                        "error": {
+                          "code": "INTERNAL_SERVER_ERROR",
+                          "message": "Internal Server Error",
+                          "status_code": 500
+                        }
                       }
                     }
                   ]
@@ -322,7 +705,7 @@
         "tags": [
           "Bill Payment"
         ],
-        "description": "Returns information's about a bill payment for a specif account.",
+        "description": "Returns information about a bill payment for a specif account.",
         "parameters": [
           {
             "in": "query",
@@ -552,39 +935,292 @@
               }
             }
           },
-          "409": {
-            "description": "Conflict",
+          "400": {
+            "description": "Error with types [ValidationFailed, BadRequest].",
             "content": {
               "application/json": {
                 "schema": {
-                  "allOf": [
+                  "oneOf": [
                     {
-                      "type": "object",
+                      "title": "The provided data is invalid",
                       "properties": {
-                        "code": {
-                          "type": "string"
-                        },
-                        "message": {
-                          "type": "string"
-                        },
-                        "status_code": {
-                          "type": "number"
+                        "error": {
+                          "type": "object",
+                          "properties": {
+                            "code": {
+                              "type": "string",
+                              "title": "Error code",
+                              "description": "The type of error",
+                              "example": "VALIDATION_FAILED",
+                              "enum": [
+                                "VALIDATION_FAILED"
+                              ]
+                            },
+                            "message": {
+                              "type": "string",
+                              "title": "Error message",
+                              "description": "Describes a message informing a reason for the error",
+                              "example": "Invalid request data"
+                            },
+                            "status_code": {
+                              "type": "number",
+                              "description": "Error status code",
+                              "example": "400"
+                            }
+                          }
                         }
-                      },
-                      "required": [
-                        "code",
-                        "message",
-                        "status_code"
-                      ]
+                      }
                     },
                     {
-                      "example": {
-                        "code": "CONFLICT",
-                        "message": "Requested id already exists",
-                        "status_code": 409
+                      "title": "Bad Request",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "BAD_REQUEST",
+                          "enum": [
+                            "BAD_REQUEST"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "Invalid request params"
+                        },
+                        "status_code": {
+                          "type": "number",
+                          "description": "Error status code",
+                          "example": "400"
+                        }
                       }
                     }
                   ]
+                },
+                "examples": {
+                  "Example 1 - ValidationFailed": {
+                    "value": {
+                      "error": {
+                        "code": "VALIDATION_FAILED",
+                        "message": "Invalid request data",
+                        "status_code": 400
+                      }
+                    }
+                  },
+                  "Example 2 - BadRequest": {
+                    "value": {
+                      "error": {
+                        "code": "BAD_REQUEST",
+                        "message": "Account is not valid",
+                        "status_code": 400
+                      }
+                    }
+                  },
+                  "Example 3 - Account is not valid (BadRequest)": {
+                    "value": {
+                      "error": {
+                        "code": "BAD_REQUEST",
+                        "message": "Account is not valid",
+                        "status_code": 400
+                      }
+                    }
+                  },
+                  "Example 4 - Invalid application uuid (BadRequest)": {
+                    "value": {
+                      "error": {
+                        "code": "BAD_REQUEST",
+                        "message": "Invalid application uuid",
+                        "status_code": 400
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Error with types [AuthenticationError].",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Unauthorized",
+                  "properties": {
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "UNAUTHORIZED_ERROR",
+                          "enum": [
+                            "UNAUTHORIZED_ERROR"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "Unauthorized request"
+                        },
+                        "status_code": {
+                          "type": "number",
+                          "description": "Error status code",
+                          "example": "401"
+                        }
+                      }
+                    }
+                  }
+                },
+                "examples": {
+                  "Example 1 - Unauthorized": {
+                    "value": {
+                      "error": {
+                        "code": "UNAUTHORIZED_ERROR",
+                        "message": "Unauthorized request",
+                        "status_code": 401
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Error with types [MissingProductPermission].",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "title": "Missing product permission",
+                      "properties": {
+                        "error": {
+                          "type": "object",
+                          "properties": {
+                            "code": {
+                              "type": "string",
+                              "title": "Error code",
+                              "description": "The type of error",
+                              "example": "MISSING_PRODUCT_PERMISSION",
+                              "enum": [
+                                "MISSING_PRODUCT_PERMISSION"
+                              ]
+                            },
+                            "message": {
+                              "type": "string",
+                              "title": "Error message",
+                              "description": "Describes a message informing a reason for the error",
+                              "example": "Missing product permission"
+                            },
+                            "status_code": {
+                              "type": "number",
+                              "description": "Error status code",
+                              "example": "403"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                },
+                "examples": {
+                  "Example 1 - MissingProductPermission": {
+                    "value": {
+                      "error": {
+                        "code": "MISSING_PRODUCT_PERMISSION",
+                        "message": "Missing product permission",
+                        "status_code": 403
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Error with types [AccountNotFound, NotFound].",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "title": "Account Not Found",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "ACCOUNT_NOT_FOUND",
+                          "enum": [
+                            "ACCOUNT_NOT_FOUND"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "Account not found"
+                        },
+                        "status_code": {
+                          "type": "number",
+                          "description": "Error status code",
+                          "example": "404"
+                        }
+                      }
+                    },
+                    {
+                      "title": "Not Found",
+                      "properties": {
+                        "error": {
+                          "type": "object",
+                          "properties": {
+                            "code": {
+                              "type": "string",
+                              "title": "Error code",
+                              "description": "The type of error",
+                              "example": "NOT_FOUND",
+                              "enum": [
+                                "NOT_FOUND"
+                              ]
+                            },
+                            "message": {
+                              "type": "string",
+                              "title": "Error message",
+                              "description": "Describes a message informing a reason for the error",
+                              "example": "Page not found"
+                            },
+                            "status_code": {
+                              "type": "number",
+                              "description": "Error status code",
+                              "example": "404"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                },
+                "examples": {
+                  "Example 1 - AccountNotFound": {
+                    "value": {
+                      "error": {
+                        "code": "ACCOUNT_NOT_FOUND",
+                        "message": "Account not found",
+                        "status_code": 404
+                      }
+                    }
+                  },
+                  "Example 2 - NotFound": {
+                    "value": {
+                      "error": {
+                        "code": "NOT_FOUND",
+                        "message": "Page not found",
+                        "status_code": 404
+                      }
+                    }
+                  }
                 }
               }
             }
@@ -616,9 +1252,11 @@
                     },
                     {
                       "example": {
-                        "code": "INTERNAL_SERVER_ERROR",
-                        "message": "Internal Server Error",
-                        "status_code": 500
+                        "error": {
+                          "code": "INTERNAL_SERVER_ERROR",
+                          "message": "Internal Server Error",
+                          "status_code": 500
+                        }
                       }
                     }
                   ]
@@ -700,46 +1338,405 @@
               }
             }
           },
-          "404": {
-            "description": "The specified resource was not found",
+          "400": {
+            "description": "Error with types [ValidationFailed, BadRequest].",
             "content": {
               "application/json": {
                 "schema": {
-                  "allOf": [
+                  "oneOf": [
                     {
-                      "type": "object",
+                      "title": "The provided data is invalid",
+                      "properties": {
+                        "error": {
+                          "type": "object",
+                          "properties": {
+                            "code": {
+                              "type": "string",
+                              "title": "Error code",
+                              "description": "The type of error",
+                              "example": "VALIDATION_FAILED",
+                              "enum": [
+                                "VALIDATION_FAILED"
+                              ]
+                            },
+                            "message": {
+                              "type": "string",
+                              "title": "Error message",
+                              "description": "Describes a message informing a reason for the error",
+                              "example": "Invalid request data"
+                            },
+                            "status_code": {
+                              "type": "number",
+                              "description": "Error status code",
+                              "example": "400"
+                            }
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "title": "Bad Request",
                       "properties": {
                         "code": {
-                          "type": "string"
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "BAD_REQUEST",
+                          "enum": [
+                            "BAD_REQUEST"
+                          ]
                         },
                         "message": {
-                          "type": "string"
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "Invalid request params"
                         },
                         "status_code": {
-                          "type": "number"
+                          "type": "number",
+                          "description": "Error status code",
+                          "example": "400"
                         }
-                      },
-                      "required": [
-                        "code",
-                        "message",
-                        "status_code"
-                      ]
-                    },
-                    {
-                      "required": [
-                        "code",
-                        "message",
-                        "status_code"
-                      ]
-                    },
-                    {
-                      "example": {
-                        "code": "RESOURCE_NOT_FOUND",
-                        "message": "Resource not found",
-                        "status_code": 404
                       }
                     }
                   ]
+                },
+                "examples": {
+                  "Example 1 - ValidationFailed": {
+                    "value": {
+                      "error": {
+                        "code": "VALIDATION_FAILED",
+                        "message": "Invalid request data",
+                        "status_code": 400
+                      }
+                    }
+                  },
+                  "Example 2 - BadRequest": {
+                    "value": {
+                      "error": {
+                        "code": "BAD_REQUEST",
+                        "message": "Account is not valid",
+                        "status_code": 400
+                      }
+                    }
+                  },
+                  "Example 3 - Account is not valid (BadRequest)": {
+                    "value": {
+                      "error": {
+                        "code": "BAD_REQUEST",
+                        "message": "Account is not valid",
+                        "status_code": 400
+                      }
+                    }
+                  },
+                  "Example 4 - Invalid application uuid (BadRequest)": {
+                    "value": {
+                      "error": {
+                        "code": "BAD_REQUEST",
+                        "message": "Invalid application uuid",
+                        "status_code": 400
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Error with types [AuthenticationError].",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Unauthorized",
+                  "properties": {
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "UNAUTHORIZED_ERROR",
+                          "enum": [
+                            "UNAUTHORIZED_ERROR"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "Unauthorized request"
+                        },
+                        "status_code": {
+                          "type": "number",
+                          "description": "Error status code",
+                          "example": "401"
+                        }
+                      }
+                    }
+                  }
+                },
+                "examples": {
+                  "Example 1 - Unauthorized": {
+                    "value": {
+                      "error": {
+                        "code": "UNAUTHORIZED_ERROR",
+                        "message": "Unauthorized request",
+                        "status_code": 401
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Error with types [MissingProductPermission].",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "title": "Missing product permission",
+                      "properties": {
+                        "error": {
+                          "type": "object",
+                          "properties": {
+                            "code": {
+                              "type": "string",
+                              "title": "Error code",
+                              "description": "The type of error",
+                              "example": "MISSING_PRODUCT_PERMISSION",
+                              "enum": [
+                                "MISSING_PRODUCT_PERMISSION"
+                              ]
+                            },
+                            "message": {
+                              "type": "string",
+                              "title": "Error message",
+                              "description": "Describes a message informing a reason for the error",
+                              "example": "Missing product permission"
+                            },
+                            "status_code": {
+                              "type": "number",
+                              "description": "Error status code",
+                              "example": "403"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                },
+                "examples": {
+                  "Example 1 - MissingProductPermission": {
+                    "value": {
+                      "error": {
+                        "code": "MISSING_PRODUCT_PERMISSION",
+                        "message": "Missing product permission",
+                        "status_code": 403
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Error with types [AccountNotFound, NotFound].",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "title": "Account Not Found",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "ACCOUNT_NOT_FOUND",
+                          "enum": [
+                            "ACCOUNT_NOT_FOUND"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "Account not found"
+                        },
+                        "status_code": {
+                          "type": "number",
+                          "description": "Error status code",
+                          "example": "404"
+                        }
+                      }
+                    },
+                    {
+                      "title": "Not Found",
+                      "properties": {
+                        "error": {
+                          "type": "object",
+                          "properties": {
+                            "code": {
+                              "type": "string",
+                              "title": "Error code",
+                              "description": "The type of error",
+                              "example": "NOT_FOUND",
+                              "enum": [
+                                "NOT_FOUND"
+                              ]
+                            },
+                            "message": {
+                              "type": "string",
+                              "title": "Error message",
+                              "description": "Describes a message informing a reason for the error",
+                              "example": "Page not found"
+                            },
+                            "status_code": {
+                              "type": "number",
+                              "description": "Error status code",
+                              "example": "404"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                },
+                "examples": {
+                  "Example 1 - AccountNotFound": {
+                    "value": {
+                      "error": {
+                        "code": "ACCOUNT_NOT_FOUND",
+                        "message": "Account not found",
+                        "status_code": 404
+                      }
+                    }
+                  },
+                  "Example 2 - NotFound": {
+                    "value": {
+                      "error": {
+                        "code": "NOT_FOUND",
+                        "message": "Page not found",
+                        "status_code": 404
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "title": "Conflict",
+                      "properties": {
+                        "error": {
+                          "type": "object",
+                          "properties": {
+                            "code": {
+                              "type": "string",
+                              "title": "Error code",
+                              "description": "The type of error",
+                              "example": "CONFLICT",
+                              "enum": [
+                                "CONFLICT"
+                              ]
+                            },
+                            "message": {
+                              "type": "string",
+                              "title": "Error message",
+                              "description": "Describes a message informing a reason for the error",
+                              "example": "Requested id already exists"
+                            },
+                            "status_code": {
+                              "type": "number",
+                              "description": "Error status code",
+                              "example": "409"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                },
+                "examples": {
+                  "Example 1 - Conflict": {
+                    "value": {
+                      "error": {
+                        "code": "CONFLICT",
+                        "message": "Payment already authorized or no longer allowed",
+                        "status_code": 409
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "title": "Unprocessable Entity",
+                      "properties": {
+                        "error": {
+                          "type": "object",
+                          "properties": {
+                            "code": {
+                              "type": "string",
+                              "title": "Error code",
+                              "description": "The type of error",
+                              "example": "UNPROCESSABLE_ENTITY",
+                              "enum": [
+                                "UNPROCESSABLE_ENTITY"
+                              ]
+                            },
+                            "message": {
+                              "type": "string",
+                              "title": "Error message",
+                              "description": "Describes a message informing a reason for the error",
+                              "example": "The request was well-formed but was unable to be followed due to semantic errors."
+                            },
+                            "status_code": {
+                              "type": "number",
+                              "description": "Error status code",
+                              "example": "422"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                },
+                "examples": {
+                  "Example 1 - Payment Amount should be greater than X": {
+                    "value": {
+                      "error": {
+                        "code": "UNPROCESSABLE_ENTITY",
+                        "message": "Payment amount must be greater than or equal to 50",
+                        "status_code": 422
+                      }
+                    }
+                  },
+                  "Example 2 - Payment Amount should be less than X": {
+                    "value": {
+                      "error": {
+                        "code": "UNPROCESSABLE_ENTITY",
+                        "message": "Payment amount must be less than or equal 10",
+                        "status_code": 422
+                      }
+                    }
+                  }
                 }
               }
             }
@@ -771,9 +1768,11 @@
                     },
                     {
                       "example": {
-                        "code": "INTERNAL_SERVER_ERROR",
-                        "message": "Internal Server Error",
-                        "status_code": 500
+                        "error": {
+                          "code": "INTERNAL_SERVER_ERROR",
+                          "message": "Internal Server Error",
+                          "status_code": 500
+                        }
                       }
                     }
                   ]
@@ -1016,46 +2015,292 @@
               }
             }
           },
-          "404": {
-            "description": "The specified resource was not found",
+          "400": {
+            "description": "Error with types [ValidationFailed, BadRequest].",
             "content": {
               "application/json": {
                 "schema": {
-                  "allOf": [
+                  "oneOf": [
                     {
-                      "type": "object",
+                      "title": "The provided data is invalid",
+                      "properties": {
+                        "error": {
+                          "type": "object",
+                          "properties": {
+                            "code": {
+                              "type": "string",
+                              "title": "Error code",
+                              "description": "The type of error",
+                              "example": "VALIDATION_FAILED",
+                              "enum": [
+                                "VALIDATION_FAILED"
+                              ]
+                            },
+                            "message": {
+                              "type": "string",
+                              "title": "Error message",
+                              "description": "Describes a message informing a reason for the error",
+                              "example": "Invalid request data"
+                            },
+                            "status_code": {
+                              "type": "number",
+                              "description": "Error status code",
+                              "example": "400"
+                            }
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "title": "Bad Request",
                       "properties": {
                         "code": {
-                          "type": "string"
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "BAD_REQUEST",
+                          "enum": [
+                            "BAD_REQUEST"
+                          ]
                         },
                         "message": {
-                          "type": "string"
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "Invalid request params"
                         },
                         "status_code": {
-                          "type": "number"
+                          "type": "number",
+                          "description": "Error status code",
+                          "example": "400"
                         }
-                      },
-                      "required": [
-                        "code",
-                        "message",
-                        "status_code"
-                      ]
-                    },
-                    {
-                      "required": [
-                        "code",
-                        "message",
-                        "status_code"
-                      ]
-                    },
-                    {
-                      "example": {
-                        "code": "RESOURCE_NOT_FOUND",
-                        "message": "Resource not found",
-                        "status_code": 404
                       }
                     }
                   ]
+                },
+                "examples": {
+                  "Example 1 - ValidationFailed": {
+                    "value": {
+                      "error": {
+                        "code": "VALIDATION_FAILED",
+                        "message": "Invalid request data",
+                        "status_code": 400
+                      }
+                    }
+                  },
+                  "Example 2 - BadRequest": {
+                    "value": {
+                      "error": {
+                        "code": "BAD_REQUEST",
+                        "message": "Account is not valid",
+                        "status_code": 400
+                      }
+                    }
+                  },
+                  "Example 3 - Account is not valid (BadRequest)": {
+                    "value": {
+                      "error": {
+                        "code": "BAD_REQUEST",
+                        "message": "Account is not valid",
+                        "status_code": 400
+                      }
+                    }
+                  },
+                  "Example 4 - Invalid application uuid (BadRequest)": {
+                    "value": {
+                      "error": {
+                        "code": "BAD_REQUEST",
+                        "message": "Invalid application uuid",
+                        "status_code": 400
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Error with types [AuthenticationError].",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Unauthorized",
+                  "properties": {
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "UNAUTHORIZED_ERROR",
+                          "enum": [
+                            "UNAUTHORIZED_ERROR"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "Unauthorized request"
+                        },
+                        "status_code": {
+                          "type": "number",
+                          "description": "Error status code",
+                          "example": "401"
+                        }
+                      }
+                    }
+                  }
+                },
+                "examples": {
+                  "Example 1 - Unauthorized": {
+                    "value": {
+                      "error": {
+                        "code": "UNAUTHORIZED_ERROR",
+                        "message": "Unauthorized request",
+                        "status_code": 401
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Error with types [MissingProductPermission].",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "title": "Missing product permission",
+                      "properties": {
+                        "error": {
+                          "type": "object",
+                          "properties": {
+                            "code": {
+                              "type": "string",
+                              "title": "Error code",
+                              "description": "The type of error",
+                              "example": "MISSING_PRODUCT_PERMISSION",
+                              "enum": [
+                                "MISSING_PRODUCT_PERMISSION"
+                              ]
+                            },
+                            "message": {
+                              "type": "string",
+                              "title": "Error message",
+                              "description": "Describes a message informing a reason for the error",
+                              "example": "Missing product permission"
+                            },
+                            "status_code": {
+                              "type": "number",
+                              "description": "Error status code",
+                              "example": "403"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                },
+                "examples": {
+                  "Example 1 - MissingProductPermission": {
+                    "value": {
+                      "error": {
+                        "code": "MISSING_PRODUCT_PERMISSION",
+                        "message": "Missing product permission",
+                        "status_code": 403
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Error with types [AccountNotFound, NotFound].",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "title": "Account Not Found",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "ACCOUNT_NOT_FOUND",
+                          "enum": [
+                            "ACCOUNT_NOT_FOUND"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "Account not found"
+                        },
+                        "status_code": {
+                          "type": "number",
+                          "description": "Error status code",
+                          "example": "404"
+                        }
+                      }
+                    },
+                    {
+                      "title": "Not Found",
+                      "properties": {
+                        "error": {
+                          "type": "object",
+                          "properties": {
+                            "code": {
+                              "type": "string",
+                              "title": "Error code",
+                              "description": "The type of error",
+                              "example": "NOT_FOUND",
+                              "enum": [
+                                "NOT_FOUND"
+                              ]
+                            },
+                            "message": {
+                              "type": "string",
+                              "title": "Error message",
+                              "description": "Describes a message informing a reason for the error",
+                              "example": "Page not found"
+                            },
+                            "status_code": {
+                              "type": "number",
+                              "description": "Error status code",
+                              "example": "404"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                },
+                "examples": {
+                  "Example 1 - AccountNotFound": {
+                    "value": {
+                      "error": {
+                        "code": "ACCOUNT_NOT_FOUND",
+                        "message": "Account not found",
+                        "status_code": 404
+                      }
+                    }
+                  },
+                  "Example 2 - NotFound": {
+                    "value": {
+                      "error": {
+                        "code": "NOT_FOUND",
+                        "message": "Page not found",
+                        "status_code": 404
+                      }
+                    }
+                  }
                 }
               }
             }
@@ -1087,9 +2332,11 @@
                     },
                     {
                       "example": {
-                        "code": "INTERNAL_SERVER_ERROR",
-                        "message": "Internal Server Error",
-                        "status_code": 500
+                        "error": {
+                          "code": "INTERNAL_SERVER_ERROR",
+                          "message": "Internal Server Error",
+                          "status_code": 500
+                        }
                       }
                     }
                   ]
@@ -1103,7 +2350,7 @@
         "tags": [
           "Bill Payment"
         ],
-        "description": "Cancels a payment and reverse when possible",
+        "description": "Cancels a payment and reverse it when possible",
         "parameters": [
           {
             "in": "path",
@@ -1132,46 +2379,383 @@
               }
             }
           },
-          "404": {
-            "description": "The specified resource was not found",
+          "400": {
+            "description": "Error with types [ValidationFailed, PaymentNotPerformed, BadRequest].",
             "content": {
               "application/json": {
                 "schema": {
-                  "allOf": [
+                  "oneOf": [
                     {
-                      "type": "object",
+                      "title": "The provided data is invalid",
+                      "properties": {
+                        "error": {
+                          "type": "object",
+                          "properties": {
+                            "code": {
+                              "type": "string",
+                              "title": "Error code",
+                              "description": "The type of error",
+                              "example": "VALIDATION_FAILED",
+                              "enum": [
+                                "VALIDATION_FAILED"
+                              ]
+                            },
+                            "message": {
+                              "type": "string",
+                              "title": "Error message",
+                              "description": "Describes a message informing a reason for the error",
+                              "example": "Invalid request data"
+                            },
+                            "status_code": {
+                              "type": "number",
+                              "description": "Error status code",
+                              "example": "400"
+                            }
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "title": "Payment not performed",
+                      "properties": {
+                        "error": {
+                          "type": "object",
+                          "properties": {
+                            "code": {
+                              "type": "string",
+                              "title": "Error code",
+                              "description": "The type of error",
+                              "example": "PAYMENT_NOT_PERFORMED",
+                              "enum": [
+                                "PAYMENT_NOT_PERFORMED"
+                              ]
+                            },
+                            "message": {
+                              "type": "string",
+                              "title": "Error message",
+                              "description": "Describes a message informing a reason for the error",
+                              "example": "Payment not performed"
+                            },
+                            "status_code": {
+                              "type": "number",
+                              "description": "Error status code",
+                              "example": "400"
+                            }
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "title": "Bad Request",
                       "properties": {
                         "code": {
-                          "type": "string"
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "BAD_REQUEST",
+                          "enum": [
+                            "BAD_REQUEST"
+                          ]
                         },
                         "message": {
-                          "type": "string"
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "Invalid request params"
                         },
                         "status_code": {
-                          "type": "number"
+                          "type": "number",
+                          "description": "Error status code",
+                          "example": "400"
                         }
-                      },
-                      "required": [
-                        "code",
-                        "message",
-                        "status_code"
-                      ]
-                    },
-                    {
-                      "required": [
-                        "code",
-                        "message",
-                        "status_code"
-                      ]
-                    },
-                    {
-                      "example": {
-                        "code": "RESOURCE_NOT_FOUND",
-                        "message": "Resource not found",
-                        "status_code": 404
                       }
                     }
                   ]
+                },
+                "examples": {
+                  "Example 1 - ValidationFailed": {
+                    "value": {
+                      "error": {
+                        "code": "VALIDATION_FAILED",
+                        "message": "Invalid request data",
+                        "status_code": 400
+                      }
+                    }
+                  },
+                  "Example 2 - PaymentNotPerformed": {
+                    "value": {
+                      "error": {
+                        "code": "PAYMENT_NOT_PERFORMED",
+                        "message": "Payment has not been made, or has been rejected / cancelled.",
+                        "status_code": 400
+                      }
+                    }
+                  },
+                  "Example 3 - PaymentNotPerformed": {
+                    "value": {
+                      "error": {
+                        "code": "PAYMENT_NOT_PERFORMED",
+                        "message": "payment cannot be canceled.",
+                        "status_code": 400
+                      }
+                    }
+                  },
+                  "Example 4 - Account is not valid (BadRequest)": {
+                    "value": {
+                      "error": {
+                        "code": "BAD_REQUEST",
+                        "message": "Account is not valid",
+                        "status_code": 400
+                      }
+                    }
+                  },
+                  "Example 5 - Invalid application uuid (BadRequest)": {
+                    "value": {
+                      "error": {
+                        "code": "BAD_REQUEST",
+                        "message": "Invalid application uuid",
+                        "status_code": 400
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Error with types [AuthenticationError].",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Unauthorized",
+                  "properties": {
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "UNAUTHORIZED_ERROR",
+                          "enum": [
+                            "UNAUTHORIZED_ERROR"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "Unauthorized request"
+                        },
+                        "status_code": {
+                          "type": "number",
+                          "description": "Error status code",
+                          "example": "401"
+                        }
+                      }
+                    }
+                  }
+                },
+                "examples": {
+                  "Example 1 - Unauthorized": {
+                    "value": {
+                      "error": {
+                        "code": "UNAUTHORIZED_ERROR",
+                        "message": "Unauthorized request",
+                        "status_code": 401
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Error with types [MissingProductPermission].",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "title": "Missing product permission",
+                      "properties": {
+                        "error": {
+                          "type": "object",
+                          "properties": {
+                            "code": {
+                              "type": "string",
+                              "title": "Error code",
+                              "description": "The type of error",
+                              "example": "MISSING_PRODUCT_PERMISSION",
+                              "enum": [
+                                "MISSING_PRODUCT_PERMISSION"
+                              ]
+                            },
+                            "message": {
+                              "type": "string",
+                              "title": "Error message",
+                              "description": "Describes a message informing a reason for the error",
+                              "example": "Missing product permission"
+                            },
+                            "status_code": {
+                              "type": "number",
+                              "description": "Error status code",
+                              "example": "403"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                },
+                "examples": {
+                  "Example 1 - MissingProductPermission": {
+                    "value": {
+                      "error": {
+                        "code": "MISSING_PRODUCT_PERMISSION",
+                        "message": "Missing product permission",
+                        "status_code": 403
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Error with types [AccountNotFound, NotFound].",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "title": "Account Not Found",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "ACCOUNT_NOT_FOUND",
+                          "enum": [
+                            "ACCOUNT_NOT_FOUND"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "Account not found"
+                        },
+                        "status_code": {
+                          "type": "number",
+                          "description": "Error status code",
+                          "example": "404"
+                        }
+                      }
+                    },
+                    {
+                      "title": "Not Found",
+                      "properties": {
+                        "error": {
+                          "type": "object",
+                          "properties": {
+                            "code": {
+                              "type": "string",
+                              "title": "Error code",
+                              "description": "The type of error",
+                              "example": "NOT_FOUND",
+                              "enum": [
+                                "NOT_FOUND"
+                              ]
+                            },
+                            "message": {
+                              "type": "string",
+                              "title": "Error message",
+                              "description": "Describes a message informing a reason for the error",
+                              "example": "Page not found"
+                            },
+                            "status_code": {
+                              "type": "number",
+                              "description": "Error status code",
+                              "example": "404"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                },
+                "examples": {
+                  "Example 1 - AccountNotFound": {
+                    "value": {
+                      "error": {
+                        "code": "ACCOUNT_NOT_FOUND",
+                        "message": "Account not found",
+                        "status_code": 404
+                      }
+                    }
+                  },
+                  "Example 2 - NotFound": {
+                    "value": {
+                      "error": {
+                        "code": "NOT_FOUND",
+                        "message": "Page not found",
+                        "status_code": 404
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "406": {
+            "description": "Error with types [PaymentAlreadyPerformed].",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "title": "Payment already performed",
+                      "properties": {
+                        "error": {
+                          "type": "object",
+                          "properties": {
+                            "code": {
+                              "type": "string",
+                              "title": "Error code",
+                              "description": "The type of error",
+                              "example": "PAYMENT_ALREADY_PERFORMED",
+                              "enum": [
+                                "PAYMENT_ALREADY_PERFORMED"
+                              ]
+                            },
+                            "message": {
+                              "type": "string",
+                              "title": "Error message",
+                              "description": "Describes a message informing a reason for the error",
+                              "example": "Bill payment already done, cannot be canceled"
+                            },
+                            "status_code": {
+                              "type": "number",
+                              "description": "Error status code",
+                              "example": "406"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                },
+                "examples": {
+                  "Example 1 - PaymentAlreadyPerformed": {
+                    "value": {
+                      "error": {
+                        "code": "PAYMENT_ALREADY_PERFORMED",
+                        "message": "Bill payment already done, cannot be canceled",
+                        "status_code": 406
+                      }
+                    }
+                  }
                 }
               }
             }
@@ -1203,9 +2787,11 @@
                     },
                     {
                       "example": {
-                        "code": "INTERNAL_SERVER_ERROR",
-                        "message": "Internal Server Error",
-                        "status_code": 500
+                        "error": {
+                          "code": "INTERNAL_SERVER_ERROR",
+                          "message": "Internal Server Error",
+                          "status_code": 500
+                        }
                       }
                     }
                   ]
@@ -1219,87 +2805,6 @@
   },
   "components": {
     "responses": {
-      "NotFound": {
-        "description": "The specified resource was not found",
-        "content": {
-          "application/json": {
-            "schema": {
-              "allOf": [
-                {
-                  "type": "object",
-                  "properties": {
-                    "code": {
-                      "type": "string"
-                    },
-                    "message": {
-                      "type": "string"
-                    },
-                    "status_code": {
-                      "type": "number"
-                    }
-                  },
-                  "required": [
-                    "code",
-                    "message",
-                    "status_code"
-                  ]
-                },
-                {
-                  "required": [
-                    "code",
-                    "message",
-                    "status_code"
-                  ]
-                },
-                {
-                  "example": {
-                    "code": "RESOURCE_NOT_FOUND",
-                    "message": "Resource not found",
-                    "status_code": 404
-                  }
-                }
-              ]
-            }
-          }
-        }
-      },
-      "UnprocessableEntity": {
-        "description": "Unprocessable Entity",
-        "content": {
-          "application/json": {
-            "schema": {
-              "allOf": [
-                {
-                  "type": "object",
-                  "properties": {
-                    "code": {
-                      "type": "string"
-                    },
-                    "message": {
-                      "type": "string"
-                    },
-                    "status_code": {
-                      "type": "number"
-                    }
-                  },
-                  "required": [
-                    "code",
-                    "message",
-                    "status_code"
-                  ]
-                },
-                {
-                  "example": {
-                    "code": "INTERNAL_SERVER_ERROR",
-                    "message": "Unprocessable Entity",
-                    "status_code": 422
-                  }
-                }
-              ]
-            }
-          }
-        }
-      },
       "InternalServerError": {
         "description": "Internal Server Error",
         "content": {
@@ -1327,46 +2832,11 @@
                 },
                 {
                   "example": {
-                    "code": "INTERNAL_SERVER_ERROR",
-                    "message": "Internal Server Error",
-                    "status_code": 500
-                  }
-                }
-              ]
-            }
-          }
-        }
-      },
-      "Conflict": {
-        "description": "Conflict",
-        "content": {
-          "application/json": {
-            "schema": {
-              "allOf": [
-                {
-                  "type": "object",
-                  "properties": {
-                    "code": {
-                      "type": "string"
-                    },
-                    "message": {
-                      "type": "string"
-                    },
-                    "status_code": {
-                      "type": "number"
+                    "error": {
+                      "code": "INTERNAL_SERVER_ERROR",
+                      "message": "Internal Server Error",
+                      "status_code": 500
                     }
-                  },
-                  "required": [
-                    "code",
-                    "message",
-                    "status_code"
-                  ]
-                },
-                {
-                  "example": {
-                    "code": "CONFLICT",
-                    "message": "Requested id already exists",
-                    "status_code": 409
                   }
                 }
               ]
@@ -2001,106 +3471,11 @@
           },
           {
             "example": {
-              "code": "INTERNAL_SERVER_ERROR",
-              "message": "Internal Server Error",
-              "status_code": 500
-            }
-          }
-        ]
-      },
-      "UnprocessableEntity": {
-        "allOf": [
-          {
-            "type": "object",
-            "properties": {
-              "code": {
-                "type": "string"
-              },
-              "message": {
-                "type": "string"
-              },
-              "status_code": {
-                "type": "number"
+              "error": {
+                "code": "INTERNAL_SERVER_ERROR",
+                "message": "Internal Server Error",
+                "status_code": 500
               }
-            },
-            "required": [
-              "code",
-              "message",
-              "status_code"
-            ]
-          },
-          {
-            "example": {
-              "code": "INTERNAL_SERVER_ERROR",
-              "message": "Unprocessable Entity",
-              "status_code": 422
-            }
-          }
-        ]
-      },
-      "ResourceNotFound": {
-        "allOf": [
-          {
-            "type": "object",
-            "properties": {
-              "code": {
-                "type": "string"
-              },
-              "message": {
-                "type": "string"
-              },
-              "status_code": {
-                "type": "number"
-              }
-            },
-            "required": [
-              "code",
-              "message",
-              "status_code"
-            ]
-          },
-          {
-            "required": [
-              "code",
-              "message",
-              "status_code"
-            ]
-          },
-          {
-            "example": {
-              "code": "RESOURCE_NOT_FOUND",
-              "message": "Resource not found",
-              "status_code": 404
-            }
-          }
-        ]
-      },
-      "Conflict": {
-        "allOf": [
-          {
-            "type": "object",
-            "properties": {
-              "code": {
-                "type": "string"
-              },
-              "message": {
-                "type": "string"
-              },
-              "status_code": {
-                "type": "number"
-              }
-            },
-            "required": [
-              "code",
-              "message",
-              "status_code"
-            ]
-          },
-          {
-            "example": {
-              "code": "CONFLICT",
-              "message": "Requested id already exists",
-              "status_code": 409
             }
           }
         ]
