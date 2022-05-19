@@ -1659,7 +1659,7 @@
                                     "INVALID_NUMBER_OF_TRANSACTIONS",
                                     "MESSAGE_INVALID_DUE_DATE_TIME",
                                     "ORDER_REJECTED",
-                                    "ORIGINAL_TRANSACTION_IS_NOT_WITHDRAW_OR_CHANGE",
+                                    "REQUESTED_BY_RECIPIENT_DUE_TO_ERROR_OR_DISAGREEMENT",
                                     "PARTICIPANT_IS_NOT_AUTHORIZED_TO_PERFORM_TRANSACTION",
                                     "PARTICIPANT_IS_NOT_REGISTERED",
                                     "PAYER_DOCUMENT_NUMBER_INVALID",
@@ -2028,7 +2028,7 @@
                       "OPERATIONAL_ISSUES",
                       "SUSPECTED_FRAUD",
                       "REQUESTED_BY_RECIPIENT",
-                      "ORIGINAL_TRANSACTION_IS_NOT_WITHDRAW_OR_CHANGE"
+                      "REQUESTED_BY_RECIPIENT_DUE_TO_ERROR_OR_DISAGREEMENT"
                     ],
                     "description": "Reason obtained from the get reason endpoint.",
                     "example": "REQUESTED_BY_RECIPIENT"
@@ -3301,7 +3301,7 @@
                               "INVALID_NUMBER_OF_TRANSACTIONS",
                               "MESSAGE_INVALID_DUE_DATE_TIME",
                               "ORDER_REJECTED",
-                              "ORIGINAL_TRANSACTION_IS_NOT_WITHDRAW_OR_CHANGE",
+                              "REQUESTED_BY_RECIPIENT_DUE_TO_ERROR_OR_DISAGREEMENT",
                               "PARTICIPANT_IS_NOT_AUTHORIZED_TO_PERFORM_TRANSACTION",
                               "PARTICIPANT_IS_NOT_REGISTERED",
                               "PAYER_DOCUMENT_NUMBER_INVALID",
