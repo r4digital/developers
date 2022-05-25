@@ -55,7 +55,7 @@
                           "return_code": {
                             "type": "string",
                             "description": "Code from return.\n",
-                            "example": "OPERATIONAL_FAIL"
+                            "example": "OPERATIONAL_ISSUES"
                           },
                           "description": {
                             "type": "string",
