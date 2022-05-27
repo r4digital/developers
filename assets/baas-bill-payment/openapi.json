@@ -3,7 +3,7 @@
   "info": {
     "version": "1.1.0-beta",
     "title": "Bill Payment",
-    "description": "**Description**: Api responsible for soliciting bill payments\n\n  For a bill payment be successfully completed, the client has to do two requests to the service.\n\n  The first one is for create a payment and get information about bill.\n\n  The second one is for the client provide information about payer and about the amount to pay.\nAfter this steps, some back end process will be responsible to confirm with application if the transaction is permitted and if was, check if client has balance enough to do the operation requested.\n# Status\nTo see how the payment flow is going the client can get information about it and confirm the statuses and occurrences.\n\n  | Status                | Description                                                 |\n  |-------------------- | ------------------------------------------------------------|\n  | `CREATED` | The payment was created with the id provided. |\n  | `AUTHORIZED` | The customer has authorized the payment and it will be processed. |\n  | `CONFIRMING` | Payment has been sent for internal confirmation. |\n  | `COFIRMED` | Application confirmed payment. |\n  | `NOT_CONFIRMED` | Application not confirmed payment. |\n  | `PROCESSING` | Payment has been sent for internal processing |\n  | `TRANSFERRED` | Payment has been transferred internally and awaits finalization. |\n  | `REJECTED` | Payment has been rejected. |\n  | `ERROR` | Some error has ocurred during the process. |\n  | `CANCELED` | Payment has been cancelled. |\n  | `DONE` | Payment has been fully processed. |\n\n\n## Status Change Notification\nAs described in the status table, some statuses will fire a notification call to the client.\n  To receive this notifications, its necessary to request the registration of the service URL which will receive the notification object.\n  This object will be sent as an HTTP call with the POST method, of which the client must respond with a 200 status and within 5 seconds.\n\n**Notification Call Scheme**\n\n  Headers:\n  ```json\n  {\n    X-R4-Application: GUID // Application Unique Identifier\n    X-R4-Delivery: GUID // Attempt Unique Identifier\n    X-R4-Event: {event_type} // Event Type for the Notification (As describe in the Status Table)\n    User-Agent: R4-Hookshot\n  }\n  ```\n  Body\n  ```json\n  {\n    \"object_kind\": \"{event_type}\", // Event Type for the Notification (As describe in the Status Table)\n    \"object_id\": \"GUID\", // Bill payment Unique Identifier\n    \"application_id\": \"GUID\", // Application Unique Identifier\n    \"account_id\": \"GUID\" // Account Unique Identifier\n  }\n  ```\n## Bill Payment Confirmation Call\nTo receive the confirmation, its necessary the previous registration of the client url.\n  This object will be sent as an HTTP call with the POST method, of which the client must respond with a 202 status and within 10 seconds.\n\n**Bill Payment Confirmation Call Scheme**\n\n  Headers:\n  ```json\n  {\n    X-R4-Application: GUID // Application Unique Identifier\n    X-R4-Delivery: GUID // Attempt Unique Identifier\n    X-R4-Event: bill_payment_confirmation\n    User-Agent: R4-Hookshot\n  }\n  ```\n  Body\n  ```json\n  {\n    \"object_kind\": \"bill_payment_confirmation\", // Kind for the Confirmation Call\n    \"object_id\": \"GUID\", // Bill payment Unique Identifier\n    \"application_id\": \"GUID\", // Application Unique Identifier\n    \"account_id\": \"GUID\", // Account Unique Identifier\n    \"metadata\": { // Bill payment confirmation metadata\n      \"id\": \"GUID\", // Bill payment Unique Identifier\n      \"amount\": number // Amount to be paid\n      \"type\": \"string\" // Bill payment type, \"BARCODE\" or \"DIGITABLE\"\n      \"value\": \"string\" // Bill payment type value\n      \"payer\": {\n        \"document_type\": \"string\" // Payer document type, \"CPF\" or \"CNPJ\"\n        \"document_number\": \"string\" // Payer document number\n      }\n    }\n  }\n  ```\n# Errors\nBill Payment uses [HTTP response status codes](https://en.wikipedia.org/wiki/List_of_HTTP_status_codes) to indicate the success or failure of your API requests.\nIn general, there are three status code ranges you can expect:\n- `2xx` success status codes confirm that your request worked as expected\n\n- `4xx` error status codes indicate an error because of the information provided (e.g., a required parameter was not provided)\n\n- `5xx` error status codes are rare and indicate an error with R4's servers\n"
+    "description": "**Description**: Api responsible for soliciting bill payments\n\n  For a bill payment be successfully completed, the client has to do two requests to the service.\n\n  The first one is for create a payment and get information about bill.\n\n  The second one is for the client provide information about payer and about the amount to pay.\nAfter this steps, some back end process will be responsible to confirm with application if the transaction is permitted and if was, check if client has balance enough to do the operation requested.\n# Status\nTo see how the payment flow is going the client can get information about it and confirm the statuses and occurrences.\n\n  | Status                | Description                                                 |\n  |---------------------- | ------------------------------------------------------------|\n  | `CREATED` | The payment was created with the id provided. |\n  | `AUTHORIZED` | The customer has authorized the payment and it will be processed. |\n  | `CONFIRMING` | Payment has been sent for internal confirmation. |\n  | `CONFIRMED` | Application confirmed payment. |\n  | `NOT_CONFIRMED` | Application not confirmed payment. |\n  | `PROCESSING` | Payment has been sent for internal processing |\n  | `TRANSFERRED` | Payment has been transferred internally and awaits finalization. |\n  | `REJECTED` | Payment has been rejected. |\n  | `ERROR` | Some error has ocurred during the process. |\n  | `CANCELED` | Payment has been cancelled. |\n  | `DONE` | Payment has been fully processed. |\n\n\n## Status Change Notification\nAs described in the status table, some statuses will fire a notification call to the client.\n  To receive this notifications, its necessary to request the registration of the service URL which will receive the notification object.\n  This object will be sent as an HTTP call with the POST method, of which the client must respond with a 200 status and within 5 seconds.\n\n**Notification Call Scheme**\n\n  Headers:\n  ```json\n  {\n    X-R4-Application: GUID // Application Unique Identifier\n    X-R4-Delivery: GUID // Attempt Unique Identifier\n    X-R4-Event: {event_type} // Event Type for the Notification (As describe in the Status Table)\n    User-Agent: R4-Hookshot\n  }\n  ```\n  Body\n  ```json\n  {\n    \"object_kind\": \"{event_type}\", // Event Type for the Notification (As describe in the Status Table)\n    \"object_id\": \"GUID\", // Bill payment Unique Identifier\n    \"application_id\": \"GUID\", // Application Unique Identifier\n    \"account_id\": \"GUID\" // Account Unique Identifier\n  }\n  ```\n## Bill Payment Confirmation Call\nTo receive the confirmation, its necessary the previous registration of the client url.\n  This object will be sent as an HTTP call with the POST method, of which the client must respond with a 202 status and within 10 seconds.\n\n**Bill Payment Confirmation Call Scheme**\n\n  Headers:\n  ```json\n  {\n    X-R4-Application: GUID // Application Unique Identifier\n    X-R4-Delivery: GUID // Attempt Unique Identifier\n    X-R4-Event: bill_payment_confirmation\n    User-Agent: R4-Hookshot\n  }\n  ```\n  Body\n  ```json\n  {\n    \"object_kind\": \"bill_payment_confirmation\", // Kind for the Confirmation Call\n    \"object_id\": \"GUID\", // Bill payment Unique Identifier\n    \"application_id\": \"GUID\", // Application Unique Identifier\n    \"account_id\": \"GUID\", // Account Unique Identifier\n    \"metadata\": { // Bill payment confirmation metadata\n      \"id\": \"GUID\", // Bill payment Unique Identifier\n      \"amount\": number // Amount to be paid\n      \"type\": \"string\" // Bill payment type, \"BARCODE\" or \"DIGITABLE\"\n      \"value\": \"string\" // Bill payment type value\n      \"payer\": {\n        \"document_type\": \"string\" // Payer document type, \"CPF\" or \"CNPJ\"\n        \"document_number\": \"string\" // Payer document number\n      }\n    }\n  }\n  ```\n# Errors\nBill Payment uses [HTTP response status codes](https://en.wikipedia.org/wiki/List_of_HTTP_status_codes) to indicate the success or failure of your API requests.\nIn general, there are three status code ranges you can expect:\n- `2xx` success status codes confirm that your request worked as expected\n\n- `4xx` error status codes indicate an error because of the information provided (e.g., a required parameter was not provided)\n\n- `5xx` error status codes are rare and indicate an error with R4's servers\n"
   },
   "servers": [
     {
@@ -698,6 +698,45 @@
                 }
               }
             }
+          },
+          "504": {
+            "description": "Gateway Timeout Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "code": {
+                          "type": "string"
+                        },
+                        "message": {
+                          "type": "string"
+                        },
+                        "status_code": {
+                          "type": "number"
+                        }
+                      },
+                      "required": [
+                        "code",
+                        "message",
+                        "status_code"
+                      ]
+                    },
+                    {
+                      "example": {
+                        "error": {
+                          "code": "GATEWAY_TIMEOUT",
+                          "message": "Gateway Timeout. Try again later",
+                          "status_code": 504
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
           }
         }
       },
@@ -1263,6 +1302,45 @@
                 }
               }
             }
+          },
+          "504": {
+            "description": "Gateway Timeout Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "code": {
+                          "type": "string"
+                        },
+                        "message": {
+                          "type": "string"
+                        },
+                        "status_code": {
+                          "type": "number"
+                        }
+                      },
+                      "required": [
+                        "code",
+                        "message",
+                        "status_code"
+                      ]
+                    },
+                    {
+                      "example": {
+                        "error": {
+                          "code": "GATEWAY_TIMEOUT",
+                          "message": "Gateway Timeout. Try again later",
+                          "status_code": 504
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
           }
         }
       }
@@ -1772,6 +1850,45 @@
                           "code": "INTERNAL_SERVER_ERROR",
                           "message": "Internal Server Error",
                           "status_code": 500
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "504": {
+            "description": "Gateway Timeout Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "code": {
+                          "type": "string"
+                        },
+                        "message": {
+                          "type": "string"
+                        },
+                        "status_code": {
+                          "type": "number"
+                        }
+                      },
+                      "required": [
+                        "code",
+                        "message",
+                        "status_code"
+                      ]
+                    },
+                    {
+                      "example": {
+                        "error": {
+                          "code": "GATEWAY_TIMEOUT",
+                          "message": "Gateway Timeout. Try again later",
+                          "status_code": 504
                         }
                       }
                     }
@@ -2343,6 +2460,45 @@
                 }
               }
             }
+          },
+          "504": {
+            "description": "Gateway Timeout Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "code": {
+                          "type": "string"
+                        },
+                        "message": {
+                          "type": "string"
+                        },
+                        "status_code": {
+                          "type": "number"
+                        }
+                      },
+                      "required": [
+                        "code",
+                        "message",
+                        "status_code"
+                      ]
+                    },
+                    {
+                      "example": {
+                        "error": {
+                          "code": "GATEWAY_TIMEOUT",
+                          "message": "Gateway Timeout. Try again later",
+                          "status_code": 504
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
           }
         }
       },
@@ -2798,6 +2954,45 @@
                 }
               }
             }
+          },
+          "504": {
+            "description": "Gateway Timeout Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "code": {
+                          "type": "string"
+                        },
+                        "message": {
+                          "type": "string"
+                        },
+                        "status_code": {
+                          "type": "number"
+                        }
+                      },
+                      "required": [
+                        "code",
+                        "message",
+                        "status_code"
+                      ]
+                    },
+                    {
+                      "example": {
+                        "error": {
+                          "code": "GATEWAY_TIMEOUT",
+                          "message": "Gateway Timeout. Try again later",
+                          "status_code": 504
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
           }
         }
       }
@@ -2836,6 +3031,45 @@
                       "code": "INTERNAL_SERVER_ERROR",
                       "message": "Internal Server Error",
                       "status_code": 500
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      },
+      "GatewayTimeoutError": {
+        "description": "Gateway Timeout Error",
+        "content": {
+          "application/json": {
+            "schema": {
+              "allOf": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "status_code": {
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "message",
+                    "status_code"
+                  ]
+                },
+                {
+                  "example": {
+                    "error": {
+                      "code": "GATEWAY_TIMEOUT",
+                      "message": "Gateway Timeout. Try again later",
+                      "status_code": 504
                     }
                   }
                 }
@@ -3475,6 +3709,38 @@
                 "code": "INTERNAL_SERVER_ERROR",
                 "message": "Internal Server Error",
                 "status_code": 500
+              }
+            }
+          }
+        ]
+      },
+      "GatewayTimeoutError": {
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "string"
+              },
+              "message": {
+                "type": "string"
+              },
+              "status_code": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "code",
+              "message",
+              "status_code"
+            ]
+          },
+          {
+            "example": {
+              "error": {
+                "code": "GATEWAY_TIMEOUT",
+                "message": "Gateway Timeout. Try again later",
+                "status_code": 504
               }
             }
           }
