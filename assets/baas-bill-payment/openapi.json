@@ -661,79 +661,96 @@
             }
           },
           "500": {
-            "description": "Internal Server Error",
+            "description": "Error with types [InternalServerError, GatewayTimeoutError].",
             "content": {
               "application/json": {
                 "schema": {
-                  "allOf": [
+                  "oneOf": [
                     {
-                      "type": "object",
-                      "properties": {
-                        "code": {
-                          "type": "string"
+                      "allOf": [
+                        {
+                          "type": "object",
+                          "properties": {
+                            "code": {
+                              "type": "string"
+                            },
+                            "message": {
+                              "type": "string"
+                            },
+                            "status_code": {
+                              "type": "number"
+                            }
+                          },
+                          "required": [
+                            "code",
+                            "message",
+                            "status_code"
+                          ]
                         },
-                        "message": {
-                          "type": "string"
-                        },
-                        "status_code": {
-                          "type": "number"
+                        {
+                          "example": {
+                            "error": {
+                              "code": "INTERNAL_SERVER_ERROR",
+                              "message": "Internal Server Error",
+                              "status_code": 500
+                            }
+                          }
                         }
-                      },
-                      "required": [
-                        "code",
-                        "message",
-                        "status_code"
                       ]
                     },
                     {
-                      "example": {
-                        "error": {
-                          "code": "INTERNAL_SERVER_ERROR",
-                          "message": "Internal Server Error",
-                          "status_code": 500
-                        }
-                      }
-                    }
-                  ]
-                }
-              }
-            }
-          },
-          "504": {
-            "description": "Gateway Timeout Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "allOf": [
-                    {
-                      "type": "object",
-                      "properties": {
-                        "code": {
-                          "type": "string"
+                      "allOf": [
+                        {
+                          "type": "object",
+                          "properties": {
+                            "code": {
+                              "type": "string"
+                            },
+                            "message": {
+                              "type": "string"
+                            },
+                            "status_code": {
+                              "type": "number"
+                            }
+                          },
+                          "required": [
+                            "code",
+                            "message",
+                            "status_code"
+                          ]
                         },
-                        "message": {
-                          "type": "string"
-                        },
-                        "status_code": {
-                          "type": "number"
+                        {
+                          "example": {
+                            "error": {
+                              "code": "GATEWAY_TIMEOUT",
+                              "message": "Gateway Timeout. Try again later",
+                              "status_code": 504
+                            }
+                          }
                         }
-                      },
-                      "required": [
-                        "code",
-                        "message",
-                        "status_code"
                       ]
-                    },
-                    {
-                      "example": {
-                        "error": {
-                          "code": "GATEWAY_TIMEOUT",
-                          "message": "Gateway Timeout. Try again later",
-                          "status_code": 504
-                        }
-                      }
                     }
                   ]
+                },
+                "examples": {
+                  "Example 1 - InternalServerError": {
+                    "value": {
+                      "error": {
+                        "code": "INTERNAL_SERVER_ERROR",
+                        "message": "Internal Server Error",
+                        "status_code": 500
+                      }
+                    }
+                  },
+                  "Example 2 - GatewayTimeoutError": {
+                    "value": {
+                      "error": {
+                        "code": "GATEWAY_TIMEOUT_ERROR",
+                        "message": "Gateway Timeout. Try again later",
+                        "status_code": 504
+                      }
+                    }
+                  }
                 }
               }
             }
