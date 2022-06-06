@@ -17,7 +17,16 @@
   ],
   "tags": [
     {
-      "name": "BaaS Pix QR Code"
+      "name": "general",
+      "x-displayName": "General"
+    },
+    {
+      "name": "decode_qr_code",
+      "x-displayName": "Decode QR Code"
+    },
+    {
+      "name": "create_qr_code",
+      "x-displayName": "Create QR Code"
     }
   ],
   "security": [
@@ -29,9 +38,10 @@
     "/decode": {
       "post": {
         "tags": [
-          "Decode QR Code"
+          "decode_qr_code"
         ],
         "summary": "Decode QR Code",
+        "operationId": "decode_qr_code",
         "security": [
           {
             "BearerAuth": []
@@ -1133,9 +1143,10 @@
     "/status": {
       "get": {
         "tags": [
-          "BaaS Pix QR Code"
+          "general"
         ],
         "summary": "Health Check",
+        "operationId": "health_check",
         "security": [
           {
             "BearerAuth": []
@@ -1220,10 +1231,11 @@
     "/static": {
       "post": {
         "tags": [
-          "Static QR Code"
+          "create_qr_code"
         ],
         "summary": "Create a static QR Code",
         "description": "Create a static QR Code",
+        "operationId": "create_static_qr_code",
         "security": [
           {
             "BearerAuth": []
