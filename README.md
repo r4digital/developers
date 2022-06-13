@@ -1,5 +1,5 @@
 # developer
-Developer docs webiste
+Developer docs website
 
 bundle exec jekyll serve --watch
 
