@@ -17,7 +17,7 @@ plugins:
 
 # Output options
 timezone: America/Sao_Paulo
-encoding: utf-8
+encoding: UTF-8
 layout: default
 
 # Name of website
@@ -28,4 +28,4 @@ noindex: true
 collections:
   apis:
     output: true
-    permalinlk: /:collection/:path
+    permalink: /:collection/:path
