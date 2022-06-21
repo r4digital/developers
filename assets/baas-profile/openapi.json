@@ -1110,7 +1110,8 @@
                       "complement_description": {
                         "type": "string",
                         "description": "The complement description of the person.",
-                        "example": "AP 321"
+                        "example": "AP 321",
+                        "maxLength": 10
                       },
                       "ddd_number": {
                         "type": "string",
