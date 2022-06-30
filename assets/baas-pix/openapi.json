@@ -436,22 +436,22 @@
                       }
                     },
                     {
-                      "title": "Account Disabled",
+                      "title": "entry key in custody off different participant",
                       "properties": {
                         "code": {
                           "type": "string",
                           "title": "Error code",
                           "description": "The type of error",
-                          "example": "ACCOUNT_DISABLED",
+                          "example": "ENTRY_KEY_IN_CUSTODY_OF_DIFFERENT_PARTICIPANT",
                           "enum": [
-                            "ACCOUNT_DISABLED"
+                            "ENTRY_KEY_IN_CUSTODY_OF_DIFFERENT_PARTICIPANT"
                           ]
                         },
                         "message": {
                           "type": "string",
                           "title": "Error message",
                           "description": "Describes a message informing a reason for the error",
-                          "example": "The provided account has been disabled."
+                          "example": "There is already a link for this key with the same owner, but it is associated with another participant. It is indicated that a portability solution is made."
                         }
                       }
                     }
