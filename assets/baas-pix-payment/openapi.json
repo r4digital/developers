@@ -2149,6 +2149,30 @@
                       "WITHOUT_SUSPECT"
                     ],
                     "example": "WITHOUT_SUSPECT"
+                  },
+                  "initiation_channel": {
+                    "type": "string",
+                    "description": "The property indicates the payment return initiation channel",
+                    "enum": [
+                      "AGENCY",
+                      "APP",
+                      "ATM",
+                      "CALL_CENTER",
+                      "INTERNET_BANKING"
+                    ],
+                    "example": "INTERNET_BANKING"
+                  },
+                  "open_banking": {
+                    "type": "boolean",
+                    "description": "Indicates that the payment return was initiated in the Open Banking",
+                    "example": true,
+                    "default": false
+                  },
+                  "initiator_name": {
+                    "type": "string",
+                    "description": "The name of the payment return initiator institution",
+                    "example": "NATIONAL BANK S.A.",
+                    "maxLength": 80
                   }
                 }
               }
