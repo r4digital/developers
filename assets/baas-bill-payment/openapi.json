@@ -56,13 +56,31 @@
                   },
                   "value": {
                     "type": "string"
+                  },
+                  "initiation_channel": {
+                    "type": "string",
+                    "description": "The property indicates the bill payment initiation channel",
+                    "enum": [
+                      "AGENCY",
+                      "APP",
+                      "ATM",
+                      "CALL_CENTER",
+                      "INTERNET_BANKING"
+                    ]
+                  },
+                  "open_banking": {
+                    "type": "boolean",
+                    "description": "Indicates that the bill payment was initiated in the Open Banking",
+                    "default": false
                   }
                 },
                 "example": {
                   "id": "0683e31a-b8c7-4984-9c6a-fafd36e9ffba",
                   "account_id": "b24c5c00-b294-4956-8500-705c93ffaee8",
                   "type": "DIGITABLE",
-                  "value": "34191.79001 01043.510047 91020.150008 6 86470026000"
+                  "value": "34191.79001 01043.510047 91020.150008 6 86470026000",
+                  "initiation_channel": "INTERNET_BANKING",
+                  "open_banking": true
                 }
               }
             }
@@ -236,6 +254,24 @@
                       "type": "string",
                       "format": "date",
                       "example": "2021-09-24T12:59:49.830Z"
+                    },
+                    "initiation_channel": {
+                      "type": "string",
+                      "description": "The property indicates the bill payment initiation channel",
+                      "enum": [
+                        "AGENCY",
+                        "APP",
+                        "ATM",
+                        "CALL_CENTER",
+                        "INTERNET_BANKING"
+                      ],
+                      "example": "INTERNET_BANKING"
+                    },
+                    "open_banking": {
+                      "type": "boolean",
+                      "description": "Indicates that the bill payment was initiated in the Open Banking",
+                      "example": true,
+                      "default": false
                     }
                   }
                 }
@@ -982,6 +1018,24 @@
                             "type": "string",
                             "format": "date",
                             "example": "2021-09-24T12:59:49.830Z"
+                          },
+                          "initiation_channel": {
+                            "type": "string",
+                            "description": "The property indicates the bill payment initiation channel",
+                            "enum": [
+                              "AGENCY",
+                              "APP",
+                              "ATM",
+                              "CALL_CENTER",
+                              "INTERNET_BANKING"
+                            ],
+                            "example": "INTERNET_BANKING"
+                          },
+                          "open_banking": {
+                            "type": "boolean",
+                            "description": "Indicates that the bill payment was initiated in the Open Banking",
+                            "example": true,
+                            "default": false
                           }
                         }
                       }
@@ -2111,6 +2165,24 @@
                             "type": "string",
                             "format": "date",
                             "example": "2021-09-24T12:59:49.830Z"
+                          },
+                          "initiation_channel": {
+                            "type": "string",
+                            "description": "The property indicates the bill payment initiation channel",
+                            "enum": [
+                              "AGENCY",
+                              "APP",
+                              "ATM",
+                              "CALL_CENTER",
+                              "INTERNET_BANKING"
+                            ],
+                            "example": "INTERNET_BANKING"
+                          },
+                          "open_banking": {
+                            "type": "boolean",
+                            "description": "Indicates that the bill payment was initiated in the Open Banking",
+                            "example": true,
+                            "default": false
                           }
                         }
                       }
@@ -3262,6 +3334,24 @@
                   "type": "string",
                   "format": "date",
                   "example": "2021-09-24T12:59:49.830Z"
+                },
+                "initiation_channel": {
+                  "type": "string",
+                  "description": "The property indicates the bill payment initiation channel",
+                  "enum": [
+                    "AGENCY",
+                    "APP",
+                    "ATM",
+                    "CALL_CENTER",
+                    "INTERNET_BANKING"
+                  ],
+                  "example": "INTERNET_BANKING"
+                },
+                "open_banking": {
+                  "type": "boolean",
+                  "description": "Indicates that the bill payment was initiated in the Open Banking",
+                  "example": true,
+                  "default": false
                 }
               }
             }
@@ -3454,6 +3544,24 @@
                         "type": "string",
                         "format": "date",
                         "example": "2021-09-24T12:59:49.830Z"
+                      },
+                      "initiation_channel": {
+                        "type": "string",
+                        "description": "The property indicates the bill payment initiation channel",
+                        "enum": [
+                          "AGENCY",
+                          "APP",
+                          "ATM",
+                          "CALL_CENTER",
+                          "INTERNET_BANKING"
+                        ],
+                        "example": "INTERNET_BANKING"
+                      },
+                      "open_banking": {
+                        "type": "boolean",
+                        "description": "Indicates that the bill payment was initiated in the Open Banking",
+                        "example": true,
+                        "default": false
                       }
                     }
                   }
@@ -3640,6 +3748,24 @@
                         "type": "string",
                         "format": "date",
                         "example": "2021-09-24T12:59:49.830Z"
+                      },
+                      "initiation_channel": {
+                        "type": "string",
+                        "description": "The property indicates the bill payment initiation channel",
+                        "enum": [
+                          "AGENCY",
+                          "APP",
+                          "ATM",
+                          "CALL_CENTER",
+                          "INTERNET_BANKING"
+                        ],
+                        "example": "INTERNET_BANKING"
+                      },
+                      "open_banking": {
+                        "type": "boolean",
+                        "description": "Indicates that the bill payment was initiated in the Open Banking",
+                        "example": true,
+                        "default": false
                       }
                     }
                   }
@@ -3945,6 +4071,24 @@
                   "type": "string",
                   "format": "date",
                   "example": "2021-09-24T12:59:49.830Z"
+                },
+                "initiation_channel": {
+                  "type": "string",
+                  "description": "The property indicates the bill payment initiation channel",
+                  "enum": [
+                    "AGENCY",
+                    "APP",
+                    "ATM",
+                    "CALL_CENTER",
+                    "INTERNET_BANKING"
+                  ],
+                  "example": "INTERNET_BANKING"
+                },
+                "open_banking": {
+                  "type": "boolean",
+                  "description": "Indicates that the bill payment was initiated in the Open Banking",
+                  "example": true,
+                  "default": false
                 }
               }
             }
@@ -4124,6 +4268,24 @@
                   "type": "string",
                   "format": "date",
                   "example": "2021-09-24T12:59:49.830Z"
+                },
+                "initiation_channel": {
+                  "type": "string",
+                  "description": "The property indicates the bill payment initiation channel",
+                  "enum": [
+                    "AGENCY",
+                    "APP",
+                    "ATM",
+                    "CALL_CENTER",
+                    "INTERNET_BANKING"
+                  ],
+                  "example": "INTERNET_BANKING"
+                },
+                "open_banking": {
+                  "type": "boolean",
+                  "description": "Indicates that the bill payment was initiated in the Open Banking",
+                  "example": true,
+                  "default": false
                 }
               }
             }
@@ -4322,6 +4484,24 @@
             "type": "string",
             "format": "date",
             "example": "2021-09-24T12:59:49.830Z"
+          },
+          "initiation_channel": {
+            "type": "string",
+            "description": "The property indicates the bill payment initiation channel",
+            "enum": [
+              "AGENCY",
+              "APP",
+              "ATM",
+              "CALL_CENTER",
+              "INTERNET_BANKING"
+            ],
+            "example": "INTERNET_BANKING"
+          },
+          "open_banking": {
+            "type": "boolean",
+            "description": "Indicates that the bill payment was initiated in the Open Banking",
+            "example": true,
+            "default": false
           }
         }
       }
