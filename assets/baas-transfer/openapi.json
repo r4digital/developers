@@ -132,6 +132,24 @@
                         "example": 44769510071
                       }
                     }
+                  },
+                  "initiation_channel": {
+                    "type": "string",
+                    "description": "The property indicates the transfer initiation channel",
+                    "enum": [
+                      "AGENCY",
+                      "APP",
+                      "ATM",
+                      "CALL_CENTER",
+                      "INTERNET_BANKING"
+                    ],
+                    "example": "INTERNET_BANKING"
+                  },
+                  "open_banking": {
+                    "type": "boolean",
+                    "description": "Indicates that the transfer was initiated in the Open Banking",
+                    "example": true,
+                    "default": false
                   }
                 }
               }
@@ -239,6 +257,24 @@
                               "example": 44769510071
                             }
                           }
+                        },
+                        "initiation_channel": {
+                          "type": "string",
+                          "description": "The property indicates the transfer initiation channel",
+                          "enum": [
+                            "AGENCY",
+                            "APP",
+                            "ATM",
+                            "CALL_CENTER",
+                            "INTERNET_BANKING"
+                          ],
+                          "example": "INTERNET_BANKING"
+                        },
+                        "open_banking": {
+                          "type": "boolean",
+                          "description": "Indicates that the transfer was initiated in the Open Banking",
+                          "example": true,
+                          "default": false
                         }
                       }
                     },
@@ -865,6 +901,24 @@
                           "type": "string",
                           "description": "Update date of transfer",
                           "example": "2021-04-06T22:10:10Z"
+                        },
+                        "initiation_channel": {
+                          "type": "string",
+                          "description": "The property indicates the transfer initiation channel",
+                          "enum": [
+                            "AGENCY",
+                            "APP",
+                            "ATM",
+                            "CALL_CENTER",
+                            "INTERNET_BANKING"
+                          ],
+                          "example": "INTERNET_BANKING"
+                        },
+                        "open_banking": {
+                          "type": "boolean",
+                          "description": "Indicates that the transfer was initiated in the Open Banking",
+                          "example": true,
+                          "default": false
                         }
                       }
                     }
@@ -1089,6 +1143,24 @@
                                 "type": "string",
                                 "description": "Update date of transfer",
                                 "example": "2021-04-06T22:10:10Z"
+                              },
+                              "initiation_channel": {
+                                "type": "string",
+                                "description": "The property indicates the transfer initiation channel",
+                                "enum": [
+                                  "AGENCY",
+                                  "APP",
+                                  "ATM",
+                                  "CALL_CENTER",
+                                  "INTERNET_BANKING"
+                                ],
+                                "example": "INTERNET_BANKING"
+                              },
+                              "open_banking": {
+                                "type": "boolean",
+                                "description": "Indicates that the transfer was initiated in the Open Banking",
+                                "example": true,
+                                "default": false
                               }
                             }
                           }
@@ -1514,6 +1586,24 @@
                           "description": "Update date of transfer",
                           "example": "2021-04-06T22:10:10Z"
                         },
+                        "initiation_channel": {
+                          "type": "string",
+                          "description": "The property indicates the transfer initiation channel",
+                          "enum": [
+                            "AGENCY",
+                            "APP",
+                            "ATM",
+                            "CALL_CENTER",
+                            "INTERNET_BANKING"
+                          ],
+                          "example": "INTERNET_BANKING"
+                        },
+                        "open_banking": {
+                          "type": "boolean",
+                          "description": "Indicates that the transfer was initiated in the Open Banking",
+                          "example": true,
+                          "default": false
+                        },
                         "occurrences": {
                           "type": "array",
                           "items": {
@@ -1899,6 +1989,24 @@
                 "example": 44769510071
               }
             }
+          },
+          "initiation_channel": {
+            "type": "string",
+            "description": "The property indicates the transfer initiation channel",
+            "enum": [
+              "AGENCY",
+              "APP",
+              "ATM",
+              "CALL_CENTER",
+              "INTERNET_BANKING"
+            ],
+            "example": "INTERNET_BANKING"
+          },
+          "open_banking": {
+            "type": "boolean",
+            "description": "Indicates that the transfer was initiated in the Open Banking",
+            "example": true,
+            "default": false
           }
         }
       },
