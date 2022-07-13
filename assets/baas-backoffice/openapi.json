@@ -1,0 +1,687 @@
+{
+  "openapi": "3.0.2",
+  "info": {
+    "version": "1.0.0",
+    "title": "BaaS Backoffice",
+    "description": "BaaS Backoffice\n"
+  },
+  "servers": [
+    {
+      "description": "Development",
+      "url": "https://develop.r4digital.cloud/backoffice"
+    },
+    {
+      "description": "Production",
+      "url": "https://api.r4digital.cloud/backoffice"
+    }
+  ],
+  "tags": [
+    {
+      "name": "BaaS Backoffice"
+    }
+  ],
+  "security": [
+    {
+      "BearerAuth": []
+    }
+  ],
+  "paths": {
+    "/status": {
+      "get": {
+        "tags": [
+          "BaaS Backoffice"
+        ],
+        "summary": "API Health Check",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Not Found",
+                  "properties": {
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "NOT_FOUND",
+                          "enum": [
+                            "NOT_FOUND"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "Unable to found the requested account"
+                        },
+                        "status_code": {
+                          "type": "number",
+                          "description": "Error status code",
+                          "example": "404"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Internal Server Error",
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "title": "Error code",
+                      "description": "The type of error",
+                      "example": "INTERNAL_SERVER_ERROR",
+                      "enum": [
+                        "INTERNAL_SERVER_ERROR"
+                      ]
+                    },
+                    "message": {
+                      "type": "string",
+                      "title": "Error message",
+                      "description": "Describes a message informing a reason for the error",
+                      "example": "Unexpected error with our service"
+                    },
+                    "status_code": {
+                      "type": "number",
+                      "description": "Error status code",
+                      "example": "500"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/in32/{year}/{month}": {
+      "get": {
+        "tags": [
+          "in32File"
+        ],
+        "summary": "Get in32 File",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "year",
+            "schema": {
+              "type": "integer",
+              "minLength": 4,
+              "maxLength": 4,
+              "example": 2022
+            },
+            "required": true
+          },
+          {
+            "in": "path",
+            "name": "month",
+            "schema": {
+              "type": "integer",
+              "minLength": 1,
+              "maxLength": 2,
+              "example": 5
+            },
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "name",
+            "schema": {
+              "type": "string",
+              "example": "Jos\u00e9 Silva"
+            }
+          },
+          {
+            "in": "query",
+            "name": "email",
+            "schema": {
+              "type": "string",
+              "example": "josesilva@mail.com"
+            }
+          },
+          {
+            "in": "query",
+            "name": "phone_number",
+            "schema": {
+              "type": "string",
+              "example": "11971625362"
+            }
+          },
+          {
+            "in": "query",
+            "name": "kind",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "INFORM",
+                "ADJUSTMENT"
+              ],
+              "example": "INFORM"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "in32 File",
+            "content": {
+              "application/xml": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "DtArquivo": {
+                      "type": "string",
+                      "example": "2022-06-13",
+                      "xml": {
+                        "attribute": true
+                      }
+                    },
+                    "Ano": {
+                      "type": "integer",
+                      "example": 2022,
+                      "xml": {
+                        "attribute": true
+                      }
+                    },
+                    "Mes": {
+                      "type": "string",
+                      "example": "05",
+                      "xml": {
+                        "attribute": true
+                      }
+                    },
+                    "ISPB": {
+                      "type": "integer",
+                      "example": 12548,
+                      "xml": {
+                        "attribute": true
+                      }
+                    },
+                    "NomeResp": {
+                      "type": "string",
+                      "example": "Jos\u00e9 Silva",
+                      "xml": {
+                        "attribute": true
+                      }
+                    },
+                    "EmailResp": {
+                      "type": "string",
+                      "example": "josesilva@mail.com.br",
+                      "xml": {
+                        "attribute": true
+                      }
+                    },
+                    "TelResp": {
+                      "type": "string",
+                      "example": 5551985856554,
+                      "xml": {
+                        "attribute": true
+                      }
+                    },
+                    "TipoEnvio": {
+                      "type": "string",
+                      "enum": [
+                        "I (INFORM)",
+                        "S (ADJUSTMENT)"
+                      ],
+                      "example": "I",
+                      "xml": {
+                        "attribute": true
+                      }
+                    },
+                    "Transacoes": {
+                      "type": "array",
+                      "items": {
+                        "properties": {
+                          "Transacao": {
+                            "type": "object",
+                            "properties": {
+                              "QtdTransacoes": {
+                                "type": "integer"
+                              },
+                              "ValorTransacoes": {
+                                "type": "number"
+                              },
+                              "ValorEspecie": {
+                                "type": "number"
+                              },
+                              "DetalhamentoTransacoes": {
+                                "type": "integer"
+                              },
+                              "FinalidadeTransacoes": {
+                                "type": "integer"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "Devolucoes": {
+                      "type": "object",
+                      "properties": {
+                        "QtdDevolucoes": {
+                          "type": "integer",
+                          "xml": {
+                            "attribute": true
+                          }
+                        },
+                        "ValorDevolucoes": {
+                          "type": "number",
+                          "xml": {
+                            "attribute": true
+                          }
+                        }
+                      }
+                    },
+                    "BloqueiosCautelares": {
+                      "type": "array",
+                      "items": {
+                        "properties": {
+                          "BloqueioCautelar": {
+                            "type": "object",
+                            "properties": {
+                              "QtdeBloqCaut": {
+                                "type": "integer"
+                              },
+                              "ValorBloqCaut": {
+                                "type": "number"
+                              },
+                              "DetalhamentoTransacoesBloqCaut": {
+                                "type": "integer"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "Receitas": {
+                      "type": "array",
+                      "items": {
+                        "properties": {
+                          "Receita": {
+                            "type": "object",
+                            "properties": {
+                              "ValorReceita": {
+                                "type": "number"
+                              },
+                              "FonteReceita": {
+                                "type": "integer"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "TemposTransacoes": {
+                      "type": "object",
+                      "properties": {
+                        "Perc50TempoExpUsuarioLiqSPI": {
+                          "type": "integer",
+                          "xml": {
+                            "attribute": true
+                          }
+                        },
+                        "Perc99TempoExpUsuarioLiqSPI": {
+                          "type": "integer",
+                          "xml": {
+                            "attribute": true
+                          }
+                        },
+                        "Perc50TempoExpUsuarioLiqForaSPI": {
+                          "type": "integer",
+                          "xml": {
+                            "attribute": true
+                          }
+                        },
+                        "Perc99TempoExpUsuarioLiqForaSPI": {
+                          "type": "integer",
+                          "xml": {
+                            "attribute": true
+                          }
+                        },
+                        "TempoMaxBloqueioCautelar": {
+                          "type": "integer",
+                          "xml": {
+                            "attribute": true
+                          }
+                        }
+                      }
+                    },
+                    "TemposDict": {
+                      "type": "object",
+                      "properties": {
+                        "Perc99TempoUsuarioConsulta": {
+                          "type": "integer",
+                          "xml": {
+                            "attribute": true
+                          }
+                        },
+                        "PercTempoEnvioRegistro": {
+                          "type": "integer",
+                          "xml": {
+                            "attribute": true
+                          }
+                        },
+                        "PercTempoExpUsuarioRegistro": {
+                          "type": "integer",
+                          "xml": {
+                            "attribute": true
+                          }
+                        },
+                        "PercTempoExpUsuarioExclusao": {
+                          "type": "integer",
+                          "xml": {
+                            "attribute": true
+                          }
+                        },
+                        "PercTempoNotificacaoPortabilidade": {
+                          "type": "integer",
+                          "xml": {
+                            "attribute": true
+                          }
+                        },
+                        "PercTempoEnvioPortabilidade": {
+                          "type": "integer",
+                          "xml": {
+                            "attribute": true
+                          }
+                        }
+                      }
+                    },
+                    "ConsultasDict": {
+                      "type": "object",
+                      "properties": {
+                        "QtdConsultas": {
+                          "type": "integer",
+                          "xml": {
+                            "attribute": true
+                          }
+                        }
+                      }
+                    },
+                    "Disponibilidade": {
+                      "type": "object",
+                      "properties": {
+                        "IndiceDisponibilidade": {
+                          "type": "integer",
+                          "xml": {
+                            "attribute": true
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "xml": {
+                    "name": "APIX001"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Error with types [ValidationFailed].",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "title": "Invalid request data",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "VALIDATION_FAILED"
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "Invalid request data."
+                        },
+                        "details": {
+                          "type": "array",
+                          "title": "Error details",
+                          "description": "Informs error details",
+                          "example": "Invalid request data."
+                        }
+                      }
+                    }
+                  ]
+                },
+                "examples": {
+                  "Example 1 - ValidationFailed": {
+                    "value": {
+                      "code": "VALIDATION_FAILED",
+                      "message": "Invalid request data."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Error with types [AuthenticationError].",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Authentication error",
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "title": "Error code",
+                      "description": "The type of error",
+                      "example": "AUTHENTICATION_FAILED",
+                      "enum": [
+                        "AUTHENTICATION_FAILED"
+                      ]
+                    },
+                    "message": {
+                      "type": "string",
+                      "title": "Error message",
+                      "description": "Describes a message informing a reason for the error",
+                      "example": "Authentication failed."
+                    }
+                  }
+                },
+                "examples": {
+                  "Example 1 - AuthenticationError": {
+                    "value": {
+                      "code": "AUTHENTICATION_FAILED",
+                      "message": "Authentication failed."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Error with types [MissingProduct, ProductDisabledError, ApplicationNotFound, ProfileNotFound].",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "title": "Missing Product Permission",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "MISSING_PRODUCT_PERMISSION",
+                          "enum": [
+                            "MISSING_PRODUCT_PERMISSION"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "Missing product permission."
+                        }
+                      }
+                    },
+                    {
+                      "title": "Bad Request",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "PRODUCT_DISABLED",
+                          "enum": [
+                            "PRODUCT_DISABLED"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "Product is not enabled."
+                        }
+                      }
+                    },
+                    {
+                      "title": "Application product not found",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "APPLICATION_PRODUCT_NOT_FOUND",
+                          "enum": [
+                            "APPLICATION_PRODUCT_NOT_FOUND"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "Product not found for given application id."
+                        }
+                      }
+                    },
+                    {
+                      "title": "Bad Request",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "PROFILE_NOT_FOUND",
+                          "enum": [
+                            "PROFILE_NOT_FOUND"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "Profile not found."
+                        }
+                      }
+                    }
+                  ]
+                },
+                "examples": {
+                  "Example 1 - MissingProduct": {
+                    "value": {
+                      "code": "MISSING_PRODUCT_PERMISSION",
+                      "message": "Missing product permission."
+                    }
+                  },
+                  "Example 2 - ProductDisabledError": {
+                    "value": {
+                      "code": "PRODUCT_DISABLED",
+                      "message": "Product is not enabled."
+                    }
+                  },
+                  "Example 3 - ApplicationNotFound": {
+                    "value": {
+                      "code": "APPLICATION_PRODUCT_NOT_FOUND",
+                      "message": "Product not found for given application id."
+                    }
+                  },
+                  "Example 4 - ProfileNotFound": {
+                    "value": {
+                      "code": "PROFILE_NOT_FOUND",
+                      "message": "Profile not found."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Internal Server Error",
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "title": "Error code",
+                      "description": "The type of error",
+                      "example": "INTERNAL_SERVER_ERROR",
+                      "enum": [
+                        "INTERNAL_SERVER_ERROR"
+                      ]
+                    },
+                    "message": {
+                      "type": "string",
+                      "title": "Error message",
+                      "description": "Describes a message informing a reason for the error",
+                      "example": "Unexpected error with our service"
+                    },
+                    "status_code": {
+                      "type": "number",
+                      "description": "Error status code",
+                      "example": "500"
+                    }
+                  }
+                },
+                "examples": {
+                  "Example 1 - InternalServerError": {
+                    "value": {
+                      "code": "INTERNAL_SERVER_ERROR",
+                      "message": "Unexpected error with our service"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "bearerFormat": "JWT",
+        "scheme": "bearer",
+        "description": "Bearer auth (https://developer.mozilla.org/en-US/docs/Web/HTTP/Authentication)."
+      }
+    }
+  }
+}
