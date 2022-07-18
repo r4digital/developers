@@ -1065,6 +1065,46 @@
               }
             }
           },
+          "406": {
+            "description": "Error with types [InvalidQRCodePayloadError]",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Invalid QR Code payload",
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "title": "Error code",
+                      "description": "The type of error",
+                      "example": "INVALID_QR_CODE_PAYLOAD",
+                      "enum": [
+                        "INVALID_QR_CODE_PAYLOAD"
+                      ]
+                    },
+                    "message": {
+                      "type": "string",
+                      "title": "Error message",
+                      "description": "Describes a message informing a reason for the error",
+                      "example": "The payload has been violated or is invalid"
+                    },
+                    "status_code": {
+                      "type": "number",
+                      "description": "Error status code",
+                      "example": "406"
+                    }
+                  }
+                },
+                "examples": {
+                  "Example 1 - InvalidQRCodePayloadError": {
+                    "value": {
+                      "code": "INVALID_QR_CODE_PAYLOAD",
+                      "message": "The payload has been violated or is invalid"
+                    }
+                  }
+                }
+              }
+            }
+          },
           "409": {
             "description": "Conflict Error with types [IdempotenceKeyAlreadyExistsError]",
             "content": {
