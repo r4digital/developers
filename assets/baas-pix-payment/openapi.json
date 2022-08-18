@@ -2242,6 +2242,7 @@
                                     "TIMEOUT",
                                     "TOO_LONG_REQUEST",
                                     "TOO_MANY_REQUESTS",
+                                    "CONCILIATION_MANUALLY_REQUESTED_BY_USER",
                                     "UNEXPECTED"
                                   ]
                                 },
@@ -4398,6 +4399,7 @@
                               "TIMEOUT",
                               "TOO_LONG_REQUEST",
                               "TOO_MANY_REQUESTS",
+                              "CONCILIATION_MANUALLY_REQUESTED_BY_USER",
                               "UNEXPECTED"
                             ]
                           },
