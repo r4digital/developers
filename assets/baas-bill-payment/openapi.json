@@ -338,6 +338,96 @@
                           "example": "400"
                         }
                       }
+                    },
+                    {
+                      "title": "Not Business Day Error",
+                      "properties": {
+                        "error": {
+                          "type": "object",
+                          "properties": {
+                            "code": {
+                              "type": "string",
+                              "title": "Error code",
+                              "description": "The type of error",
+                              "example": "BUSINESS_DAY_ONLY_ERROR",
+                              "enum": [
+                                "BUSINESS_DAY_ONLY_ERROR"
+                              ]
+                            },
+                            "message": {
+                              "type": "string",
+                              "title": "Error message",
+                              "description": "Describes a message informing a reason for the error",
+                              "example": "The current day is not a business day"
+                            },
+                            "status_code": {
+                              "type": "number",
+                              "description": "Error status code",
+                              "example": "400"
+                            }
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "title": "Time Out Of Range Error",
+                      "properties": {
+                        "error": {
+                          "type": "object",
+                          "properties": {
+                            "code": {
+                              "type": "string",
+                              "title": "Error code",
+                              "description": "The type of error",
+                              "example": "TIME_OUT_OF_RANGE",
+                              "enum": [
+                                "TIME_OUT_OF_RANGE"
+                              ]
+                            },
+                            "message": {
+                              "type": "string",
+                              "title": "Error message",
+                              "description": "Describes a message informing a reason for the error",
+                              "example": "The current time is out of range"
+                            },
+                            "status_code": {
+                              "type": "number",
+                              "description": "Error status code",
+                              "example": "400"
+                            }
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "title": "Request not allowed",
+                      "properties": {
+                        "error": {
+                          "type": "object",
+                          "properties": {
+                            "code": {
+                              "type": "string",
+                              "title": "Error code",
+                              "description": "The type of error",
+                              "example": "REQUEST_NOT_ALLOWED",
+                              "enum": [
+                                "REQUEST_NOT_ALLOWED"
+                              ]
+                            },
+                            "message": {
+                              "type": "string",
+                              "title": "Error message",
+                              "description": "Describes a message informing a reason for the error",
+                              "example": "The request is not allowed"
+                            },
+                            "status_code": {
+                              "type": "number",
+                              "description": "Error status code",
+                              "example": "400"
+                            }
+                          }
+                        }
+                      }
                     }
                   ]
                 },
@@ -374,6 +464,33 @@
                       "error": {
                         "code": "BAD_REQUEST",
                         "message": "Invalid application uuid",
+                        "status_code": 400
+                      }
+                    }
+                  },
+                  "Example 5 - Not Business Day (BadRequest)": {
+                    "value": {
+                      "error": {
+                        "code": "BUSINESS_DAY_ONLY_ERROR",
+                        "message": "The current day is not a business day",
+                        "status_code": 400
+                      }
+                    }
+                  },
+                  "Example 6 - Time Out Of Range (BadRequest)": {
+                    "value": {
+                      "error": {
+                        "code": "TIME_OUT_OF_RANGE",
+                        "message": "The current time is out of range",
+                        "status_code": 400
+                      }
+                    }
+                  },
+                  "Example 7 - Request Not Allowed (BadRequest)": {
+                    "value": {
+                      "error": {
+                        "code": "REQUEST_NOT_ALLOWED",
+                        "message": "The request is not allowed",
                         "status_code": 400
                       }
                     }
