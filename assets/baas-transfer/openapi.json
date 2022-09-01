@@ -420,6 +420,36 @@
                           }
                         }
                       }
+                    },
+                    {
+                      "title": "Request not allowed",
+                      "properties": {
+                        "error": {
+                          "type": "object",
+                          "properties": {
+                            "code": {
+                              "type": "string",
+                              "title": "Error code",
+                              "description": "The type of error",
+                              "example": "REQUEST_NOT_ALLOWED",
+                              "enum": [
+                                "REQUEST_NOT_ALLOWED"
+                              ]
+                            },
+                            "message": {
+                              "type": "string",
+                              "title": "Error message",
+                              "description": "Describes a message informing a reason for the error",
+                              "example": "The request is not allowed"
+                            },
+                            "status_code": {
+                              "type": "number",
+                              "description": "Error status code",
+                              "example": "400"
+                            }
+                          }
+                        }
+                      }
                     }
                   ]
                 }
