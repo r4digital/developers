@@ -2,17 +2,17 @@
   "openapi": "3.0.2",
   "info": {
     "version": "1.0.0",
-    "title": "Utils",
-    "description": "**Description**: Api responsible for managing accounts, statements & balance\n# Schemas\n<a name=\"account_statuses\"></a>\n\n  ## Account statuses\n\n  <table>\n    <tr>\n      <td>Status</td>\n      <td>Description</td>\n    </tr>\n    <tr>\n      <td>`BLOCKED`</td>\n      <td>Informs that the account is blocked and can not do any transaction.</td>\n    </tr>\n    <tr>\n      <td>`ENABLED`</td>\n      <td>Informs that the account is enabled and ready for use.</td>\n    </tr>\n    <tr>\n      <td>`CANCELED`</td>\n      <td>Informs that the account is canceled and not able to do anything.</td>\n    </tr>\n  </table>\n\n\n# Errors\nAccount Middleware uses [HTTP response status codes](https://en.wikipedia.org/wiki/List_of_HTTP_status_codes) to indicate the success or failure of your API requests.\nIn general, there are three status code ranges you can expect:\n- `2xx` success status codes confirm that your request worked as expected\n- `4xx` error status codes indicate an error because of the information provided (e.g., a required parameter was not provided)\n- `5xx` error status codes are rare and indicate an error with R4's servers\n\n## HTTP Status code summary\nExtracted from [Stripe API codes](https://stripe.com/docs/api/errors)\n- `200 - OK` Everything worked as expected.\n- `400 - Bad Request` The request was unacceptable, often due to missing a required parameter.\n- `401 - Unauthorized` No valid API key provided.\n- `403 - Forbidden` The API key doesn't have permissions to perform the request.\n- `404 - Not Found` The requested resource doesn't exist.\n- `429 - Too Many Requests` Too many requests hit the API too quickly. We recommend an exponential backoff of your requests.\n- `500, 502, 503, 504 - Server Errors` Something went wrong on R4's end.\n## Error codes\nBelow is a list of possible error codes that can be returned:\n<table>\n    <tr>\n      <td>Code</td>\n      <td>Description</td>\n    </tr>\n    <tr>\n      <td>`ACCOUNT_NOT_FOUND`</td>\n      <td>The account informed was not found.</td>\n    </tr>\n    <tr>\n      <td>`PROFILE_NOT_FOUND`</td>\n      <td>The profile informed was not found.</td>\n    </tr>\n    <tr>\n      <td>`UUID_INVALID`</td>\n      <td>The uuid informed was not valid.</td>\n    </tr>\n    <tr>\n      <td>`REQUEST_VALIDATOR_ERROR`</td>\n      <td>The request is not formatted correctly.</td>\n    </tr>\n    <tr>\n      <td>`UNAUTHORIZED`</td>\n      <td>The request unauthorized, no valid API key provided</td>\n    </tr>\n  </table>\n"
+    "title": "BaaS Utils",
+    "description": "# Errors\nAccount Middleware uses [HTTP response status codes](https://en.wikipedia.org/wiki/List_of_HTTP_status_codes) to indicate the success or failure of your API requests.\nIn general, there are three status code ranges you can expect:\n- `2xx` success status codes confirm that your request worked as expected\n- `4xx` error status codes indicate an error because of the information provided (e.g., a required parameter was not provided)\n- `5xx` error status codes are rare and indicate an error with R4's servers\n\n## HTTP Status code summary\nExtracted from [Stripe API codes](https://stripe.com/docs/api/errors)\n- `200 - OK` Everything worked as expected.\n- `400 - Bad Request` The request was unacceptable, often due to missing a required parameter.\n- `401 - Unauthorized` No valid API key provided.\n- `403 - Forbidden` The API key doesn't have permissions to perform the request.\n- `404 - Not Found` The requested resource doesn't exist.\n- `429 - Too Many Requests` Too many requests hit the API too quickly. We recommend an exponential backoff of your requests.\n- `500, 502, 503, 504 - Server Errors` Something went wrong on R4's end.\n"
   },
   "servers": [
     {
       "description": "Development",
-      "url": "https://api.dev.xpto.com"
+      "url": "https://develop.r4digital.cloud/utils"
     },
     {
       "description": "Production",
-      "url": "https://api.xpto.com"
+      "url": "https://api.r4digital.cloud/utils"
     }
   ],
   "tags": [
@@ -21,144 +21,95 @@
     }
   ],
   "paths": {
-    "/upload/{id}": {
-      "put": {
+    "/operation-rules": {
+      "get": {
+        "description": "Rules affect the times and days when operations are available",
         "tags": [
-          "Upload"
+          "Operation Rules"
         ],
-        "summary": "Upload file",
-        "description": "Upload file",
-        "security": [
-          {
-            "BearerAuth": []
-          }
-        ],
+        "summary": "Operation rules",
         "parameters": [
           {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "description": "Upload request ID",
-            "example": "76c183dd-6b37-49ec-a798-e0b19ece8cbe",
+            "in": "header",
+            "name": "Authorization",
+            "description": "Bearer token",
             "schema": {
               "type": "string"
-            }
+            },
+            "required": true,
+            "example": "Bearer eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSlicVN5VzljIn0"
+          },
+          {
+            "in": "query",
+            "name": "status",
+            "description": "Filter rules by status",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "ACTIVE",
+                "INACTIVE"
+              ]
+            },
+            "example": "INACTIVE"
           }
         ],
-        "requestBody": {
-          "description": "Corpo de requisi\u00e7\u00e3o para enviar um arquivo.",
-          "required": true,
-          "content": {
-            "multipart/form-data": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "file": {
-                    "type": "string",
-                    "format": "binary"
-                  }
-                }
-              }
-            }
-          }
-        },
         "responses": {
-          "204": {
-            "description": "Uploaded successfully."
-          },
-          "400": {
-            "description": "Upload failed.",
+          "200": {
+            "description": "Rules successfully listed",
             "content": {
               "application/json": {
                 "schema": {
-                  "oneOf": [
-                    {
-                      "title": "Invalid UUID",
-                      "properties": {
-                        "message": {
-                          "description": "Error message",
-                          "type": "string",
-                          "example": "Invalid uuid."
-                        },
-                        "code": {
-                          "type": "string",
-                          "description": "Error code",
-                          "example": "INVALID_UUID"
-                        }
-                      }
-                    },
-                    {
-                      "title": "Invalid File Size Error",
-                      "properties": {
-                        "message": {
-                          "description": "Error message",
-                          "type": "string",
-                          "example": "Invalid file size."
-                        },
-                        "code": {
-                          "type": "string",
-                          "description": "Error code",
-                          "example": "INVALID_FILE_SIZE"
-                        }
-                      }
-                    },
-                    {
-                      "title": "Invalid Mime Type Error",
-                      "properties": {
-                        "message": {
-                          "description": "Error message",
-                          "type": "string",
-                          "example": "Invalid mime type."
-                        },
-                        "code": {
-                          "type": "string",
-                          "description": "Error code",
-                          "example": "INVALID_MIME_TYPE"
-                        }
-                      }
-                    }
-                  ]
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Error with types [NotFound].",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "oneOf": [
-                    {
-                      "title": "Not Found",
-                      "properties": {
-                        "error": {
-                          "type": "object",
-                          "properties": {
-                            "code": {
-                              "type": "string",
-                              "title": "Error code",
-                              "description": "The type of error",
-                              "example": "NOT_FOUND",
-                              "enum": [
-                                "NOT_FOUND"
-                              ]
-                            },
-                            "message": {
-                              "type": "string",
-                              "title": "Error message",
-                              "description": "Describes a message informing a reason for the error",
-                              "example": "Unable to found the requested account"
-                            },
-                            "status_code": {
-                              "type": "number",
-                              "description": "Error status code",
-                              "example": "404"
-                            }
-                          }
-                        }
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "format": "uuid",
+                        "example": "0938e85f-c188-464c-a1c2-c19bc660f93a"
+                      },
+                      "name": {
+                        "type": "string",
+                        "example": "TED"
+                      },
+                      "description": {
+                        "type": "string",
+                        "example": "TED 7h-17h"
+                      },
+                      "start_time": {
+                        "type": "string",
+                        "description": "The time the operation becomes available",
+                        "example": "07:00:00"
+                      },
+                      "end_time": {
+                        "type": "string",
+                        "description": "The time the operation becomes unavailable",
+                        "example": "17:00:00"
+                      },
+                      "is_business_days_only": {
+                        "type": "boolean",
+                        "description": "If true, the operation is only available on business days",
+                        "example": true
+                      },
+                      "status": {
+                        "type": "string",
+                        "enum": [
+                          "ACTIVE",
+                          "INACTIVE"
+                        ],
+                        "example": "ACTIVE"
+                      },
+                      "created_at": {
+                        "type": "string",
+                        "example": "2021-07-23T16:58:27.000Z"
+                      },
+                      "updated_at": {
+                        "type": "string",
+                        "description": "The date the rule was last updated",
+                        "example": "2022-10-20T12:51:18.000Z"
                       }
                     }
-                  ]
+                  }
                 }
               }
             }
@@ -185,7 +136,7 @@
                           "type": "string",
                           "title": "Error message",
                           "description": "Describes a message informing a reason for the error",
-                          "example": "Unexpected error with our service"
+                          "example": "Internal server failure"
                         },
                         "status_code": {
                           "type": "number",
