@@ -1851,6 +1851,23 @@
                             "type": "string",
                             "description": "Update date of statement.",
                             "example": "2021-04-06T22:10:10Z"
+                          },
+                          "open_banking": {
+                            "type": "boolean",
+                            "description": "Indicates that the transaction was initiated in the Open Banking.",
+                            "example": true
+                          },
+                          "initiation_channel": {
+                            "type": "string",
+                            "description": "The property indicates the transaction initiation channel.",
+                            "enum": [
+                              "AGENCY",
+                              "APP",
+                              "ATM",
+                              "CALL_CENTER",
+                              "INTERNET_BANKING"
+                            ],
+                            "example": "AGENCY"
                           }
                         }
                       }
