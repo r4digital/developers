@@ -27,6 +27,475 @@
   ],
   "paths": {
     "/persons/{id}": {
+      "patch": {
+        "tags": [
+          "Person"
+        ],
+        "summary": "Update person by id",
+        "description": "Update a person from id.",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "description": "Update Person.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "person": {
+                    "type": "object",
+                    "description": "Person holder details.\n",
+                    "properties": {
+                      "full_name": {
+                        "type": "string",
+                        "description": "Name from person.",
+                        "example": "Jonh"
+                      },
+                      "document_number": {
+                        "type": "number",
+                        "description": "The value of document.",
+                        "example": 81893643085
+                      },
+                      "secondary_document_number": {
+                        "type": "string",
+                        "description": "The value of the secondary document.",
+                        "example": "5256856547"
+                      },
+                      "secondary_document_type": {
+                        "type": "string",
+                        "description": "The Type of the secondary document.",
+                        "enum": [
+                          "CNH",
+                          "RG"
+                        ]
+                      },
+                      "marital_status": {
+                        "type": "string",
+                        "enum": [
+                          "MARRIED",
+                          "CONCUBINAGE",
+                          "PARTIAL_COMMUNITY_PROPERTY_REGIME",
+                          "FULL_COMMUNITY_PROPERTY_REGIME",
+                          "DESQUITADO",
+                          "DIVORCED",
+                          "LEGAL_SEPARATION",
+                          "SINGLE",
+                          "PARTIAL_SEPARATION_OF_PROPERTY_REGIME",
+                          "FULL_SEPARATION_OF_PROPERTY_REGIME",
+                          "WIDOWED"
+                        ]
+                      },
+                      "nationality": {
+                        "type": "string",
+                        "description": "The nationality of the person.",
+                        "example": "BRASILEIRA"
+                      },
+                      "birth_date": {
+                        "type": "string",
+                        "description": "The birth date of the person.",
+                        "format": "date",
+                        "example": "2000-01-01"
+                      },
+                      "politically_exposed": {
+                        "type": "boolean",
+                        "description": "If the person is politically exposed."
+                      }
+                    }
+                  },
+                  "parent": {
+                    "type": "object",
+                    "description": "Parent details from person.\n",
+                    "properties": {
+                      "name": {
+                        "type": "string",
+                        "example": "Marie"
+                      },
+                      "document_number": {
+                        "type": "number",
+                        "description": "The value of Document.",
+                        "example": 81893643085
+                      },
+                      "type": {
+                        "type": "string",
+                        "enum": [
+                          "SPOUSE",
+                          "GROUP",
+                          "MOTHER",
+                          "FATHER",
+                          "PARTNERSHIP",
+                          "PARTNERSHIP_BACEN"
+                        ]
+                      },
+                      "politically_exposed": {
+                        "type": "boolean",
+                        "description": "If the parent is politically exposed."
+                      }
+                    }
+                  },
+                  "address": {
+                    "type": "object",
+                    "description": "Address from holder details.\n",
+                    "properties": {
+                      "uf": {
+                        "type": "string",
+                        "description": "The state of the person.",
+                        "example": "SP"
+                      },
+                      "city": {
+                        "type": "string",
+                        "description": "The city of the person.",
+                        "example": "S\u00e3o Paulo"
+                      },
+                      "district": {
+                        "type": "string",
+                        "description": "The district of the person.",
+                        "example": "Morumbi"
+                      },
+                      "zip_code": {
+                        "type": "string",
+                        "description": "The CEP of the person.",
+                        "example": "05653-160"
+                      },
+                      "street_name": {
+                        "type": "string",
+                        "description": "The district of the person.",
+                        "example": "Av. Padre Lebret"
+                      },
+                      "street_number": {
+                        "type": "string",
+                        "description": "The street number of the person.",
+                        "example": "123"
+                      },
+                      "complement_description": {
+                        "type": "string",
+                        "description": "The complement description of the person.",
+                        "example": "AP 321",
+                        "maxLength": 10
+                      },
+                      "ddd_number": {
+                        "type": "string",
+                        "description": "The DDD from phone of the person.",
+                        "example": "21"
+                      },
+                      "phone_number": {
+                        "type": "string",
+                        "description": "The number from phone of the person.",
+                        "example": "998877665"
+                      },
+                      "complete_phone_number": {
+                        "type": "string",
+                        "description": "The DDD + number from phone of the person.",
+                        "example": "21998877665"
+                      },
+                      "email_address": {
+                        "type": "string",
+                        "description": "The email from person.",
+                        "example": "test@email.com"
+                      },
+                      "public_place": {
+                        "type": "string",
+                        "description": "Optional additional address information",
+                        "enum": [
+                          "AVENIDA",
+                          "CHACARA",
+                          "CONJUNTO",
+                          "COLONIA",
+                          "COMUNIDADE",
+                          "CONJUNTO_HABITACIONAL",
+                          "DISTRITO",
+                          "ESTRADA",
+                          "ESTANCIA",
+                          "FAVELA",
+                          "FAZENDA",
+                          "LOTEAMENTO",
+                          "RUA",
+                          "RESIDENCIAL",
+                          "RODOVIA",
+                          "SITIO",
+                          "TERMINAL",
+                          "TRECHO",
+                          "TREVO",
+                          "TRAVESSA",
+                          "UNIDADE",
+                          "VIA",
+                          "VILA"
+                        ],
+                        "example": "AVENIDA"
+                      }
+                    }
+                  },
+                  "profession": {
+                    "type": "object",
+                    "description": "Profession from holder details.\n",
+                    "properties": {
+                      "cbo_code": {
+                        "type": "string",
+                        "description": "Code identifying of the job.",
+                        "example": "084"
+                      },
+                      "description": {
+                        "type": "string",
+                        "description": "Description of the job."
+                      },
+                      "remuneration": {
+                        "type": "number",
+                        "format": "double",
+                        "description": "Remuneration of the job.",
+                        "example": 1000
+                      },
+                      "company_name": {
+                        "type": "string",
+                        "description": "Name from company of the job.",
+                        "example": "R4"
+                      },
+                      "company_document": {
+                        "type": "number",
+                        "description": "Document from company of the job.",
+                        "example": 123456789
+                      },
+                      "occupation_type": {
+                        "type": "string",
+                        "description": "Type occupation from company of the job.",
+                        "enum": [
+                          "RETIRED",
+                          "EMPLOYEE",
+                          "SELF_EMPLOYED",
+                          "CO_OWNER",
+                          "FREELANCER",
+                          "OTHERS"
+                        ],
+                        "example": "FREELANCER"
+                      },
+                      "admission_date": {
+                        "type": "string",
+                        "description": "Admission date occupation of the job.",
+                        "format": "date",
+                        "example": "2000-01-01"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "string",
+              "format": "uuid-v4",
+              "example": "6d814c28-fe73-443c-bfe0-48d518aa32fa"
+            },
+            "description": "Unique identifier of the person.",
+            "required": true
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Update person successfully."
+          },
+          "400": {
+            "description": "Error with types [BadRequest].",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "title": "Bad Request",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "BAD_REQUEST",
+                          "enum": [
+                            "BAD_REQUEST"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "Invalid request params"
+                        },
+                        "status_code": {
+                          "type": "number",
+                          "description": "Error status code",
+                          "example": "400"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Error with types [Unauthorized].",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "title": "Unauthorized",
+                      "properties": {
+                        "error": {
+                          "type": "object",
+                          "properties": {
+                            "code": {
+                              "type": "string",
+                              "title": "Error code",
+                              "description": "The type of error",
+                              "example": "UNAUTHORIZED",
+                              "enum": [
+                                "UNAUTHORIZED"
+                              ]
+                            },
+                            "message": {
+                              "type": "string",
+                              "title": "Error message",
+                              "description": "Describes a message informing a reason for the error",
+                              "example": "Unauthorized"
+                            },
+                            "status_code": {
+                              "type": "number",
+                              "description": "Error status code",
+                              "example": "401"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Error with types [Forbidden].",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "title": "Forbidden",
+                      "properties": {
+                        "error": {
+                          "type": "object",
+                          "properties": {
+                            "code": {
+                              "type": "string",
+                              "title": "Error code",
+                              "description": "The type of error",
+                              "example": "FORBIDDEN",
+                              "enum": [
+                                "FORBIDDEN"
+                              ]
+                            },
+                            "message": {
+                              "type": "string",
+                              "title": "Error message",
+                              "description": "Describes a message informing a reason for the error",
+                              "example": "Forbidden"
+                            },
+                            "status_code": {
+                              "type": "number",
+                              "description": "Error status code",
+                              "example": "403"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Error with types [Not Found].",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "title": "Not Found",
+                      "properties": {
+                        "error": {
+                          "type": "object",
+                          "properties": {
+                            "code": {
+                              "type": "string",
+                              "title": "Error code",
+                              "description": "The type of error",
+                              "example": "NOT_FOUND",
+                              "enum": [
+                                "NOT_FOUND"
+                              ]
+                            },
+                            "message": {
+                              "type": "string",
+                              "title": "Error message",
+                              "description": "Describes a message informing a reason for the error",
+                              "example": "Unable to found the requested account"
+                            },
+                            "status_code": {
+                              "type": "number",
+                              "description": "Error status code",
+                              "example": "404"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error with internal server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "title": "Internal Server Error",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "INTERNAL_SERVER_ERROR",
+                          "enum": [
+                            "INTERNAL_SERVER_ERROR"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "Unexpected error with our service"
+                        },
+                        "status_code": {
+                          "type": "number",
+                          "description": "Error status code",
+                          "example": "500"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      },
       "get": {
         "tags": [
           "Person"
