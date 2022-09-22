@@ -2375,13 +2375,13 @@
                 "properties": {
                   "kind": {
                     "type": "string",
-                    "description": "Kind of the Pix key.\n",
                     "enum": [
                       "CELLPHONE",
                       "CPF",
                       "CNPJ",
                       "EMAIL"
                     ],
+                    "description": "[CPF, CNPJ] are only allowed if claim [PORTABILITY].\n",
                     "example": "CELLPHONE"
                   },
                   "key": {
