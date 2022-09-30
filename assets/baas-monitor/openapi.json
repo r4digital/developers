@@ -16,7 +16,7 @@
     }
   ],
   "paths": {
-    "/v1/heath-check": {
+    "/v1/health-check": {
       "get": {
         "tags": [
           "Services"
