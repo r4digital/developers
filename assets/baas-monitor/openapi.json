@@ -11,7 +11,7 @@
     }
   ],
   "paths": {
-    "/services": {
+    "/v1/heath-check": {
       "get": {
         "tags": [
           "Services"
