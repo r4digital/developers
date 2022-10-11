@@ -406,10 +406,6 @@
                   "account_type": {
                     "type": "string",
                     "enum": [
-                      "CHECKING_ACCOUNT",
-                      "SAVINGS_ACCOUNT",
-                      "CONTROL_ACCOUNT",
-                      "GRAPHIC_ACCOUNT",
                       "PAYMENT_ACCOUNT"
                     ],
                     "example": "PAYMENT_ACCOUNT"
@@ -469,10 +465,6 @@
                     "account_type": {
                       "type": "string",
                       "enum": [
-                        "CHECKING_ACCOUNT",
-                        "SAVINGS_ACCOUNT",
-                        "CONTROL_ACCOUNT",
-                        "GRAPHIC_ACCOUNT",
                         "PAYMENT_ACCOUNT"
                       ],
                       "example": "PAYMENT_ACCOUNT"
