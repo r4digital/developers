@@ -121,12 +121,7 @@
                       "type": {
                         "type": "string",
                         "enum": [
-                          "SPOUSE",
-                          "GROUP",
-                          "MOTHER",
-                          "FATHER",
-                          "PARTNERSHIP",
-                          "PARTNERSHIP_BACEN"
+                          "MOTHER"
                         ]
                       },
                       "politically_exposed": {
@@ -1515,12 +1510,7 @@
                       "type": {
                         "type": "string",
                         "enum": [
-                          "SPOUSE",
-                          "GROUP",
-                          "MOTHER",
-                          "FATHER",
-                          "PARTNERSHIP",
-                          "PARTNERSHIP_BACEN"
+                          "MOTHER"
                         ]
                       },
                       "politically_exposed": {
