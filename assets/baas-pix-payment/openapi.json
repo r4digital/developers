@@ -857,8 +857,8 @@
                                   "example": "05486587"
                                 },
                                 "withdraw_ispb": {
-                                  "type": "string",
-                                  "example": "11476673"
+                                  "type": "number",
+                                  "example": 11476673
                                 },
                                 "additional_data": {
                                   "type": "string",
@@ -1961,8 +1961,8 @@
                                             "example": "05486587"
                                           },
                                           "withdraw_ispb": {
-                                            "type": "string",
-                                            "example": "11476673"
+                                            "type": "number",
+                                            "example": 11476673
                                           },
                                           "additional_data": {
                                             "type": "string",
@@ -3018,8 +3018,8 @@
                                       "example": "05486587"
                                     },
                                     "withdraw_ispb": {
-                                      "type": "string",
-                                      "example": "11476673"
+                                      "type": "number",
+                                      "example": 11476673
                                     },
                                     "additional_data": {
                                       "type": "string",
@@ -4118,8 +4118,8 @@
                                       "example": "05486587"
                                     },
                                     "withdraw_ispb": {
-                                      "type": "string",
-                                      "example": "11476673"
+                                      "type": "number",
+                                      "example": 11476673
                                     },
                                     "additional_data": {
                                       "type": "string",
