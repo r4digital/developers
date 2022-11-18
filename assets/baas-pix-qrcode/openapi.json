@@ -271,8 +271,7 @@
                                 "withdraw_ispb": {
                                   "type": "integer",
                                   "description": "Service provider",
-                                  "maxLength": 8,
-                                  "example": "44568458"
+                                  "example": 44568458
                                 },
                                 "agent": {
                                   "type": "string",
@@ -618,10 +617,10 @@
                               "example": 4587.92
                             },
                             "withdraw_ispb": {
-                              "type": "string",
-                              "description": "ISPB from PSS. When provided it means the QR code is for \"Pix Saque\".",
+                              "type": "integer",
                               "maxLength": 8,
-                              "example": "44568458"
+                              "description": "ISPB from PSS. When provided it means the QR code is for \"Pix Saque\".",
+                              "example": 44568458
                             },
                             "additional_data": {
                               "type": "string"
@@ -1362,10 +1361,10 @@
                     "maxLength": 64
                   },
                   "withdraw_ispb": {
-                    "type": "string",
+                    "type": "integer",
                     "description": "ISPB from PSS. When provided it means the QR code is for \"Pix Saque\".",
                     "maxLength": 8,
-                    "example": "44568458"
+                    "example": 44568458
                   }
                 }
               }
