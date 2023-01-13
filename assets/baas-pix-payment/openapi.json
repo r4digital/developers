@@ -3286,7 +3286,7 @@
             }
           },
           "400": {
-            "description": "Error with types [ValidationFailed, InvalidDataError, PaymentAlreadyReturnedError, InvalidPaymentValueError, PaymentIsNotACreditError].",
+            "description": "Error with types [ValidationFailed, InvalidDataError, PaymentAlreadyReturnedError, InvalidPaymentValueError, PaymentIsNotACreditError, ReturnPaymentDeadlineExceededError].",
             "content": {
               "application/json": {
                 "schema": {
@@ -3413,6 +3413,26 @@
                           "example": "It is not possible to return a debit"
                         }
                       }
+                    },
+                    {
+                      "title": "Bad Request",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "RETURN_PAYMENT_DEADLINE_EXCEEDED",
+                          "enum": [
+                            "RETURN_PAYMENT_DEADLINE_EXCEEDED"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "The limit of days to return the payment has expired"
+                        }
+                      }
                     }
                   ]
                 },
@@ -3445,6 +3465,12 @@
                     "value": {
                       "code": "PAYMENT_IS_NOT_A_CREDIT",
                       "message": "It is not possible to return a debit"
+                    }
+                  },
+                  "Example 6 - ReturnPaymentDeadlineExceededError": {
+                    "value": {
+                      "code": "RETURN_PAYMENT_DEADLINE_EXCEEDED",
+                      "message": "The limit of days to return the payment has expired"
                     }
                   }
                 }
