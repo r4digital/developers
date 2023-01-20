@@ -1462,6 +1462,16 @@
                       "type": "integer",
                       "example": 15230
                     },
+                    "blocked_value": {
+                      "type": "number",
+                      "description": "Blocked amount",
+                      "example": 0
+                    },
+                    "total_value": {
+                      "type": "number",
+                      "description": "Total amount of the account, corresponds to the sum of value and blocked_value",
+                      "example": 0
+                    },
                     "created_at": {
                       "type": "string",
                       "description": "Creation date of balance.",
