@@ -1,5 +1,5 @@
 :root {
-  --background: #F73932;
+  --background: #545252;
 }
 
 body {
@@ -7,10 +7,50 @@ body {
   font-family: "Segoe UI", "SegoeUI", "Helvetica Neue", Helvetica, Arial, sans-serif;
   min-width: 320px;
   color: #fff;
-  background: linear-gradient(22deg, rgba(60,10,10,1) 10%, rgba(91,18,17,1) 35%, rgba(175,39,35,1) 83%, rgba(247,57,50,1) 100%);
+  background: linear-gradient(0deg,rgba(0,0,0,0) 0,#000 100%);
   background-attachment: fixed;
   margin: 0;
   padding: 0;
+}
+
+#logo {
+  height: 70px;
+  margin-top: 15px;
+  margin-left: 15px;
+}
+#linkApi{
+ color: white!important;
+}
+.btn-hover:hover{
+background-color: whitesmoke!important;
+color: #292929!important;
+}
+.ms-CommandButton-button {
+  width: 100%;
+}
+
+.ms-CommandButton.ms-CommandButton--pivot.is-active:before, .ms-CommandButton.ms-CommandButton--pivot:hover:before{
+  background-color: transparent!important;
+}
+
+.apis-content.apis-content-box{
+  -webkit-box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.24);
+  -moz-box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.24);
+  box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.24);
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  border-radius: 10px;
+  background-color: #292929;
+}
+.ms-CommandButton-label{
+  margin-left: 5%;
+  font-size: 23px;
+  margin-top: 32px;
+  font-weight: bold;
+}
+
+.header-content{
+  width: 100%;
 }
 
 a { text-decoration: none; }
