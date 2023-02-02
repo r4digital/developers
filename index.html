@@ -4,8 +4,9 @@ layout: home
 
 <div class="ms-CommandBar">
   <div class="ms-CommandBar-mainArea">
-    <div class="ms-CommandButton ms-CommandButton--pivot is-active">
+    <div class="ms-CommandButton ms-CommandButton--pivot header-content is-active">
       <a class="ms-CommandButton-button" href="/" >
+        <img src="https://www.randon.com.br/media/1317/empresas_randon_transparente.png" id="logo">
         <span class="ms-CommandButton-label">{{ site.title }}</span>
       </a>
     </div>
@@ -23,7 +24,7 @@ layout: home
             <p>{{ item.description }}</p>
           </div>
           <div class="col-12 align-self-end p-3">
-            <a class="btn btn-" href="{{ item.url }}">
+            <a class="btn btn- btn-hover" href="{{ item.url }}">
               Access api
             </a>
           </div>
@@ -44,7 +45,7 @@ layout: home
         </div>
         <div class="col-12 col-lg-6 p-3">
           <h5>Development:</h5>
-          <code>https://develop.r4digital.cloud</code>
+          <code id="linkApi">https://develop.r4digital.cloud</code>
         </div>
       </div>
   </div>
