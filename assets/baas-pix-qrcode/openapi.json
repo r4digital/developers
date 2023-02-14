@@ -67,7 +67,7 @@
                 "description": "Params to decode a QR Code",
                 "required": [
                   "payload",
-                  "document_number"
+                  "account_id"
                 ],
                 "properties": {
                   "payload": {
