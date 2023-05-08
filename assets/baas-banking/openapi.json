@@ -3,7 +3,7 @@
   "info": {
     "version": "1.0.5",
     "title": "Baas Banking",
-    "description": "**Description**: Api responsible for managing accounts, statements & balance\n# Schemas\n<a name=\"account_statuses\"></a>\n\n  ## Account statuses\n\n  <table>\n    <tr>\n      <td>Status</td>\n      <td>Description</td>\n    </tr>\n    <tr>\n      <td>`BLOCKED`</td>\n      <td>Informs that the account is blocked and can not do any transaction.</td>\n    </tr>\n    <tr>\n      <td>`ENABLED`</td>\n      <td>Informs that the account is enabled and ready for use.</td>\n    </tr>\n    <tr>\n      <td>`CANCELED`</td>\n      <td>Informs that the account is canceled and not able to do anything.</td>\n    </tr>\n  </table>\n\n\n# Errors\nAccount Middleware uses [HTTP response status codes](https://en.wikipedia.org/wiki/List_of_HTTP_status_codes) to indicate the success or failure of your API requests.\nIn general, there are three status code ranges you can expect:\n- `2xx` success status codes confirm that your request worked as expected\n- `4xx` error status codes indicate an error because of the information provided (e.g., a required parameter was not provided)\n- `5xx` error status codes are rare and indicate an error with R4's servers\n\n## HTTP Status code summary\nExtracted from [Stripe API codes](https://stripe.com/docs/api/errors)\n- `200 - OK` Everything worked as expected.\n- `400 - Bad Request` The request was unacceptable, often due to missing a required parameter.\n- `401 - Unauthorized` No valid API key provided.\n- `403 - Forbidden` The API key doesn't have permissions to perform the request.\n- `404 - Not Found` The requested resource doesn't exist.\n- `429 - Too Many Requests` Too many requests hit the API too quickly. We recommend an exponential backoff of your requests.\n- `500, 502, 503, 504 - Server Errors` Something went wrong on R4's end.\n## Error codes\nBelow is a list of possible error codes that can be returned:\n<table>\n    <tr>\n      <td>Code</td>\n      <td>Description</td>\n    </tr>\n    <tr>\n      <td>`ACCOUNT_NOT_FOUND`</td>\n      <td>The account informed was not found.</td>\n    </tr>\n    <tr>\n      <td>`PROFILE_NOT_FOUND`</td>\n      <td>The profile informed was not found.</td>\n    </tr>\n    <tr>\n      <td>`UUID_INVALID`</td>\n      <td>The uuid informed was not valid.</td>\n    </tr>\n    <tr>\n      <td>`REQUEST_VALIDATOR_ERROR`</td>\n      <td>The request is not formatted correctly.</td>\n    </tr>\n    <tr>\n      <td>`UNAUTHORIZED`</td>\n      <td>The request unauthorized, no valid API key provided</td>\n    </tr>\n  </table>\n"
+    "description": "**Description**: Api responsible for managing accounts, statements & balance\n\n# Schemas\n\n<a name=\"account_statuses\"></a>\n\n  ## Account statuses\n\n  <table>\n    <tr>\n      <td>Status</td>\n      <td>Description</td>\n    </tr>\n    <tr>\n      <td>`BLOCKED`</td>\n      <td>Informs that the account is blocked and can not do any transaction.</td>\n    </tr>\n    <tr>\n      <td>`ENABLED`</td>\n      <td>Informs that the account is enabled and ready for use.</td>\n    </tr>\n    <tr>\n      <td>`CANCELED`</td>\n      <td>Informs that the account is canceled and not able to do anything.</td>\n    </tr>\n  </table>\n\n# Status Change Notification\n\nSome statuses changes will fire a notification call to the client.\n\nTo receive this notifications, its necessary to request the registration of the service URL which will receive the notification object.\n\nThis object will be sent as a HTTP call with the POST method, of which the client must respond with a 200 status and within 5 seconds.\n\n| Event Type                        | Description                                                                    |\n|---------------------------------- | ------------------------------------------------------------------------------ |\n| `account_block-balance-created`   | Block balance was created                                                      |\n| `account_block-balance-cancelled` | Block balance was cancelled and the blocked value returned to user the account |\n| `account_block-balance-unblocked` | Block balance was unblocked and the blocked value returned to user the account |\n| `account_block-balance-captured`  | Block balance was captured from another credit event                           |\n\nFor block balance request more details use the route `GET /accounts/{account_id}/blocks/{block_id}`\n\n### Notification Call Scheme\n\n#### *Header*\n```json\n{\n  X-R4-Application: GUID, // Application Unique Identifier\n  X-R4-Delivery: GUID, // Attempt Unique Identifier\n  X-R4-Event: {event_type}, // Event Type for the Notification (as described in Event Type table)\n  User-Agent: R4-Hookshot\n}\n```\n\n#### *Body*\n```\n{\n  \"object_kind\": \"{event_type}\", // Event Type for the Notification (as described in Event Type table)\n  \"object_id\": \"GUID\", // Payment Unique Identifier\n  \"account_id\": \"GUID\" // Account Unique Identifier\n  \"application_id\": \"GUID\" // Application Unique Identifier\n}\n```\n\n# Errors\n\nAccount Middleware uses [HTTP response status codes](https://en.wikipedia.org/wiki/List_of_HTTP_status_codes) to indicate the success or failure of your API requests.\n\nIn general, there are three status code ranges you can expect:\n\n- `2xx` success status codes confirm that your request worked as expected\n\n- `4xx` error status codes indicate an error because of the information provided (e.g., a required parameter was not provided)\n\n- `5xx` error status codes are rare and indicate an error with R4's servers\n\n\n## HTTP Status code summary\n\nExtracted from [Stripe API codes](https://stripe.com/docs/api/errors)\n\n- `200 - OK` Everything worked as expected.\n\n- `400 - Bad Request` The request was unacceptable, often due to missing a required parameter.\n\n- `401 - Unauthorized` No valid API key provided.\n\n- `403 - Forbidden` The API key doesn't have permissions to perform the request.\n\n- `404 - Not Found` The requested resource doesn't exist.\n\n- `429 - Too Many Requests` Too many requests hit the API too quickly. We recommend an exponential backoff of your requests.\n\n- `500, 502, 503, 504 - Server Errors` Something went wrong on R4's end.\n\n## Error codes\n\nBelow is a list of possible error codes that can be returned:\n\n<table>\n    <tr>\n      <td>Code</td>\n      <td>Description</td>\n    </tr>\n    <tr>\n      <td>`ACCOUNT_NOT_FOUND`</td>\n      <td>The account informed was not found.</td>\n    </tr>\n    <tr>\n      <td>`BLOCK_BALANCE_NOT_FOUND`</td>\n      <td>The block balance informed was not found.</td>\n    </tr>\n    <tr>\n      <td>`PROFILE_NOT_FOUND`</td>\n      <td>The profile informed was not found.</td>\n    </tr>\n    <tr>\n      <td>`UUID_INVALID`</td>\n      <td>The uuid informed was not valid.</td>\n    </tr>\n    <tr>\n      <td>`REQUEST_VALIDATOR_ERROR`</td>\n      <td>The request is not formatted correctly.</td>\n    </tr>\n    <tr>\n      <td>`UNAUTHORIZED`</td>\n      <td>The request unauthorized, no valid API key provided</td>\n    </tr>\n  </table>\n"
   },
   "servers": [
     {
@@ -1642,6 +1642,392 @@
                           "title": "Error message",
                           "description": "Describes a message informing a reason for the error",
                           "example": "Profile not found"
+                        },
+                        "status_code": {
+                          "type": "number",
+                          "description": "Error status code",
+                          "example": "404"
+                        }
+                      }
+                    },
+                    {
+                      "title": "Account Not Found",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "ACCOUNT_NOT_FOUND",
+                          "enum": [
+                            "ACCOUNT_NOT_FOUND"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "Account not found"
+                        },
+                        "status_code": {
+                          "type": "number",
+                          "description": "Error status code",
+                          "example": "404"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error with internal server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "title": "Internal Server Error",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "INTERNAL_SERVER_ERROR",
+                          "enum": [
+                            "INTERNAL_SERVER_ERROR"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "Unexpected error with our service"
+                        },
+                        "status_code": {
+                          "type": "number",
+                          "description": "Error status code",
+                          "example": "500"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/accounts/{account_id}/blocks/{block_id}": {
+      "get": {
+        "tags": [
+          "Account"
+        ],
+        "summary": "Retrieves the block balance request by a given block id",
+        "description": "Retrieves the block balance request",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "account_id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "Unique identifier of the account.",
+              "format": "uuid-v4",
+              "example": "6d814c28-fe73-443c-bfe0-48d518aa32fa"
+            }
+          },
+          {
+            "in": "path",
+            "name": "block_id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "Unique identifier of the block balance request.",
+              "format": "uuid-v4",
+              "example": "6d814c28-fe73-443c-bfe0-48d518aa32fa"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Account balance successfully retrieved.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "description": "Block balance request identifier",
+                      "format": "uuid-v4",
+                      "example": "6d814c28-fe73-443c-bfe0-48d518aa32fa"
+                    },
+                    "account_id": {
+                      "type": "string",
+                      "description": "Unique identifier of the account.",
+                      "format": "uuid-v4",
+                      "example": "6d814c28-fe73-443c-bfe0-48d518aa32fa"
+                    },
+                    "partner_id": {
+                      "type": "string",
+                      "description": "Unique identifier of partner id.",
+                      "format": "uuid-v4",
+                      "example": "e363aa8b-5b4d-0aba-920d-54c1afce2643"
+                    },
+                    "requested_value": {
+                      "type": "number",
+                      "description": "Value to block.",
+                      "example": 200
+                    },
+                    "pending_value": {
+                      "type": "number",
+                      "description": "Pending value to block.",
+                      "example": 0
+                    },
+                    "unblocked_value": {
+                      "type": "number",
+                      "description": "Value unblocked.",
+                      "example": 0
+                    },
+                    "blocked_value": {
+                      "type": "number",
+                      "description": "Blocked value.",
+                      "example": 200
+                    },
+                    "expire_at": {
+                      "type": "string",
+                      "description": "Date of blocked request expired.",
+                      "nullable": true,
+                      "example": "2020-08-06T22:10:00Z"
+                    },
+                    "unlocked_at": {
+                      "type": "string",
+                      "description": "Date of blocked request unlocked.",
+                      "nullable": true,
+                      "example": "2020-08-06T22:10:00Z"
+                    },
+                    "created_at": {
+                      "type": "string",
+                      "description": "Creation date of statement.",
+                      "example": "2020-08-06T22:10:00Z"
+                    },
+                    "updated_at": {
+                      "type": "string",
+                      "description": "Update date of statement.",
+                      "example": "2021-04-06T22:10:10Z"
+                    },
+                    "kind": {
+                      "type": "string",
+                      "description": "Kind of block balance request",
+                      "enum": [
+                        "PRELIMINARY",
+                        "TRANSACTIONAL"
+                      ],
+                      "example": "PRELIMINARY"
+                    },
+                    "application_id": {
+                      "type": "string",
+                      "description": "Application id from account",
+                      "format": "uuid-v4",
+                      "example": "6d814c28-fe73-443c-bfe0-48d518aa32fa"
+                    },
+                    "blocked_balances": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "description": "Describes the properties of the blocked balances.",
+                        "properties": {
+                          "id": {
+                            "type": "number",
+                            "description": "Blocked balances identifier",
+                            "example": 1
+                          },
+                          "block_balance_request_id": {
+                            "type": "string",
+                            "description": "Block balance request identifier",
+                            "format": "uuid-v4",
+                            "example": "6d814c28-fe73-443c-bfe0-48d518aa32fa"
+                          },
+                          "value": {
+                            "type": "number",
+                            "description": "Blocked value.",
+                            "example": 200
+                          },
+                          "created_at": {
+                            "type": "string",
+                            "description": "Creation date of statement.",
+                            "example": "2020-08-06T22:10:00Z"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Error with types [BadRequest, UuidError].",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "title": "Bad Request",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "BAD_REQUEST",
+                          "enum": [
+                            "BAD_REQUEST"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "Invalid request params"
+                        },
+                        "status_code": {
+                          "type": "number",
+                          "description": "Error status code",
+                          "example": "400"
+                        }
+                      }
+                    },
+                    {
+                      "title": "Uuid Error",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "UUID_INVALID",
+                          "enum": [
+                            "UUID_INVALID"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "Uuid invalid"
+                        },
+                        "status_code": {
+                          "type": "number",
+                          "description": "Error status code",
+                          "example": "400"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Error with types [Unauthorized].",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "title": "Unauthorized",
+                      "properties": {
+                        "error": {
+                          "type": "object",
+                          "properties": {
+                            "code": {
+                              "type": "string",
+                              "title": "Error code",
+                              "description": "The type of error",
+                              "example": "UNAUTHORIZED",
+                              "enum": [
+                                "UNAUTHORIZED"
+                              ]
+                            },
+                            "message": {
+                              "type": "string",
+                              "title": "Error message",
+                              "description": "Describes a message informing a reason for the error",
+                              "example": "Unauthorized"
+                            },
+                            "status_code": {
+                              "type": "number",
+                              "description": "Error status code",
+                              "example": "401"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Error with types [NotFound, AccountNotFound, BlockBalanceNotFound].",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "title": "Not Found",
+                      "properties": {
+                        "error": {
+                          "type": "object",
+                          "properties": {
+                            "code": {
+                              "type": "string",
+                              "title": "Error code",
+                              "description": "The type of error",
+                              "example": "NOT_FOUND",
+                              "enum": [
+                                "NOT_FOUND"
+                              ]
+                            },
+                            "message": {
+                              "type": "string",
+                              "title": "Error message",
+                              "description": "Describes a message informing a reason for the error",
+                              "example": "Unable to found the requested account"
+                            },
+                            "status_code": {
+                              "type": "number",
+                              "description": "Error status code",
+                              "example": "404"
+                            }
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "title": "Block Balance Not Found",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "BLOCK_BALANCE_NOT_FOUND",
+                          "enum": [
+                            "BLOCK_BALANCE_NOT_FOUND"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "Block balance not found"
                         },
                         "status_code": {
                           "type": "number",
