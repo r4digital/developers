@@ -2217,8 +2217,20 @@
                           "current_balance": {
                             "type": "number",
                             "nullable": true,
-                            "description": "Balance value after transaction.",
+                            "description": "Balance value after transaction, available value.",
                             "example": 840
+                          },
+                          "current_blocked_balance": {
+                            "type": "number",
+                            "nullable": true,
+                            "description": "Blocked Balance value after transaction, not available value.",
+                            "example": 100
+                          },
+                          "current_total_balance": {
+                            "type": "number",
+                            "nullable": true,
+                            "description": "Total of balance with current_balance more current_blocked_balance.",
+                            "example": 940
                           },
                           "history_code": {
                             "type": "integer",
@@ -2256,6 +2268,23 @@
                               "INTERNET_BANKING"
                             ],
                             "example": "AGENCY"
+                          },
+                          "status": {
+                            "type": "string",
+                            "description": "The property indicates the statement status",
+                            "enum": [
+                              "ACTIVE",
+                              "BLOCKED",
+                              "CANCELED"
+                            ],
+                            "example": "ACTIVE"
+                          },
+                          "block_balance_request_id": {
+                            "type": "string",
+                            "nullable": true,
+                            "description": "Block balance request ID",
+                            "format": "uuid-v4",
+                            "example": "6d814c28-fe73-443c-bfe0-48d518aa32fa"
                           }
                         }
                       }
