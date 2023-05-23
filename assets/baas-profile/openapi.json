@@ -52,11 +52,13 @@
                       "full_name": {
                         "type": "string",
                         "description": "Name from person.",
-                        "example": "Jonh"
+                        "example": "JONH",
+                        "maxLength": 150,
+                        "pattern": "[A-Z]{1,}(\\s{1}[A-Z]+)*$"
                       },
                       "document_number": {
                         "type": "number",
-                        "description": "The value of document.",
+                        "description": "The value of document, a valid CPF.",
                         "example": 81893643085
                       },
                       "secondary_document_number": {
@@ -91,7 +93,9 @@
                       "nationality": {
                         "type": "string",
                         "description": "The nationality of the person.",
-                        "example": "BRASILEIRA"
+                        "example": "BRASILEIRA",
+                        "maxLength": 50,
+                        "pattern": "[A-Z]{1,}(\\s{1}[A-Z]+)*$"
                       },
                       "birth_date": {
                         "type": "string",
@@ -111,7 +115,8 @@
                     "properties": {
                       "name": {
                         "type": "string",
-                        "example": "Marie"
+                        "example": "MARIE",
+                        "pattern": "[A-Z]{1,}(\\s{1}[A-Z]+)*$"
                       },
                       "document_number": {
                         "type": "number",
@@ -137,58 +142,73 @@
                       "uf": {
                         "type": "string",
                         "description": "The state of the person.",
-                        "example": "SP"
+                        "example": "SP",
+                        "maxLength": 2
                       },
                       "city": {
                         "type": "string",
                         "description": "The city of the person.",
-                        "example": "S\u00e3o Paulo"
+                        "example": "SAO PAULO",
+                        "maxLength": 100,
+                        "pattern": "^[A-Z0-9]{1,}(\\s{1}[A-Z0-9]+)*$"
                       },
                       "district": {
                         "type": "string",
                         "description": "The district of the person.",
-                        "example": "Morumbi"
+                        "example": "MORUMBI",
+                        "maxLength": 100,
+                        "pattern": "^[A-Z0-9]{1,}(\\s{1}[A-Z0-9]+)*$"
                       },
                       "zip_code": {
                         "type": "string",
                         "description": "The CEP of the person.",
-                        "example": "05653-160"
+                        "example": "05653160",
+                        "minLength": 8,
+                        "maxLength": 8
                       },
                       "street_name": {
                         "type": "string",
                         "description": "The district of the person.",
-                        "example": "Av. Padre Lebret"
+                        "example": "AV PADRE LEBRET",
+                        "maxLength": 255,
+                        "pattern": "^[A-Z0-9]{1,}(\\s{1}[A-Z0-9]+)*$"
                       },
                       "street_number": {
                         "type": "string",
                         "description": "The street number of the person.",
-                        "example": "123"
+                        "example": "123",
+                        "pattern": "^[A-Z0-9]{1,}(\\s{1}[A-Z0-9]+)*$"
                       },
                       "complement_description": {
                         "type": "string",
                         "description": "The complement description of the person.",
                         "example": "AP 321",
-                        "maxLength": 10
+                        "maxLength": 10,
+                        "pattern": "^[A-Z0-9]{1,}(\\s{1}[A-Z0-9]+)*$"
                       },
                       "ddd_number": {
                         "type": "string",
                         "description": "The DDD from phone of the person.",
-                        "example": "21"
+                        "example": "21",
+                        "maxLength": 10
                       },
                       "phone_number": {
                         "type": "string",
                         "description": "The number from phone of the person.",
-                        "example": "998877665"
+                        "example": "998877665",
+                        "maxLength": 25
                       },
                       "complete_phone_number": {
                         "type": "string",
                         "description": "The DDD + number from phone of the person.",
-                        "example": "21998877665"
+                        "example": "21998877665",
+                        "maxLength": 25
                       },
                       "email_address": {
                         "type": "string",
                         "description": "The email from person.",
-                        "example": "test@email.com"
+                        "example": "test@email.com",
+                        "maxLength": 100
                       },
                       "public_place": {
                         "type": "string",
@@ -229,11 +249,13 @@
                       "cbo_code": {
                         "type": "string",
                         "description": "Code identifying of the job.",
-                        "example": "084"
+                        "example": "084",
+                        "maxLength": 50
                       },
                       "description": {
                         "type": "string",
-                        "description": "Description of the job."
+                        "description": "Description of the job.",
+                        "maxLength": 100
                       },
                       "remuneration": {
                         "type": "number",
@@ -244,11 +266,12 @@
                       "company_name": {
                         "type": "string",
                         "description": "Name from company of the job.",
-                        "example": "R4"
+                        "example": "R4",
+                        "maxLength": 150
                       },
                       "company_document": {
                         "type": "number",
-                        "description": "Document from company of the job.",
+                        "description": "Document from company of the job, a valid CNPJ.",
                         "example": 123456789
                       },
                       "occupation_type": {
@@ -1437,11 +1460,13 @@
                       "full_name": {
                         "type": "string",
                         "description": "Name from person.",
-                        "example": "Jonh"
+                        "example": "JONH",
+                        "maxLength": 150,
+                        "pattern": "[A-Z]{1,}(\\s{1}[A-Z]+)*$"
                       },
                       "document_number": {
                         "type": "number",
-                        "description": "The value of document.",
+                        "description": "The value of document, a valid CPF.",
                         "example": 81893643085
                       },
                       "secondary_document_number": {
@@ -1476,7 +1501,9 @@
                       "nationality": {
                         "type": "string",
                         "description": "The nationality of the person.",
-                        "example": "BRASILEIRA"
+                        "example": "BRASILEIRA",
+                        "maxLength": 50,
+                        "pattern": "[A-Z]{1,}(\\s{1}[A-Z]+)*$"
                       },
                       "birth_date": {
                         "type": "string",
@@ -1500,11 +1527,13 @@
                     "properties": {
                       "name": {
                         "type": "string",
-                        "example": "Marie"
+                        "example": "MARIE",
+                        "maxLength": 150,
+                        "pattern": "[A-Z]{1,}(\\s{1}[A-Z]+)*$"
                       },
                       "document_number": {
                         "type": "number",
-                        "description": "The value of Document.",
+                        "description": "The value of Document, a valid CPF.",
                         "example": 81893643085
                       },
                       "type": {
@@ -1539,58 +1568,72 @@
                       "uf": {
                         "type": "string",
                         "description": "The state of the person.",
-                        "example": "SP"
+                        "example": "SP",
+                        "maxLength": 2
                       },
                       "city": {
                         "type": "string",
                         "description": "The city of the person.",
-                        "example": "S\u00e3o Paulo"
+                        "example": "SAO PAULO",
+                        "maxLength": 100,
+                        "pattern": "^[A-Z0-9]{1,}(\\s{1}[A-Z0-9]+)*$"
                       },
                       "district": {
                         "type": "string",
                         "description": "The district of the person.",
-                        "example": "Morumbi"
+                        "example": "MORUMBI",
+                        "maxLength": 100,
+                        "pattern": "^[A-Z0-9]{1,}(\\s{1}[A-Z0-9]+)*$"
                       },
                       "zip_code": {
                         "type": "string",
                         "description": "The CEP of the person.",
-                        "example": "05653-160"
+                        "example": "05653160",
+                        "maxLength": 8
                       },
                       "street_name": {
                         "type": "string",
                         "description": "The district of the person.",
-                        "example": "Av. Padre Lebret"
+                        "example": "AV PADRE LEBRET",
+                        "maxLength": 255,
+                        "pattern": "^[A-Z0-9]{1,}(\\s{1}[A-Z0-9]+)*$"
                       },
                       "street_number": {
                         "type": "string",
                         "description": "The street number of the person.",
-                        "example": "123"
+                        "example": "123",
+                        "pattern": "^[A-Z0-9]{1,}(\\s{1}[A-Z0-9]+)*$"
                       },
                       "complement_description": {
                         "type": "string",
                         "description": "The complement description of the person.",
                         "example": "AP 321",
-                        "maxLength": 10
+                        "maxLength": 10,
+                        "pattern": "^[A-Z0-9]{1,}(\\s{1}[A-Z0-9]+)*$"
                       },
                       "ddd_number": {
                         "type": "string",
                         "description": "The DDD from phone of the person.",
-                        "example": "21"
+                        "example": "21",
+                        "maxLength": 10
                       },
                       "phone_number": {
                         "type": "string",
                         "description": "The number from phone of the person.",
-                        "example": "998877665"
+                        "example": "998877665",
+                        "maxLength": 25
                       },
                       "complete_phone_number": {
                         "type": "string",
                         "description": "The DDD + number from phone of the person.",
-                        "example": "21998877665"
+                        "example": "21998877665",
+                        "maxLength": 25
                       },
                       "email_address": {
                         "type": "string",
                         "description": "The email from person.",
-                        "example": "test@email.com"
+                        "example": "test@email.com",
+                        "maxLength": 100
                       },
                       "public_place": {
                         "type": "string",
@@ -1637,11 +1680,13 @@
                       "cbo_code": {
                         "type": "string",
                         "description": "Code identifying of the job.",
-                        "example": "084"
+                        "example": "084",
+                        "maxLength": 50
                       },
                       "description": {
                         "type": "string",
-                        "description": "Description of the job."
+                        "description": "Description of the job.",
+                        "maxLength": 100
                       },
                       "remuneration": {
                         "type": "number",
@@ -1657,7 +1702,8 @@
                       "company_document": {
                         "type": "number",
                         "description": "Document from company of the job.",
-                        "example": 123456789
+                        "example": 123456789,
+                        "maxLength": 150
                       },
                       "occupation_type": {
                         "type": "string",
@@ -1670,7 +1716,8 @@
                           "FREELANCER",
                           "OTHERS"
                         ],
-                        "example": "FREELANCER"
+                        "example": "FREELANCER",
+                        "maxLength": 100
                       },
                       "admission_date": {
                         "type": "string",
