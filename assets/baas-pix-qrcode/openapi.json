@@ -1104,6 +1104,51 @@
               }
             }
           },
+          "408": {
+            "description": "Timeout Error with types [DecodeTimeout]",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Timeout to decode the qr code by third party integration",
+                  "properties": {
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "DECODE_TIMEOUT",
+                          "enum": [
+                            "DECODE_TIMEOUT"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "Invalid request data"
+                        },
+                        "status_code": {
+                          "type": "number",
+                          "description": "Error status code",
+                          "example": "408"
+                        }
+                      }
+                    }
+                  }
+                },
+                "examples": {
+                  "Example 1 - DecodeTimeout": {
+                    "value": {
+                      "code": "DECODE_TIMEOUT",
+                      "message": "Timeout to decode the qr code"
+                    }
+                  }
+                }
+              }
+            }
+          },
           "409": {
             "description": "Conflict Error with types [IdempotenceKeyAlreadyExistsError]",
             "content": {
