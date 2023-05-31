@@ -672,6 +672,444 @@
           }
         }
       }
+    },
+    "/internal-credit": {
+      "post": {
+        "tags": [
+          "Internal Credit"
+        ],
+        "summary": "Create an internal credit in specific account",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "description": "Id from credit movement",
+                    "type": "string",
+                    "format": "uuid-v4",
+                    "example": "6d814c28-fe73-443c-bfe0-48d518aa32fa"
+                  },
+                  "account_number": {
+                    "description": "Account number",
+                    "type": "number",
+                    "example": 1234567
+                  },
+                  "account_digit": {
+                    "description": "Account digit",
+                    "type": "number",
+                    "example": 7
+                  },
+                  "agency_number": {
+                    "description": "Agency number from account",
+                    "type": "number",
+                    "example": 1
+                  },
+                  "value": {
+                    "description": "Credit value",
+                    "type": "number",
+                    "example": 10.12
+                  },
+                  "history_code": {
+                    "description": "The credit history code",
+                    "type": "string",
+                    "enum": [
+                      "PAYROLL_LOAN_RELEASE_CREDIT"
+                    ],
+                    "example": "PAYROLL_LOAN_RELEASE_CREDIT"
+                  }
+                },
+                "required": [
+                  "id",
+                  "account_number",
+                  "account_digit",
+                  "agency_number",
+                  "value",
+                  "history_code"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Internal Credit",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "description": "Id from credit movement",
+                      "type": "string",
+                      "format": "uuid-v4",
+                      "example": "6d814c28-fe73-443c-bfe0-48d518aa32fa"
+                    },
+                    "account_id": {
+                      "description": "Id from account",
+                      "type": "string",
+                      "format": "uuid-v4",
+                      "example": "6d814c28-fe73-443c-bfe0-48d518aa32fa"
+                    },
+                    "application_id": {
+                      "description": "Id from application",
+                      "type": "string",
+                      "format": "uuid-v4",
+                      "example": "6d814c28-fe73-443c-bfe0-48d518aa32fa"
+                    },
+                    "status": {
+                      "description": "Credit status",
+                      "type": "string",
+                      "example": "CREATED"
+                    },
+                    "value": {
+                      "description": "Credit value",
+                      "type": "number",
+                      "example": 10.12
+                    },
+                    "history_code": {
+                      "description": "The credit history code",
+                      "type": "string",
+                      "enum": [
+                        "PAYROLL_LOAN_RELEASE_CREDIT"
+                      ],
+                      "example": "PAYROLL_LOAN_RELEASE_CREDIT"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Error with types [ValidationFailed].",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "title": "Invalid request data",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "VALIDATION_FAILED"
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "Invalid request data."
+                        },
+                        "details": {
+                          "type": "array",
+                          "title": "Error details",
+                          "description": "Informs error details",
+                          "example": "Invalid request data."
+                        }
+                      }
+                    }
+                  ]
+                },
+                "examples": {
+                  "Example 1 - ValidationFailed": {
+                    "value": {
+                      "code": "VALIDATION_FAILED",
+                      "message": "Invalid request data."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Error with types [AuthenticationError].",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Authentication error",
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "title": "Error code",
+                      "description": "The type of error",
+                      "example": "AUTHENTICATION_FAILED",
+                      "enum": [
+                        "AUTHENTICATION_FAILED"
+                      ]
+                    },
+                    "message": {
+                      "type": "string",
+                      "title": "Error message",
+                      "description": "Describes a message informing a reason for the error",
+                      "example": "Authentication failed."
+                    }
+                  }
+                },
+                "examples": {
+                  "Example 1 - AuthenticationError": {
+                    "value": {
+                      "code": "AUTHENTICATION_FAILED",
+                      "message": "Authentication failed."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Error with types [MissingProduct, ProductDisabledError, ApplicationNotFound, ProfileNotFound].",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "title": "Missing Product Permission",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "MISSING_PRODUCT_PERMISSION",
+                          "enum": [
+                            "MISSING_PRODUCT_PERMISSION"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "Missing product permission."
+                        }
+                      }
+                    },
+                    {
+                      "title": "Bad Request",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "PRODUCT_DISABLED",
+                          "enum": [
+                            "PRODUCT_DISABLED"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "Product is not enabled."
+                        }
+                      }
+                    },
+                    {
+                      "title": "Application product not found",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "APPLICATION_PRODUCT_NOT_FOUND",
+                          "enum": [
+                            "APPLICATION_PRODUCT_NOT_FOUND"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "Product not found for given application id."
+                        }
+                      }
+                    },
+                    {
+                      "title": "Bad Request",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "PROFILE_NOT_FOUND",
+                          "enum": [
+                            "PROFILE_NOT_FOUND"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "Profile not found."
+                        }
+                      }
+                    }
+                  ]
+                },
+                "examples": {
+                  "Example 1 - MissingProduct": {
+                    "value": {
+                      "code": "MISSING_PRODUCT_PERMISSION",
+                      "message": "Missing product permission."
+                    }
+                  },
+                  "Example 2 - ProductDisabledError": {
+                    "value": {
+                      "code": "PRODUCT_DISABLED",
+                      "message": "Product is not enabled."
+                    }
+                  },
+                  "Example 3 - ApplicationNotFound": {
+                    "value": {
+                      "code": "APPLICATION_PRODUCT_NOT_FOUND",
+                      "message": "Product not found for given application id."
+                    }
+                  },
+                  "Example 4 - ProfileNotFound": {
+                    "value": {
+                      "code": "PROFILE_NOT_FOUND",
+                      "message": "Profile not found."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Error with types [AccountNotFound].",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "title": "Account Not Found",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "ACCOUNT_NOT_FOUND",
+                          "enum": [
+                            "ACCOUNT_NOT_FOUND"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "Account not found"
+                        },
+                        "status_code": {
+                          "type": "number",
+                          "description": "Error status code",
+                          "example": "404"
+                        }
+                      }
+                    }
+                  ]
+                },
+                "examples": {
+                  "Example 1 - AccountNotFound": {
+                    "value": {
+                      "code": "ACCOUNT_NOT_FOUND",
+                      "message": "Account not found."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "title": "Internal Credit already exists",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "Internal Credit already exists",
+                          "enum": [
+                            "INTERNAL_CREDIT_ALREADY_EXISTS"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "Internal Credit already exists"
+                        },
+                        "status_code": {
+                          "type": "number",
+                          "description": "Error status code",
+                          "example": "409"
+                        }
+                      }
+                    }
+                  ]
+                },
+                "examples": {
+                  "Example 1 - InternalCreditAlreadyExists": {
+                    "value": {
+                      "code": "INTERNAL_CREDIT_ALREADY_EXISTS",
+                      "message": "Internal Credit already exists."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Internal Server Error",
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "title": "Error code",
+                      "description": "The type of error",
+                      "example": "INTERNAL_SERVER_ERROR",
+                      "enum": [
+                        "INTERNAL_SERVER_ERROR"
+                      ]
+                    },
+                    "message": {
+                      "type": "string",
+                      "title": "Error message",
+                      "description": "Describes a message informing a reason for the error",
+                      "example": "Unexpected error with our service"
+                    },
+                    "status_code": {
+                      "type": "number",
+                      "description": "Error status code",
+                      "example": "500"
+                    }
+                  }
+                },
+                "examples": {
+                  "Example 1 - InternalServerError": {
+                    "value": {
+                      "code": "INTERNAL_SERVER_ERROR",
+                      "message": "Unexpected error with our service"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
