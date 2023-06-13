@@ -3,7 +3,7 @@
   "info": {
     "version": "1.0.0",
     "title": "BaaS Backoffice",
-    "description": "BaaS Backoffice\n\nApi responsible for managing backoffice operations, reports, etc.\n\n## Internal Operation Confirmation Call\n\nTo receive the confirmation, its necessary the previous registration of the client url.\n  This object will be sent as an HTTP call with the POST method, of which the client must respond with a 202 status and within 10 seconds.\n\n**Internal Operation Confirmation Call Scheme**\n\n  Headers:\n  ```json\n  {\n    X-R4-Application: GUID // Application Unique Identifier\n    X-R4-Delivery: GUID // Attempt Unique Identifier\n    X-R4-Event: internal_operation_confirmation\n    User-Agent: R4-Hookshot\n  }\n  ```\n  Body\n  ```json\n  {\n    \"object_kind\": \"internal_operation_confirmation\",\n    \"object_id\": \"GUID\", // Internal Operation Unique Identifier\n    \"application_id\": \"GUID\", // Application Unique Identifier\n    \"account_id\": \"GUID\", // Account Unique Identifier\n    \"account_number\": 1234567,\n    \"account_digit\": 7,\n    \"agency_number\": 1,\n    \"value\": 10.12,\n    \"history_code\": \"PAYROLL_LOAN_RELEASE_CREDIT\"\n  }\n  ```\n\n## Internal Operation Status Change Notification\n\nSome statuses changes will fire a notification call to the client.\n\nTo receive this notifications, its necessary to request the registration of the service URL which will receive the notification object.\n\nThis object will be sent as a HTTP call with the POST method, of which the client must respond with a 200 status.\n\n| Event Type          | Internal Operation Status     |\n|-------------------- | -------------- |\n| `backoffice_internal_operation_not_confirmed` | NOT_CONFIRMED |\n| `backoffice_internal_operation_rejected` | REJECTED |\n| `backoffice_internal_operation_error` | ERROR |\n| `backoffice_internal_operation_done` | DONE |\n\n### Notification Call Scheme\n\n#### *Header*\n```json\n{\n  X-R4-Application: GUID, // Application Unique Identifier\n  X-R4-Delivery: GUID, // Attempt Unique Identifier\n  X-R4-Event: {event_type}, // Event Type for the Notification (as described in Event Type table)\n  User-Agent: R4-Hookshot\n}\n```\n\n#### *Body*\n```\n{\n  \"object_kind\": \"{event_type}\", // Event Type for the Notification (as described in Event Type table)\n  \"object_id\": \"GUID\", // Operation Unique Identifier\n  \"account_id\": \"GUID\" // Account Unique Identifier\n  \"application_id\": \"GUID\" // Application Unique Identifier\n}\n```\n"
+    "description": "BaaS Backoffice\n\nApi responsible for managing backoffice operations, reports, etc.\n\n## Internal Operation Status\n\n| Status | Description | Final Status | Notification Event Type |\n| ------ | ----------- | ------------ | ----------------------  |\n| CREATED       | Operation created | | |\n| CONFIRMING    | Operation begin verified with the client if it was requested by him | | |\n| CONFIRMED     | Operation confirmed by the client | | |\n| NOT_CONFIRMED | Operation denied by the client | Yes | backoffice_internal_operation_not_confirmed |\n| PROCESSING    | Processing bank operation | | |\n| REJECTED      | Operation rejected due internal validation | Yes | backoffice_internal_operation_rejected |\n| ERROR         | Failure to process | Yes | backoffice_internal_operation_error | |\n| DONE          | Operation completed successfully | Yes | backoffice_internal_operation_done |\n\n## Internal Operation Confirmation Call\n\nTo receive the confirmation, its necessary the previous registration of the client url.\n  This object will be sent as an HTTP call with the POST method, of which the client must respond with a 202 status and within 10 seconds.\n\n**Internal Operation Confirmation Call Scheme**\n\n  Headers:\n  ```json\n  {\n    X-R4-Application: GUID // Application Unique Identifier\n    X-R4-Delivery: GUID // Attempt Unique Identifier\n    X-R4-Event: internal_operation_confirmation\n    User-Agent: R4-Hookshot\n  }\n  ```\n  Body\n  ```json\n  {\n    \"object_kind\": \"internal_operation_confirmation\",\n    \"object_id\": \"GUID\", // Internal Operation Unique Identifier\n    \"application_id\": \"GUID\", // Application Unique Identifier\n    \"account_id\": \"GUID\", // Account Unique Identifier\n    \"account_number\": 1234567,\n    \"account_digit\": 7,\n    \"agency_number\": 1,\n    \"value\": 10.12,\n    \"history_code\": \"PAYROLL_LOAN_RELEASE_CREDIT\"\n  }\n  ```\n\n## Internal Operation Status Change Notification\n\nSome statuses changes will fire a notification call to the client.\n\nTo receive this notifications, its necessary to request the registration of the service URL which will receive the notification object.\n\nThis object will be sent as a HTTP call with the POST method, of which the client must respond with a 200 status.\n\n| Event Type          | Internal Operation Status     |\n|-------------------- | -------------- |\n| `backoffice_internal_operation_not_confirmed` | NOT_CONFIRMED |\n| `backoffice_internal_operation_rejected` | REJECTED |\n| `backoffice_internal_operation_error` | ERROR |\n| `backoffice_internal_operation_done` | DONE |\n\n### Notification Call Scheme\n\n#### *Header*\n```json\n{\n  X-R4-Application: GUID, // Application Unique Identifier\n  X-R4-Delivery: GUID, // Attempt Unique Identifier\n  X-R4-Event: {event_type}, // Event Type for the Notification (as described in Event Type table)\n  User-Agent: R4-Hookshot\n}\n```\n\n#### *Body*\n```\n{\n  \"object_kind\": \"{event_type}\", // Event Type for the Notification (as described in Event Type table)\n  \"object_id\": \"GUID\", // Operation Unique Identifier\n  \"account_id\": \"GUID\" // Account Unique Identifier\n  \"application_id\": \"GUID\" // Application Unique Identifier\n}\n```\n"
   },
   "servers": [
     {
@@ -32,6 +32,7 @@
           "BaaS Backoffice"
         ],
         "summary": "API Health Check",
+        "description": "API Health Check",
         "security": [
           {
             "BearerAuth": []
@@ -116,9 +117,10 @@
     "/in32/{year}/{month}": {
       "get": {
         "tags": [
-          "in32File"
+          "IN32 File"
         ],
         "summary": "Get in32 File",
+        "description": "IN32 Report",
         "parameters": [
           {
             "in": "path",
@@ -679,6 +681,7 @@
           "Internal Operation"
         ],
         "summary": "Create an internal operation in specific account",
+        "description": "Allows to create an internal banking operation in specific account.",
         "security": [
           {
             "BearerAuth": []
@@ -766,7 +769,17 @@
                     "status": {
                       "description": "Operation status",
                       "type": "string",
-                      "example": "CREATED"
+                      "example": "CREATED",
+                      "enum": [
+                        "CREATED",
+                        "CONFIRMING",
+                        "NOT_CONFIRMED",
+                        "CONFIRMED",
+                        "PROCESSING",
+                        "DONE",
+                        "ERROR",
+                        "REJECTED"
+                      ]
                     },
                     "value": {
                       "description": "Operation value",
