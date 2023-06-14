@@ -49,31 +49,6 @@
                     "type": "object",
                     "description": "Person holder details.\n",
                     "properties": {
-                      "full_name": {
-                        "type": "string",
-                        "description": "Name from person.",
-                        "example": "JONH",
-                        "maxLength": 150,
-                        "pattern": "[A-Z]{1,}(\\s{1}[A-Z]+)*$"
-                      },
-                      "document_number": {
-                        "type": "number",
-                        "description": "The value of document, a valid CPF.",
-                        "example": 81893643085
-                      },
-                      "secondary_document_number": {
-                        "type": "string",
-                        "description": "The value of the secondary document.",
-                        "example": "5256856547"
-                      },
-                      "secondary_document_type": {
-                        "type": "string",
-                        "description": "The Type of the secondary document.",
-                        "enum": [
-                          "CNH",
-                          "RG"
-                        ]
-                      },
                       "marital_status": {
                         "type": "string",
                         "enum": [
@@ -97,41 +72,9 @@
                         "maxLength": 50,
                         "pattern": "[A-Z]{1,}(\\s{1}[A-Z]+)*$"
                       },
-                      "birth_date": {
-                        "type": "string",
-                        "description": "The birth date of the person.",
-                        "format": "date",
-                        "example": "2000-01-01"
-                      },
                       "politically_exposed": {
                         "type": "boolean",
                         "description": "If the person is politically exposed."
-                      }
-                    }
-                  },
-                  "parent": {
-                    "type": "object",
-                    "description": "Parent details from person.\n",
-                    "properties": {
-                      "name": {
-                        "type": "string",
-                        "example": "MARIE",
-                        "pattern": "[A-Z]{1,}(\\s{1}[A-Z]+)*$"
-                      },
-                      "document_number": {
-                        "type": "number",
-                        "description": "The value of Document.",
-                        "example": 81893643085
-                      },
-                      "type": {
-                        "type": "string",
-                        "enum": [
-                          "MOTHER"
-                        ]
-                      },
-                      "politically_exposed": {
-                        "type": "boolean",
-                        "description": "If the parent is politically exposed."
                       }
                     }
                   },
