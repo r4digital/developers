@@ -147,6 +147,24 @@
                         "example": "21998877665",
                         "maxLength": 25
                       },
+                      "cellphone_ddd_number": {
+                        "type": "string",
+                        "description": "The DDD from cellphone of the person.",
+                        "example": "21",
+                        "maxLength": 10
+                      },
+                      "cellphone_number": {
+                        "type": "string",
+                        "description": "The number from cellphone of the person.",
+                        "example": "998877665",
+                        "maxLength": 25
+                      },
+                      "complete_cellphone_number": {
+                        "type": "string",
+                        "description": "The DDD + number from cellphone of the person.",
+                        "example": "21998877665",
+                        "maxLength": 25
+                      },
                       "email_address": {
                         "type": "string",
                         "description": "The email from person.",
@@ -652,6 +670,21 @@
                               "description": "The DDD + number from phone of the person.",
                               "example": "21998877665"
                             },
+                            "cellphone_ddd_number": {
+                              "type": "string",
+                              "description": "The DDD from cellphone of the person.",
+                              "example": "21"
+                            },
+                            "cellphone_number": {
+                              "type": "string",
+                              "description": "The number from cellphone of the person.",
+                              "example": "998877665"
+                            },
+                            "complete_cellphone_number": {
+                              "type": "string",
+                              "description": "The DDD + number from cellphone of the person.",
+                              "example": "21998877665"
+                            },
                             "email_address": {
                               "type": "string",
                               "description": "The email from person.",
@@ -1103,6 +1136,21 @@
                             "complete_phone_number": {
                               "type": "string",
                               "description": "The DDD + number from phone of the person.",
+                              "example": "21998877665"
+                            },
+                            "cellphone_ddd_number": {
+                              "type": "string",
+                              "description": "The DDD from cellphone of the person.",
+                              "example": "21"
+                            },
+                            "cellphone_number": {
+                              "type": "string",
+                              "description": "The number from cellphone of the person.",
+                              "example": "998877665"
+                            },
+                            "complete_cellphone_number": {
+                              "type": "string",
+                              "description": "The DDD + number from cellphone of the person.",
                               "example": "21998877665"
                             },
                             "email_address": {
@@ -1569,6 +1617,24 @@
                       "complete_phone_number": {
                         "type": "string",
                         "description": "The DDD + number from phone of the person.",
+                        "example": "21998877665",
+                        "maxLength": 25
+                      },
+                      "cellphone_ddd_number": {
+                        "type": "string",
+                        "description": "The DDD from cellphone of the person.",
+                        "example": "21",
+                        "maxLength": 10
+                      },
+                      "cellphone_number": {
+                        "type": "string",
+                        "description": "The number from cellphone of the person.",
+                        "example": "998877665",
+                        "maxLength": 25
+                      },
+                      "complete_cellphone_number": {
+                        "type": "string",
+                        "description": "The DDD + number from cellphone of the person.",
                         "example": "21998877665",
                         "maxLength": 25
                       },
