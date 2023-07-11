@@ -67,7 +67,7 @@
             "schema": {
               "type": "integer"
             },
-            "description": "The document number for specific account.",
+            "description": "The CPF document number for a specific account.",
             "required": false
           }
         ],
