@@ -133,37 +133,25 @@
                         "type": "string",
                         "description": "The DDD from phone of the person.",
                         "example": "21",
-                        "maxLength": 10
+                        "maxLength": 4
                       },
                       "phone_number": {
                         "type": "string",
                         "description": "The number from phone of the person.",
                         "example": "998877665",
-                        "maxLength": 25
-                      },
-                      "complete_phone_number": {
-                        "type": "string",
-                        "description": "The DDD + number from phone of the person.",
-                        "example": "21998877665",
-                        "maxLength": 25
+                        "maxLength": 10
                       },
                       "cellphone_ddd_number": {
                         "type": "string",
                         "description": "The DDD from cellphone of the person.",
                         "example": "21",
-                        "maxLength": 10
+                        "maxLength": 4
                       },
                       "cellphone_number": {
                         "type": "string",
                         "description": "The number from cellphone of the person.",
                         "example": "998877665",
-                        "maxLength": 25
-                      },
-                      "complete_cellphone_number": {
-                        "type": "string",
-                        "description": "The DDD + number from cellphone of the person.",
-                        "example": "21998877665",
-                        "maxLength": 25
+                        "maxLength": 10
                       },
                       "email_address": {
                         "type": "string",
@@ -1551,7 +1539,6 @@
                       "complement_description",
                       "ddd_number",
                       "phone_number",
-                      "complete_phone_number",
                       "email_address"
                     ],
                     "description": "Address from holder details.\n",
@@ -1606,37 +1593,25 @@
                         "type": "string",
                         "description": "The DDD from phone of the person.",
                         "example": "21",
-                        "maxLength": 10
+                        "maxLength": 4
                       },
                       "phone_number": {
                         "type": "string",
                         "description": "The number from phone of the person.",
                         "example": "998877665",
-                        "maxLength": 25
-                      },
-                      "complete_phone_number": {
-                        "type": "string",
-                        "description": "The DDD + number from phone of the person.",
-                        "example": "21998877665",
-                        "maxLength": 25
+                        "maxLength": 10
                       },
                       "cellphone_ddd_number": {
                         "type": "string",
                         "description": "The DDD from cellphone of the person.",
                         "example": "21",
-                        "maxLength": 10
+                        "maxLength": 4
                       },
                       "cellphone_number": {
                         "type": "string",
                         "description": "The number from cellphone of the person.",
                         "example": "998877665",
-                        "maxLength": 25
-                      },
-                      "complete_cellphone_number": {
-                        "type": "string",
-                        "description": "The DDD + number from cellphone of the person.",
-                        "example": "21998877665",
-                        "maxLength": 25
+                        "maxLength": 10
                       },
                       "email_address": {
                         "type": "string",
