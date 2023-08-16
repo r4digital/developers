@@ -3262,7 +3262,7 @@
                               "account_opening_date",
                               "document_type",
                               "document_number",
-                              "ispb_grantor",
+                              "grantor_ispb",
                               "claim_id",
                               "status",
                               "resolution_limit",
@@ -3359,7 +3359,7 @@
                                 "type": "string",
                                 "description": "Owner's nickname"
                               },
-                              "ispb_grantor": {
+                              "grantor_ispb": {
                                 "type": "number",
                                 "description": "ISPB grantor number",
                                 "example": 114761213
@@ -4306,7 +4306,7 @@
                     "account_opening_date",
                     "document_type",
                     "document_number",
-                    "ispb_grantor",
+                    "grantor_ispb",
                     "claim_id",
                     "status",
                     "resolution_limit",
@@ -4384,7 +4384,7 @@
                       "description": "Owner's document number",
                       "example": 24093302073
                     },
-                    "ispb_grantor": {
+                    "grantor_ispb": {
                       "type": "number",
                       "description": "ISPB grantor number",
                       "example": 114761213
