@@ -871,6 +871,20 @@
                     "type": "string",
                     "description": "The reason to close account",
                     "example": "Requisi\u00e7\u00e3o do usu\u00e1rio"
+                  },
+                  "reason": {
+                    "type": "string",
+                    "enum": [
+                      "SECOND_PRESENTATION",
+                      "SPURIOUS_PRACTICE",
+                      "CUSTOMER_INITIATIVE",
+                      "BANK_INITIATIVE",
+                      "DOCUMENT_CANCELLATION",
+                      "LONG_PERIOD_INSUFFICIENT_BALANCE",
+                      "BACEN_STANDARDIZATION",
+                      "TRANSFER_TO_ANOTHER_AGENCY"
+                    ],
+                    "description": "Reason type for exclusion"
                   }
                 }
               }
