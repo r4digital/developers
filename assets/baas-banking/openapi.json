@@ -884,7 +884,8 @@
                       "BACEN_STANDARDIZATION",
                       "TRANSFER_TO_ANOTHER_AGENCY"
                     ],
-                    "description": "Reason type for exclusion"
+                    "description": "Reason type for exclusion",
+                    "default": "CUSTOMER_INITIATIVE"
                   }
                 }
               }
