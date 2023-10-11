@@ -273,6 +273,11 @@
                       "description": "Indicates that the bill payment was initiated in the Open Banking",
                       "example": true,
                       "default": false
+                    },
+                    "convenant": {
+                      "type": "string",
+                      "description": "Name of the convenant available for payment on the Celcoin",
+                      "example": "BANCO 756 / AG\u00caNCIA 432"
                     }
                   }
                 }
@@ -1038,6 +1043,11 @@
                             "description": "Indicates that the bill payment was initiated in the Open Banking",
                             "example": true,
                             "default": false
+                          },
+                          "convenant": {
+                            "type": "string",
+                            "description": "Name of the convenant available for payment on the Celcoin",
+                            "example": "BANCO 756 / AG\u00caNCIA 432"
                           }
                         }
                       }
@@ -2303,6 +2313,11 @@
                             "description": "Indicates that the bill payment was initiated in the Open Banking",
                             "example": true,
                             "default": false
+                          },
+                          "convenant": {
+                            "type": "string",
+                            "description": "Name of the convenant available for payment on the Celcoin",
+                            "example": "BANCO 756 / AG\u00caNCIA 432"
                           }
                         }
                       }
@@ -3473,6 +3488,11 @@
                   "description": "Indicates that the bill payment was initiated in the Open Banking",
                   "example": true,
                   "default": false
+                },
+                "convenant": {
+                  "type": "string",
+                  "description": "Name of the convenant available for payment on the Celcoin",
+                  "example": "BANCO 756 / AG\u00caNCIA 432"
                 }
               }
             }
@@ -3684,6 +3704,11 @@
                         "description": "Indicates that the bill payment was initiated in the Open Banking",
                         "example": true,
                         "default": false
+                      },
+                      "convenant": {
+                        "type": "string",
+                        "description": "Name of the convenant available for payment on the Celcoin",
+                        "example": "BANCO 756 / AG\u00caNCIA 432"
                       }
                     }
                   }
@@ -3889,6 +3914,11 @@
                         "description": "Indicates that the bill payment was initiated in the Open Banking",
                         "example": true,
                         "default": false
+                      },
+                      "convenant": {
+                        "type": "string",
+                        "description": "Name of the convenant available for payment on the Celcoin",
+                        "example": "BANCO 756 / AG\u00caNCIA 432"
                       }
                     }
                   }
@@ -4213,6 +4243,11 @@
                   "description": "Indicates that the bill payment was initiated in the Open Banking",
                   "example": true,
                   "default": false
+                },
+                "convenant": {
+                  "type": "string",
+                  "description": "Name of the convenant available for payment on the Celcoin",
+                  "example": "BANCO 756 / AG\u00caNCIA 432"
                 }
               }
             }
@@ -4411,6 +4446,11 @@
                   "description": "Indicates that the bill payment was initiated in the Open Banking",
                   "example": true,
                   "default": false
+                },
+                "convenant": {
+                  "type": "string",
+                  "description": "Name of the convenant available for payment on the Celcoin",
+                  "example": "BANCO 756 / AG\u00caNCIA 432"
                 }
               }
             }
@@ -4628,6 +4668,11 @@
             "description": "Indicates that the bill payment was initiated in the Open Banking",
             "example": true,
             "default": false
+          },
+          "convenant": {
+            "type": "string",
+            "description": "Name of the convenant available for payment on the Celcoin",
+            "example": "BANCO 756 / AG\u00caNCIA 432"
           }
         }
       }
