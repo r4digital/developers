@@ -276,7 +276,7 @@
                     },
                     "convenant": {
                       "type": "string",
-                      "description": "Name of the convenant available for payment on the Celcoin",
+                      "description": "Represents in which institution the payment will be settled",
                       "example": "BANCO 756 / AG\u00caNCIA 432"
                     }
                   }
@@ -1046,7 +1046,7 @@
                           },
                           "convenant": {
                             "type": "string",
-                            "description": "Name of the convenant available for payment on the Celcoin",
+                            "description": "Represents in which institution the payment will be settled",
                             "example": "BANCO 756 / AG\u00caNCIA 432"
                           }
                         }
@@ -2316,7 +2316,7 @@
                           },
                           "convenant": {
                             "type": "string",
-                            "description": "Name of the convenant available for payment on the Celcoin",
+                            "description": "Represents in which institution the payment will be settled",
                             "example": "BANCO 756 / AG\u00caNCIA 432"
                           }
                         }
@@ -3491,7 +3491,7 @@
                 },
                 "convenant": {
                   "type": "string",
-                  "description": "Name of the convenant available for payment on the Celcoin",
+                  "description": "Represents in which institution the payment will be settled",
                   "example": "BANCO 756 / AG\u00caNCIA 432"
                 }
               }
@@ -3707,7 +3707,7 @@
                       },
                       "convenant": {
                         "type": "string",
-                        "description": "Name of the convenant available for payment on the Celcoin",
+                        "description": "Represents in which institution the payment will be settled",
                         "example": "BANCO 756 / AG\u00caNCIA 432"
                       }
                     }
@@ -3917,7 +3917,7 @@
                       },
                       "convenant": {
                         "type": "string",
-                        "description": "Name of the convenant available for payment on the Celcoin",
+                        "description": "Represents in which institution the payment will be settled",
                         "example": "BANCO 756 / AG\u00caNCIA 432"
                       }
                     }
@@ -4246,7 +4246,7 @@
                 },
                 "convenant": {
                   "type": "string",
-                  "description": "Name of the convenant available for payment on the Celcoin",
+                  "description": "Represents in which institution the payment will be settled",
                   "example": "BANCO 756 / AG\u00caNCIA 432"
                 }
               }
@@ -4449,7 +4449,7 @@
                 },
                 "convenant": {
                   "type": "string",
-                  "description": "Name of the convenant available for payment on the Celcoin",
+                  "description": "Represents in which institution the payment will be settled",
                   "example": "BANCO 756 / AG\u00caNCIA 432"
                 }
               }
@@ -4671,7 +4671,7 @@
           },
           "convenant": {
             "type": "string",
-            "description": "Name of the convenant available for payment on the Celcoin",
+            "description": "Represents in which institution the payment will be settled",
             "example": "BANCO 756 / AG\u00caNCIA 432"
           }
         }
