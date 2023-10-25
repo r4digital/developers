@@ -1500,6 +1500,266 @@
             }
           }
         }
+      },
+      "get": {
+        "tags": [
+          "Infraction"
+        ],
+        "summary": "List frauds",
+        "description": "List information about fraud marks",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "ispb",
+            "schema": {
+              "type": "number",
+              "example": 11476673,
+              "description": "ISPB to filter"
+            },
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "document_number",
+            "schema": {
+              "type": "number",
+              "example": 12345678911,
+              "description": "Document number to filter"
+            },
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "key",
+            "schema": {
+              "type": "string",
+              "example": "+5554999999999",
+              "description": "Key to filter"
+            },
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "kind",
+            "schema": {
+              "type": "string",
+              "description": "Fraud kind to filter",
+              "enum": [
+                "APPLICATION_FRAUD",
+                "MULE_ACCOUNT",
+                "SCAMMER_ACCOUNT",
+                "OTHERS"
+              ]
+            },
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "situation",
+            "schema": {
+              "type": "string",
+              "description": "Fraud situation to filter",
+              "enum": [
+                "REGISTERED",
+                "CANCELED"
+              ]
+            },
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "created_at_start",
+            "schema": {
+              "type": "string",
+              "format": "dateTime",
+              "example": "2023-10-20T13:01:36.386Z",
+              "description": "Filter by more then created at field"
+            },
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "created_at_end",
+            "schema": {
+              "type": "string",
+              "format": "dateTime",
+              "example": "2023-10-20T13:01:36.386Z",
+              "description": "Filter by less then created at field"
+            },
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "schema": {
+              "type": "number",
+              "example": 1,
+              "description": "Page to return"
+            },
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "size",
+            "schema": {
+              "type": "string",
+              "example": 10,
+              "description": "Quantity of registers to return in a page"
+            },
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List result.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "required": [
+                    "responded_at",
+                    "data",
+                    "pagination"
+                  ],
+                  "type": "object",
+                  "description": "Describes the properties of fraud list.",
+                  "properties": {
+                    "responded_at": {
+                      "type": "string",
+                      "format": "dateTime",
+                      "example": "2023-10-24T13:56:23.832Z"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "properties": {
+                          "fraud_id": {
+                            "type": "string",
+                            "format": "uuid-v4",
+                            "example": "ff4dd014-8e95-455e-b38b-1f0ecac06bb7",
+                            "description": "Id from fraud"
+                          },
+                          "key": {
+                            "type": "string",
+                            "example": "+5554999999999",
+                            "description": "Key from fraud"
+                          },
+                          "document_number": {
+                            "type": "number",
+                            "example": 13544528002,
+                            "description": "Document from fraud"
+                          },
+                          "kind": {
+                            "type": "string",
+                            "description": "Fraud kind",
+                            "enum": [
+                              "APPLICATION_FRAUD",
+                              "MULE_ACCOUNT",
+                              "SCAMMER_ACCOUNT",
+                              "OTHERS"
+                            ]
+                          },
+                          "situation": {
+                            "type": "string",
+                            "description": "Fraud situation",
+                            "enum": [
+                              "REGISTERED",
+                              "CANCELED"
+                            ]
+                          },
+                          "created_at": {
+                            "type": "string",
+                            "format": "dateTime",
+                            "example": "2023-10-20T13:01:36.386Z",
+                            "description": "Filter by less then created at field"
+                          },
+                          "updated_at": {
+                            "type": "string",
+                            "format": "dateTime",
+                            "example": "2023-10-20T13:01:36.386Z",
+                            "description": "Filter by less then created at field"
+                          }
+                        }
+                      }
+                    },
+                    "pagination": {
+                      "type": "object",
+                      "properties": {
+                        "total": {
+                          "type": "number",
+                          "example": 100,
+                          "description": "Total number of registers"
+                        },
+                        "page": {
+                          "type": "number",
+                          "example": 1,
+                          "description": "Page number"
+                        },
+                        "limit": {
+                          "type": "number",
+                          "example": 50,
+                          "description": "Quantity of registers limited"
+                        },
+                        "has_previous_page": {
+                          "type": "boolean",
+                          "description": "Return if have more previous pages"
+                        },
+                        "has_next_page": {
+                          "type": "boolean",
+                          "description": "Return if have more next pages"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Invalid Data Error",
+                  "properties": {
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "INVALID_DATA",
+                          "enum": [
+                            "INVALID_DATA"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "The data provided has an invalid format"
+                        },
+                        "status_code": {
+                          "type": "number",
+                          "description": "Error status code",
+                          "example": "400"
+                        }
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "Example 1 - InvalidDataError": {
+                    "value": {
+                      "code": "INVALID_DATA",
+                      "message": "The data provided has an invalid format"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
       }
     }
   },
