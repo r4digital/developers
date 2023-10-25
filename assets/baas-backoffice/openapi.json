@@ -529,13 +529,9 @@
                     }
                   ]
                 },
-                "examples": {
-                  "Example 1 - AccountNotFound": {
-                    "value": {
-                      "code": "ACCOUNT_NOT_FOUND",
-                      "message": "Account not found."
-                    }
-                  }
+                "example": {
+                  "code": "ACCOUNT_NOT_FOUND",
+                  "message": "Account not found."
                 }
               }
             }
@@ -573,13 +569,9 @@
                     }
                   ]
                 },
-                "examples": {
-                  "Example 1 - InternalOperationAlreadyExists": {
-                    "value": {
-                      "code": "INTERNAL_OPERATION_ALREADY_EXISTS",
-                      "message": "Internal Operation already exists."
-                    }
-                  }
+                "example": {
+                  "code": "INTERNAL_OPERATION_ALREADY_EXISTS",
+                  "message": "Internal Operation already exists."
                 }
               }
             }
@@ -742,13 +734,9 @@
                     }
                   ]
                 },
-                "examples": {
-                  "Example 1 - OperationNotFound": {
-                    "value": {
-                      "code": "OPERATION_NOT_FOUND",
-                      "message": "Operation not found."
-                    }
-                  }
+                "example": {
+                  "code": "OPERATION_NOT_FOUND",
+                  "message": "Operation not found."
                 }
               }
             }
@@ -1282,13 +1270,9 @@
                     }
                   ]
                 },
-                "examples": {
-                  "Example 1 - NotFound": {
-                    "value": {
-                      "code": "BLOCK_NOT_FOUND",
-                      "message": "Block not found"
-                    }
-                  }
+                "example": {
+                  "code": "BLOCK_NOT_FOUND",
+                  "message": "Block not found"
                 }
               }
             }
@@ -1755,6 +1739,152 @@
                       "message": "The data provided has an invalid format"
                     }
                   }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/fraud/{id}": {
+      "get": {
+        "tags": [
+          "Infraction"
+        ],
+        "summary": "Get a fraud marking by id",
+        "description": "Get a fraud marking for a specific id",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "ID of the fraud marking to get."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully get fraud marking",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "description": "Describes the properties of fraud marking",
+                  "required": [
+                    "fraud_id",
+                    "correlation_id",
+                    "document_number",
+                    "kind",
+                    "situation",
+                    "responded_at",
+                    "created_at",
+                    "updated_at"
+                  ],
+                  "properties": {
+                    "fraud_id": {
+                      "type": "string",
+                      "description": "Created fraud id",
+                      "example": "59bfea43-95f1-4f44-8ec9-254d9109de81"
+                    },
+                    "correlation_id": {
+                      "type": "string",
+                      "description": "Correlation id from fraud",
+                      "example": "B2023102010013637811476673153F13"
+                    },
+                    "document_number": {
+                      "type": "number",
+                      "description": "User document number to which the fraud marking.",
+                      "example": 37722745091
+                    },
+                    "key": {
+                      "type": "string",
+                      "description": "Pix key to which the fraud. It must be entered, if known",
+                      "example": "+55519999999"
+                    },
+                    "kind": {
+                      "type": "string",
+                      "description": "Kind of fraud marking",
+                      "enum": [
+                        "APPLICATION_FRAUD",
+                        "MULE_ACCOUNT",
+                        "SCAMMER_ACCOUNT",
+                        "OTHERS",
+                        "UNKNOWN"
+                      ],
+                      "example": "APPLICATION_FRAUD"
+                    },
+                    "situation": {
+                      "type": "string",
+                      "description": "Situation from fraud Mark",
+                      "enum": [
+                        "REGISTERED",
+                        "CANCELLED"
+                      ],
+                      "example": "CANCELLED"
+                    },
+                    "responded_at": {
+                      "type": "string",
+                      "description": "Dict responded at",
+                      "example": "2023-10-20T13:01:36.411Z"
+                    },
+                    "created_at": {
+                      "type": "string",
+                      "description": "Fraud mark created at",
+                      "example": "2023-10-20T13:01:36.411Z"
+                    },
+                    "updated_at": {
+                      "type": "string",
+                      "description": "Fraud mark last update",
+                      "example": "2023-10-20T13:01:36.411Z"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "title": "Not Found",
+                      "properties": {
+                        "error": {
+                          "type": "object",
+                          "properties": {
+                            "code": {
+                              "type": "string",
+                              "title": "Error code",
+                              "description": "The type of error",
+                              "example": "NOT_FOUND",
+                              "enum": [
+                                "NOT_FOUND"
+                              ]
+                            },
+                            "message": {
+                              "type": "string",
+                              "title": "Error message",
+                              "description": "Describes a message informing a reason for the error",
+                              "example": "Unable to found the requested account"
+                            },
+                            "status_code": {
+                              "type": "number",
+                              "description": "Error status code",
+                              "example": "404"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                },
+                "example": {
+                  "code": "FRAUD_MARKING_NOT_FOUND",
+                  "message": "The provided fraud marking was not found or does not exist"
                 }
               }
             }
