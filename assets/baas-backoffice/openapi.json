@@ -1746,6 +1746,305 @@
         }
       }
     },
+    "/fraud/{id}/cancel": {
+      "post": {
+        "tags": [
+          "Infraction"
+        ],
+        "summary": "Cancel fraud mark",
+        "description": "Cancel and returns information about canceled fraud mark",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Idempotence-Key",
+            "schema": {
+              "type": "string",
+              "format": "uuid-v4",
+              "example": "59bfea43-95f1-4f44-8ec9-254d9109de81"
+            },
+            "required": true
+          },
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "string",
+              "format": "uuid-v4",
+              "example": "59bfea43-95f1-4f44-8ec9-254d9109de81"
+            },
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "description": "Describes the properties.",
+                "required": [
+                  "ispb"
+                ],
+                "properties": {
+                  "ispb": {
+                    "type": "number",
+                    "description": "ISPB from fraud marking",
+                    "example": 123456789
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Canceled result.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "description": "Describes the properties of caneled fraud.",
+                  "required": [
+                    "fraud_id",
+                    "correlation_id",
+                    "situation",
+                    "responded_at",
+                    "created_at",
+                    "updated_at"
+                  ],
+                  "properties": {
+                    "fraud_id": {
+                      "type": "string",
+                      "description": "Created fraud id",
+                      "example": "59bfea43-95f1-4f44-8ec9-254d9109de81"
+                    },
+                    "correlation_id": {
+                      "type": "string",
+                      "description": "Correlation id from fraud",
+                      "example": "B2023102010013637811476673153F13"
+                    },
+                    "situation": {
+                      "type": "string",
+                      "description": "Situation from fraud Mark",
+                      "enum": [
+                        "CANCELED"
+                      ]
+                    },
+                    "responded_at": {
+                      "type": "string",
+                      "description": "Dict responded at",
+                      "example": "2023-10-20T13:01:36.411Z"
+                    },
+                    "created_at": {
+                      "type": "string",
+                      "description": "Fraud mark created at",
+                      "example": "2023-10-20T13:01:36.411Z"
+                    },
+                    "updated_at": {
+                      "type": "string",
+                      "description": "Fraud mark last update",
+                      "example": "2023-10-20T13:01:36.411Z"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "title": "Invalid Data Error",
+                      "properties": {
+                        "error": {
+                          "type": "object",
+                          "properties": {
+                            "code": {
+                              "type": "string",
+                              "title": "Error code",
+                              "description": "The type of error",
+                              "example": "INVALID_DATA",
+                              "enum": [
+                                "INVALID_DATA"
+                              ]
+                            },
+                            "message": {
+                              "type": "string",
+                              "title": "Error message",
+                              "description": "Describes a message informing a reason for the error",
+                              "example": "The data provided has an invalid format"
+                            },
+                            "status_code": {
+                              "type": "number",
+                              "description": "Error status code",
+                              "example": "400"
+                            }
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "title": "Invalid Idempotence Key Error",
+                      "properties": {
+                        "error": {
+                          "type": "object",
+                          "properties": {
+                            "code": {
+                              "type": "string",
+                              "title": "Error code",
+                              "description": "The type of error",
+                              "example": "INVALID_IDEMPOTENCE_KEY",
+                              "enum": [
+                                "INVALID_IDEMPOTENCE_KEY"
+                              ]
+                            },
+                            "message": {
+                              "type": "string",
+                              "title": "Error message",
+                              "description": "Describes a message informing a reason for the error",
+                              "example": "The data provided has an invalid format"
+                            },
+                            "status_code": {
+                              "type": "number",
+                              "description": "Error status code",
+                              "example": "400"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                },
+                "examples": {
+                  "Example 1 - InvalidDataError": {
+                    "value": {
+                      "code": "INVALID_DATA",
+                      "message": "The data provided has an invalid format"
+                    }
+                  },
+                  "Example 2 - InvalidIdempotenceKeyError": {
+                    "value": {
+                      "code": "INVALID_IDEMPOTENCE_KEY",
+                      "message": "Idempotence Key is missing or is not a valid uuid."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "The fraud mark can only be canceled by creator ispb or ispb who close the fraud mark",
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "title": "Error code",
+                      "description": "The type of error",
+                      "example": "ISPB_NOT_PERMITED",
+                      "enum": [
+                        "ISPB_NOT_PERMITED"
+                      ]
+                    },
+                    "message": {
+                      "type": "string",
+                      "title": "Error message",
+                      "description": "Describes a message informing a reason for the error",
+                      "example": "The fraud mark can only be canceled by creator ispb or ispb who close the fraud mark"
+                    },
+                    "status_code": {
+                      "type": "number",
+                      "description": "Error status code",
+                      "example": "403"
+                    }
+                  }
+                },
+                "example": {
+                  "code": "ISPB_NOT_PERMITED",
+                  "message": "The fraud mark can only be canceled by creator ispb or ispb who close the fraud mark"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "The provided fraud marking was not found or does not exist",
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "title": "Error code",
+                      "description": "The type of error",
+                      "example": "FRAUD_MARKING_NOT_FOUND",
+                      "enum": [
+                        "FRAUD_MARKING_NOT_FOUND"
+                      ]
+                    },
+                    "message": {
+                      "type": "string",
+                      "title": "Error message",
+                      "description": "Describes a message informing a reason for the error",
+                      "example": "The provided fraud marking was not found or does not exist"
+                    },
+                    "status_code": {
+                      "type": "number",
+                      "description": "Error status code",
+                      "example": "404"
+                    }
+                  }
+                },
+                "example": {
+                  "code": "FRAUD_MARKING_NOT_FOUND",
+                  "message": "The provided fraud marking was not found or does not exist"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "The fraud mark was already canceled.",
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "title": "Error code",
+                      "description": "The type of error",
+                      "example": "FRAUD_MARKING_ALREADY_CANCELED",
+                      "enum": [
+                        "FRAUD_MARKING_ALREADY_CANCELED"
+                      ]
+                    },
+                    "message": {
+                      "type": "string",
+                      "title": "Error message",
+                      "description": "Describes a message informing a reason for the error",
+                      "example": "The fraud mark was already canceled."
+                    },
+                    "status_code": {
+                      "type": "number",
+                      "description": "Error status code",
+                      "example": "409"
+                    }
+                  }
+                },
+                "example": {
+                  "code": "FRAUD_MARKING_ALREADY_CANCELED",
+                  "message": "The fraud mark was already canceled."
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/fraud/{id}": {
       "get": {
         "tags": [
