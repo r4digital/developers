@@ -1632,6 +1632,14 @@
                             "example": 13544528002,
                             "description": "Document from fraud"
                           },
+                          "document_type": {
+                            "type": "string",
+                            "enum": [
+                              "CPF",
+                              "CNPJ"
+                            ],
+                            "description": "Document type from fraud"
+                          },
                           "kind": {
                             "type": "string",
                             "description": "Fraud kind",
