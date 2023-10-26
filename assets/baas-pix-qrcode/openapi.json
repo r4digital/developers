@@ -123,6 +123,7 @@
                           "required": [
                             "kind",
                             "key",
+                            "key_kind",
                             "review",
                             "recipient",
                             "original_value",
@@ -146,6 +147,17 @@
                               "minLength": 5,
                               "maxLength": 77,
                               "example": "30937116068"
+                            },
+                            "key_kind": {
+                              "type": "string",
+                              "description": "Kind from key",
+                              "enum": [
+                                "CPF",
+                                "CNPJ",
+                                "EMAIL",
+                                "CELLPHONE",
+                                "VIRTUAL"
+                              ]
                             },
                             "category_code": {
                               "type": "string",
@@ -351,6 +363,7 @@
                           "required": [
                             "kind",
                             "key",
+                            "key_kind",
                             "review",
                             "recipient",
                             "final_value",
@@ -375,6 +388,17 @@
                               "minLength": 5,
                               "maxLength": 77,
                               "example": "30937116068"
+                            },
+                            "key_kind": {
+                              "type": "string",
+                              "description": "Kind from key",
+                              "enum": [
+                                "CPF",
+                                "CNPJ",
+                                "EMAIL",
+                                "CELLPHONE",
+                                "VIRTUAL"
+                              ]
                             },
                             "category_code": {
                               "type": "string",
@@ -573,6 +597,7 @@
                           "required": [
                             "kind",
                             "key",
+                            "key_kind",
                             "city",
                             "recipient"
                           ],
@@ -591,6 +616,17 @@
                               "minLength": 5,
                               "maxLength": 77,
                               "example": "30937116068"
+                            },
+                            "key_kind": {
+                              "type": "string",
+                              "description": "Kind from key",
+                              "enum": [
+                                "CPF",
+                                "CNPJ",
+                                "EMAIL",
+                                "CELLPHONE",
+                                "VIRTUAL"
+                              ]
                             },
                             "category_code": {
                               "type": "string",
@@ -695,6 +731,7 @@
                         "category_code": "0000",
                         "city": "PORTO ALEGRE",
                         "key": "90226395090",
+                        "key_kind": "CPF",
                         "recipient": {
                           "account_number": 378,
                           "account_digit": 6,
@@ -720,6 +757,7 @@
                         "city": "PORTO ALEGRE",
                         "zip_code": "90480-002",
                         "key": "90226395090",
+                        "key_kind": "CPF",
                         "original_value": 2.44,
                         "recipient": {
                           "account_number": 378,
@@ -768,6 +806,7 @@
                         "fine": 10.05,
                         "interest": 1.55,
                         "key": "90226395090",
+                        "key_kind": "CPF",
                         "original_value": 254.57,
                         "payer": {
                           "document_number": 72909231038,
