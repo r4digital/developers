@@ -2075,6 +2075,7 @@
                     "fraud_id",
                     "correlation_id",
                     "document_number",
+                    "document_type",
                     "kind",
                     "situation",
                     "responded_at",
@@ -2096,6 +2097,14 @@
                       "type": "number",
                       "description": "User document number to which the fraud marking.",
                       "example": 37722745091
+                    },
+                    "document_type": {
+                      "type": "string",
+                      "description": "User document type.",
+                      "enum": [
+                        "CPF",
+                        "CNPJ"
+                      ]
                     },
                     "key": {
                       "type": "string",
