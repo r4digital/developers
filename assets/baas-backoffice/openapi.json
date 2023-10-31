@@ -2065,7 +2065,8 @@
             "in": "path",
             "name": "id",
             "schema": {
-              "type": "string"
+              "type": "string",
+              "format": "uuid-v4"
             },
             "required": true,
             "description": "ID of the fraud marking to get."
