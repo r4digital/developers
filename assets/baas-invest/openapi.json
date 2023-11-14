@@ -1,63 +1,532 @@
 {
   "openapi": "3.0.3",
   "info": {
-    "title": "BaaS Invest",
+    "title": "baas-invest",
     "version": "0.0.1",
-    "description": "\n*Description**: API responsible for managing investments\n# Errors\nThis service uses [HTTP response status codes](https://en.wikipedia.org/wiki/List_of_HTTP_status_codes) to indicate the success or failure of your API requests.\nIn general, there are three status code ranges you can expect:\n- `2xx` success status codes confirm that your request worked as expected\n- `4xx` error status codes indicate an error because of the information provided (e.g., a required parameter was not provided)\n- `5xx` error status codes are rare and indicate an error with servers\n## HTTP Status code summary\nExtracted from [Stripe API codes](https://stripe.com/docs/api/errors)\n\n  - `200 - OK` Everything worked as expected.\n\n  - `400 - Bad Request` The request was unacceptable, often due to missing a required parameter.\n\n  - `401 - Unauthorized` No valid API key provided.\n\n  - `403 - Forbidden` The API key doesn't have permissions to perform the request.\n\n  - `404 - Not Found` The requested resource doesn't exist.\n\n  - `429 - Too Many Requests` Too many requests hit the API too quickly. We recommend an exponential backoff of your requests.\n\n  - `500, 502, 503, 504 - Server Errors` Something went wrong on R4's end.\n\n## Error codes\nBelow is a list of possible error codes that can be returned:\n\n  | Code                     | Description                                              |\n  |------------------------- | ---------------------------------------------------------|\n  | `ENTITY_ALREADY_EXISTS`  | The operation informed already exists                    |\n  | `INVALID_PARAM`          | There is an invalid param in the request                 |\n  | `UNEXPECTED_ERROR`       | Internal server failure                                  |\n"
+    "description": "\n*Description**: API responsible for investment operations.\n# Errors\nThis service uses [HTTP response status codes](https://en.wikipedia.org/wiki/List_of_HTTP_status_codes) to indicate the success or failure of your API requests.\nIn general, there are three status code ranges you can expect:\n- `2xx` success status codes confirm that your request worked as expected\n- `4xx` error status codes indicate an error because of the information provided (e.g., a required parameter was not provided)\n- `5xx` error status codes are rare and indicate an error with servers\n## HTTP Status code summary\nExtracted from [Stripe API codes](https://stripe.com/docs/api/errors)\n\n  - `200 - OK` Everything worked as expected.\n\n  - `400 - Bad Request` The request was unacceptable, often due to missing a required parameter.\n\n  - `401 - Unauthorized` No valid API key provided.\n\n  - `403 - Forbidden` The API key doesn't have permissions to perform the request.\n\n  - `404 - Not Found` The requested resource doesn't exist.\n\n  - `408 - Request Timeout` The connection was ended by timeout.\n\n  - `429 - Too Many Requests` Too many requests hit the API too quickly. We recommend an exponential backoff of your requests.\n\n  - `500, 502, 503, 504 - Server Errors` Something went wrong on R4's end.\n\n## Error codes\nBelow is a list of possible error codes that can be returned:\n\n  | Code                     | Description                                              |\n  |------------------------- | ---------------------------------------------------------|\n  | `ENTITY_ALREADY_EXISTS`  | The operation informed already exists                    |\n  | `INVALID_PARAM`          | There is an invalid param in the request                 |\n  | `UNEXPECTED_ERROR`       | Internal server failure                                  |\n"
   },
   "servers": [
     {
       "description": "Development",
-      "url": "https://develop.r4digital.cloud/pix"
+      "url": "https://develop.r4digital.cloud/investment"
     },
     {
       "description": "Production",
-      "url": "https://api.r4digital.cloud/pix"
+      "url": "https://api.r4digital.cloud/investment"
     }
   ],
   "paths": {
-    "/v1/action": {
-      "post": {
-        "summary": "Create and process some action",
-        "description": "Create and process some action",
+    "/accounts/{account_id}/investments": {
+      "get": {
+        "summary": "List Account Investments",
+        "description": "List Account Investments",
         "tags": [
-          "Action"
+          "Investments"
         ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "allOf": [
-                  {
-                    "title": "Action",
-                    "type": "object",
-                    "description": "Create and process some action",
-                    "properties": {
-                      "action": {
-                        "type": "string",
-                        "description": "Action to be processed",
-                        "example": "PING",
-                        "enum": [
-                          "PING",
-                          "PONG",
-                          "ERROR"
-                        ]
-                      },
-                      "options": {
+        "parameters": [
+          {
+            "in": "path",
+            "name": "account_id",
+            "schema": {
+              "type": "string",
+              "format": "uuid-v4",
+              "example": "24c7a78d-ed48-4f9a-82c8-051d662be415"
+            },
+            "description": "Account id",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Investments successfully found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "title": "Investment",
                         "type": "object",
-                        "description": "additional data to be processed",
-                        "example": "12345678900"
+                        "description": "Describes properties of an investment",
+                        "properties": {
+                          "indicator_percentage": {
+                            "type": "number",
+                            "description": "Indicator percentage",
+                            "example": 100
+                          },
+                          "maturity_date": {
+                            "type": "string",
+                            "description": "Investments maturity date",
+                            "example": "2023-11-06"
+                          },
+                          "withdrawal_amount": {
+                            "type": "number",
+                            "description": "Withdrawal amount",
+                            "example": 268717.71
+                          },
+                          "product_name": {
+                            "type": "string",
+                            "description": "Product name",
+                            "example": "CDB - CDI - Taxa Fltutuante"
+                          },
+                          "application_number": {
+                            "type": "number",
+                            "description": "Application number",
+                            "example": 1
+                          },
+                          "account_number": {
+                            "type": "number",
+                            "description": "Number of account",
+                            "example": 12345
+                          },
+                          "indexer": {
+                            "type": "string",
+                            "description": "indexer",
+                            "example": "CDI"
+                          },
+                          "profitability": {
+                            "type": "number",
+                            "description": "Profitability",
+                            "example": 100
+                          },
+                          "liquidity": {
+                            "type": "string",
+                            "description": "Liquidity",
+                            "example": "Di\u00e1ria"
+                          },
+                          "issue_date": {
+                            "type": "string",
+                            "description": "Issue date",
+                            "example": "2018-11-06"
+                          },
+                          "grace_period": {
+                            "type": "number",
+                            "description": "Grace period",
+                            "example": 1
+                          },
+                          "operation_term": {
+                            "type": "number",
+                            "description": "Operation term",
+                            "example": 1255
+                          },
+                          "interest_type": {
+                            "type": "string",
+                            "description": "Interest type",
+                            "example": "P\u00f3s-Fixado"
+                          },
+                          "applied_value": {
+                            "type": "number",
+                            "description": "Applied value",
+                            "example": 200000
+                          },
+                          "current_value": {
+                            "type": "number",
+                            "description": "Current value",
+                            "example": 280844.36
+                          },
+                          "income_tax_value": {
+                            "type": "number",
+                            "description": "income tax value",
+                            "example": 12126.65
+                          },
+                          "iof_value": {
+                            "type": "number",
+                            "description": "iof value",
+                            "example": 268717.71
+                          },
+                          "accumulated_interest_value": {
+                            "type": "number",
+                            "description": "Accumulated interest value",
+                            "example": 80844.36
+                          },
+                          "accumulated_correction_value": {
+                            "type": "number",
+                            "description": "Accumulated correction value",
+                            "example": 1
+                          },
+                          "daily_interest_value": {
+                            "type": "number",
+                            "description": "Daily interest value",
+                            "example": 137
+                          },
+                          "operation_value": {
+                            "type": "number",
+                            "description": "Operation value",
+                            "example": 280844.36
+                          },
+                          "redemption_face_value": {
+                            "type": "number",
+                            "description": "Redemption face value",
+                            "example": 100
+                          },
+                          "operation_unit_value": {
+                            "type": "number",
+                            "description": "Operation unit value",
+                            "example": 1.4042218
+                          },
+                          "repurchase_result_value": {
+                            "type": "number",
+                            "description": "Repurchase result value",
+                            "example": 0
+                          },
+                          "operation_date": {
+                            "type": "string",
+                            "description": "Operation date",
+                            "example": "2023-11-06"
+                          },
+                          "transaction_sequence_number": {
+                            "type": "number",
+                            "description": "Transaction sequence number",
+                            "example": 1
+                          },
+                          "batch_number": {
+                            "type": "number",
+                            "description": "Batch number",
+                            "example": 197
+                          },
+                          "operation_rate": {
+                            "type": "number",
+                            "description": "Operation rate",
+                            "example": 0
+                          },
+                          "reference_percentage_variation": {
+                            "type": "number",
+                            "description": "Reference percentage variation",
+                            "example": 100
+                          },
+                          "custody_symbol": {
+                            "type": "string",
+                            "description": "Custody symbol",
+                            "example": "C"
+                          },
+                          "segment_identifier": {
+                            "type": "string",
+                            "description": "Segment identifier",
+                            "example": "C"
+                          },
+                          "period_rate": {
+                            "type": "number",
+                            "description": "Period rate",
+                            "example": 0
+                          },
+                          "elapsed_term": {
+                            "type": "number",
+                            "description": "Elapsed term",
+                            "example": 423
+                          },
+                          "elapsed_days": {
+                            "type": "number",
+                            "description": "Elapsed days",
+                            "example": 12345
+                          },
+                          "elapsed_business_days": {
+                            "type": "number",
+                            "description": "Elapsed business days",
+                            "example": 1
+                          },
+                          "manager_code": {
+                            "type": "number",
+                            "description": "Manager code",
+                            "example": 100
+                          },
+                          "liquidation_form_identifier": {
+                            "type": "string",
+                            "description": "Liquidation form identifier",
+                            "example": "FIN"
+                          },
+                          "second_operation_unit_value": {
+                            "type": "number",
+                            "description": "Second operation unit value",
+                            "example": 1
+                          },
+                          "income_tax_base_value": {
+                            "type": "number",
+                            "description": "Income tax base value",
+                            "example": 1
+                          },
+                          "final_income_tax_value": {
+                            "type": "number",
+                            "description": "Final income tax value",
+                            "example": 1255
+                          },
+                          "liquid_value": {
+                            "type": "number",
+                            "description": "Liquid value",
+                            "example": 268717.71
+                          },
+                          "spread_earnings_value": {
+                            "type": "number",
+                            "description": "Spread earnings value",
+                            "example": 200000
+                          },
+                          "matched_operation_value": {
+                            "type": "number",
+                            "description": "Matched operation value",
+                            "example": 280844.36
+                          },
+                          "banked_revenue_value": {
+                            "type": "number",
+                            "description": "banked revenue value",
+                            "example": 12126.65
+                          },
+                          "financed_daily_revenue_value": {
+                            "type": "number",
+                            "description": "Financed daily revenue value",
+                            "example": 268717.71
+                          },
+                          "repurchase_allowed": {
+                            "type": "boolean",
+                            "description": "Repurchase allowed",
+                            "example": true
+                          }
+                        }
                       }
                     }
                   }
-                ]
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NotFound",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Account not found",
+                  "type": "object",
+                  "description": "Representation of an not found error",
+                  "properties": {
+                    "code": {
+                      "description": "The type of error",
+                      "type": "string",
+                      "example": "ACCOUNT_NOT_FOUND"
+                    },
+                    "message": {
+                      "description": "Describes a message informing a reason for the error",
+                      "type": "string",
+                      "example": "Account was not found."
+                    }
+                  }
+                },
+                "example": {
+                  "code": "ACCOUNT_NOT_FOUND",
+                  "message": "Account was not found."
+                }
               }
             }
           }
-        },
+        }
+      }
+    },
+    "/products": {
+      "get": {
+        "summary": "List Products",
+        "description": "List Products",
+        "tags": [
+          "Products"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "account_id",
+            "schema": {
+              "type": "string",
+              "format": "uuid-v4"
+            },
+            "description": "Account id",
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "after",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Base64 filter to bring only products after the provided value",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "before",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Base64 filter to bring only products before the provided value",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The numbers of products to return. Can be omitted if provided before or after filters with limit embedded in them. If nothing is provided, the default will be 50 as limit",
+            "required": false
+          }
+        ],
         "responses": {
-          "204": {
-            "description": "No Content"
+          "200": {
+            "description": "Products successfully found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "title": "Products",
+                        "type": "object",
+                        "description": "Describes properties of a product",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "format": "uuid-v4",
+                            "example": "f6ee2b64-1c5d-4504-bb52-6f79e02d1006",
+                            "description": "Product's id"
+                          },
+                          "person_kind": {
+                            "type": "string",
+                            "enum": [
+                              "NATURAL_PERSON",
+                              "LEGAL_PERSON"
+                            ],
+                            "description": "Person kind"
+                          },
+                          "status": {
+                            "type": "string",
+                            "enum": [
+                              "ACTIVE",
+                              "INACTIVE"
+                            ],
+                            "description": "Status from product"
+                          },
+                          "product": {
+                            "type": "string",
+                            "description": "The name or identifier of the investment product",
+                            "example": "CDB - CDI - Taxa Flutuante"
+                          },
+                          "kind": {
+                            "type": "string",
+                            "description": "The type or category of the investment product",
+                            "example": "P\u00f3s-Fixada"
+                          },
+                          "profitability": {
+                            "type": "number",
+                            "description": "The profitability or interest rate of the investment product",
+                            "example": 5.2
+                          },
+                          "indexer": {
+                            "type": "string",
+                            "description": "The financial index used to calculate the profitability",
+                            "example": "CDI"
+                          },
+                          "term": {
+                            "type": "number",
+                            "description": "The duration or term of the investment product in days",
+                            "example": 9998
+                          },
+                          "maturity_date": {
+                            "type": "string",
+                            "description": "The date when the investment product matures",
+                            "example": "2050-09-24"
+                          },
+                          "minimum_value": {
+                            "type": "number",
+                            "description": "The minimum investment amount required for the product",
+                            "example": 100
+                          },
+                          "grace_period": {
+                            "type": "number",
+                            "description": "The grace period in days for the investment product",
+                            "example": 1
+                          },
+                          "liquidity": {
+                            "type": "string",
+                            "description": "The liquidity frequency of the investment product",
+                            "example": "Di\u00e1ria"
+                          },
+                          "repurchase_grace_period": {
+                            "type": "number",
+                            "description": "The repurchase grace period in days for the investment product",
+                            "example": 1
+                          },
+                          "calculation_criteria": {
+                            "type": "string",
+                            "description": "The criteria used for calculating the investment product",
+                            "example": "PRE"
+                          },
+                          "criteria_type": {
+                            "type": "string",
+                            "description": "The type of criteria used",
+                            "example": "CONTABIL"
+                          },
+                          "paper_type": {
+                            "type": "string",
+                            "description": "The type of financial instrument",
+                            "example": "CDB"
+                          },
+                          "income_type": {
+                            "type": "string",
+                            "description": "The type of income generated by the investment product",
+                            "example": "PRE"
+                          },
+                          "tax_rate_sequence_number": {
+                            "type": "number",
+                            "description": "The sequence number for the tax rate applied to the investment product",
+                            "example": 4
+                          },
+                          "automatic_application_available": {
+                            "type": "boolean",
+                            "description": "Indicates whether automatic application is available for the investment product"
+                          },
+                          "escalated": {
+                            "type": "boolean",
+                            "description": "Indicates whether the investment product has escalated features"
+                          },
+                          "redemption_form_identifier": {
+                            "type": "string",
+                            "description": "The identifier for the redemption form associated with the investment product",
+                            "example": "FIN"
+                          },
+                          "scheduling_available": {
+                            "type": "boolean",
+                            "description": "Indicates whether scheduling is available for the investment product"
+                          }
+                        }
+                      }
+                    },
+                    "cursor": {
+                      "title": "Cursor",
+                      "type": "object",
+                      "description": "Describes properties of a cursor",
+                      "properties": {
+                        "after": {
+                          "type": "string",
+                          "format": "base64",
+                          "description": "cursor pointing at the last item of the list. If no more items exist, the property is removed from the response",
+                          "example": "eyJmaWVsZCI6ImNyZWF0ZWRfYXQiLCJ2YWx1ZSI6IjIwMjMtMTEtMDlUMTM6MDM6NDAuMDAwWiIsImxpbWl0IjoyfQ=="
+                        },
+                        "before": {
+                          "type": "string",
+                          "format": "base64",
+                          "description": "cursor pointing at the first item of the list. If its the first available item, the property is removed from the response",
+                          "example": "eyJmaWVsZCI6ImNyZWF0ZWRfYXQiLCJ2YWx1ZSI6IjIwMjMtMTEtMDlUMTM6MDM6NDAuMDAwWiIsImxpbWl0IjoyfQ=="
+                        },
+                        "limit": {
+                          "type": "number",
+                          "format": "base64",
+                          "description": "number of items to return.",
+                          "example": 10
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }
