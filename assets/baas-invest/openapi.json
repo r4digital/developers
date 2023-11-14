@@ -3,7 +3,7 @@
   "info": {
     "title": "baas-invest",
     "version": "0.0.1",
-    "description": "\n*Description**: API responsible for investment operations.\n# Errors\nThis service uses [HTTP response status codes](https://en.wikipedia.org/wiki/List_of_HTTP_status_codes) to indicate the success or failure of your API requests.\nIn general, there are three status code ranges you can expect:\n- `2xx` success status codes confirm that your request worked as expected\n- `4xx` error status codes indicate an error because of the information provided (e.g., a required parameter was not provided)\n- `5xx` error status codes are rare and indicate an error with servers\n## HTTP Status code summary\nExtracted from [Stripe API codes](https://stripe.com/docs/api/errors)\n\n  - `200 - OK` Everything worked as expected.\n\n  - `400 - Bad Request` The request was unacceptable, often due to missing a required parameter.\n\n  - `401 - Unauthorized` No valid API key provided.\n\n  - `403 - Forbidden` The API key doesn't have permissions to perform the request.\n\n  - `404 - Not Found` The requested resource doesn't exist.\n\n  - `408 - Request Timeout` The connection was ended by timeout.\n\n  - `429 - Too Many Requests` Too many requests hit the API too quickly. We recommend an exponential backoff of your requests.\n\n  - `500, 502, 503, 504 - Server Errors` Something went wrong on R4's end.\n\n## Error codes\nBelow is a list of possible error codes that can be returned:\n\n  | Code                     | Description                                              |\n  |------------------------- | ---------------------------------------------------------|\n  | `ENTITY_ALREADY_EXISTS`  | The operation informed already exists                    |\n  | `INVALID_PARAM`          | There is an invalid param in the request                 |\n  | `UNEXPECTED_ERROR`       | Internal server failure                                  |\n"
+    "description": "\n*Description**: API responsible for investment operations.\n# Errors\nThis service uses [HTTP response status codes](https://en.wikipedia.org/wiki/List_of_HTTP_status_codes) to indicate the success or failure of your API requests.\nIn general, there are three status code ranges you can expect:\n- `2xx` success status codes confirm that your request worked as expected\n- `4xx` error status codes indicate an error because of the information provided (e.g., a required parameter was not provided)\n- `5xx` error status codes are rare and indicate an error with servers\n## HTTP Status code summary\nExtracted from [Stripe API codes](https://stripe.com/docs/api/errors)\n\n  - `200 - OK` Everything worked as expected.\n\n  - `400 - Bad Request` The request was unacceptable, often due to missing a required parameter.\n\n  - `401 - Unauthorized` No valid API key provided.\n\n  - `403 - Forbidden` The API key doesn't have permissions to perform the request.\n\n  - `404 - Not Found` The requested resource doesn't exist.\n\n  - `408 - Request Timeout` The connection was ended by timeout.\n\n  - `429 - Too Many Requests` Too many requests hit the API too quickly. We recommend an exponential backoff of your requests.\n\n  - `500, 502, 503, 504 - Server Errors` Something went wrong on R4's end.\n\n## Error codes\nBelow is a list of possible error codes that can be returned:\n\n  | Code                     | Description                                              |\n  |------------------------- | ---------------------------------------------------------|\n  | `ENTITY_ALREADY_EXISTS`  | The operation informed already exists                    |\n  | `INVALID_PARAM`          | There is an invalid param in the request                 |\n  | `UNEXPECTED_ERROR`       | Internal server failure                                  |\n  | `ACCOUNT_NOT_FOUND`      | Account was not found.                                   |\n  | `MINIMUM_VALUE_TO_INVEST`| The value is less then the minimun value to invest.      |\n"
   },
   "servers": [
     {
@@ -15,8 +15,13 @@
       "url": "https://api.r4digital.cloud/investment"
     }
   ],
+  "security": [
+    {
+      "BearerAuth": []
+    }
+  ],
   "paths": {
-    "/accounts/{account_id}/investments": {
+    "/v1/accounts/{account_id}/investments": {
       "get": {
         "summary": "List Account Investments",
         "description": "List Account Investments",
@@ -318,9 +323,191 @@
             }
           }
         }
+      },
+      "post": {
+        "summary": "List Account Investments",
+        "description": "List Account Investments",
+        "tags": [
+          "Investments"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "account_id",
+            "schema": {
+              "type": "string",
+              "format": "uuid-v4",
+              "example": "24c7a78d-ed48-4f9a-82c8-051d662be415"
+            },
+            "description": "Account id",
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "title": "Investment",
+                "type": "object",
+                "description": "Describes properties of an investment",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "format": "uuid-v4",
+                    "description": "Unique identifier to create invest",
+                    "example": "9111fee6-5236-48b2-b260-1d599e94adf9"
+                  },
+                  "product_id": {
+                    "type": "string",
+                    "format": "uuid-v4",
+                    "description": "Unique identifier of a product to invest",
+                    "example": "9111fee6-5236-48b2-b260-1d599e94adf9"
+                  },
+                  "maturity_date": {
+                    "type": "string",
+                    "format": "date",
+                    "description": "Maturity date to apply redeem",
+                    "example": "2050-08-30T00:00:00.000Z"
+                  },
+                  "value": {
+                    "type": "number",
+                    "description": "Value to invest",
+                    "example": 100.26
+                  },
+                  "application_node": {
+                    "type": "string",
+                    "description": "Description of an investment",
+                    "example": "Description for investment"
+                  },
+                  "automatic_redemption": {
+                    "type": "boolean",
+                    "description": "Marks if the redemption will be automatic",
+                    "example": true
+                  }
+                },
+                "required": [
+                  "id",
+                  "product_id",
+                  "value"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Investments successfully found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Investment",
+                  "type": "object",
+                  "description": "Describes properties of an investment",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "format": "uuid-v4",
+                      "description": "Unique identifier to create invest",
+                      "example": "9111fee6-5236-48b2-b260-1d599e94adf9"
+                    },
+                    "product_id": {
+                      "type": "string",
+                      "format": "uuid-v4",
+                      "description": "Unique identifier of a product to invest",
+                      "example": "9111fee6-5236-48b2-b260-1d599e94adf9"
+                    },
+                    "acount_id": {
+                      "type": "string",
+                      "format": "uuid-v4",
+                      "description": "Invested account id",
+                      "example": "9111fee6-5236-48b2-b260-1d599e94adf9"
+                    },
+                    "maturity_date": {
+                      "type": "string",
+                      "format": "date",
+                      "description": "Maturity date to apply redeem",
+                      "example": "2050-08-30T00:00:00.000Z"
+                    },
+                    "value": {
+                      "type": "number",
+                      "description": "Value to invest",
+                      "example": 100.26
+                    },
+                    "application_node": {
+                      "type": "string",
+                      "description": "Description of an investment",
+                      "example": "Description for investment"
+                    },
+                    "automatic_redemption": {
+                      "type": "boolean",
+                      "description": "Marks if the redemption will be automatic",
+                      "example": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "BadRequest",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Minimum value to invest",
+                  "type": "object",
+                  "description": "Representation of an bad request error",
+                  "properties": {
+                    "code": {
+                      "description": "The type of error",
+                      "type": "string",
+                      "example": "MINIMUM_VALUE_TO_INVEST"
+                    },
+                    "message": {
+                      "description": "Describes a message informing a reason for the error",
+                      "type": "string",
+                      "example": "The value is less then the minimun value to invest."
+                    }
+                  }
+                },
+                "example": {
+                  "code": "MINIMUM_VALUE_TO_INVEST",
+                  "message": "The value is less then the minimun value to invest."
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NotFound",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Account not found",
+                  "type": "object",
+                  "description": "Representation of an not found error",
+                  "properties": {
+                    "code": {
+                      "description": "The type of error",
+                      "type": "string",
+                      "example": "ACCOUNT_NOT_FOUND"
+                    },
+                    "message": {
+                      "description": "Describes a message informing a reason for the error",
+                      "type": "string",
+                      "example": "Account was not found."
+                    }
+                  }
+                },
+                "example": {
+                  "code": "ACCOUNT_NOT_FOUND",
+                  "message": "Account was not found."
+                }
+              }
+            }
+          }
+        }
       }
     },
-    "/products": {
+    "/v1/products": {
       "get": {
         "summary": "List Products",
         "description": "List Products",
@@ -529,6 +716,16 @@
             }
           }
         }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "bearerFormat": "JWT",
+        "scheme": "bearer",
+        "description": "Bearer auth (https://developer.mozilla.org/en-US/docs/Web/HTTP/Authentication)."
       }
     }
   }
