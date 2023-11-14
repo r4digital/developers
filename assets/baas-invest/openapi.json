@@ -325,8 +325,8 @@
         }
       },
       "post": {
-        "summary": "List Account Investments",
-        "description": "List Account Investments",
+        "summary": "Create Investment",
+        "description": "Create Investment",
         "tags": [
           "Investments"
         ],
