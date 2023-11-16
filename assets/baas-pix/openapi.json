@@ -1408,6 +1408,15 @@
             "description": "Unique account id",
             "required": true,
             "example": "60863781-58ce-4665-939e-45e895fd40eb"
+          },
+          {
+            "in": "query",
+            "name": "include_statistics",
+            "schema": {
+              "type": "boolean"
+            },
+            "description": "Defines return of statistics",
+            "required": false
           }
         ],
         "description": "Get Pix Key data",
@@ -1517,50 +1526,461 @@
                       "type": "string",
                       "description": "Unique identifier of the payment transaction"
                     },
-                    "statistics": {
+                    "key_statistics": {
                       "type": "object",
-                      "description": "Statistical data related to key, owner or account",
+                      "description": "Statistics from key",
                       "properties": {
-                        "anti_fraud_updated_at": {
-                          "type": "string",
-                          "description": "Latest anti-fraud update"
-                        },
-                        "counters": {
-                          "type": "array",
-                          "description": "Event counter",
-                          "items": {
-                            "type": "object",
-                            "properties": {
-                              "kind": {
-                                "type": "string",
-                                "description": "Accountant type",
-                                "enum": [
-                                  "TRANSACTIONS",
-                                  "FRAUD_REPORT",
-                                  "FRAUD_CONFIRMATION"
-                                ]
-                              },
-                              "aggregator": {
-                                "type": "string",
-                                "description": "Counter aggregation type",
-                                "enum": [
-                                  "KEY",
-                                  "OWNER",
-                                  "ACCOUNT"
-                                ]
-                              },
-                              "d3": {
-                                "type": "number",
-                                "description": "Value for the last 3 days"
-                              },
-                              "d30": {
-                                "type": "number",
-                                "description": "Value for the last 30 days"
-                              },
-                              "m6": {
-                                "type": "number",
-                                "description": "Value for the last 6 months"
+                        "spi": {
+                          "type": "object",
+                          "properties": {
+                            "updated_at": {
+                              "type": "string",
+                              "format": "dateTime",
+                              "example": "2021-10-31T12:56:23.123Z"
+                            },
+                            "transactions": {
+                              "type": "object",
+                              "description": "Describes the properties of pix key statistics",
+                              "properties": {
+                                "d90": {
+                                  "type": "number",
+                                  "description": "90 days"
+                                },
+                                "m12": {
+                                  "type": "number",
+                                  "description": "12 months"
+                                },
+                                "m60": {
+                                  "type": "number",
+                                  "description": "60 months"
+                                }
                               }
+                            }
+                          }
+                        },
+                        "fraud_markings": {
+                          "type": "object",
+                          "properties": {
+                            "updated_at": {
+                              "type": "string",
+                              "format": "dateTime",
+                              "example": "2021-10-31T12:56:23.123Z"
+                            },
+                            "application_fraud": {
+                              "type": "object",
+                              "description": "Quantity of reports from application frauds in a period",
+                              "properties": {
+                                "d90": {
+                                  "type": "number",
+                                  "description": "90 days"
+                                },
+                                "m12": {
+                                  "type": "number",
+                                  "description": "12 months"
+                                },
+                                "m60": {
+                                  "type": "number",
+                                  "description": "60 months"
+                                }
+                              }
+                            },
+                            "mule_account": {
+                              "type": "object",
+                              "description": "Quantity of reports from mule accounts in a period",
+                              "properties": {
+                                "d90": {
+                                  "type": "number",
+                                  "description": "90 days"
+                                },
+                                "m12": {
+                                  "type": "number",
+                                  "description": "12 months"
+                                },
+                                "m60": {
+                                  "type": "number",
+                                  "description": "60 months"
+                                }
+                              }
+                            },
+                            "scammer_account": {
+                              "type": "object",
+                              "description": "Quantity of reports from scammer accounts in a period",
+                              "properties": {
+                                "d90": {
+                                  "type": "number",
+                                  "description": "90 days"
+                                },
+                                "m12": {
+                                  "type": "number",
+                                  "description": "12 months"
+                                },
+                                "m60": {
+                                  "type": "number",
+                                  "description": "60 months"
+                                }
+                              }
+                            },
+                            "other": {
+                              "type": "object",
+                              "description": "Quantity of reports from other types in a period",
+                              "properties": {
+                                "d90": {
+                                  "type": "number",
+                                  "description": "90 days"
+                                },
+                                "m12": {
+                                  "type": "number",
+                                  "description": "12 months"
+                                },
+                                "m60": {
+                                  "type": "number",
+                                  "description": "60 months"
+                                }
+                              }
+                            },
+                            "fraud_unknown": {
+                              "type": "object",
+                              "description": "Quantity of reports from unknown frauds in a period",
+                              "properties": {
+                                "d90": {
+                                  "type": "number",
+                                  "description": "90 days"
+                                },
+                                "m12": {
+                                  "type": "number",
+                                  "description": "12 months"
+                                },
+                                "m60": {
+                                  "type": "number",
+                                  "description": "60 months"
+                                }
+                              }
+                            },
+                            "fraud_total_spi": {
+                              "type": "object",
+                              "description": "Quantity of reports from frauds spi in a period",
+                              "properties": {
+                                "d90": {
+                                  "type": "number",
+                                  "description": "90 days"
+                                },
+                                "m12": {
+                                  "type": "number",
+                                  "description": "12 months"
+                                },
+                                "m60": {
+                                  "type": "number",
+                                  "description": "60 months"
+                                }
+                              }
+                            },
+                            "fraud_distinct_psp": {
+                              "type": "object",
+                              "description": "Quantity of reports from distincts psp in a period",
+                              "properties": {
+                                "d90": {
+                                  "type": "number",
+                                  "description": "90 days"
+                                },
+                                "m12": {
+                                  "type": "number",
+                                  "description": "12 months"
+                                },
+                                "m60": {
+                                  "type": "number",
+                                  "description": "60 months"
+                                }
+                              }
+                            }
+                          }
+                        },
+                        "infraction_reports": {
+                          "type": "object",
+                          "properties": {
+                            "updated_at": {
+                              "type": "string",
+                              "format": "dateTime",
+                              "example": "2021-10-31T12:56:23.123Z"
+                            },
+                            "opened": {
+                              "type": "number",
+                              "example": 10,
+                              "description": "Quantity of infraction reports opened"
+                            },
+                            "opened_distinct_psp": {
+                              "type": "number",
+                              "example": 10,
+                              "description": "Quantity of infraction reports opened from distincts psp"
+                            },
+                            "rejected": {
+                              "type": "object",
+                              "description": "Quantity of infraction reports rejected in a period",
+                              "properties": {
+                                "d90": {
+                                  "type": "number",
+                                  "description": "90 days"
+                                },
+                                "m12": {
+                                  "type": "number",
+                                  "description": "12 months"
+                                },
+                                "m60": {
+                                  "type": "number",
+                                  "description": "60 months"
+                                }
+                              }
+                            }
+                          }
+                        },
+                        "accounts": {
+                          "type": "object",
+                          "properties": {
+                            "updated_at": {
+                              "type": "string",
+                              "format": "dateTime",
+                              "example": "2021-10-31T12:56:23.123Z"
+                            },
+                            "different_accounts": {
+                              "type": "object",
+                              "description": "Describes the properties of pix key statistics",
+                              "properties": {
+                                "d90": {
+                                  "type": "number",
+                                  "description": "90 days"
+                                },
+                                "m12": {
+                                  "type": "number",
+                                  "description": "12 months"
+                                },
+                                "m60": {
+                                  "type": "number",
+                                  "description": "60 months"
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "user_statistics": {
+                      "type": "object",
+                      "description": "Statistics from user",
+                      "properties": {
+                        "spi": {
+                          "type": "object",
+                          "properties": {
+                            "updated_at": {
+                              "type": "string",
+                              "format": "dateTime",
+                              "example": "2021-10-31T12:56:23.123Z"
+                            },
+                            "transactions": {
+                              "type": "object",
+                              "description": "Describes the properties of pix key statistics",
+                              "properties": {
+                                "d90": {
+                                  "type": "number",
+                                  "description": "90 days"
+                                },
+                                "m12": {
+                                  "type": "number",
+                                  "description": "12 months"
+                                },
+                                "m60": {
+                                  "type": "number",
+                                  "description": "60 months"
+                                }
+                              }
+                            }
+                          }
+                        },
+                        "fraud_markings": {
+                          "type": "object",
+                          "properties": {
+                            "updated_at": {
+                              "type": "string",
+                              "format": "dateTime",
+                              "example": "2021-10-31T12:56:23.123Z"
+                            },
+                            "application_fraud": {
+                              "type": "object",
+                              "description": "Quantity of reports from application frauds in a period",
+                              "properties": {
+                                "d90": {
+                                  "type": "number",
+                                  "description": "90 days"
+                                },
+                                "m12": {
+                                  "type": "number",
+                                  "description": "12 months"
+                                },
+                                "m60": {
+                                  "type": "number",
+                                  "description": "60 months"
+                                }
+                              }
+                            },
+                            "mule_account": {
+                              "type": "object",
+                              "description": "Quantity of reports from mule accounts in a period",
+                              "properties": {
+                                "d90": {
+                                  "type": "number",
+                                  "description": "90 days"
+                                },
+                                "m12": {
+                                  "type": "number",
+                                  "description": "12 months"
+                                },
+                                "m60": {
+                                  "type": "number",
+                                  "description": "60 months"
+                                }
+                              }
+                            },
+                            "scammer_account": {
+                              "type": "object",
+                              "description": "Quantity of reports from scammer accounts in a period",
+                              "properties": {
+                                "d90": {
+                                  "type": "number",
+                                  "description": "90 days"
+                                },
+                                "m12": {
+                                  "type": "number",
+                                  "description": "12 months"
+                                },
+                                "m60": {
+                                  "type": "number",
+                                  "description": "60 months"
+                                }
+                              }
+                            },
+                            "other": {
+                              "type": "object",
+                              "description": "Quantity of reports from other types in a period",
+                              "properties": {
+                                "d90": {
+                                  "type": "number",
+                                  "description": "90 days"
+                                },
+                                "m12": {
+                                  "type": "number",
+                                  "description": "12 months"
+                                },
+                                "m60": {
+                                  "type": "number",
+                                  "description": "60 months"
+                                }
+                              }
+                            },
+                            "fraud_unknown": {
+                              "type": "object",
+                              "description": "Quantity of reports from unknown frauds in a period",
+                              "properties": {
+                                "d90": {
+                                  "type": "number",
+                                  "description": "90 days"
+                                },
+                                "m12": {
+                                  "type": "number",
+                                  "description": "12 months"
+                                },
+                                "m60": {
+                                  "type": "number",
+                                  "description": "60 months"
+                                }
+                              }
+                            },
+                            "fraud_total_spi": {
+                              "type": "object",
+                              "description": "Quantity of reports from frauds spi in a period",
+                              "properties": {
+                                "d90": {
+                                  "type": "number",
+                                  "description": "90 days"
+                                },
+                                "m12": {
+                                  "type": "number",
+                                  "description": "12 months"
+                                },
+                                "m60": {
+                                  "type": "number",
+                                  "description": "60 months"
+                                }
+                              }
+                            },
+                            "fraud_distinct_psp": {
+                              "type": "object",
+                              "description": "Quantity of reports from distincts psp in a period",
+                              "properties": {
+                                "d90": {
+                                  "type": "number",
+                                  "description": "90 days"
+                                },
+                                "m12": {
+                                  "type": "number",
+                                  "description": "12 months"
+                                },
+                                "m60": {
+                                  "type": "number",
+                                  "description": "60 months"
+                                }
+                              }
+                            }
+                          }
+                        },
+                        "infraction_reports": {
+                          "type": "object",
+                          "properties": {
+                            "updated_at": {
+                              "type": "string",
+                              "format": "dateTime",
+                              "example": "2021-10-31T12:56:23.123Z"
+                            },
+                            "opened": {
+                              "type": "number",
+                              "example": 10,
+                              "description": "Quantity of infraction reports opened"
+                            },
+                            "opened_distinct_psp": {
+                              "type": "number",
+                              "example": 10,
+                              "description": "Quantity of infraction reports opened from distincts psp"
+                            },
+                            "rejected": {
+                              "type": "object",
+                              "description": "Quantity of infraction reports rejected in a period",
+                              "properties": {
+                                "d90": {
+                                  "type": "number",
+                                  "description": "90 days"
+                                },
+                                "m12": {
+                                  "type": "number",
+                                  "description": "12 months"
+                                },
+                                "m60": {
+                                  "type": "number",
+                                  "description": "60 months"
+                                }
+                              }
+                            }
+                          }
+                        },
+                        "accounts": {
+                          "type": "object",
+                          "properties": {
+                            "updated_at": {
+                              "type": "string",
+                              "format": "dateTime",
+                              "example": "2021-10-31T12:56:23.123Z",
+                              "description": "Date time from last update"
+                            },
+                            "total": {
+                              "type": "number",
+                              "example": 10,
+                              "description": "Total number of accounts"
                             }
                           }
                         }
