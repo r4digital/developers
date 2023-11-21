@@ -336,6 +336,12 @@
                           "xml": {
                             "attribute": true
                           }
+                        },
+                        "PercTempoAberturaNotificacao": {
+                          "type": "integer",
+                          "xml": {
+                            "attribute": true
+                          }
                         }
                       }
                     },
