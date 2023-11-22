@@ -2610,30 +2610,120 @@
               }
             }
           },
-          "404": {
-            "description": "Error with type IncomeTaxNotFound.",
+          "400": {
+            "description": "Error with types [BadRequest, AccountNotActive].",
             "content": {
               "application/json": {
                 "schema": {
-                  "title": "Income Tax Not Found",
-                  "properties": {
-                    "error": {
-                      "type": "object",
+                  "oneOf": [
+                    {
+                      "title": "Bad Request",
                       "properties": {
                         "code": {
                           "type": "string",
                           "title": "Error code",
                           "description": "The type of error",
-                          "example": "INCOME_TAX_NOT_FOUND",
+                          "example": "BAD_REQUEST",
                           "enum": [
-                            "INCOME_TAX_NOT_FOUND"
+                            "BAD_REQUEST"
                           ]
                         },
                         "message": {
                           "type": "string",
                           "title": "Error message",
                           "description": "Describes a message informing a reason for the error",
-                          "example": "Income Tax Not Found for params"
+                          "example": "Invalid request params"
+                        },
+                        "status_code": {
+                          "type": "number",
+                          "description": "Error status code",
+                          "example": "400"
+                        }
+                      }
+                    },
+                    {
+                      "title": "Account Not Active Error",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "ACCOUNT_NOT_ACTIVE",
+                          "enum": [
+                            "ACCOUNT_NOT_ACTIVE"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "Account is not active."
+                        },
+                        "status_code": {
+                          "type": "number",
+                          "description": "Error status code",
+                          "example": "400"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Error with types [IncomeTaxNotFound, AccountNotFound].",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "title": "Income Tax Not Found",
+                      "properties": {
+                        "error": {
+                          "type": "object",
+                          "properties": {
+                            "code": {
+                              "type": "string",
+                              "title": "Error code",
+                              "description": "The type of error",
+                              "example": "INCOME_TAX_NOT_FOUND",
+                              "enum": [
+                                "INCOME_TAX_NOT_FOUND"
+                              ]
+                            },
+                            "message": {
+                              "type": "string",
+                              "title": "Error message",
+                              "description": "Describes a message informing a reason for the error",
+                              "example": "Income Tax Not Found for params"
+                            },
+                            "status_code": {
+                              "type": "number",
+                              "description": "Error status code",
+                              "example": "404"
+                            }
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "title": "Account Not Found",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "ACCOUNT_NOT_FOUND",
+                          "enum": [
+                            "ACCOUNT_NOT_FOUND"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "Account not found"
                         },
                         "status_code": {
                           "type": "number",
@@ -2642,7 +2732,7 @@
                         }
                       }
                     }
-                  }
+                  ]
                 }
               }
             }
