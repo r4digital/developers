@@ -374,7 +374,7 @@
                     "description": "Value to invest",
                     "example": 100.26
                   },
-                  "application_node": {
+                  "application_note": {
                     "type": "string",
                     "description": "Description of an investment",
                     "example": "Description for investment"
@@ -383,12 +383,32 @@
                     "type": "boolean",
                     "description": "Marks if the redemption will be automatic",
                     "example": true
+                  },
+                  "initiation_channel": {
+                    "type": "string",
+                    "enum": [
+                      "AGENCY",
+                      "APP",
+                      "ATM",
+                      "CALL_CENTER",
+                      "INTERNET_BANKING",
+                      "MED",
+                      "INFRACTION_REPORT"
+                    ],
+                    "description": "The channel who start the operation"
+                  },
+                  "open_banking": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Marks if the operation is from open banking"
                   }
                 },
                 "required": [
                   "id",
                   "product_id",
-                  "value"
+                  "value",
+                  "automatic_redemption",
+                  "initiation_channel"
                 ]
               }
             }
@@ -403,45 +423,195 @@
                   "title": "Investment",
                   "type": "object",
                   "description": "Describes properties of an investment",
+                  "required": [
+                    "id",
+                    "application_id",
+                    "account_id",
+                    "product_id",
+                    "kind",
+                    "term",
+                    "maturity_date",
+                    "value",
+                    "repurchase_grace_period",
+                    "calculation_criteria",
+                    "criteria_type",
+                    "paper_type",
+                    "income_type",
+                    "tax_rate_sequence_number",
+                    "automatic_application_available",
+                    "escalated",
+                    "automatic_redemption",
+                    "redemption_form_identifier",
+                    "scheduling_available",
+                    "status",
+                    "created_at",
+                    "updated_at",
+                    "occurrences"
+                  ],
                   "properties": {
                     "id": {
                       "type": "string",
-                      "format": "uuid-v4",
-                      "description": "Unique identifier to create invest",
-                      "example": "9111fee6-5236-48b2-b260-1d599e94adf9"
+                      "format": "uuid",
+                      "description": "Investment id",
+                      "example": "123e4567-e89b-12d3-a456-426655440000"
+                    },
+                    "application_id": {
+                      "type": "string",
+                      "format": "uuid",
+                      "description": "Application id",
+                      "example": "68f7b55c-9185-4874-b6b4-5cb7720d56ca"
+                    },
+                    "account_id": {
+                      "type": "string",
+                      "format": "uuid",
+                      "description": "Account id",
+                      "example": "d23a8ba2-dc0c-4023-9430-a68b4398f0de"
                     },
                     "product_id": {
                       "type": "string",
-                      "format": "uuid-v4",
-                      "description": "Unique identifier of a product to invest",
-                      "example": "9111fee6-5236-48b2-b260-1d599e94adf9"
+                      "format": "uuid",
+                      "description": "Product id",
+                      "example": "3a1e0e60-b702-488f-8a42-fcb27d90c4f0"
                     },
-                    "acount_id": {
+                    "kind": {
                       "type": "string",
-                      "format": "uuid-v4",
-                      "description": "Invested account id",
-                      "example": "9111fee6-5236-48b2-b260-1d599e94adf9"
+                      "description": "The type or category of the investment product",
+                      "example": "P\u00f3s-Fixada"
+                    },
+                    "term": {
+                      "type": "number",
+                      "example": 1,
+                      "description": "The operation term"
                     },
                     "maturity_date": {
                       "type": "string",
                       "format": "date",
-                      "description": "Maturity date to apply redeem",
-                      "example": "2050-08-30T00:00:00.000Z"
+                      "description": "Investment maturity date",
+                      "example": "2023-11-06T03:00:00.000Z"
                     },
                     "value": {
                       "type": "number",
-                      "description": "Value to invest",
-                      "example": 100.26
+                      "description": "Investment value",
+                      "example": 11000.98
                     },
-                    "application_node": {
+                    "repurchase_grace_period": {
+                      "type": "number",
+                      "description": "The repurchase grace period in days for the investment product",
+                      "example": 1
+                    },
+                    "calculation_criteria": {
                       "type": "string",
-                      "description": "Description of an investment",
-                      "example": "Description for investment"
+                      "description": "The criteria used for calculating the investment product",
+                      "example": "PRE"
+                    },
+                    "criteria_type": {
+                      "type": "string",
+                      "description": "The type of criteria used",
+                      "example": "CONTABIL"
+                    },
+                    "paper_type": {
+                      "type": "string",
+                      "description": "The type of financial instrument",
+                      "example": "CDB"
+                    },
+                    "income_type": {
+                      "type": "string",
+                      "description": "The type of income generated by the investment product",
+                      "example": "PRE"
+                    },
+                    "tax_rate_sequence_number": {
+                      "type": "number",
+                      "description": "The sequence number for the tax rate applied to the investment product",
+                      "example": 4
+                    },
+                    "automatic_application_available": {
+                      "type": "boolean",
+                      "description": "Indicates whether automatic application is available for the investment product"
+                    },
+                    "escalated": {
+                      "type": "boolean",
+                      "description": "Indicates whether the investment product has escalated features"
+                    },
+                    "redemption_form_identifier": {
+                      "type": "string",
+                      "description": "The identifier for the redemption form associated with the investment product",
+                      "example": "FIN"
+                    },
+                    "scheduling_available": {
+                      "type": "boolean",
+                      "description": "Indicates whether scheduling is available for the investment product"
                     },
                     "automatic_redemption": {
                       "type": "boolean",
-                      "description": "Marks if the redemption will be automatic",
-                      "example": true
+                      "description": "Indicates whetter the investment is automatically redeemed or not"
+                    },
+                    "application_note": {
+                      "type": "string",
+                      "description": "Investment application note"
+                    },
+                    "status": {
+                      "type": "string",
+                      "enum": [
+                        "CREATED",
+                        "CONFIRMING",
+                        "CONFIRMED",
+                        "NOT_CONFIRMED",
+                        "PROCESSING",
+                        "PROCESSED",
+                        "DONE",
+                        "ERROR"
+                      ],
+                      "description": "The status of the investment"
+                    },
+                    "updated_at": {
+                      "type": "string",
+                      "format": "date-time",
+                      "description": "The date and time when the investment was last updated",
+                      "example": "2021-01-01T03:00:00.000Z"
+                    },
+                    "created_at": {
+                      "type": "string",
+                      "format": "date-time",
+                      "description": "The date and time when the investment was created",
+                      "example": "2021-01-01T03:00:00.000Z"
+                    },
+                    "occurrences": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "code": {
+                            "type": "string",
+                            "enum": [
+                              "BI0001",
+                              "BI0002",
+                              "BI0003",
+                              "BI0004",
+                              "BI0005",
+                              "BI0006"
+                            ],
+                            "description": "The code for the occurrence"
+                          },
+                          "status": {
+                            "type": "string",
+                            "enum": [
+                              "CREATED",
+                              "CONFIRMED",
+                              "NOT_CONFIRMED",
+                              "PROCESSED",
+                              "DONE",
+                              "ERROR"
+                            ],
+                            "description": "The status of the occurrence"
+                          },
+                          "created_at": {
+                            "type": "string",
+                            "format": "date-time",
+                            "description": "The date and time when the occurrence was created",
+                            "example": "2021-01-01T03:00:00.000Z"
+                          }
+                        }
+                      }
                     }
                   }
                 }
