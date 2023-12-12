@@ -508,7 +508,7 @@
             }
           },
           "400": {
-            "description": "Error with types [BadRequest, FailedToCreateAccountBalanceError, AccountTypeInvalid, PersonNotActive].",
+            "description": "Error with types [BadRequest, FailedToCreateAccountBalanceError, AccountTypeInvalid, PersonNotActive, InvalidClientCodeError].",
             "content": {
               "application/json": {
                 "schema": {
@@ -630,6 +630,31 @@
                           "title": "Error message",
                           "description": "Describes a message informing a reason for the error",
                           "example": "Profile Person is not active"
+                        },
+                        "status_code": {
+                          "type": "number",
+                          "description": "Error status code",
+                          "example": "400"
+                        }
+                      }
+                    },
+                    {
+                      "title": "Invalid client code error.",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "INVALID_CLIENT_CODE",
+                          "enum": [
+                            "INVALID_CLIENT_CODE"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "Invalid client code error."
                         },
                         "status_code": {
                           "type": "number",
