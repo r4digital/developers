@@ -363,12 +363,6 @@
                     "description": "Unique identifier of a product to invest",
                     "example": "9111fee6-5236-48b2-b260-1d599e94adf9"
                   },
-                  "maturity_date": {
-                    "type": "string",
-                    "format": "date",
-                    "description": "Maturity date to apply redeem",
-                    "example": "2050-08-30T00:00:00.000Z"
-                  },
                   "value": {
                     "type": "number",
                     "description": "Value to invest",
