@@ -426,16 +426,6 @@
                     ],
                     "example": "CPF",
                     "description": "Type of document"
-                  },
-                  "name": {
-                    "type": "string",
-                    "description": "Name of the person bound to the account, required when document is CNPJ.",
-                    "example": "Julian Alfred Pankratz"
-                  },
-                  "normalized_name": {
-                    "type": "string",
-                    "description": "Name normalized of the person bound to the account, required when document is CNPJ.",
-                    "example": "Julian Alfred Pankratz"
                   }
                 },
                 "required": [
