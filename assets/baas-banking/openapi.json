@@ -498,7 +498,7 @@
             }
           },
           "400": {
-            "description": "Error with types [BadRequest, FailedToCreateAccountBalanceError, AccountTypeInvalid, PersonNotActive, InvalidClientCodeError].",
+            "description": "Error with types [BadRequest, FailedToCreateAccountBalanceError, AccountTypeInvalid, PersonNotActive, InvalidClientCodeError, NotAllowedForThisDocumentNumber].",
             "content": {
               "application/json": {
                 "schema": {
@@ -645,6 +645,31 @@
                           "title": "Error message",
                           "description": "Describes a message informing a reason for the error",
                           "example": "Invalid client code error."
+                        },
+                        "status_code": {
+                          "type": "number",
+                          "description": "Error status code",
+                          "example": "400"
+                        }
+                      }
+                    },
+                    {
+                      "title": "Not allowed for this document number",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "NOT_ALLOWED_FOR_THIS_DOCUMENT_NUMBER",
+                          "enum": [
+                            "NOT_ALLOWED_FOR_THIS_DOCUMENT_NUMBER"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "Not allowed for this document number."
                         },
                         "status_code": {
                           "type": "number",
