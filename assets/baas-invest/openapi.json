@@ -671,6 +671,272 @@
         }
       }
     },
+    "/v1/accounts/{account_id}/investments/{investment_id}": {
+      "get": {
+        "summary": "Get Investment",
+        "description": "Get Investment",
+        "tags": [
+          "Investments"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "account_id",
+            "schema": {
+              "type": "string",
+              "format": "uuid-v4",
+              "example": "24c7a78d-ed48-4f9a-82c8-051d662be415"
+            },
+            "description": "Account id",
+            "required": true
+          },
+          {
+            "in": "path",
+            "name": "investment_id",
+            "schema": {
+              "type": "string",
+              "format": "uuid-v4",
+              "example": "e9f9d165-a9cd-4e87-bf72-805ecee5ded0"
+            },
+            "description": "Investment identification code",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Investment successfully found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "Investment",
+                  "description": "Describes properties of an investment",
+                  "required": [
+                    "id",
+                    "application_id",
+                    "account_id",
+                    "product_id",
+                    "kind",
+                    "term",
+                    "maturity_date",
+                    "value",
+                    "repurchase_grace_period",
+                    "calculation_criteria",
+                    "criteria_type",
+                    "paper_type",
+                    "income_type",
+                    "tax_rate_sequence_number",
+                    "automatic_application_available",
+                    "escalated",
+                    "automatic_redemption",
+                    "redemption_form_identifier",
+                    "scheduling_available",
+                    "status",
+                    "created_at",
+                    "updated_at",
+                    "occurrences"
+                  ],
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "format": "uuid",
+                      "description": "Investment id",
+                      "example": "123e4567-e89b-12d3-a456-426655440000"
+                    },
+                    "application_id": {
+                      "type": "string",
+                      "format": "uuid",
+                      "description": "Application id",
+                      "example": "68f7b55c-9185-4874-b6b4-5cb7720d56ca"
+                    },
+                    "account_id": {
+                      "type": "string",
+                      "format": "uuid",
+                      "description": "Account id",
+                      "example": "d23a8ba2-dc0c-4023-9430-a68b4398f0de"
+                    },
+                    "product_id": {
+                      "type": "string",
+                      "format": "uuid",
+                      "description": "Product id",
+                      "example": "3a1e0e60-b702-488f-8a42-fcb27d90c4f0"
+                    },
+                    "kind": {
+                      "type": "string",
+                      "description": "The type or category of the investment product",
+                      "example": "P\u00f3s-Fixada"
+                    },
+                    "term": {
+                      "type": "number",
+                      "example": 1,
+                      "description": "The operation term"
+                    },
+                    "maturity_date": {
+                      "type": "string",
+                      "format": "date",
+                      "description": "Investment maturity date",
+                      "example": "2023-11-06T03:00:00.000Z"
+                    },
+                    "value": {
+                      "type": "number",
+                      "description": "Investment value",
+                      "example": 11000.98
+                    },
+                    "repurchase_grace_period": {
+                      "type": "number",
+                      "description": "The repurchase grace period in days for the investment product",
+                      "example": 1
+                    },
+                    "calculation_criteria": {
+                      "type": "string",
+                      "description": "The criteria used for calculating the investment product",
+                      "example": "PRE"
+                    },
+                    "criteria_type": {
+                      "type": "string",
+                      "description": "The type of criteria used",
+                      "example": "CONTABIL"
+                    },
+                    "paper_type": {
+                      "type": "string",
+                      "description": "The type of financial instrument",
+                      "example": "CDB"
+                    },
+                    "income_type": {
+                      "type": "string",
+                      "description": "The type of income generated by the investment product",
+                      "example": "PRE"
+                    },
+                    "tax_rate_sequence_number": {
+                      "type": "number",
+                      "description": "The sequence number for the tax rate applied to the investment product",
+                      "example": 4
+                    },
+                    "automatic_application_available": {
+                      "type": "boolean",
+                      "description": "Indicates whether automatic application is available for the investment product"
+                    },
+                    "escalated": {
+                      "type": "boolean",
+                      "description": "Indicates whether the investment product has escalated features"
+                    },
+                    "redemption_form_identifier": {
+                      "type": "string",
+                      "description": "The identifier for the redemption form associated with the investment product",
+                      "example": "FIN"
+                    },
+                    "scheduling_available": {
+                      "type": "boolean",
+                      "description": "Indicates whether scheduling is available for the investment product"
+                    },
+                    "automatic_redemption": {
+                      "type": "boolean",
+                      "description": "Indicates whetter the investment is automatically redeemed or not"
+                    },
+                    "application_note": {
+                      "type": "string",
+                      "description": "Investment application note"
+                    },
+                    "status": {
+                      "type": "string",
+                      "enum": [
+                        "CREATED",
+                        "CONFIRMING",
+                        "CONFIRMED",
+                        "NOT_CONFIRMED",
+                        "PROCESSING",
+                        "PROCESSED",
+                        "DONE",
+                        "ERROR"
+                      ],
+                      "description": "The status of the investment"
+                    },
+                    "updated_at": {
+                      "type": "string",
+                      "format": "date-time",
+                      "description": "The date and time when the investment was last updated",
+                      "example": "2021-01-01T03:00:00.000Z"
+                    },
+                    "created_at": {
+                      "type": "string",
+                      "format": "date-time",
+                      "description": "The date and time when the investment was created",
+                      "example": "2021-01-01T03:00:00.000Z"
+                    },
+                    "occurrences": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "code": {
+                            "type": "string",
+                            "enum": [
+                              "BI0001",
+                              "BI0002",
+                              "BI0003",
+                              "BI0004",
+                              "BI0005",
+                              "BI0006"
+                            ],
+                            "description": "The code for the occurrence"
+                          },
+                          "status": {
+                            "type": "string",
+                            "enum": [
+                              "CREATED",
+                              "CONFIRMED",
+                              "NOT_CONFIRMED",
+                              "PROCESSED",
+                              "DONE",
+                              "ERROR"
+                            ],
+                            "description": "The status of the occurrence"
+                          },
+                          "created_at": {
+                            "type": "string",
+                            "format": "date-time",
+                            "description": "The date and time when the occurrence was created",
+                            "example": "2021-01-01T03:00:00.000Z"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "InvestmentNotFound",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Investment not found",
+                  "type": "object",
+                  "description": "Representation of an not found error",
+                  "properties": {
+                    "code": {
+                      "description": "The type of error",
+                      "type": "string",
+                      "example": "INVESTMENT_NOT_FOUND"
+                    },
+                    "message": {
+                      "description": "Describes a message informing a reason for the error",
+                      "type": "string",
+                      "example": "Investment was not found."
+                    }
+                  }
+                },
+                "example": {
+                  "code": "INVESTMENT_NOT_FOUND",
+                  "message": "Investment was not found."
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/v1/products": {
       "get": {
         "summary": "List Products",
