@@ -617,25 +617,60 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "title": "Minimum value to invest",
-                  "type": "object",
-                  "description": "Representation of an bad request error",
-                  "properties": {
-                    "code": {
-                      "description": "The type of error",
-                      "type": "string",
-                      "example": "MINIMUM_VALUE_TO_INVEST"
+                  "oneOf": [
+                    {
+                      "title": "Minimum value to invest",
+                      "type": "object",
+                      "description": "Representation of an bad request error",
+                      "properties": {
+                        "code": {
+                          "description": "The type of error",
+                          "type": "string",
+                          "example": "MINIMUM_VALUE_TO_INVEST"
+                        },
+                        "message": {
+                          "description": "Describes a message informing a reason for the error",
+                          "type": "string",
+                          "example": "The value is less then the minimun value to invest."
+                        }
+                      }
                     },
-                    "message": {
-                      "description": "Describes a message informing a reason for the error",
-                      "type": "string",
-                      "example": "The value is less then the minimun value to invest."
+                    {
+                      "title": "Invalid person kind for product",
+                      "type": "object",
+                      "description": "Representation of an bad request error",
+                      "properties": {
+                        "code": {
+                          "description": "The type of error",
+                          "type": "string",
+                          "example": "INVALID_PERSON_KIND_FOR_PRODUCT"
+                        },
+                        "message": {
+                          "description": "Describes a message informing a reason for the error",
+                          "type": "string",
+                          "example": "Invalid person kind for product"
+                        }
+                      }
+                    }
+                  ]
+                },
+                "examples": {
+                  "Example 1 - MinimumValueToInvest": {
+                    "value": {
+                      "error": {
+                        "code": "MINIMUM_VALUE_TO_INVEST",
+                        "message": "The value is less then the minimun value to invest."
+                      }
+                    }
+                  },
+                  "Example 2 - InvalidPersonKindForProduct": {
+                    "value": {
+                      "error": {
+                        "code": "INVALID_PERSON_KIND_FOR_PRODUCT",
+                        "message": "Invalid person kind for product"
+                      }
                     }
                   }
-                },
-                "example": {
-                  "code": "MINIMUM_VALUE_TO_INVEST",
-                  "message": "The value is less then the minimun value to invest."
                 }
               }
             }
