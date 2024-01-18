@@ -103,7 +103,7 @@
                       "account": {
                         "type": "number",
                         "description": "Account number without the digit",
-                        "example": 1010101
+                        "example": 266305
                       },
                       "account_digit": {
                         "type": "number",
@@ -228,7 +228,7 @@
                             "account": {
                               "type": "number",
                               "description": "Account number without the digit",
-                              "example": 1010101
+                              "example": 266305
                             },
                             "account_digit": {
                               "type": "number",
@@ -867,7 +867,7 @@
                             "account": {
                               "type": "number",
                               "description": "Account number without the digit",
-                              "example": 1010101
+                              "example": 266305
                             },
                             "account_digit": {
                               "type": "number",
@@ -1109,7 +1109,7 @@
                                   "account": {
                                     "type": "number",
                                     "description": "Account number without the digit",
-                                    "example": 1010101
+                                    "example": 266305
                                   },
                                   "account_digit": {
                                     "type": "number",
@@ -1553,7 +1553,7 @@
                             "account": {
                               "type": "number",
                               "description": "Account number without the digit",
-                              "example": 1010101
+                              "example": 266305
                             },
                             "account_digit": {
                               "type": "number",
@@ -1652,6 +1652,7 @@
                                 "example": "160"
                               },
                               "status": {
+                                "example": "CREATED",
                                 "type": "string",
                                 "enum": [
                                   "CREATED",
@@ -1663,8 +1664,7 @@
                                   "REJECTED",
                                   "ERROR",
                                   "DONE"
-                                ],
-                                "example": "CREATED"
+                                ]
                               },
                               "created_at": {
                                 "type": "string",
@@ -1990,7 +1990,7 @@
               "account": {
                 "type": "number",
                 "description": "Account number without the digit",
-                "example": 1010101
+                "example": 266305
               },
               "account_digit": {
                 "type": "number",
