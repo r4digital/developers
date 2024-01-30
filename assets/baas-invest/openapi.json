@@ -1001,6 +1001,43 @@
           },
           {
             "in": "query",
+            "name": "order_by[field]",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "MINIMUM_VALUE",
+                "PROFITABILITY",
+                "GRACE_PERIOD"
+              ]
+            },
+            "description": "The field to be ordered",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "order_by[orientation]",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "ASC",
+                "DESC"
+              ]
+            },
+            "description": "The orientation of the order",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "minimum_value",
+            "schema": {
+              "type": "number",
+              "example": 100.12
+            },
+            "description": "The filter to bring only the exact or greater minimum value",
+            "required": false
+          },
+          {
+            "in": "query",
             "name": "before",
             "schema": {
               "type": "string"
