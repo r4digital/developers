@@ -440,6 +440,9 @@
                     "status",
                     "created_at",
                     "updated_at",
+                    "redemption_minimum_date",
+                    "redemption_minimum_value",
+                    "remaining_minimum_value",
                     "occurrences"
                   ],
                   "properties": {
@@ -568,6 +571,21 @@
                       "format": "date-time",
                       "description": "The date and time when the investment was created",
                       "example": "2021-01-01T03:00:00.000Z"
+                    },
+                    "redemption_minimum_date": {
+                      "type": "string",
+                      "description": "The minimum date on which the investment can be redeemed",
+                      "example": "2021-01-02"
+                    },
+                    "redemption_minimum_value": {
+                      "type": "number",
+                      "description": "Indicates the minimum value for redemption",
+                      "example": 500
+                    },
+                    "remaining_minimum_value": {
+                      "type": "number",
+                      "description": "Indicates the minimum remaining value",
+                      "example": 500
                     },
                     "occurrences": {
                       "type": "array",
@@ -769,6 +787,9 @@
                     "status",
                     "created_at",
                     "updated_at",
+                    "redemption_minimum_date",
+                    "redemption_minimum_value",
+                    "remaining_minimum_value",
                     "occurrences"
                   ],
                   "properties": {
@@ -897,6 +918,21 @@
                       "format": "date-time",
                       "description": "The date and time when the investment was created",
                       "example": "2021-01-01T03:00:00.000Z"
+                    },
+                    "redemption_minimum_date": {
+                      "type": "string",
+                      "description": "The minimum date on which the investment can be redeemed",
+                      "example": "2021-01-02"
+                    },
+                    "redemption_minimum_value": {
+                      "type": "number",
+                      "description": "Indicates the minimum value for redemption",
+                      "example": 500
+                    },
+                    "remaining_minimum_value": {
+                      "type": "number",
+                      "description": "Indicates the minimum remaining value",
+                      "example": 500
                     },
                     "occurrences": {
                       "type": "array",
