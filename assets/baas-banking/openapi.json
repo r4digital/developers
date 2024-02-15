@@ -3,7 +3,7 @@
   "info": {
     "version": "1.1.0",
     "title": "Baas Banking",
-    "description": "**Description**: Api responsible for managing accounts, statements & balance\n\n# Schemas\n\n<a name=\"account_statuses\"></a>\n\n  ## Account statuses\n\n  <table>\n    <tr>\n      <td>Status</td>\n      <td>Description</td>\n    </tr>\n    <tr>\n      <td>`BLOCKED`</td>\n      <td>Informs that the account is blocked and can not do any transaction.</td>\n    </tr>\n    <tr>\n      <td>`ENABLED`</td>\n      <td>Informs that the account is enabled and ready for use.</td>\n    </tr>\n    <tr>\n      <td>`CANCELED`</td>\n      <td>Informs that the account is canceled and not able to do anything.</td>\n    </tr>\n  </table>\n\n# Status Change Notification\n\nSome statuses changes will fire a notification call to the client.\n\nTo receive this notifications, its necessary to request the registration of the service URL which will receive the notification object.\n\nThis object will be sent as a HTTP call with the POST method, of which the client must respond with a 200 status and within 5 seconds.\n\n| Event Type                        | Description                                                                    |\n|---------------------------------- | ------------------------------------------------------------------------------ |\n| `account_block-balance-created`   | Block balance was created                                                      |\n| `account_block-balance-cancelled` | Block balance was cancelled and the blocked value returned to user the account |\n| `account_block-balance-unblocked` | Block balance was unblocked and the blocked value returned to user the account |\n| `account_block-balance-captured`  | Block balance was captured from another credit event                           |\n\nFor block balance request more details use the route `GET /accounts/{account_id}/blocks/{block_id}`\n\n### Notification Call Scheme\n\n#### *Header*\n```json\n{\n  X-R4-Application: GUID, // Application Unique Identifier\n  X-R4-Delivery: GUID, // Attempt Unique Identifier\n  X-R4-Event: {event_type}, // Event Type for the Notification (as described in Event Type table)\n  User-Agent: R4-Hookshot\n}\n```\n\n#### *Body*\n```\n{\n  \"object_kind\": \"{event_type}\", // Event Type for the Notification (as described in Event Type table)\n  \"object_id\": \"GUID\", // Payment Unique Identifier\n  \"account_id\": \"GUID\" // Account Unique Identifier\n  \"application_id\": \"GUID\" // Application Unique Identifier\n}\n```\n\n# Errors\n\nAccount Middleware uses [HTTP response status codes](https://en.wikipedia.org/wiki/List_of_HTTP_status_codes) to indicate the success or failure of your API requests.\n\nIn general, there are three status code ranges you can expect:\n\n- `2xx` success status codes confirm that your request worked as expected\n\n- `4xx` error status codes indicate an error because of the information provided (e.g., a required parameter was not provided)\n\n- `5xx` error status codes are rare and indicate an error with R4's servers\n\n\n## HTTP Status code summary\n\nExtracted from [Stripe API codes](https://stripe.com/docs/api/errors)\n\n- `200 - OK` Everything worked as expected.\n\n- `400 - Bad Request` The request was unacceptable, often due to missing a required parameter.\n\n- `401 - Unauthorized` No valid API key provided.\n\n- `403 - Forbidden` The API key doesn't have permissions to perform the request.\n\n- `404 - Not Found` The requested resource doesn't exist.\n\n- `408 - Request Timeout` The connection was ended by timeout.\n\n- `429 - Too Many Requests` Too many requests hit the API too quickly. We recommend an exponential backoff of your requests.\n\n- `500, 502, 503, 504 - Server Errors` Something went wrong on R4's end.\n\n## Error codes\n\nBelow is a list of possible error codes that can be returned:\n\n<table>\n    <tr>\n      <td>Code</td>\n      <td>Description</td>\n    </tr>\n    <tr>\n      <td>`ACCOUNT_NOT_FOUND`</td>\n      <td>The account informed was not found.</td>\n    </tr>\n    <tr>\n      <td>`BLOCK_BALANCE_NOT_FOUND`</td>\n      <td>The block balance informed was not found.</td>\n    </tr>\n    <tr>\n      <td>`PERSON_NOT_ACTIVE`</td>\n      <td>The profile person is not active.</td>\n    </tr>\n    <tr>\n      <td>`PROFILE_NOT_FOUND`</td>\n      <td>The profile informed was not found.</td>\n    </tr>\n    <tr>\n      <td>`UUID_INVALID`</td>\n      <td>The uuid informed was not valid.</td>\n    </tr>\n    <tr>\n      <td>`REQUEST_VALIDATOR_ERROR`</td>\n      <td>The request is not formatted correctly.</td>\n    </tr>\n    <tr>\n      <td>`UNAUTHORIZED`</td>\n      <td>The request unauthorized, no valid API key provided</td>\n    </tr>\n  </table>\n"
+    "description": "**Description**: Api responsible for managing accounts, statements & balance\n\n# Schemas\n\n<a name=\"account_statuses\"></a>\n\n  ## Account statuses\n\n  <table>\n    <tr>\n      <td>Status</td>\n      <td>Description</td>\n    </tr>\n    <tr>\n      <td>`BLOCKED`</td>\n      <td>Informs that the account is blocked and can not do any transaction.</td>\n    </tr>\n    <tr>\n      <td>`ENABLED`</td>\n      <td>Informs that the account is enabled and ready for use.</td>\n    </tr>\n    <tr>\n      <td>`CANCELED`</td>\n      <td>Informs that the account is canceled and not able to do anything.</td>\n    </tr>\n  </table>\n\n# Status Change Notification\n\nSome statuses changes will fire a notification call to the client.\n\nTo receive this notifications, its necessary to request the registration of the service URL which will receive the notification object.\n\nThis object will be sent as a HTTP call with the POST method, of which the client must respond with a 200 status and within 5 seconds.\n\n| Event Type                        | Description                                                                    |\n|---------------------------------- | ------------------------------------------------------------------------------ |\n| `account_block-balance-created`   | Block balance was created                                                      |\n| `account_block-balance-cancelled` | Block balance was cancelled and the blocked value returned to user the account |\n| `account_block-balance-unblocked` | Block balance was unblocked and the blocked value returned to user the account |\n| `account_block-balance-captured`  | Block balance was captured from another credit event                           |\n\nFor block balance request more details use the route `GET /accounts/{account_id}/blocks/{block_id}`\n\n### Notification Call Scheme\n\n#### *Header*\n```json\n{\n  X-R4-Application: GUID, // Application Unique Identifier\n  X-R4-Delivery: GUID, // Attempt Unique Identifier\n  X-R4-Event: {event_type}, // Event Type for the Notification (as described in Event Type table)\n  User-Agent: R4-Hookshot\n}\n```\n\n#### *Body*\n```\n{\n  \"object_kind\": \"{event_type}\", // Event Type for the Notification (as described in Event Type table)\n  \"object_id\": \"GUID\", // Payment Unique Identifier\n  \"account_id\": \"GUID\" // Account Unique Identifier\n  \"application_id\": \"GUID\" // Application Unique Identifier\n}\n```\n\n# Errors\n\nAccount Middleware uses [HTTP response status codes](https://en.wikipedia.org/wiki/List_of_HTTP_status_codes) to indicate the success or failure of your API requests.\n\nIn general, there are three status code ranges you can expect:\n\n- `2xx` success status codes confirm that your request worked as expected\n\n- `4xx` error status codes indicate an error because of the information provided (e.g., a required parameter was not provided)\n\n- `5xx` error status codes are rare and indicate an error with R4's servers\n\n\n## HTTP Status code summary\n\nExtracted from [Stripe API codes](https://stripe.com/docs/api/errors)\n\n- `200 - OK` Everything worked as expected.\n\n- `400 - Bad Request` The request was unacceptable, often due to missing a required parameter.\n\n- `401 - Unauthorized` No valid API key provided.\n\n- `403 - Forbidden` The API key doesn't have permissions to perform the request.\n\n- `404 - Not Found` The requested resource doesn't exist.\n\n- `408 - Request Timeout` The connection was ended by timeout.\n\n- `429 - Too Many Requests` Too many requests hit the API too quickly. We recommend an exponential backoff of your requests.\n\n- `500, 502, 503, 504 - Server Errors` Something went wrong on R4's end.\n\n## Error codes\n\nBelow is a list of possible error codes that can be returned:\n\n<table>\n    <tr>\n      <td>Code</td>\n      <td>Description</td>\n    </tr>\n    <tr>\n      <td>`ACCOUNT_NOT_FOUND`</td>\n      <td>The account informed was not found.</td>\n    </tr>\n    <tr>\n      <td>`BLOCK_BALANCE_NOT_FOUND`</td>\n      <td>The block balance informed was not found.</td>\n    </tr>\n    <tr>\n      <td>`PERSON_NOT_ACTIVE`</td>\n      <td>The profile person is not active.</td>\n    </tr>\n    <tr>\n      <td>`PROFILE_NOT_FOUND`</td>\n      <td>The profile informed was not found.</td>\n    </tr>\n    <tr>\n      <td>`UUID_INVALID`</td>\n      <td>The uuid informed was not valid.</td>\n    </tr>\n    <tr>\n      <td>`REQUEST_VALIDATOR_ERROR`</td>\n      <td>The request is not formatted correctly.</td>\n    </tr>\n    <tr>\n      <td>`UNAUTHORIZED`</td>\n      <td>The request unauthorized, no valid API key provided</td>\n    </tr>\n    <tr>\n      <td>`AUTHENTICATION_FAILED`</td>\n      <td>Authentication failed.</td>\n    </tr>\n  </table>\n"
   },
   "servers": [
     {
@@ -248,7 +248,7 @@
                 "schema": {
                   "oneOf": [
                     {
-                      "title": "Unauthorized",
+                      "title": "Authentication Failed",
                       "properties": {
                         "error": {
                           "type": "object",
@@ -257,16 +257,16 @@
                               "type": "string",
                               "title": "Error code",
                               "description": "The type of error",
-                              "example": "UNAUTHORIZED",
+                              "example": "AUTHENTICATION_FAILED",
                               "enum": [
-                                "UNAUTHORIZED"
+                                "AUTHENTICATION_FAILED"
                               ]
                             },
                             "message": {
                               "type": "string",
                               "title": "Error message",
                               "description": "Describes a message informing a reason for the error",
-                              "example": "Unauthorized"
+                              "example": "Authentication failed."
                             },
                             "status_code": {
                               "type": "number",
@@ -690,7 +690,7 @@
                 "schema": {
                   "oneOf": [
                     {
-                      "title": "Unauthorized",
+                      "title": "Authentication Failed",
                       "properties": {
                         "error": {
                           "type": "object",
@@ -699,16 +699,16 @@
                               "type": "string",
                               "title": "Error code",
                               "description": "The type of error",
-                              "example": "UNAUTHORIZED",
+                              "example": "AUTHENTICATION_FAILED",
                               "enum": [
-                                "UNAUTHORIZED"
+                                "AUTHENTICATION_FAILED"
                               ]
                             },
                             "message": {
                               "type": "string",
                               "title": "Error message",
                               "description": "Describes a message informing a reason for the error",
-                              "example": "Unauthorized"
+                              "example": "Authentication failed."
                             },
                             "status_code": {
                               "type": "number",
@@ -1073,7 +1073,7 @@
                 "schema": {
                   "oneOf": [
                     {
-                      "title": "Unauthorized",
+                      "title": "Authentication Failed",
                       "properties": {
                         "error": {
                           "type": "object",
@@ -1082,16 +1082,16 @@
                               "type": "string",
                               "title": "Error code",
                               "description": "The type of error",
-                              "example": "UNAUTHORIZED",
+                              "example": "AUTHENTICATION_FAILED",
                               "enum": [
-                                "UNAUTHORIZED"
+                                "AUTHENTICATION_FAILED"
                               ]
                             },
                             "message": {
                               "type": "string",
                               "title": "Error message",
                               "description": "Describes a message informing a reason for the error",
-                              "example": "Unauthorized"
+                              "example": "Authentication failed."
                             },
                             "status_code": {
                               "type": "number",
@@ -1359,7 +1359,7 @@
                 "schema": {
                   "oneOf": [
                     {
-                      "title": "Unauthorized",
+                      "title": "Authentication Failed",
                       "properties": {
                         "error": {
                           "type": "object",
@@ -1368,16 +1368,16 @@
                               "type": "string",
                               "title": "Error code",
                               "description": "The type of error",
-                              "example": "UNAUTHORIZED",
+                              "example": "AUTHENTICATION_FAILED",
                               "enum": [
-                                "UNAUTHORIZED"
+                                "AUTHENTICATION_FAILED"
                               ]
                             },
                             "message": {
                               "type": "string",
                               "title": "Error message",
                               "description": "Describes a message informing a reason for the error",
-                              "example": "Unauthorized"
+                              "example": "Authentication failed."
                             },
                             "status_code": {
                               "type": "number",
@@ -1654,7 +1654,7 @@
                 "schema": {
                   "oneOf": [
                     {
-                      "title": "Unauthorized",
+                      "title": "Authentication Failed",
                       "properties": {
                         "error": {
                           "type": "object",
@@ -1663,16 +1663,16 @@
                               "type": "string",
                               "title": "Error code",
                               "description": "The type of error",
-                              "example": "UNAUTHORIZED",
+                              "example": "AUTHENTICATION_FAILED",
                               "enum": [
-                                "UNAUTHORIZED"
+                                "AUTHENTICATION_FAILED"
                               ]
                             },
                             "message": {
                               "type": "string",
                               "title": "Error message",
                               "description": "Describes a message informing a reason for the error",
-                              "example": "Unauthorized"
+                              "example": "Authentication failed."
                             },
                             "status_code": {
                               "type": "number",
@@ -2040,7 +2040,7 @@
                 "schema": {
                   "oneOf": [
                     {
-                      "title": "Unauthorized",
+                      "title": "Authentication Failed",
                       "properties": {
                         "error": {
                           "type": "object",
@@ -2049,16 +2049,16 @@
                               "type": "string",
                               "title": "Error code",
                               "description": "The type of error",
-                              "example": "UNAUTHORIZED",
+                              "example": "AUTHENTICATION_FAILED",
                               "enum": [
-                                "UNAUTHORIZED"
+                                "AUTHENTICATION_FAILED"
                               ]
                             },
                             "message": {
                               "type": "string",
                               "title": "Error message",
                               "description": "Describes a message informing a reason for the error",
-                              "example": "Unauthorized"
+                              "example": "Authentication failed."
                             },
                             "status_code": {
                               "type": "number",
@@ -2446,6 +2446,47 @@
                           "type": "number",
                           "description": "Error status code",
                           "example": "400"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Error with types [Unauthorized].",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "title": "Authentication Failed",
+                      "properties": {
+                        "error": {
+                          "type": "object",
+                          "properties": {
+                            "code": {
+                              "type": "string",
+                              "title": "Error code",
+                              "description": "The type of error",
+                              "example": "AUTHENTICATION_FAILED",
+                              "enum": [
+                                "AUTHENTICATION_FAILED"
+                              ]
+                            },
+                            "message": {
+                              "type": "string",
+                              "title": "Error message",
+                              "description": "Describes a message informing a reason for the error",
+                              "example": "Authentication failed."
+                            },
+                            "status_code": {
+                              "type": "number",
+                              "description": "Error status code",
+                              "example": "401"
+                            }
+                          }
                         }
                       }
                     }
