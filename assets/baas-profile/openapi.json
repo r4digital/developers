@@ -303,13 +303,13 @@
             }
           },
           "401": {
-            "description": "Error with types [Unauthorized].",
+            "description": "Error with types [Authentication Error].",
             "content": {
               "application/json": {
                 "schema": {
                   "oneOf": [
                     {
-                      "title": "Unauthorized",
+                      "title": "Authentication Error",
                       "properties": {
                         "error": {
                           "type": "object",
@@ -318,16 +318,16 @@
                               "type": "string",
                               "title": "Error code",
                               "description": "The type of error",
-                              "example": "UNAUTHORIZED",
+                              "example": "AUTHENTICATION_FAILED",
                               "enum": [
-                                "UNAUTHORIZED"
+                                "AUTHENTICATION_FAILED"
                               ]
                             },
                             "message": {
                               "type": "string",
                               "title": "Error message",
                               "description": "Describes a message informing a reason for the error",
-                              "example": "Unauthorized"
+                              "example": "Authentication failed."
                             },
                             "status_code": {
                               "type": "number",
@@ -771,13 +771,13 @@
             }
           },
           "401": {
-            "description": "Error with types [Unauthorized].",
+            "description": "Error with types [Authentication Error].",
             "content": {
               "application/json": {
                 "schema": {
                   "oneOf": [
                     {
-                      "title": "Unauthorized",
+                      "title": "Authentication Error",
                       "properties": {
                         "error": {
                           "type": "object",
@@ -786,16 +786,16 @@
                               "type": "string",
                               "title": "Error code",
                               "description": "The type of error",
-                              "example": "UNAUTHORIZED",
+                              "example": "AUTHENTICATION_FAILED",
                               "enum": [
-                                "UNAUTHORIZED"
+                                "AUTHENTICATION_FAILED"
                               ]
                             },
                             "message": {
                               "type": "string",
                               "title": "Error message",
                               "description": "Describes a message informing a reason for the error",
-                              "example": "Unauthorized"
+                              "example": "Authentication failed."
                             },
                             "status_code": {
                               "type": "number",
@@ -1239,13 +1239,13 @@
             }
           },
           "401": {
-            "description": "Error with types [Unauthorized].",
+            "description": "Error with types [Authentication Error].",
             "content": {
               "application/json": {
                 "schema": {
                   "oneOf": [
                     {
-                      "title": "Unauthorized",
+                      "title": "Authentication Error",
                       "properties": {
                         "error": {
                           "type": "object",
@@ -1254,16 +1254,16 @@
                               "type": "string",
                               "title": "Error code",
                               "description": "The type of error",
-                              "example": "UNAUTHORIZED",
+                              "example": "AUTHENTICATION_FAILED",
                               "enum": [
-                                "UNAUTHORIZED"
+                                "AUTHENTICATION_FAILED"
                               ]
                             },
                             "message": {
                               "type": "string",
                               "title": "Error message",
                               "description": "Describes a message informing a reason for the error",
-                              "example": "Unauthorized"
+                              "example": "Authentication failed."
                             },
                             "status_code": {
                               "type": "number",
@@ -1772,13 +1772,13 @@
             }
           },
           "401": {
-            "description": "Error with types [Unauthorized].",
+            "description": "Error with types [Authentication Error].",
             "content": {
               "application/json": {
                 "schema": {
                   "oneOf": [
                     {
-                      "title": "Unauthorized",
+                      "title": "Authentication Error",
                       "properties": {
                         "error": {
                           "type": "object",
@@ -1787,16 +1787,16 @@
                               "type": "string",
                               "title": "Error code",
                               "description": "The type of error",
-                              "example": "UNAUTHORIZED",
+                              "example": "AUTHENTICATION_FAILED",
                               "enum": [
-                                "UNAUTHORIZED"
+                                "AUTHENTICATION_FAILED"
                               ]
                             },
                             "message": {
                               "type": "string",
                               "title": "Error message",
                               "description": "Describes a message informing a reason for the error",
-                              "example": "Unauthorized"
+                              "example": "Authentication failed."
                             },
                             "status_code": {
                               "type": "number",
@@ -2109,13 +2109,13 @@
             }
           },
           "401": {
-            "description": "Error with types [Unauthorized].",
+            "description": "Error with types [Authentication Error].",
             "content": {
               "application/json": {
                 "schema": {
                   "oneOf": [
                     {
-                      "title": "Unauthorized",
+                      "title": "Authentication Error",
                       "properties": {
                         "error": {
                           "type": "object",
@@ -2124,16 +2124,16 @@
                               "type": "string",
                               "title": "Error code",
                               "description": "The type of error",
-                              "example": "UNAUTHORIZED",
+                              "example": "AUTHENTICATION_FAILED",
                               "enum": [
-                                "UNAUTHORIZED"
+                                "AUTHENTICATION_FAILED"
                               ]
                             },
                             "message": {
                               "type": "string",
                               "title": "Error message",
                               "description": "Describes a message informing a reason for the error",
-                              "example": "Unauthorized"
+                              "example": "Authentication failed."
                             },
                             "status_code": {
                               "type": "number",
@@ -2287,13 +2287,13 @@
             }
           },
           "401": {
-            "description": "Error with types [Unauthorized].",
+            "description": "Error with types [Authentication Error].",
             "content": {
               "application/json": {
                 "schema": {
                   "oneOf": [
                     {
-                      "title": "Unauthorized",
+                      "title": "Authentication Error",
                       "properties": {
                         "error": {
                           "type": "object",
@@ -2302,16 +2302,16 @@
                               "type": "string",
                               "title": "Error code",
                               "description": "The type of error",
-                              "example": "UNAUTHORIZED",
+                              "example": "AUTHENTICATION_FAILED",
                               "enum": [
-                                "UNAUTHORIZED"
+                                "AUTHENTICATION_FAILED"
                               ]
                             },
                             "message": {
                               "type": "string",
                               "title": "Error message",
                               "description": "Describes a message informing a reason for the error",
-                              "example": "Unauthorized"
+                              "example": "Authentication failed."
                             },
                             "status_code": {
                               "type": "number",
@@ -2460,13 +2460,13 @@
             }
           },
           "401": {
-            "description": "Error with types [Unauthorized].",
+            "description": "Error with types [Authentication Error].",
             "content": {
               "application/json": {
                 "schema": {
                   "oneOf": [
                     {
-                      "title": "Unauthorized",
+                      "title": "Authentication Error",
                       "properties": {
                         "error": {
                           "type": "object",
@@ -2475,16 +2475,16 @@
                               "type": "string",
                               "title": "Error code",
                               "description": "The type of error",
-                              "example": "UNAUTHORIZED",
+                              "example": "AUTHENTICATION_FAILED",
                               "enum": [
-                                "UNAUTHORIZED"
+                                "AUTHENTICATION_FAILED"
                               ]
                             },
                             "message": {
                               "type": "string",
                               "title": "Error message",
                               "description": "Describes a message informing a reason for the error",
-                              "example": "Unauthorized"
+                              "example": "Authentication failed."
                             },
                             "status_code": {
                               "type": "number",
