@@ -70,31 +70,26 @@
             }
           },
           "401": {
-            "description": "Unauthorized",
+            "description": "Authentication Error",
             "content": {
               "application/json": {
                 "schema": {
-                  "title": "Unauthorized",
+                  "title": "Authentication error",
                   "properties": {
                     "code": {
                       "type": "string",
                       "title": "Error code",
                       "description": "The type of error",
-                      "example": "UNAUTHORIZED",
+                      "example": "AUTHENTICATION_FAILED",
                       "enum": [
-                        "UNAUTHORIZED"
+                        "AUTHENTICATION_FAILED"
                       ]
                     },
                     "message": {
                       "type": "string",
                       "title": "Error message",
                       "description": "Describes a message informing a reason for the error",
-                      "example": "Unauthorized request"
-                    },
-                    "status_code": {
-                      "type": "number",
-                      "description": "Error status code",
-                      "example": "401"
+                      "example": "Authentication failed."
                     }
                   }
                 }
@@ -1284,14 +1279,6 @@
                       "example": "Authentication failed."
                     }
                   }
-                },
-                "examples": {
-                  "Example 1 - AuthenticationError": {
-                    "value": {
-                      "code": "AUTHENTICATION_FAILED",
-                      "message": "Authentication failed."
-                    }
-                  }
                 }
               }
             }
@@ -2402,14 +2389,6 @@
                       "example": "Authentication failed."
                     }
                   }
-                },
-                "examples": {
-                  "Example 1 - AuthenticationError": {
-                    "value": {
-                      "code": "AUTHENTICATION_FAILED",
-                      "message": "Authentication failed."
-                    }
-                  }
                 }
               }
             }
@@ -3503,14 +3482,6 @@
                       "example": "Authentication failed."
                     }
                   }
-                },
-                "examples": {
-                  "Example 1 - AuthenticationError": {
-                    "value": {
-                      "code": "AUTHENTICATION_FAILED",
-                      "message": "Authentication failed."
-                    }
-                  }
                 }
               }
             }
@@ -4563,14 +4534,6 @@
                       "title": "Error message",
                       "description": "Describes a message informing a reason for the error",
                       "example": "Authentication failed."
-                    }
-                  }
-                },
-                "examples": {
-                  "Example 1 - AuthenticationError": {
-                    "value": {
-                      "code": "AUTHENTICATION_FAILED",
-                      "message": "Authentication failed."
                     }
                   }
                 }
