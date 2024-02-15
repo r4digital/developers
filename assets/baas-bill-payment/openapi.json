@@ -389,49 +389,40 @@
             }
           },
           "401": {
-            "description": "Error with types [AuthenticationError].",
+            "description": "Authentication Failed",
             "content": {
               "application/json": {
                 "schema": {
-                  "title": "Unauthorized",
-                  "properties": {
-                    "error": {
+                  "allOf": [
+                    {
                       "type": "object",
                       "properties": {
                         "code": {
-                          "type": "string",
-                          "title": "Error code",
-                          "description": "The type of error",
-                          "example": "UNAUTHORIZED_ERROR",
-                          "enum": [
-                            "UNAUTHORIZED_ERROR"
-                          ]
+                          "type": "string"
                         },
                         "message": {
-                          "type": "string",
-                          "title": "Error message",
-                          "description": "Describes a message informing a reason for the error",
-                          "example": "Unauthorized request"
+                          "type": "string"
                         },
                         "status_code": {
-                          "type": "number",
-                          "description": "Error status code",
-                          "example": "401"
+                          "type": "number"
+                        }
+                      },
+                      "required": [
+                        "code",
+                        "message",
+                        "status_code"
+                      ]
+                    },
+                    {
+                      "example": {
+                        "error": {
+                          "code": "AUTHENTICATION_FAILED",
+                          "message": "Authentication failed.",
+                          "status_code": 401
                         }
                       }
                     }
-                  }
-                },
-                "examples": {
-                  "Example 1 - Unauthorized": {
-                    "value": {
-                      "error": {
-                        "code": "UNAUTHORIZED_ERROR",
-                        "message": "Unauthorized request",
-                        "status_code": 401
-                      }
-                    }
-                  }
+                  ]
                 }
               }
             }
@@ -1162,49 +1153,40 @@
             }
           },
           "401": {
-            "description": "Error with types [AuthenticationError].",
+            "description": "Authentication Failed",
             "content": {
               "application/json": {
                 "schema": {
-                  "title": "Unauthorized",
-                  "properties": {
-                    "error": {
+                  "allOf": [
+                    {
                       "type": "object",
                       "properties": {
                         "code": {
-                          "type": "string",
-                          "title": "Error code",
-                          "description": "The type of error",
-                          "example": "UNAUTHORIZED_ERROR",
-                          "enum": [
-                            "UNAUTHORIZED_ERROR"
-                          ]
+                          "type": "string"
                         },
                         "message": {
-                          "type": "string",
-                          "title": "Error message",
-                          "description": "Describes a message informing a reason for the error",
-                          "example": "Unauthorized request"
+                          "type": "string"
                         },
                         "status_code": {
-                          "type": "number",
-                          "description": "Error status code",
-                          "example": "401"
+                          "type": "number"
+                        }
+                      },
+                      "required": [
+                        "code",
+                        "message",
+                        "status_code"
+                      ]
+                    },
+                    {
+                      "example": {
+                        "error": {
+                          "code": "AUTHENTICATION_FAILED",
+                          "message": "Authentication failed.",
+                          "status_code": 401
                         }
                       }
                     }
-                  }
-                },
-                "examples": {
-                  "Example 1 - Unauthorized": {
-                    "value": {
-                      "error": {
-                        "code": "UNAUTHORIZED_ERROR",
-                        "message": "Unauthorized request",
-                        "status_code": 401
-                      }
-                    }
-                  }
+                  ]
                 }
               }
             }
@@ -1721,49 +1703,40 @@
             }
           },
           "401": {
-            "description": "Error with types [AuthenticationError].",
+            "description": "Authentication Failed",
             "content": {
               "application/json": {
                 "schema": {
-                  "title": "Unauthorized",
-                  "properties": {
-                    "error": {
+                  "allOf": [
+                    {
                       "type": "object",
                       "properties": {
                         "code": {
-                          "type": "string",
-                          "title": "Error code",
-                          "description": "The type of error",
-                          "example": "UNAUTHORIZED_ERROR",
-                          "enum": [
-                            "UNAUTHORIZED_ERROR"
-                          ]
+                          "type": "string"
                         },
                         "message": {
-                          "type": "string",
-                          "title": "Error message",
-                          "description": "Describes a message informing a reason for the error",
-                          "example": "Unauthorized request"
+                          "type": "string"
                         },
                         "status_code": {
-                          "type": "number",
-                          "description": "Error status code",
-                          "example": "401"
+                          "type": "number"
+                        }
+                      },
+                      "required": [
+                        "code",
+                        "message",
+                        "status_code"
+                      ]
+                    },
+                    {
+                      "example": {
+                        "error": {
+                          "code": "AUTHENTICATION_FAILED",
+                          "message": "Authentication failed.",
+                          "status_code": 401
                         }
                       }
                     }
-                  }
-                },
-                "examples": {
-                  "Example 1 - Unauthorized": {
-                    "value": {
-                      "error": {
-                        "code": "UNAUTHORIZED_ERROR",
-                        "message": "Unauthorized request",
-                        "status_code": 401
-                      }
-                    }
-                  }
+                  ]
                 }
               }
             }
@@ -2461,49 +2434,40 @@
             }
           },
           "401": {
-            "description": "Error with types [AuthenticationError].",
+            "description": "Authentication Failed",
             "content": {
               "application/json": {
                 "schema": {
-                  "title": "Unauthorized",
-                  "properties": {
-                    "error": {
+                  "allOf": [
+                    {
                       "type": "object",
                       "properties": {
                         "code": {
-                          "type": "string",
-                          "title": "Error code",
-                          "description": "The type of error",
-                          "example": "UNAUTHORIZED_ERROR",
-                          "enum": [
-                            "UNAUTHORIZED_ERROR"
-                          ]
+                          "type": "string"
                         },
                         "message": {
-                          "type": "string",
-                          "title": "Error message",
-                          "description": "Describes a message informing a reason for the error",
-                          "example": "Unauthorized request"
+                          "type": "string"
                         },
                         "status_code": {
-                          "type": "number",
-                          "description": "Error status code",
-                          "example": "401"
+                          "type": "number"
+                        }
+                      },
+                      "required": [
+                        "code",
+                        "message",
+                        "status_code"
+                      ]
+                    },
+                    {
+                      "example": {
+                        "error": {
+                          "code": "AUTHENTICATION_FAILED",
+                          "message": "Authentication failed.",
+                          "status_code": 401
                         }
                       }
                     }
-                  }
-                },
-                "examples": {
-                  "Example 1 - Unauthorized": {
-                    "value": {
-                      "error": {
-                        "code": "UNAUTHORIZED_ERROR",
-                        "message": "Unauthorized request",
-                        "status_code": 401
-                      }
-                    }
-                  }
+                  ]
                 }
               }
             }
@@ -2903,49 +2867,40 @@
             }
           },
           "401": {
-            "description": "Error with types [AuthenticationError].",
+            "description": "Authentication Failed",
             "content": {
               "application/json": {
                 "schema": {
-                  "title": "Unauthorized",
-                  "properties": {
-                    "error": {
+                  "allOf": [
+                    {
                       "type": "object",
                       "properties": {
                         "code": {
-                          "type": "string",
-                          "title": "Error code",
-                          "description": "The type of error",
-                          "example": "UNAUTHORIZED_ERROR",
-                          "enum": [
-                            "UNAUTHORIZED_ERROR"
-                          ]
+                          "type": "string"
                         },
                         "message": {
-                          "type": "string",
-                          "title": "Error message",
-                          "description": "Describes a message informing a reason for the error",
-                          "example": "Unauthorized request"
+                          "type": "string"
                         },
                         "status_code": {
-                          "type": "number",
-                          "description": "Error status code",
-                          "example": "401"
+                          "type": "number"
+                        }
+                      },
+                      "required": [
+                        "code",
+                        "message",
+                        "status_code"
+                      ]
+                    },
+                    {
+                      "example": {
+                        "error": {
+                          "code": "AUTHENTICATION_FAILED",
+                          "message": "Authentication failed.",
+                          "status_code": 401
                         }
                       }
                     }
-                  }
-                },
-                "examples": {
-                  "Example 1 - Unauthorized": {
-                    "value": {
-                      "error": {
-                        "code": "UNAUTHORIZED_ERROR",
-                        "message": "Unauthorized request",
-                        "status_code": 401
-                      }
-                    }
-                  }
+                  ]
                 }
               }
             }
@@ -3294,6 +3249,45 @@
                       "code": "GATEWAY_TIMEOUT",
                       "message": "Gateway Timeout. Try again later",
                       "status_code": 504
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      },
+      "AuthenticationError": {
+        "description": "Authentication Failed",
+        "content": {
+          "application/json": {
+            "schema": {
+              "allOf": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "status_code": {
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "message",
+                    "status_code"
+                  ]
+                },
+                {
+                  "example": {
+                    "error": {
+                      "code": "AUTHENTICATION_FAILED",
+                      "message": "Authentication failed.",
+                      "status_code": 401
                     }
                   }
                 }
@@ -4037,6 +4031,38 @@
                 "code": "GATEWAY_TIMEOUT",
                 "message": "Gateway Timeout. Try again later",
                 "status_code": 504
+              }
+            }
+          }
+        ]
+      },
+      "AuthenticationError": {
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "string"
+              },
+              "message": {
+                "type": "string"
+              },
+              "status_code": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "code",
+              "message",
+              "status_code"
+            ]
+          },
+          {
+            "example": {
+              "error": {
+                "code": "AUTHENTICATION_FAILED",
+                "message": "Authentication failed.",
+                "status_code": 401
               }
             }
           }
