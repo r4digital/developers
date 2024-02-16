@@ -2214,6 +2214,249 @@
           }
         }
       }
+    },
+    "/invest/products/{product_id}": {
+      "post": {
+        "tags": [
+          "Invest Operation"
+        ],
+        "summary": "Update a product from invest operation",
+        "description": "Update a product from invest operation.",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "product_id",
+            "schema": {
+              "type": "string",
+              "format": "uuid-v4",
+              "example": "e9f9d165-a9cd-4e87-bf72-805ecee5ded0"
+            },
+            "description": "Product identification code",
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "expiration_term": {
+                    "type": "number",
+                    "description": "Indicates the time of investment have to expire",
+                    "example": 360
+                  }
+                },
+                "required": [
+                  "expiration_term"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Updated with success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "format": "uuid-v4",
+                      "example": "f6ee2b64-1c5d-4504-bb52-6f79e02d1006",
+                      "description": "Product's id"
+                    },
+                    "person_kind": {
+                      "type": "string",
+                      "enum": [
+                        "NATURAL_PERSON",
+                        "LEGAL_PERSON"
+                      ],
+                      "description": "Person kind"
+                    },
+                    "status": {
+                      "type": "string",
+                      "enum": [
+                        "ACTIVE",
+                        "INACTIVE"
+                      ],
+                      "description": "Status from product"
+                    },
+                    "product": {
+                      "type": "string",
+                      "description": "The name or identifier of the investment product",
+                      "example": "CDB - CDI - Taxa Flutuante"
+                    },
+                    "kind": {
+                      "type": "string",
+                      "description": "The type or category of the investment product",
+                      "example": "P\u00f3s-Fixada"
+                    },
+                    "profitability": {
+                      "type": "number",
+                      "description": "The profitability or interest rate of the investment product",
+                      "example": 5.2
+                    },
+                    "indexer": {
+                      "type": "string",
+                      "description": "The financial index used to calculate the profitability",
+                      "example": "CDI"
+                    },
+                    "term": {
+                      "type": "number",
+                      "description": "The duration or term of the investment product in days",
+                      "example": 9998
+                    },
+                    "maturity_date": {
+                      "type": "string",
+                      "description": "The date when the investment product matures",
+                      "example": "2050-09-24"
+                    },
+                    "minimum_value": {
+                      "type": "number",
+                      "description": "The minimum investment amount required for the product",
+                      "example": 100
+                    },
+                    "grace_period": {
+                      "type": "number",
+                      "description": "The grace period in days for the investment product",
+                      "example": 1
+                    },
+                    "liquidity": {
+                      "type": "string",
+                      "description": "The liquidity frequency of the investment product",
+                      "example": "Di\u00e1ria"
+                    },
+                    "repurchase_grace_period": {
+                      "type": "number",
+                      "description": "The repurchase grace period in days for the investment product",
+                      "example": 1
+                    },
+                    "calculation_criteria": {
+                      "type": "string",
+                      "description": "The criteria used for calculating the investment product",
+                      "example": "PRE"
+                    },
+                    "criteria_type": {
+                      "type": "string",
+                      "description": "The type of criteria used",
+                      "example": "CONTABIL"
+                    },
+                    "paper_type": {
+                      "type": "string",
+                      "description": "The type of financial instrument",
+                      "example": "CDB"
+                    },
+                    "income_type": {
+                      "type": "string",
+                      "description": "The type of income generated by the investment product",
+                      "example": "PRE"
+                    },
+                    "tax_rate_sequence_number": {
+                      "type": "number",
+                      "description": "The sequence number for the tax rate applied to the investment product",
+                      "example": 4
+                    },
+                    "automatic_application_available": {
+                      "type": "boolean",
+                      "description": "Indicates whether automatic application is available for the investment product"
+                    },
+                    "escalated": {
+                      "type": "boolean",
+                      "description": "Indicates whether the investment product has escalated features"
+                    },
+                    "redemption_form_identifier": {
+                      "type": "string",
+                      "description": "The identifier for the redemption form associated with the investment product",
+                      "example": "FIN"
+                    },
+                    "scheduling_available": {
+                      "type": "boolean",
+                      "description": "Indicates whether scheduling is available for the investment product"
+                    },
+                    "expiration_term": {
+                      "type": "number",
+                      "description": "Indicates the time of investment have to expire",
+                      "example": 360
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "BadRequest",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "title": "Expiration Term Invalid",
+                      "type": "object",
+                      "description": "Representation of an bad request error",
+                      "properties": {
+                        "code": {
+                          "description": "The type of error",
+                          "type": "string",
+                          "example": "EXPIRATION_TERM_INVALID"
+                        },
+                        "message": {
+                          "description": "Describes a message informing a reason for the error",
+                          "type": "string",
+                          "example": "Expiration term invalid, is greater then term"
+                        }
+                      }
+                    }
+                  ]
+                },
+                "example": {
+                  "code": "EXPIRATION_TERM_INVALID",
+                  "message": "Expiration term invalid, is greater then term"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Error with types [ProductNotFound].",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "title": "Product not found",
+                      "type": "object",
+                      "description": "Representation of an not found error",
+                      "properties": {
+                        "code": {
+                          "description": "The type of error",
+                          "type": "string",
+                          "example": "PRODUCT_NOT_FOUND"
+                        },
+                        "message": {
+                          "description": "Describes a message informing a reason for the error",
+                          "type": "string",
+                          "example": "Product was not found."
+                        }
+                      }
+                    }
+                  ]
+                },
+                "example": {
+                  "code": "PRODUCT_NOT_FOUND",
+                  "message": "Product not found."
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
