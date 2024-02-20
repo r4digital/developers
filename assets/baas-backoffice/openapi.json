@@ -2457,6 +2457,284 @@
           }
         }
       }
+    },
+    "/invest/products": {
+      "get": {
+        "tags": [
+          "Invest Operation"
+        ],
+        "summary": "List products to invest",
+        "description": "List products to invest.",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "person_kind",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "NATURAL_PERSON",
+                "LEGAL_PERSON"
+              ]
+            },
+            "description": "Person kind",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "status",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "ACTIVE",
+                "INACTIVE"
+              ]
+            },
+            "description": "Status from product",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "after",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Base64 filter to bring only products after the provided value",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "order_by[field]",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "MINIMUM_VALUE",
+                "PROFITABILITY",
+                "GRACE_PERIOD"
+              ]
+            },
+            "description": "The field to be ordered",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "order_by[orientation]",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "ASC",
+                "DESC"
+              ]
+            },
+            "description": "The orientation of the order",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "minimum_value",
+            "schema": {
+              "type": "number",
+              "example": 100.12
+            },
+            "description": "The filter to bring only the exact or greater minimum value",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "before",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Base64 filter to bring only products before the provided value",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The numbers of products to return. Can be omitted if provided before or after filters with limit embedded in them. If nothing is provided, the default will be 50 as limit",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "with_expiration_term",
+            "schema": {
+              "type": "boolean",
+              "default": false
+            },
+            "description": "Indicates when products will return only with expiration time is not null",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Updated with success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "format": "uuid-v4",
+                          "example": "f6ee2b64-1c5d-4504-bb52-6f79e02d1006",
+                          "description": "Product's id"
+                        },
+                        "person_kind": {
+                          "type": "string",
+                          "enum": [
+                            "NATURAL_PERSON",
+                            "LEGAL_PERSON"
+                          ],
+                          "description": "Person kind"
+                        },
+                        "status": {
+                          "type": "string",
+                          "enum": [
+                            "ACTIVE",
+                            "INACTIVE"
+                          ],
+                          "description": "Status from product"
+                        },
+                        "product": {
+                          "type": "string",
+                          "description": "The name or identifier of the investment product",
+                          "example": "CDB - CDI - Taxa Flutuante"
+                        },
+                        "kind": {
+                          "type": "string",
+                          "description": "The type or category of the investment product",
+                          "example": "P\u00f3s-Fixada"
+                        },
+                        "profitability": {
+                          "type": "number",
+                          "description": "The profitability or interest rate of the investment product",
+                          "example": 5.2
+                        },
+                        "indexer": {
+                          "type": "string",
+                          "description": "The financial index used to calculate the profitability",
+                          "example": "CDI"
+                        },
+                        "term": {
+                          "type": "number",
+                          "description": "The duration or term of the investment product in days",
+                          "example": 9998
+                        },
+                        "maturity_date": {
+                          "type": "string",
+                          "description": "The date when the investment product matures",
+                          "example": "2050-09-24"
+                        },
+                        "minimum_value": {
+                          "type": "number",
+                          "description": "The minimum investment amount required for the product",
+                          "example": 100
+                        },
+                        "grace_period": {
+                          "type": "number",
+                          "description": "The grace period in days for the investment product",
+                          "example": 1
+                        },
+                        "liquidity": {
+                          "type": "string",
+                          "description": "The liquidity frequency of the investment product",
+                          "example": "Di\u00e1ria"
+                        },
+                        "repurchase_grace_period": {
+                          "type": "number",
+                          "description": "The repurchase grace period in days for the investment product",
+                          "example": 1
+                        },
+                        "calculation_criteria": {
+                          "type": "string",
+                          "description": "The criteria used for calculating the investment product",
+                          "example": "PRE"
+                        },
+                        "criteria_type": {
+                          "type": "string",
+                          "description": "The type of criteria used",
+                          "example": "CONTABIL"
+                        },
+                        "paper_type": {
+                          "type": "string",
+                          "description": "The type of financial instrument",
+                          "example": "CDB"
+                        },
+                        "income_type": {
+                          "type": "string",
+                          "description": "The type of income generated by the investment product",
+                          "example": "PRE"
+                        },
+                        "tax_rate_sequence_number": {
+                          "type": "number",
+                          "description": "The sequence number for the tax rate applied to the investment product",
+                          "example": 4
+                        },
+                        "automatic_application_available": {
+                          "type": "boolean",
+                          "description": "Indicates whether automatic application is available for the investment product"
+                        },
+                        "escalated": {
+                          "type": "boolean",
+                          "description": "Indicates whether the investment product has escalated features"
+                        },
+                        "redemption_form_identifier": {
+                          "type": "string",
+                          "description": "The identifier for the redemption form associated with the investment product",
+                          "example": "FIN"
+                        },
+                        "scheduling_available": {
+                          "type": "boolean",
+                          "description": "Indicates whether scheduling is available for the investment product"
+                        },
+                        "expiration_term": {
+                          "type": "number",
+                          "description": "Indicates the time of investment have to expire",
+                          "example": 360
+                        }
+                      }
+                    },
+                    "cursor": {
+                      "type": "object",
+                      "description": "Describes properties of a cursor",
+                      "properties": {
+                        "after": {
+                          "type": "string",
+                          "format": "base64",
+                          "description": "cursor pointing at the last item of the list. If no more items exist, the property is removed from the response",
+                          "example": "eyJmaWVsZCI6ImNyZWF0ZWRfYXQiLCJ2YWx1ZSI6IjIwMjMtMTEtMDlUMTM6MDM6NDAuMDAwWiIsImxpbWl0IjoyfQ=="
+                        },
+                        "before": {
+                          "type": "string",
+                          "format": "base64",
+                          "description": "cursor pointing at the first item of the list. If its the first available item, the property is removed from the response",
+                          "example": "eyJmaWVsZCI6ImNyZWF0ZWRfYXQiLCJ2YWx1ZSI6IjIwMjMtMTEtMDlUMTM6MDM6NDAuMDAwWiIsImxpbWl0IjoyfQ=="
+                        },
+                        "limit": {
+                          "type": "number",
+                          "format": "base64",
+                          "description": "number of items to return.",
+                          "example": 10
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
