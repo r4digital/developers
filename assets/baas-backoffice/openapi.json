@@ -2216,7 +2216,7 @@
       }
     },
     "/invest/products/{product_id}": {
-      "post": {
+      "patch": {
         "tags": [
           "Invest Operation"
         ],
