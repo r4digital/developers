@@ -669,6 +669,23 @@
                           "example": "Invalid person kind for product"
                         }
                       }
+                    },
+                    {
+                      "title": "Invalid product",
+                      "type": "object",
+                      "description": "Representation of an not found error",
+                      "properties": {
+                        "code": {
+                          "description": "The type of error",
+                          "type": "string",
+                          "example": "INVALID_PRODUCT"
+                        },
+                        "message": {
+                          "description": "Describes a message informing a reason for the error",
+                          "type": "string",
+                          "example": "Product without expiration term"
+                        }
+                      }
                     }
                   ]
                 },
@@ -686,6 +703,14 @@
                       "error": {
                         "code": "INVALID_PERSON_KIND_FOR_PRODUCT",
                         "message": "Invalid person kind for product"
+                      }
+                    }
+                  },
+                  "Example 3 - InvalidProduct": {
+                    "value": {
+                      "error": {
+                        "code": "INVALID_PRODUCT",
+                        "message": "Product without expiration term"
                       }
                     }
                   }
