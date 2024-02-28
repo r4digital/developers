@@ -2735,6 +2735,110 @@
           }
         }
       }
+    },
+    "/employees/{document_number}": {
+      "get": {
+        "tags": [
+          "Employees"
+        ],
+        "summary": "Get an employee by CPF",
+        "description": "Return an employee",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "document_number",
+            "schema": {
+              "type": "string",
+              "description": "A valid CPF from employee.",
+              "minLength": 11,
+              "example": 12345678911
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Employee returned",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "document_number": {
+                      "type": "string",
+                      "description": "Employee's document number"
+                    },
+                    "origin": {
+                      "type": "string",
+                      "enum": [
+                        "SAP",
+                        "PLURYA"
+                      ],
+                      "description": "Origin of the register"
+                    },
+                    "enabled": {
+                      "type": "boolean",
+                      "description": "Indicates if the employee is enabled"
+                    },
+                    "admissional_date": {
+                      "type": "string",
+                      "description": "The admissional date from employee"
+                    },
+                    "registration_code": {
+                      "type": "string",
+                      "description": "Employee's registration code"
+                    },
+                    "city": {
+                      "type": "string",
+                      "description": "Employee's city"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Error with types [EmployeeNotFound].",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "title": "Employee Not Found",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "EMPLOYEE_NOT_FOUND",
+                          "enum": [
+                            "EMPLOYEE_NOT_FOUND"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "Employee not found"
+                        },
+                        "status_code": {
+                          "type": "number",
+                          "description": "Error status code",
+                          "example": "404"
+                        }
+                      }
+                    }
+                  ]
+                },
+                "example": {
+                  "code": "EMPLOYEE_NOT_FOUND",
+                  "message": "Employee not found."
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
