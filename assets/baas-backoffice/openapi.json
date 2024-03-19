@@ -2766,7 +2766,8 @@
                   "properties": {
                     "document_number": {
                       "type": "string",
-                      "description": "Employee's document number"
+                      "description": "Employee's document number",
+                      "example": "01234567891"
                     },
                     "origin": {
                       "type": "string",
@@ -2782,15 +2783,23 @@
                     },
                     "admissional_date": {
                       "type": "string",
-                      "description": "The admissional date from employee"
+                      "description": "The admissional date from employee",
+                      "example": "2021-01-01"
                     },
                     "registration_code": {
                       "type": "string",
-                      "description": "Employee's registration code"
+                      "description": "Employee's registration code",
+                      "example": "12345"
                     },
                     "city": {
                       "type": "string",
-                      "description": "Employee's city"
+                      "description": "Employee's city",
+                      "example": "Caxias do Sul"
+                    },
+                    "company": {
+                      "type": "string",
+                      "description": "Employee's company",
+                      "example": "DBSERVER ASSESSORIA EM SISTEMAS DE INFORMACAO LTDA"
                     }
                   }
                 }
