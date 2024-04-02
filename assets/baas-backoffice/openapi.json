@@ -1217,7 +1217,7 @@
     "/antifraud/pix/{id}/unblock": {
       "post": {
         "tags": [
-          "Antifraud"
+          "Antifraud Analysis"
         ],
         "summary": "Unblock a transaction.",
         "description": "Unblock a transaction.",
@@ -1286,10 +1286,10 @@
         }
       }
     },
-    "/fraud": {
+    "/antifraud/pix/fraud": {
       "post": {
         "tags": [
-          "Infraction"
+          "Antifraud Analysis"
         ],
         "summary": "Create fraud mark",
         "description": "Create and returns information about created fraud mark",
@@ -1493,7 +1493,7 @@
       },
       "get": {
         "tags": [
-          "Infraction"
+          "Antifraud Analysis"
         ],
         "summary": "List frauds",
         "description": "List information about fraud marks",
@@ -1760,10 +1760,166 @@
         }
       }
     },
-    "/fraud/{id}/cancel": {
+    "/antifraud/pix/fraud/{id}": {
+      "get": {
+        "tags": [
+          "Antifraud Analysis"
+        ],
+        "summary": "Get a fraud marking by id",
+        "description": "Get a fraud marking for a specific id",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "string",
+              "format": "uuid-v4"
+            },
+            "required": true,
+            "description": "ID of the fraud marking to get."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully get fraud marking",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "description": "Describes the properties of fraud marking",
+                  "required": [
+                    "fraud_id",
+                    "correlation_id",
+                    "document_number",
+                    "document_type",
+                    "kind",
+                    "situation",
+                    "responded_at",
+                    "created_at",
+                    "updated_at"
+                  ],
+                  "properties": {
+                    "fraud_id": {
+                      "type": "string",
+                      "description": "Created fraud id",
+                      "example": "59bfea43-95f1-4f44-8ec9-254d9109de81"
+                    },
+                    "correlation_id": {
+                      "type": "string",
+                      "description": "Correlation id from fraud",
+                      "example": "B2023102010013637811476673153F13"
+                    },
+                    "document_number": {
+                      "type": "number",
+                      "description": "User document number to which the fraud marking.",
+                      "example": 37722745091
+                    },
+                    "document_type": {
+                      "type": "string",
+                      "description": "User document type.",
+                      "enum": [
+                        "CPF",
+                        "CNPJ"
+                      ]
+                    },
+                    "key": {
+                      "type": "string",
+                      "description": "Pix key to which the fraud. It must be entered, if known",
+                      "example": "+55519999999"
+                    },
+                    "kind": {
+                      "type": "string",
+                      "description": "Kind of fraud marking",
+                      "enum": [
+                        "APPLICATION_FRAUD",
+                        "MULE_ACCOUNT",
+                        "SCAMMER_ACCOUNT",
+                        "OTHERS",
+                        "UNKNOWN"
+                      ],
+                      "example": "APPLICATION_FRAUD"
+                    },
+                    "situation": {
+                      "type": "string",
+                      "description": "Situation from fraud Mark",
+                      "enum": [
+                        "REGISTERED",
+                        "CANCELLED"
+                      ],
+                      "example": "CANCELLED"
+                    },
+                    "responded_at": {
+                      "type": "string",
+                      "description": "Dict responded at",
+                      "example": "2023-10-20T13:01:36.411Z"
+                    },
+                    "created_at": {
+                      "type": "string",
+                      "description": "Fraud mark created at",
+                      "example": "2023-10-20T13:01:36.411Z"
+                    },
+                    "updated_at": {
+                      "type": "string",
+                      "description": "Fraud mark last update",
+                      "example": "2023-10-20T13:01:36.411Z"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "title": "Not Found",
+                      "properties": {
+                        "error": {
+                          "type": "object",
+                          "properties": {
+                            "code": {
+                              "type": "string",
+                              "title": "Error code",
+                              "description": "The type of error",
+                              "example": "NOT_FOUND",
+                              "enum": [
+                                "NOT_FOUND"
+                              ]
+                            },
+                            "message": {
+                              "type": "string",
+                              "title": "Error message",
+                              "description": "Describes a message informing a reason for the error",
+                              "example": "Unable to found the requested account"
+                            },
+                            "status_code": {
+                              "type": "number",
+                              "description": "Error status code",
+                              "example": "404"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                },
+                "example": {
+                  "code": "FRAUD_MARKING_NOT_FOUND",
+                  "message": "The provided fraud marking was not found or does not exist"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/antifraud/pix/fraud/{id}/cancel": {
       "post": {
         "tags": [
-          "Infraction"
+          "Antifraud Analysis"
         ],
         "summary": "Cancel fraud mark",
         "description": "Cancel and returns information about canceled fraud mark",
@@ -2052,162 +2208,6 @@
                 "example": {
                   "code": "FRAUD_MARKING_ALREADY_CANCELED",
                   "message": "The fraud mark was already canceled."
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/fraud/{id}": {
-      "get": {
-        "tags": [
-          "Infraction"
-        ],
-        "summary": "Get a fraud marking by id",
-        "description": "Get a fraud marking for a specific id",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "id",
-            "schema": {
-              "type": "string",
-              "format": "uuid-v4"
-            },
-            "required": true,
-            "description": "ID of the fraud marking to get."
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successfully get fraud marking",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "description": "Describes the properties of fraud marking",
-                  "required": [
-                    "fraud_id",
-                    "correlation_id",
-                    "document_number",
-                    "document_type",
-                    "kind",
-                    "situation",
-                    "responded_at",
-                    "created_at",
-                    "updated_at"
-                  ],
-                  "properties": {
-                    "fraud_id": {
-                      "type": "string",
-                      "description": "Created fraud id",
-                      "example": "59bfea43-95f1-4f44-8ec9-254d9109de81"
-                    },
-                    "correlation_id": {
-                      "type": "string",
-                      "description": "Correlation id from fraud",
-                      "example": "B2023102010013637811476673153F13"
-                    },
-                    "document_number": {
-                      "type": "number",
-                      "description": "User document number to which the fraud marking.",
-                      "example": 37722745091
-                    },
-                    "document_type": {
-                      "type": "string",
-                      "description": "User document type.",
-                      "enum": [
-                        "CPF",
-                        "CNPJ"
-                      ]
-                    },
-                    "key": {
-                      "type": "string",
-                      "description": "Pix key to which the fraud. It must be entered, if known",
-                      "example": "+55519999999"
-                    },
-                    "kind": {
-                      "type": "string",
-                      "description": "Kind of fraud marking",
-                      "enum": [
-                        "APPLICATION_FRAUD",
-                        "MULE_ACCOUNT",
-                        "SCAMMER_ACCOUNT",
-                        "OTHERS",
-                        "UNKNOWN"
-                      ],
-                      "example": "APPLICATION_FRAUD"
-                    },
-                    "situation": {
-                      "type": "string",
-                      "description": "Situation from fraud Mark",
-                      "enum": [
-                        "REGISTERED",
-                        "CANCELLED"
-                      ],
-                      "example": "CANCELLED"
-                    },
-                    "responded_at": {
-                      "type": "string",
-                      "description": "Dict responded at",
-                      "example": "2023-10-20T13:01:36.411Z"
-                    },
-                    "created_at": {
-                      "type": "string",
-                      "description": "Fraud mark created at",
-                      "example": "2023-10-20T13:01:36.411Z"
-                    },
-                    "updated_at": {
-                      "type": "string",
-                      "description": "Fraud mark last update",
-                      "example": "2023-10-20T13:01:36.411Z"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Not found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "oneOf": [
-                    {
-                      "title": "Not Found",
-                      "properties": {
-                        "error": {
-                          "type": "object",
-                          "properties": {
-                            "code": {
-                              "type": "string",
-                              "title": "Error code",
-                              "description": "The type of error",
-                              "example": "NOT_FOUND",
-                              "enum": [
-                                "NOT_FOUND"
-                              ]
-                            },
-                            "message": {
-                              "type": "string",
-                              "title": "Error message",
-                              "description": "Describes a message informing a reason for the error",
-                              "example": "Unable to found the requested account"
-                            },
-                            "status_code": {
-                              "type": "number",
-                              "description": "Error status code",
-                              "example": "404"
-                            }
-                          }
-                        }
-                      }
-                    }
-                  ]
-                },
-                "example": {
-                  "code": "FRAUD_MARKING_NOT_FOUND",
-                  "message": "The provided fraud marking was not found or does not exist"
                 }
               }
             }
