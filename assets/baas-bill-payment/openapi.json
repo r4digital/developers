@@ -1,8 +1,8 @@
 {
   "openapi": "3.0.2",
   "info": {
-    "version": "1.1.3",
-    "title": "BaaS Bill Payment",
+    "version": "1.0.0",
+    "title": "Bass Bill Payment",
     "description": "**Description**: Api responsible for managing bill payments\n\n  For a bill payment be successfully completed, the client has to do two requests to the service.\n\n  The first one is for create a payment and get information about bill.\n\n  The second one is for the client provide information about payer and about the amount to pay.\nAfter this steps, some back end process will be responsible to confirm with application if the transaction is permitted and if was, check if client has balance enough to do the operation requested.\n# Status\nTo see how the payment flow is going the client can get information about it and confirm the statuses and occurrences.\n\n  | Status                | Description                                                 |\n  |---------------------- | ------------------------------------------------------------|\n  | `CREATED` | The payment was created with the id provided. |\n  | `AUTHORIZED` | The customer has authorized the payment and it will be processed. |\n  | `CONFIRMING` | Payment has been sent for internal confirmation. |\n  | `CONFIRMED` | Application confirmed payment. |\n  | `NOT_CONFIRMED` | Application not confirmed payment. |\n  | `PROCESSING` | Payment has been sent for internal processing |\n  | `TRANSFERRED` | Payment has been transferred internally and awaits finalization. |\n  | `REJECTED` | Payment has been rejected. |\n  | `ERROR` | Some error has ocurred during the process. |\n  | `CANCELED` | Payment has been cancelled. |\n  | `DONE` | Payment has been fully processed. |\n\n\n## Status Change Notification\nAs described in the status table, some statuses will fire a notification call to the client.\n  To receive this notifications, its necessary to request the registration of the service URL which will receive the notification object.\n  This object will be sent as an HTTP call with the POST method, of which the client must respond with a 200 status and within 5 seconds.\n\n**Notification Call Scheme**\n\n  Headers:\n  ```json\n  {\n    X-R4-Application: GUID // Application Unique Identifier\n    X-R4-Delivery: GUID // Attempt Unique Identifier\n    X-R4-Event: {event_type} // Event Type for the Notification (As describe in the Status Table)\n    User-Agent: R4-Hookshot\n  }\n  ```\n  Body\n  ```json\n  {\n    \"object_kind\": \"{event_type}\", // Event Type for the Notification (As describe in the Status Table)\n    \"object_id\": \"GUID\", // Bill payment Unique Identifier\n    \"application_id\": \"GUID\", // Application Unique Identifier\n    \"account_id\": \"GUID\" // Account Unique Identifier\n  }\n  ```\n## Bill Payment Confirmation Call\nTo receive the confirmation, its necessary the previous registration of the client url.\n  This object will be sent as an HTTP call with the POST method, of which the client must respond with a 202 status and within 10 seconds.\n\n**Bill Payment Confirmation Call Scheme**\n\n  Headers:\n  ```json\n  {\n    X-R4-Application: GUID // Application Unique Identifier\n    X-R4-Delivery: GUID // Attempt Unique Identifier\n    X-R4-Event: bill_payment_confirmation\n    User-Agent: R4-Hookshot\n  }\n  ```\n  Body\n  ```json\n  {\n    \"object_kind\": \"bill_payment_confirmation\", // Kind for the Confirmation Call\n    \"object_id\": \"GUID\", // Bill payment Unique Identifier\n    \"application_id\": \"GUID\", // Application Unique Identifier\n    \"account_id\": \"GUID\", // Account Unique Identifier\n    \"metadata\": { // Bill payment confirmation metadata\n      \"id\": \"GUID\", // Bill payment Unique Identifier\n      \"amount\": number // Amount to be paid\n      \"type\": \"string\" // Bill payment type, \"BARCODE\" or \"DIGITABLE\"\n      \"value\": \"string\" // Bill payment type value\n      \"payer\": {\n        \"document_type\": \"string\" // Payer document type, \"CPF\" or \"CNPJ\"\n        \"document_number\": \"string\" // Payer document number\n      }\n    }\n  }\n  ```\n# Errors\nBill Payment uses [HTTP response status codes](https://en.wikipedia.org/wiki/List_of_HTTP_status_codes) to indicate the success or failure of your API requests.\nIn general, there are three status code ranges you can expect:\n- `2xx` success status codes confirm that your request worked as expected\n\n- `4xx` error status codes indicate an error because of the information provided (e.g., a required parameter was not provided)\n\n- `5xx` error status codes are rare and indicate an error with R4's servers\n"
   },
   "servers": [
@@ -15,17 +15,21 @@
       "url": "https://api.r4digital.cloud/bill-payment"
     }
   ],
+  "security": [],
   "tags": [
     {
-      "name": "Bill Payment"
+      "name": "Bill Payment",
+      "description": "Bill Payment"
     }
   ],
   "paths": {
     "/bill-payments": {
       "post": {
+        "operationId": "PostBillPayments",
         "tags": [
           "Bill Payment"
         ],
+        "summary": "Authorize payment",
         "description": "Returns information about a bill payment requested and prepare to authorize payment.",
         "requestBody": {
           "content": {
@@ -143,7 +147,7 @@
                     "settle_date": {
                       "type": "string",
                       "format": "date",
-                      "example": "2021-10-18T00:00:00.000Z"
+                      "example": "2021-10-18"
                     },
                     "end_hour": {
                       "type": "string",
@@ -249,12 +253,12 @@
                     "created_at": {
                       "type": "string",
                       "format": "date",
-                      "example": "2021-09-24T12:59:46.173Z"
+                      "example": "2021-09-24 12:59:46.17378"
                     },
                     "updated_at": {
                       "type": "string",
                       "format": "date",
-                      "example": "2021-09-24T12:59:49.830Z"
+                      "example": "2021-09-24 12:59:49.830"
                     },
                     "initiation_channel": {
                       "type": "string",
@@ -277,7 +281,7 @@
                     "convenant": {
                       "type": "string",
                       "description": "Represents in which institution the payment will be settled",
-                      "example": "BANCO 756 / AG\u00caNCIA 432"
+                      "example": "BANCO 756 / AGENCIA 432"
                     }
                   }
                 }
@@ -389,49 +393,40 @@
             }
           },
           "401": {
-            "description": "Error with types [AuthenticationError].",
+            "description": "Authentication Failed",
             "content": {
               "application/json": {
                 "schema": {
-                  "title": "Unauthorized",
-                  "properties": {
-                    "error": {
+                  "allOf": [
+                    {
                       "type": "object",
                       "properties": {
                         "code": {
-                          "type": "string",
-                          "title": "Error code",
-                          "description": "The type of error",
-                          "example": "UNAUTHORIZED_ERROR",
-                          "enum": [
-                            "UNAUTHORIZED_ERROR"
-                          ]
+                          "type": "string"
                         },
                         "message": {
-                          "type": "string",
-                          "title": "Error message",
-                          "description": "Describes a message informing a reason for the error",
-                          "example": "Unauthorized request"
+                          "type": "string"
                         },
                         "status_code": {
-                          "type": "number",
-                          "description": "Error status code",
-                          "example": "401"
+                          "type": "number"
+                        }
+                      },
+                      "required": [
+                        "code",
+                        "message",
+                        "status_code"
+                      ]
+                    },
+                    {
+                      "example": {
+                        "error": {
+                          "code": "AUTHENTICATION_FAILED",
+                          "message": "Authentication failed.",
+                          "status_code": 401
                         }
                       }
                     }
-                  }
-                },
-                "examples": {
-                  "Example 1 - Unauthorized": {
-                    "value": {
-                      "error": {
-                        "code": "UNAUTHORIZED_ERROR",
-                        "message": "Unauthorized request",
-                        "status_code": 401
-                      }
-                    }
-                  }
+                  ]
                 }
               }
             }
@@ -800,9 +795,11 @@
         }
       },
       "get": {
+        "operationId": "GetBillPayments",
         "tags": [
           "Bill Payment"
         ],
+        "summary": "Receive a bill payment",
         "description": "Returns information about a bill payment for a specif account.",
         "parameters": [
           {
@@ -913,7 +910,7 @@
                           "settle_date": {
                             "type": "string",
                             "format": "date",
-                            "example": "2021-10-18T00:00:00.000Z"
+                            "example": "2021-10-18"
                           },
                           "end_hour": {
                             "type": "string",
@@ -1019,12 +1016,12 @@
                           "created_at": {
                             "type": "string",
                             "format": "date",
-                            "example": "2021-09-24T12:59:46.173Z"
+                            "example": "2021-09-24 12:59:46.17378"
                           },
                           "updated_at": {
                             "type": "string",
                             "format": "date",
-                            "example": "2021-09-24T12:59:49.830Z"
+                            "example": "2021-09-24 12:59:49.830"
                           },
                           "initiation_channel": {
                             "type": "string",
@@ -1047,7 +1044,7 @@
                           "convenant": {
                             "type": "string",
                             "description": "Represents in which institution the payment will be settled",
-                            "example": "BANCO 756 / AG\u00caNCIA 432"
+                            "example": "BANCO 756 / AGENCIA 432"
                           }
                         }
                       }
@@ -1162,49 +1159,40 @@
             }
           },
           "401": {
-            "description": "Error with types [AuthenticationError].",
+            "description": "Authentication Failed",
             "content": {
               "application/json": {
                 "schema": {
-                  "title": "Unauthorized",
-                  "properties": {
-                    "error": {
+                  "allOf": [
+                    {
                       "type": "object",
                       "properties": {
                         "code": {
-                          "type": "string",
-                          "title": "Error code",
-                          "description": "The type of error",
-                          "example": "UNAUTHORIZED_ERROR",
-                          "enum": [
-                            "UNAUTHORIZED_ERROR"
-                          ]
+                          "type": "string"
                         },
                         "message": {
-                          "type": "string",
-                          "title": "Error message",
-                          "description": "Describes a message informing a reason for the error",
-                          "example": "Unauthorized request"
+                          "type": "string"
                         },
                         "status_code": {
-                          "type": "number",
-                          "description": "Error status code",
-                          "example": "401"
+                          "type": "number"
+                        }
+                      },
+                      "required": [
+                        "code",
+                        "message",
+                        "status_code"
+                      ]
+                    },
+                    {
+                      "example": {
+                        "error": {
+                          "code": "AUTHENTICATION_FAILED",
+                          "message": "Authentication failed.",
+                          "status_code": 401
                         }
                       }
                     }
-                  }
-                },
-                "examples": {
-                  "Example 1 - Unauthorized": {
-                    "value": {
-                      "error": {
-                        "code": "UNAUTHORIZED_ERROR",
-                        "message": "Unauthorized request",
-                        "status_code": 401
-                      }
-                    }
-                  }
+                  ]
                 }
               }
             }
@@ -1430,9 +1418,11 @@
     },
     "/bill-payments/{payment_guuid}": {
       "post": {
+        "operationId": "PostBillPaymentsPaymentGuuid",
         "tags": [
           "Bill Payment"
         ],
+        "summary": "Authorize a payment",
         "description": "Authorize a payment by specifying a payment amount and payer information.",
         "parameters": [
           {
@@ -1721,49 +1711,40 @@
             }
           },
           "401": {
-            "description": "Error with types [AuthenticationError].",
+            "description": "Authentication Failed",
             "content": {
               "application/json": {
                 "schema": {
-                  "title": "Unauthorized",
-                  "properties": {
-                    "error": {
+                  "allOf": [
+                    {
                       "type": "object",
                       "properties": {
                         "code": {
-                          "type": "string",
-                          "title": "Error code",
-                          "description": "The type of error",
-                          "example": "UNAUTHORIZED_ERROR",
-                          "enum": [
-                            "UNAUTHORIZED_ERROR"
-                          ]
+                          "type": "string"
                         },
                         "message": {
-                          "type": "string",
-                          "title": "Error message",
-                          "description": "Describes a message informing a reason for the error",
-                          "example": "Unauthorized request"
+                          "type": "string"
                         },
                         "status_code": {
-                          "type": "number",
-                          "description": "Error status code",
-                          "example": "401"
+                          "type": "number"
+                        }
+                      },
+                      "required": [
+                        "code",
+                        "message",
+                        "status_code"
+                      ]
+                    },
+                    {
+                      "example": {
+                        "error": {
+                          "code": "AUTHENTICATION_FAILED",
+                          "message": "Authentication failed.",
+                          "status_code": 401
                         }
                       }
                     }
-                  }
-                },
-                "examples": {
-                  "Example 1 - Unauthorized": {
-                    "value": {
-                      "error": {
-                        "code": "UNAUTHORIZED_ERROR",
-                        "message": "Unauthorized request",
-                        "status_code": 401
-                      }
-                    }
-                  }
+                  ]
                 }
               }
             }
@@ -2100,9 +2081,11 @@
         }
       },
       "get": {
+        "operationId": "GetBillPaymentsPaymentGuuid",
         "tags": [
           "Bill Payment"
         ],
+        "summary": "Receive a bill payment",
         "description": "Get payment information by payment guuid.",
         "parameters": [
           {
@@ -2183,7 +2166,7 @@
                           "settle_date": {
                             "type": "string",
                             "format": "date",
-                            "example": "2021-10-18T00:00:00.000Z"
+                            "example": "2021-10-18"
                           },
                           "end_hour": {
                             "type": "string",
@@ -2289,12 +2272,12 @@
                           "created_at": {
                             "type": "string",
                             "format": "date",
-                            "example": "2021-09-24T12:59:46.173Z"
+                            "example": "2021-09-24 12:59:46.17378"
                           },
                           "updated_at": {
                             "type": "string",
                             "format": "date",
-                            "example": "2021-09-24T12:59:49.830Z"
+                            "example": "2021-09-24 12:59:49.830"
                           },
                           "initiation_channel": {
                             "type": "string",
@@ -2317,7 +2300,7 @@
                           "convenant": {
                             "type": "string",
                             "description": "Represents in which institution the payment will be settled",
-                            "example": "BANCO 756 / AG\u00caNCIA 432"
+                            "example": "BANCO 756 / AGENCIA 432"
                           }
                         }
                       }
@@ -2461,49 +2444,40 @@
             }
           },
           "401": {
-            "description": "Error with types [AuthenticationError].",
+            "description": "Authentication Failed",
             "content": {
               "application/json": {
                 "schema": {
-                  "title": "Unauthorized",
-                  "properties": {
-                    "error": {
+                  "allOf": [
+                    {
                       "type": "object",
                       "properties": {
                         "code": {
-                          "type": "string",
-                          "title": "Error code",
-                          "description": "The type of error",
-                          "example": "UNAUTHORIZED_ERROR",
-                          "enum": [
-                            "UNAUTHORIZED_ERROR"
-                          ]
+                          "type": "string"
                         },
                         "message": {
-                          "type": "string",
-                          "title": "Error message",
-                          "description": "Describes a message informing a reason for the error",
-                          "example": "Unauthorized request"
+                          "type": "string"
                         },
                         "status_code": {
-                          "type": "number",
-                          "description": "Error status code",
-                          "example": "401"
+                          "type": "number"
+                        }
+                      },
+                      "required": [
+                        "code",
+                        "message",
+                        "status_code"
+                      ]
+                    },
+                    {
+                      "example": {
+                        "error": {
+                          "code": "AUTHENTICATION_FAILED",
+                          "message": "Authentication failed.",
+                          "status_code": 401
                         }
                       }
                     }
-                  }
-                },
-                "examples": {
-                  "Example 1 - Unauthorized": {
-                    "value": {
-                      "error": {
-                        "code": "UNAUTHORIZED_ERROR",
-                        "message": "Unauthorized request",
-                        "status_code": 401
-                      }
-                    }
-                  }
+                  ]
                 }
               }
             }
@@ -2727,9 +2701,11 @@
         }
       },
       "delete": {
+        "operationId": "DeleteBillPaymentsPaymentGuuid",
         "tags": [
           "Bill Payment"
         ],
+        "summary": "Delete a bill payment",
         "description": "Cancels a payment and reverse it when possible",
         "parameters": [
           {
@@ -2903,49 +2879,40 @@
             }
           },
           "401": {
-            "description": "Error with types [AuthenticationError].",
+            "description": "Authentication Failed",
             "content": {
               "application/json": {
                 "schema": {
-                  "title": "Unauthorized",
-                  "properties": {
-                    "error": {
+                  "allOf": [
+                    {
                       "type": "object",
                       "properties": {
                         "code": {
-                          "type": "string",
-                          "title": "Error code",
-                          "description": "The type of error",
-                          "example": "UNAUTHORIZED_ERROR",
-                          "enum": [
-                            "UNAUTHORIZED_ERROR"
-                          ]
+                          "type": "string"
                         },
                         "message": {
-                          "type": "string",
-                          "title": "Error message",
-                          "description": "Describes a message informing a reason for the error",
-                          "example": "Unauthorized request"
+                          "type": "string"
                         },
                         "status_code": {
-                          "type": "number",
-                          "description": "Error status code",
-                          "example": "401"
+                          "type": "number"
+                        }
+                      },
+                      "required": [
+                        "code",
+                        "message",
+                        "status_code"
+                      ]
+                    },
+                    {
+                      "example": {
+                        "error": {
+                          "code": "AUTHENTICATION_FAILED",
+                          "message": "Authentication failed.",
+                          "status_code": 401
                         }
                       }
                     }
-                  }
-                },
-                "examples": {
-                  "Example 1 - Unauthorized": {
-                    "value": {
-                      "error": {
-                        "code": "UNAUTHORIZED_ERROR",
-                        "message": "Unauthorized request",
-                        "status_code": 401
-                      }
-                    }
-                  }
+                  ]
                 }
               }
             }
@@ -3302,6 +3269,45 @@
           }
         }
       },
+      "AuthenticationError": {
+        "description": "Authentication Failed",
+        "content": {
+          "application/json": {
+            "schema": {
+              "allOf": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "status_code": {
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "message",
+                    "status_code"
+                  ]
+                },
+                {
+                  "example": {
+                    "error": {
+                      "code": "AUTHENTICATION_FAILED",
+                      "message": "Authentication failed.",
+                      "status_code": 401
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      },
       "PaymentResponse": {
         "description": "Payment",
         "content": {
@@ -3358,7 +3364,7 @@
                 "settle_date": {
                   "type": "string",
                   "format": "date",
-                  "example": "2021-10-18T00:00:00.000Z"
+                  "example": "2021-10-18"
                 },
                 "end_hour": {
                   "type": "string",
@@ -3464,12 +3470,12 @@
                 "created_at": {
                   "type": "string",
                   "format": "date",
-                  "example": "2021-09-24T12:59:46.173Z"
+                  "example": "2021-09-24 12:59:46.17378"
                 },
                 "updated_at": {
                   "type": "string",
                   "format": "date",
-                  "example": "2021-09-24T12:59:49.830Z"
+                  "example": "2021-09-24 12:59:49.830"
                 },
                 "initiation_channel": {
                   "type": "string",
@@ -3492,7 +3498,7 @@
                 "convenant": {
                   "type": "string",
                   "description": "Represents in which institution the payment will be settled",
-                  "example": "BANCO 756 / AG\u00caNCIA 432"
+                  "example": "BANCO 756 / AGENCIA 432"
                 }
               }
             }
@@ -3574,7 +3580,7 @@
                       "settle_date": {
                         "type": "string",
                         "format": "date",
-                        "example": "2021-10-18T00:00:00.000Z"
+                        "example": "2021-10-18"
                       },
                       "end_hour": {
                         "type": "string",
@@ -3680,12 +3686,12 @@
                       "created_at": {
                         "type": "string",
                         "format": "date",
-                        "example": "2021-09-24T12:59:46.173Z"
+                        "example": "2021-09-24 12:59:46.17378"
                       },
                       "updated_at": {
                         "type": "string",
                         "format": "date",
-                        "example": "2021-09-24T12:59:49.830Z"
+                        "example": "2021-09-24 12:59:49.830"
                       },
                       "initiation_channel": {
                         "type": "string",
@@ -3708,7 +3714,7 @@
                       "convenant": {
                         "type": "string",
                         "description": "Represents in which institution the payment will be settled",
-                        "example": "BANCO 756 / AG\u00caNCIA 432"
+                        "example": "BANCO 756 / AGENCIA 432"
                       }
                     }
                   }
@@ -3784,7 +3790,7 @@
                       "settle_date": {
                         "type": "string",
                         "format": "date",
-                        "example": "2021-10-18T00:00:00.000Z"
+                        "example": "2021-10-18"
                       },
                       "end_hour": {
                         "type": "string",
@@ -3890,12 +3896,12 @@
                       "created_at": {
                         "type": "string",
                         "format": "date",
-                        "example": "2021-09-24T12:59:46.173Z"
+                        "example": "2021-09-24 12:59:46.17378"
                       },
                       "updated_at": {
                         "type": "string",
                         "format": "date",
-                        "example": "2021-09-24T12:59:49.830Z"
+                        "example": "2021-09-24 12:59:49.830"
                       },
                       "initiation_channel": {
                         "type": "string",
@@ -3918,7 +3924,7 @@
                       "convenant": {
                         "type": "string",
                         "description": "Represents in which institution the payment will be settled",
-                        "example": "BANCO 756 / AG\u00caNCIA 432"
+                        "example": "BANCO 756 / AGENCIA 432"
                       }
                     }
                   }
@@ -4042,6 +4048,38 @@
           }
         ]
       },
+      "AuthenticationError": {
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "string"
+              },
+              "message": {
+                "type": "string"
+              },
+              "status_code": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "code",
+              "message",
+              "status_code"
+            ]
+          },
+          {
+            "example": {
+              "error": {
+                "code": "AUTHENTICATION_FAILED",
+                "message": "Authentication failed.",
+                "status_code": 401
+              }
+            }
+          }
+        ]
+      },
       "PaymentWithCursorResponse": {
         "type": "object",
         "properties": {
@@ -4113,7 +4151,7 @@
                 "settle_date": {
                   "type": "string",
                   "format": "date",
-                  "example": "2021-10-18T00:00:00.000Z"
+                  "example": "2021-10-18"
                 },
                 "end_hour": {
                   "type": "string",
@@ -4219,12 +4257,12 @@
                 "created_at": {
                   "type": "string",
                   "format": "date",
-                  "example": "2021-09-24T12:59:46.173Z"
+                  "example": "2021-09-24 12:59:46.17378"
                 },
                 "updated_at": {
                   "type": "string",
                   "format": "date",
-                  "example": "2021-09-24T12:59:49.830Z"
+                  "example": "2021-09-24 12:59:49.830"
                 },
                 "initiation_channel": {
                   "type": "string",
@@ -4247,7 +4285,7 @@
                 "convenant": {
                   "type": "string",
                   "description": "Represents in which institution the payment will be settled",
-                  "example": "BANCO 756 / AG\u00caNCIA 432"
+                  "example": "BANCO 756 / AGENCIA 432"
                 }
               }
             }
@@ -4316,7 +4354,7 @@
                 "settle_date": {
                   "type": "string",
                   "format": "date",
-                  "example": "2021-10-18T00:00:00.000Z"
+                  "example": "2021-10-18"
                 },
                 "end_hour": {
                   "type": "string",
@@ -4422,12 +4460,12 @@
                 "created_at": {
                   "type": "string",
                   "format": "date",
-                  "example": "2021-09-24T12:59:46.173Z"
+                  "example": "2021-09-24 12:59:46.17378"
                 },
                 "updated_at": {
                   "type": "string",
                   "format": "date",
-                  "example": "2021-09-24T12:59:49.830Z"
+                  "example": "2021-09-24 12:59:49.830"
                 },
                 "initiation_channel": {
                   "type": "string",
@@ -4450,7 +4488,7 @@
                 "convenant": {
                   "type": "string",
                   "description": "Represents in which institution the payment will be settled",
-                  "example": "BANCO 756 / AG\u00caNCIA 432"
+                  "example": "BANCO 756 / AGENCIA 432"
                 }
               }
             }
@@ -4538,7 +4576,7 @@
           "settle_date": {
             "type": "string",
             "format": "date",
-            "example": "2021-10-18T00:00:00.000Z"
+            "example": "2021-10-18"
           },
           "end_hour": {
             "type": "string",
@@ -4644,12 +4682,12 @@
           "created_at": {
             "type": "string",
             "format": "date",
-            "example": "2021-09-24T12:59:46.173Z"
+            "example": "2021-09-24 12:59:46.17378"
           },
           "updated_at": {
             "type": "string",
             "format": "date",
-            "example": "2021-09-24T12:59:49.830Z"
+            "example": "2021-09-24 12:59:49.830"
           },
           "initiation_channel": {
             "type": "string",
@@ -4672,7 +4710,417 @@
           "convenant": {
             "type": "string",
             "description": "Represents in which institution the payment will be settled",
-            "example": "BANCO 756 / AG\u00caNCIA 432"
+            "example": "BANCO 756 / AGENCIA 432"
+          }
+        }
+      },
+      "ValidationFailedError": {
+        "title": "The provided data is invalid",
+        "properties": {
+          "error": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "string",
+                "title": "Error code",
+                "description": "The type of error",
+                "example": "VALIDATION_FAILED",
+                "enum": [
+                  "VALIDATION_FAILED"
+                ]
+              },
+              "message": {
+                "type": "string",
+                "title": "Error message",
+                "description": "Describes a message informing a reason for the error",
+                "example": "Invalid request data"
+              },
+              "status_code": {
+                "type": "number",
+                "description": "Error status code",
+                "example": "400"
+              }
+            }
+          }
+        }
+      },
+      "BadRequest": {
+        "title": "Bad Request",
+        "properties": {
+          "code": {
+            "type": "string",
+            "title": "Error code",
+            "description": "The type of error",
+            "example": "BAD_REQUEST",
+            "enum": [
+              "BAD_REQUEST"
+            ]
+          },
+          "message": {
+            "type": "string",
+            "title": "Error message",
+            "description": "Describes a message informing a reason for the error",
+            "example": "Invalid request params"
+          },
+          "status_code": {
+            "type": "number",
+            "description": "Error status code",
+            "example": "400"
+          }
+        }
+      },
+      "MissingProductPermissionError": {
+        "title": "Missing product permission",
+        "properties": {
+          "error": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "string",
+                "title": "Error code",
+                "description": "The type of error",
+                "example": "MISSING_PRODUCT_PERMISSION",
+                "enum": [
+                  "MISSING_PRODUCT_PERMISSION"
+                ]
+              },
+              "message": {
+                "type": "string",
+                "title": "Error message",
+                "description": "Describes a message informing a reason for the error",
+                "example": "Missing product permission"
+              },
+              "status_code": {
+                "type": "number",
+                "description": "Error status code",
+                "example": "403"
+              }
+            }
+          }
+        }
+      },
+      "AccountNotFoundError": {
+        "title": "Account Not Found",
+        "properties": {
+          "code": {
+            "type": "string",
+            "title": "Error code",
+            "description": "The type of error",
+            "example": "ACCOUNT_NOT_FOUND",
+            "enum": [
+              "ACCOUNT_NOT_FOUND"
+            ]
+          },
+          "message": {
+            "type": "string",
+            "title": "Error message",
+            "description": "Describes a message informing a reason for the error",
+            "example": "Account not found"
+          },
+          "status_code": {
+            "type": "number",
+            "description": "Error status code",
+            "example": "404"
+          }
+        }
+      },
+      "NotFound": {
+        "title": "Not Found",
+        "properties": {
+          "error": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "string",
+                "title": "Error code",
+                "description": "The type of error",
+                "example": "NOT_FOUND",
+                "enum": [
+                  "NOT_FOUND"
+                ]
+              },
+              "message": {
+                "type": "string",
+                "title": "Error message",
+                "description": "Describes a message informing a reason for the error",
+                "example": "Page not found"
+              },
+              "status_code": {
+                "type": "number",
+                "description": "Error status code",
+                "example": "404"
+              }
+            }
+          }
+        }
+      },
+      "Conflict": {
+        "title": "Conflict",
+        "properties": {
+          "error": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "string",
+                "title": "Error code",
+                "description": "The type of error",
+                "example": "CONFLICT",
+                "enum": [
+                  "CONFLICT"
+                ]
+              },
+              "message": {
+                "type": "string",
+                "title": "Error message",
+                "description": "Describes a message informing a reason for the error",
+                "example": "Requested id already exists"
+              },
+              "status_code": {
+                "type": "number",
+                "description": "Error status code",
+                "example": "409"
+              }
+            }
+          }
+        }
+      },
+      "PaymentAlreadyExistsError": {
+        "title": "Payment already exists",
+        "properties": {
+          "error": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "string",
+                "title": "Error code",
+                "description": "The type of error",
+                "example": "PAYMENT_ALREADY_EXISTS",
+                "enum": [
+                  "PAYMENT_ALREADY_EXISTS"
+                ]
+              },
+              "message": {
+                "type": "string",
+                "title": "Error message",
+                "description": "Describes a message informing a reason for the error",
+                "example": "Payment already exists"
+              },
+              "status_code": {
+                "type": "number",
+                "description": "Error status code",
+                "example": "409"
+              }
+            }
+          }
+        }
+      },
+      "FailedDependency": {
+        "title": "Failed Dependency",
+        "properties": {
+          "error": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "string",
+                "title": "Error code",
+                "description": "The type of error",
+                "example": "FAILED_DEPENDENCY",
+                "enum": [
+                  "FAILED_DEPENDENCY"
+                ]
+              },
+              "message": {
+                "type": "string",
+                "title": "Error message",
+                "description": "Describes a message informing a reason for the error",
+                "example": "The request failed due to failure of a previous request"
+              },
+              "status_code": {
+                "type": "number",
+                "description": "Error status code",
+                "example": "424"
+              }
+            }
+          }
+        }
+      },
+      "NotBusinessDayError": {
+        "title": "Not Business Day Error",
+        "properties": {
+          "error": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "string",
+                "title": "Error code",
+                "description": "The type of error",
+                "example": "BUSINESS_DAY_ONLY_ERROR",
+                "enum": [
+                  "BUSINESS_DAY_ONLY_ERROR"
+                ]
+              },
+              "message": {
+                "type": "string",
+                "title": "Error message",
+                "description": "Describes a message informing a reason for the error",
+                "example": "The current day is not a business day"
+              },
+              "status_code": {
+                "type": "number",
+                "description": "Error status code",
+                "example": "400"
+              }
+            }
+          }
+        }
+      },
+      "TimeOutOfRangeError": {
+        "title": "Time Out Of Range Error",
+        "properties": {
+          "error": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "string",
+                "title": "Error code",
+                "description": "The type of error",
+                "example": "TIME_OUT_OF_RANGE",
+                "enum": [
+                  "TIME_OUT_OF_RANGE"
+                ]
+              },
+              "message": {
+                "type": "string",
+                "title": "Error message",
+                "description": "Describes a message informing a reason for the error",
+                "example": "The current time is out of range"
+              },
+              "status_code": {
+                "type": "number",
+                "description": "Error status code",
+                "example": "400"
+              }
+            }
+          }
+        }
+      },
+      "NotAllowedRequest": {
+        "title": "Request not allowed",
+        "properties": {
+          "error": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "string",
+                "title": "Error code",
+                "description": "The type of error",
+                "example": "REQUEST_NOT_ALLOWED",
+                "enum": [
+                  "REQUEST_NOT_ALLOWED"
+                ]
+              },
+              "message": {
+                "type": "string",
+                "title": "Error message",
+                "description": "Describes a message informing a reason for the error",
+                "example": "The request is not allowed"
+              },
+              "status_code": {
+                "type": "number",
+                "description": "Error status code",
+                "example": "400"
+              }
+            }
+          }
+        }
+      },
+      "UnprocessableEntity": {
+        "title": "Unprocessable Entity",
+        "properties": {
+          "error": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "string",
+                "title": "Error code",
+                "description": "The type of error",
+                "example": "UNPROCESSABLE_ENTITY",
+                "enum": [
+                  "UNPROCESSABLE_ENTITY"
+                ]
+              },
+              "message": {
+                "type": "string",
+                "title": "Error message",
+                "description": "Describes a message informing a reason for the error",
+                "example": "The request was well-formed but was unable to be followed due to semantic errors."
+              },
+              "status_code": {
+                "type": "number",
+                "description": "Error status code",
+                "example": "422"
+              }
+            }
+          }
+        }
+      },
+      "PaymentNotPerformedError": {
+        "title": "Payment not performed",
+        "properties": {
+          "error": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "string",
+                "title": "Error code",
+                "description": "The type of error",
+                "example": "PAYMENT_NOT_PERFORMED",
+                "enum": [
+                  "PAYMENT_NOT_PERFORMED"
+                ]
+              },
+              "message": {
+                "type": "string",
+                "title": "Error message",
+                "description": "Describes a message informing a reason for the error",
+                "example": "Payment not performed"
+              },
+              "status_code": {
+                "type": "number",
+                "description": "Error status code",
+                "example": "400"
+              }
+            }
+          }
+        }
+      },
+      "PaymentAlreadyPerformedError": {
+        "title": "Payment already performed",
+        "properties": {
+          "error": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "string",
+                "title": "Error code",
+                "description": "The type of error",
+                "example": "PAYMENT_ALREADY_PERFORMED",
+                "enum": [
+                  "PAYMENT_ALREADY_PERFORMED"
+                ]
+              },
+              "message": {
+                "type": "string",
+                "title": "Error message",
+                "description": "Describes a message informing a reason for the error",
+                "example": "Bill payment already done, cannot be canceled"
+              },
+              "status_code": {
+                "type": "number",
+                "description": "Error status code",
+                "example": "406"
+              }
+            }
           }
         }
       }
