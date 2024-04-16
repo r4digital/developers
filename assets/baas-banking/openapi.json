@@ -1,7 +1,7 @@
 {
   "openapi": "3.0.2",
   "info": {
-    "version": "1.1.0",
+    "version": "1.0.0",
     "title": "Baas Banking",
     "description": "**Description**: Api responsible for managing accounts, statements & balance\n\n# Schemas\n\n<a name=\"account_statuses\"></a>\n\n  ## Account statuses\n\n  <table>\n    <tr>\n      <td>Status</td>\n      <td>Description</td>\n    </tr>\n    <tr>\n      <td>`BLOCKED`</td>\n      <td>Informs that the account is blocked and can not do any transaction.</td>\n    </tr>\n    <tr>\n      <td>`ENABLED`</td>\n      <td>Informs that the account is enabled and ready for use.</td>\n    </tr>\n    <tr>\n      <td>`CANCELED`</td>\n      <td>Informs that the account is canceled and not able to do anything.</td>\n    </tr>\n  </table>\n\n# Status Change Notification\n\nSome statuses changes will fire a notification call to the client.\n\nTo receive this notifications, its necessary to request the registration of the service URL which will receive the notification object.\n\nThis object will be sent as a HTTP call with the POST method, of which the client must respond with a 200 status and within 5 seconds.\n\n| Event Type                        | Description                                                                    |\n|---------------------------------- | ------------------------------------------------------------------------------ |\n| `account_block-balance-created`   | Block balance was created                                                      |\n| `account_block-balance-cancelled` | Block balance was cancelled and the blocked value returned to user the account |\n| `account_block-balance-unblocked` | Block balance was unblocked and the blocked value returned to user the account |\n| `account_block-balance-captured`  | Block balance was captured from another credit event                           |\n\nFor block balance request more details use the route `GET /accounts/{account_id}/blocks/{block_id}`\n\n### Notification Call Scheme\n\n#### *Header*\n```json\n{\n  X-R4-Application: GUID, // Application Unique Identifier\n  X-R4-Delivery: GUID, // Attempt Unique Identifier\n  X-R4-Event: {event_type}, // Event Type for the Notification (as described in Event Type table)\n  User-Agent: R4-Hookshot\n}\n```\n\n#### *Body*\n```\n{\n  \"object_kind\": \"{event_type}\", // Event Type for the Notification (as described in Event Type table)\n  \"object_id\": \"GUID\", // Payment Unique Identifier\n  \"account_id\": \"GUID\" // Account Unique Identifier\n  \"application_id\": \"GUID\" // Application Unique Identifier\n}\n```\n\n# Errors\n\nAccount Middleware uses [HTTP response status codes](https://en.wikipedia.org/wiki/List_of_HTTP_status_codes) to indicate the success or failure of your API requests.\n\nIn general, there are three status code ranges you can expect:\n\n- `2xx` success status codes confirm that your request worked as expected\n\n- `4xx` error status codes indicate an error because of the information provided (e.g., a required parameter was not provided)\n\n- `5xx` error status codes are rare and indicate an error with R4's servers\n\n\n## HTTP Status code summary\n\nExtracted from [Stripe API codes](https://stripe.com/docs/api/errors)\n\n- `200 - OK` Everything worked as expected.\n\n- `400 - Bad Request` The request was unacceptable, often due to missing a required parameter.\n\n- `401 - Unauthorized` No valid API key provided.\n\n- `403 - Forbidden` The API key doesn't have permissions to perform the request.\n\n- `404 - Not Found` The requested resource doesn't exist.\n\n- `408 - Request Timeout` The connection was ended by timeout.\n\n- `429 - Too Many Requests` Too many requests hit the API too quickly. We recommend an exponential backoff of your requests.\n\n- `500, 502, 503, 504 - Server Errors` Something went wrong on R4's end.\n\n## Error codes\n\nBelow is a list of possible error codes that can be returned:\n\n<table>\n    <tr>\n      <td>Code</td>\n      <td>Description</td>\n    </tr>\n    <tr>\n      <td>`ACCOUNT_NOT_FOUND`</td>\n      <td>The account informed was not found.</td>\n    </tr>\n    <tr>\n      <td>`BLOCK_BALANCE_NOT_FOUND`</td>\n      <td>The block balance informed was not found.</td>\n    </tr>\n    <tr>\n      <td>`PERSON_NOT_ACTIVE`</td>\n      <td>The profile person is not active.</td>\n    </tr>\n    <tr>\n      <td>`PROFILE_NOT_FOUND`</td>\n      <td>The profile informed was not found.</td>\n    </tr>\n    <tr>\n      <td>`UUID_INVALID`</td>\n      <td>The uuid informed was not valid.</td>\n    </tr>\n    <tr>\n      <td>`REQUEST_VALIDATOR_ERROR`</td>\n      <td>The request is not formatted correctly.</td>\n    </tr>\n    <tr>\n      <td>`UNAUTHORIZED`</td>\n      <td>The request unauthorized, no valid API key provided</td>\n    </tr>\n    <tr>\n      <td>`AUTHENTICATION_FAILED`</td>\n      <td>Authentication failed.</td>\n    </tr>\n  </table>\n"
   },
@@ -17,12 +17,14 @@
   ],
   "tags": [
     {
-      "name": "Account"
+      "name": "Account",
+      "description": "Account"
     }
   ],
   "paths": {
     "/accounts": {
       "get": {
+        "operationId": "GetAccounts",
         "tags": [
           "Account"
         ],
@@ -158,7 +160,7 @@
                             "properties": {
                               "type": {
                                 "type": "string",
-                                "description": "Document's type:\n  - `CPF`: Pessoa f\u00edsica (Natural)\n  - `CNPJ`: Pessoa jur\u00eddica (Juridical)\n",
+                                "description": "Document's type:\n  - `CPF`: Pessoa fisica (Natural)\n  - `CNPJ`: Pessoa juridica (Juridical)\n",
                                 "example": "CPF",
                                 "enum": [
                                   "CPF",
@@ -387,6 +389,7 @@
         }
       },
       "post": {
+        "operationId": "postAccount",
         "tags": [
           "Account"
         ],
@@ -922,6 +925,7 @@
     },
     "/accounts/{account_id}": {
       "delete": {
+        "operationId": "DeleteAccountsAccountId",
         "tags": [
           "Account"
         ],
@@ -954,7 +958,7 @@
                   "description": {
                     "type": "string",
                     "description": "The reason to close account",
-                    "example": "Requisi\u00e7\u00e3o do usu\u00e1rio"
+                    "example": "Requisicao do usuario"
                   },
                   "reason": {
                     "type": "string",
@@ -1187,6 +1191,7 @@
         }
       },
       "get": {
+        "operationId": "GetAccountsAccountId",
         "tags": [
           "Account"
         ],
@@ -1272,7 +1277,7 @@
                       "properties": {
                         "type": {
                           "type": "string",
-                          "description": "Document's type:\n  - `CPF`: Pessoa f\u00edsica (Natural)\n  - `CNPJ`: Pessoa jur\u00eddica (Juridical)\n",
+                          "description": "Document's type:\n  - `CPF`: Pessoa fisica (Natural)\n  - `CNPJ`: Pessoa juridica (Juridical)\n",
                           "example": "CPF",
                           "enum": [
                             "CPF",
@@ -1525,6 +1530,7 @@
     },
     "/accounts/{account_id}/balance": {
       "get": {
+        "operationId": "GetAccountsAccountIdBalance",
         "tags": [
           "Account"
         ],
@@ -1820,6 +1826,7 @@
     },
     "/accounts/{account_id}/blocks/{block_id}": {
       "get": {
+        "operationId": "GetAccountsAccountIdBlocksBlockId",
         "tags": [
           "Account"
         ],
@@ -2206,6 +2213,7 @@
     },
     "/statements/{account_id}": {
       "get": {
+        "operationId": "getStatementsAccountId",
         "tags": [
           "Account"
         ],
@@ -2624,6 +2632,189 @@
           }
         }
       }
+    },
+    "/batch-payments": {
+      "post": {
+        "operationId": "createBatchPayments",
+        "tags": [
+          "Batch Payments"
+        ],
+        "summary": "Create batch payments by file",
+        "description": "Create batch payments by file",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "description": "Unique identifier of the transaction.",
+                    "format": "uuid-v4",
+                    "example": "6d814c28-fe73-443c-bfe0-48d518aa32fa"
+                  },
+                  "account_id": {
+                    "type": "string",
+                    "description": "Unique identifier of the account.",
+                    "format": "uuid-v4",
+                    "example": "6d814c28-fe73-443c-bfe0-48d518aa32fa"
+                  },
+                  "file": {
+                    "type": "string",
+                    "description": "Batch payments file",
+                    "format": "File"
+                  }
+                }
+              },
+              "encoding": {
+                "file": {
+                  "contentType": "text/plain, text/csv"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Batch payments created with success."
+          },
+          "403": {
+            "description": "Error with types [AccountNotAllowedError].",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Account not allowed for this operation",
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "title": "Error code",
+                      "description": "The type of error",
+                      "example": "ACCOUNT_NOT_ALLOWED",
+                      "enum": [
+                        "ACCOUNT_NOT_ALLOWED"
+                      ]
+                    },
+                    "message": {
+                      "type": "string",
+                      "title": "Error message",
+                      "description": "Describes a message informing a reason for the error",
+                      "example": "Account not allowed for this operation"
+                    },
+                    "status_code": {
+                      "type": "number",
+                      "description": "Error status code",
+                      "example": "403"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Error with types [NotFound, AccountNotFound].",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "title": "Not Found",
+                      "properties": {
+                        "error": {
+                          "type": "object",
+                          "properties": {
+                            "code": {
+                              "type": "string",
+                              "title": "Error code",
+                              "description": "The type of error",
+                              "example": "NOT_FOUND",
+                              "enum": [
+                                "NOT_FOUND"
+                              ]
+                            },
+                            "message": {
+                              "type": "string",
+                              "title": "Error message",
+                              "description": "Describes a message informing a reason for the error",
+                              "example": "Unable to found the requested account"
+                            },
+                            "status_code": {
+                              "type": "number",
+                              "description": "Error status code",
+                              "example": "404"
+                            }
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "title": "Account Not Found",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "ACCOUNT_NOT_FOUND",
+                          "enum": [
+                            "ACCOUNT_NOT_FOUND"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "Account not found"
+                        },
+                        "status_code": {
+                          "type": "number",
+                          "description": "Error status code",
+                          "example": "404"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Error with types [LimitFileSizeError].",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "File too large",
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "title": "Error code",
+                      "description": "The type of error",
+                      "example": "LIMIT_FILE_SIZE",
+                      "enum": [
+                        "LIMIT_FILE_SIZE"
+                      ]
+                    },
+                    "message": {
+                      "type": "string",
+                      "title": "Error message",
+                      "description": "Describes a message informing a reason for the error",
+                      "example": "File too large."
+                    },
+                    "status_code": {
+                      "type": "number",
+                      "description": "Error status code",
+                      "example": "413"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -2633,6 +2824,831 @@
         "bearerFormat": "JWT",
         "scheme": "bearer",
         "description": "Bearer auth (https://developer.mozilla.org/en-US/docs/Web/HTTP/Authentication)."
+      }
+    },
+    "schemas": {
+      "AccountId": {
+        "type": "string",
+        "description": "Unique identifier of the account.",
+        "format": "uuid-v4",
+        "example": "6d814c28-fe73-443c-bfe0-48d518aa32fa"
+      },
+      "Document": {
+        "type": "object",
+        "description": "Document of the person bound to the account.",
+        "properties": {
+          "type": {
+            "type": "string",
+            "description": "Document's type:\n  - `CPF`: Pessoa fisica (Natural)\n  - `CNPJ`: Pessoa juridica (Juridical)\n",
+            "example": "CPF",
+            "enum": [
+              "CPF",
+              "CNPJ"
+            ]
+          },
+          "value": {
+            "type": "string",
+            "description": "Document's value",
+            "example": "12345678901"
+          }
+        }
+      },
+      "Account": {
+        "type": "object",
+        "description": "Describes the properties of an account.",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique identifier of the account.",
+            "format": "uuid-v4",
+            "example": "6d814c28-fe73-443c-bfe0-48d518aa32fa"
+          },
+          "application_id": {
+            "type": "string",
+            "description": "Unique identifier of the application which the account is bound.",
+            "format": "uuid-v4",
+            "example": "6d814c28-ff73-443c-bfe0-48d518aa32fa"
+          },
+          "bank_code": {
+            "type": "string",
+            "description": "Code identifying the account's bank.",
+            "example": "160"
+          },
+          "branch": {
+            "type": "string",
+            "description": "Number of the account's branch.",
+            "example": "0001"
+          },
+          "account_number": {
+            "type": "string",
+            "description": "Number of the account.",
+            "example": "123456"
+          },
+          "account_check_digit": {
+            "type": "string",
+            "description": "Number of the account's *check-digit*.",
+            "example": "7"
+          },
+          "status": {
+            "type": "string",
+            "description": "Status of the account. [See definitions here](#account_statuses).\n",
+            "enum": [
+              "BLOCKED",
+              "ENABLED",
+              "CANCELED"
+            ],
+            "example": "ENABLED"
+          },
+          "name": {
+            "type": "string",
+            "description": "Name of the person bound to the account.",
+            "example": "Julian Alfred Pankratz"
+          },
+          "document": {
+            "type": "object",
+            "description": "Document of the person bound to the account.",
+            "properties": {
+              "type": {
+                "type": "string",
+                "description": "Document's type:\n  - `CPF`: Pessoa fisica (Natural)\n  - `CNPJ`: Pessoa juridica (Juridical)\n",
+                "example": "CPF",
+                "enum": [
+                  "CPF",
+                  "CNPJ"
+                ]
+              },
+              "value": {
+                "type": "string",
+                "description": "Document's value",
+                "example": "12345678901"
+              }
+            }
+          }
+        }
+      },
+      "BadRequest": {
+        "title": "Bad Request",
+        "properties": {
+          "code": {
+            "type": "string",
+            "title": "Error code",
+            "description": "The type of error",
+            "example": "BAD_REQUEST",
+            "enum": [
+              "BAD_REQUEST"
+            ]
+          },
+          "message": {
+            "type": "string",
+            "title": "Error message",
+            "description": "Describes a message informing a reason for the error",
+            "example": "Invalid request params"
+          },
+          "status_code": {
+            "type": "number",
+            "description": "Error status code",
+            "example": "400"
+          }
+        }
+      },
+      "Uuid": {
+        "title": "Uuid Error",
+        "properties": {
+          "code": {
+            "type": "string",
+            "title": "Error code",
+            "description": "The type of error",
+            "example": "UUID_INVALID",
+            "enum": [
+              "UUID_INVALID"
+            ]
+          },
+          "message": {
+            "type": "string",
+            "title": "Error message",
+            "description": "Describes a message informing a reason for the error",
+            "example": "Uuid invalid"
+          },
+          "status_code": {
+            "type": "number",
+            "description": "Error status code",
+            "example": "400"
+          }
+        }
+      },
+      "AuthenticationFailed": {
+        "title": "Authentication Failed",
+        "properties": {
+          "error": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "string",
+                "title": "Error code",
+                "description": "The type of error",
+                "example": "AUTHENTICATION_FAILED",
+                "enum": [
+                  "AUTHENTICATION_FAILED"
+                ]
+              },
+              "message": {
+                "type": "string",
+                "title": "Error message",
+                "description": "Describes a message informing a reason for the error",
+                "example": "Authentication failed."
+              },
+              "status_code": {
+                "type": "number",
+                "description": "Error status code",
+                "example": "401"
+              }
+            }
+          }
+        }
+      },
+      "NotFound": {
+        "title": "Not Found",
+        "properties": {
+          "error": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "string",
+                "title": "Error code",
+                "description": "The type of error",
+                "example": "NOT_FOUND",
+                "enum": [
+                  "NOT_FOUND"
+                ]
+              },
+              "message": {
+                "type": "string",
+                "title": "Error message",
+                "description": "Describes a message informing a reason for the error",
+                "example": "Unable to found the requested account"
+              },
+              "status_code": {
+                "type": "number",
+                "description": "Error status code",
+                "example": "404"
+              }
+            }
+          }
+        }
+      },
+      "ProfileNotFound": {
+        "title": "Profile Not Found",
+        "properties": {
+          "code": {
+            "type": "string",
+            "title": "Error code",
+            "description": "The type of error",
+            "example": "PROFILE_NOT_FOUND",
+            "enum": [
+              "PROFILE_NOT_FOUND"
+            ]
+          },
+          "message": {
+            "type": "string",
+            "title": "Error message",
+            "description": "Describes a message informing a reason for the error",
+            "example": "Profile not found"
+          },
+          "status_code": {
+            "type": "number",
+            "description": "Error status code",
+            "example": "404"
+          }
+        }
+      },
+      "InternalServerError": {
+        "title": "Internal Server Error",
+        "properties": {
+          "code": {
+            "type": "string",
+            "title": "Error code",
+            "description": "The type of error",
+            "example": "INTERNAL_SERVER_ERROR",
+            "enum": [
+              "INTERNAL_SERVER_ERROR"
+            ]
+          },
+          "message": {
+            "type": "string",
+            "title": "Error message",
+            "description": "Describes a message informing a reason for the error",
+            "example": "Unexpected error with our service"
+          },
+          "status_code": {
+            "type": "number",
+            "description": "Error status code",
+            "example": "500"
+          }
+        }
+      },
+      "CreateAccount": {
+        "type": "object",
+        "description": "Describes the properties of an account.",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique identifier of the account.",
+            "format": "uuid-v4",
+            "example": "6d814c28-fe73-443c-bfe0-48d518aa32fa"
+          },
+          "application_id": {
+            "type": "string",
+            "description": "Unique identifier of the application which the account is bound.",
+            "format": "uuid-v4",
+            "example": "6d814c28-ff73-443c-bfe0-48d518aa32fa"
+          },
+          "name": {
+            "type": "string",
+            "description": "Name of the person bound to the account.",
+            "example": "Julian Alfred Pankratz"
+          },
+          "document_type": {
+            "type": "string",
+            "enum": [
+              "CPF",
+              "CNPJ"
+            ],
+            "example": "CPF"
+          },
+          "account_type": {
+            "type": "string",
+            "enum": [
+              "PAYMENT_ACCOUNT"
+            ],
+            "example": "PAYMENT_ACCOUNT"
+          },
+          "account_digit": {
+            "type": "number",
+            "description": "Check digit of the account",
+            "example": 9
+          },
+          "account_number": {
+            "type": "number",
+            "description": "Account number without the check digit",
+            "example": 55605714074
+          },
+          "agency_number": {
+            "type": "number",
+            "example": 1
+          }
+        }
+      },
+      "FailedToCreateAccountBalanceError": {
+        "title": "Failed to Create Account Balance",
+        "properties": {
+          "code": {
+            "type": "string",
+            "title": "Error code",
+            "description": "The type of error",
+            "example": "FAILED_TO_CREATE_ACCOUNT_BALANCE",
+            "enum": [
+              "FAILED_TO_CREATE_ACCOUNT_BALANCE"
+            ]
+          },
+          "message": {
+            "type": "string",
+            "title": "Error message",
+            "description": "Describes a message informing a reason for the error",
+            "example": "Failed to create account balance."
+          },
+          "status_code": {
+            "type": "number",
+            "description": "Error status code",
+            "example": "400"
+          }
+        }
+      },
+      "InvalidRegistrationDataError": {
+        "title": "Invalid registration data",
+        "properties": {
+          "code": {
+            "type": "string",
+            "title": "Error code",
+            "description": "The type of error",
+            "example": "INVALID_REGISTRATION_DATA",
+            "enum": [
+              "INVALID_REGISTRATION_DATA"
+            ]
+          },
+          "message": {
+            "type": "string",
+            "title": "Error message",
+            "description": "Describes a message informing a reason for the error",
+            "example": "Invalid registration data."
+          },
+          "status_code": {
+            "type": "number",
+            "description": "Error status code",
+            "example": "400"
+          }
+        }
+      },
+      "AccountTypeInvalid": {
+        "title": "Account Type Invalid",
+        "properties": {
+          "code": {
+            "type": "string",
+            "title": "Error code",
+            "description": "The type of error",
+            "example": "ACCOUNT_TYPE_INVALID",
+            "enum": [
+              "ACCOUNT_TYPE_INVALID"
+            ]
+          },
+          "message": {
+            "type": "string",
+            "title": "Error message",
+            "description": "Describes a message informing a reason for the error",
+            "example": "Account type invalid."
+          },
+          "status_code": {
+            "type": "number",
+            "description": "Error status code",
+            "example": "400"
+          }
+        }
+      },
+      "PersonNotActive": {
+        "title": "Person is Not Active",
+        "properties": {
+          "code": {
+            "type": "string",
+            "title": "Error code",
+            "description": "The type of error",
+            "example": "PERSON_NOT_ACTIVE",
+            "enum": [
+              "PERSON_NOT_ACTIVE"
+            ]
+          },
+          "message": {
+            "type": "string",
+            "title": "Error message",
+            "description": "Describes a message informing a reason for the error",
+            "example": "Profile Person is not active"
+          },
+          "status_code": {
+            "type": "number",
+            "description": "Error status code",
+            "example": "400"
+          }
+        }
+      },
+      "InvalidClientCodeError": {
+        "title": "Invalid client code error.",
+        "properties": {
+          "code": {
+            "type": "string",
+            "title": "Error code",
+            "description": "The type of error",
+            "example": "INVALID_CLIENT_CODE",
+            "enum": [
+              "INVALID_CLIENT_CODE"
+            ]
+          },
+          "message": {
+            "type": "string",
+            "title": "Error message",
+            "description": "Describes a message informing a reason for the error",
+            "example": "Invalid client code error."
+          },
+          "status_code": {
+            "type": "number",
+            "description": "Error status code",
+            "example": "400"
+          }
+        }
+      },
+      "NotAllowedForThisDocumentNumber": {
+        "title": "Not allowed for this document number",
+        "properties": {
+          "code": {
+            "type": "string",
+            "title": "Error code",
+            "description": "The type of error",
+            "example": "NOT_ALLOWED_FOR_THIS_DOCUMENT_NUMBER",
+            "enum": [
+              "NOT_ALLOWED_FOR_THIS_DOCUMENT_NUMBER"
+            ]
+          },
+          "message": {
+            "type": "string",
+            "title": "Error message",
+            "description": "Describes a message informing a reason for the error",
+            "example": "Not allowed for this document number."
+          },
+          "status_code": {
+            "type": "number",
+            "description": "Error status code",
+            "example": "400"
+          }
+        }
+      },
+      "ClientCodeNotFoundError": {
+        "title": "Client Code Not Found",
+        "properties": {
+          "code": {
+            "type": "string",
+            "title": "Error code",
+            "description": "The type of error",
+            "example": "CLIENT_CODE_NOT_FOUND",
+            "enum": [
+              "CLIENT_CODE_NOT_FOUND"
+            ]
+          },
+          "message": {
+            "type": "string",
+            "title": "Error message",
+            "description": "Describes a message informing a reason for the error",
+            "example": "Client code not found"
+          },
+          "status_code": {
+            "type": "number",
+            "description": "Error status code",
+            "example": "404"
+          }
+        }
+      },
+      "Conflict": {
+        "title": "Conflict",
+        "properties": {
+          "error": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "string",
+                "title": "Error code",
+                "description": "The type of error",
+                "example": "CONFLICT",
+                "enum": [
+                  "CONFLICT"
+                ]
+              },
+              "message": {
+                "type": "string",
+                "title": "Error message",
+                "description": "Describes a message informing a reason for the error",
+                "example": "The request could not be completed due to a conflict with the current state of the target resource"
+              },
+              "status_code": {
+                "type": "number",
+                "description": "Error status code",
+                "example": "409"
+              }
+            }
+          }
+        }
+      },
+      "AccountAlreadyExistsError": {
+        "title": "Account Already Exists",
+        "properties": {
+          "code": {
+            "type": "string",
+            "title": "Error code",
+            "description": "The type of error",
+            "example": "ACCOUNT_ALREADY_EXISTS",
+            "enum": [
+              "ACCOUNT_ALREADY_EXISTS"
+            ]
+          },
+          "message": {
+            "type": "string",
+            "title": "Error message",
+            "description": "Describes a message informing a reason for the error",
+            "example": "Account already exists."
+          },
+          "status_code": {
+            "type": "number",
+            "description": "Error status code",
+            "example": "409"
+          }
+        }
+      },
+      "BankingStatementAlreadyExistsError": {
+        "title": "Banking statement already exists",
+        "properties": {
+          "code": {
+            "type": "string",
+            "title": "Error code",
+            "description": "The type of error",
+            "example": "BANKING_STATEMENT_ALREADY_EXISTS",
+            "enum": [
+              "BANKING_STATEMENT_ALREADY_EXISTS"
+            ]
+          },
+          "message": {
+            "type": "string",
+            "title": "Error message",
+            "description": "Describes a message informing a reason for the error",
+            "example": "Banking statement already exists."
+          },
+          "status_code": {
+            "type": "number",
+            "description": "Error status code",
+            "example": "409"
+          }
+        }
+      },
+      "AccountNotFound": {
+        "title": "Account Not Found",
+        "properties": {
+          "code": {
+            "type": "string",
+            "title": "Error code",
+            "description": "The type of error",
+            "example": "ACCOUNT_NOT_FOUND",
+            "enum": [
+              "ACCOUNT_NOT_FOUND"
+            ]
+          },
+          "message": {
+            "type": "string",
+            "title": "Error message",
+            "description": "Describes a message informing a reason for the error",
+            "example": "Account not found"
+          },
+          "status_code": {
+            "type": "number",
+            "description": "Error status code",
+            "example": "404"
+          }
+        }
+      },
+      "AccountBalanceError": {
+        "title": "Account Balance Error",
+        "properties": {
+          "code": {
+            "type": "string",
+            "title": "Error code",
+            "description": "The type of error",
+            "example": "ACCOUNT_BALANCE_ERROR",
+            "enum": [
+              "ACCOUNT_BALANCE_ERROR"
+            ]
+          },
+          "message": {
+            "type": "string",
+            "title": "Error message",
+            "description": "Describes a message informing a reason for the error",
+            "example": "The account has a balance."
+          },
+          "status_code": {
+            "type": "number",
+            "description": "Error status code",
+            "example": "400"
+          }
+        }
+      },
+      "BlockId": {
+        "type": "string",
+        "description": "Unique identifier of the block balance request.",
+        "format": "uuid-v4",
+        "example": "6d814c28-fe73-443c-bfe0-48d518aa32fa"
+      },
+      "BlockBalanceNotFound": {
+        "title": "Block Balance Not Found",
+        "properties": {
+          "code": {
+            "type": "string",
+            "title": "Error code",
+            "description": "The type of error",
+            "example": "BLOCK_BALANCE_NOT_FOUND",
+            "enum": [
+              "BLOCK_BALANCE_NOT_FOUND"
+            ]
+          },
+          "message": {
+            "type": "string",
+            "title": "Error message",
+            "description": "Describes a message informing a reason for the error",
+            "example": "Block balance not found"
+          },
+          "status_code": {
+            "type": "number",
+            "description": "Error status code",
+            "example": "404"
+          }
+        }
+      },
+      "Id": {
+        "type": "string",
+        "description": "Unique identifier of the statement.",
+        "format": "uuid-v4",
+        "example": "e363aa8b-5b4d-48c6-920d-54c1afce2643"
+      },
+      "PartnerId": {
+        "type": "string",
+        "description": "Unique identifier of partner id.",
+        "format": "uuid-v4",
+        "example": "e363aa8b-5b4d-0aba-920d-54c1afce2643"
+      },
+      "Statement": {
+        "type": "object",
+        "description": "Describes the properties of an statements.",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique identifier of the statement.",
+            "format": "uuid-v4",
+            "example": "e363aa8b-5b4d-48c6-920d-54c1afce2643"
+          },
+          "account_id": {
+            "type": "string",
+            "description": "Unique identifier of the account.",
+            "format": "uuid-v4",
+            "example": "6d814c28-fe73-443c-bfe0-48d518aa32fa"
+          },
+          "partner_id": {
+            "type": "string",
+            "description": "Unique identifier of partner id.",
+            "format": "uuid-v4",
+            "example": "e363aa8b-5b4d-0aba-920d-54c1afce2643"
+          },
+          "value": {
+            "type": "number",
+            "description": "Statement value.",
+            "example": 160
+          },
+          "current_balance": {
+            "type": "number",
+            "nullable": true,
+            "description": "Balance value after transaction, available value.",
+            "example": 840
+          },
+          "current_blocked_balance": {
+            "type": "number",
+            "nullable": true,
+            "description": "Blocked Balance value after transaction, not available value.",
+            "example": 100
+          },
+          "current_total_balance": {
+            "type": "number",
+            "nullable": true,
+            "description": "Total of balance with current_balance more current_blocked_balance.",
+            "example": 940
+          },
+          "history_code": {
+            "type": "integer",
+            "description": "Statement history code.",
+            "example": 1
+          },
+          "reconciliated_at": {
+            "type": "string",
+            "description": "Conciliation date of statement.",
+            "example": "2020-08-06T22:10:00Z"
+          },
+          "created_at": {
+            "type": "string",
+            "description": "Creation date of statement.",
+            "example": "2020-08-06T22:10:00Z"
+          },
+          "updated_at": {
+            "type": "string",
+            "description": "Update date of statement.",
+            "example": "2021-04-06T22:10:10Z"
+          },
+          "open_banking": {
+            "type": "boolean",
+            "description": "Indicates that the transaction was initiated in the Open Banking.",
+            "example": true
+          },
+          "initiation_channel": {
+            "type": "string",
+            "description": "The property indicates the transaction initiation channel.",
+            "enum": [
+              "AGENCY",
+              "APP",
+              "ATM",
+              "CALL_CENTER",
+              "INTERNET_BANKING"
+            ],
+            "example": "AGENCY"
+          },
+          "status": {
+            "type": "string",
+            "description": "The property indicates the statement status",
+            "enum": [
+              "ACTIVE",
+              "BLOCKED",
+              "CANCELED"
+            ],
+            "example": "ACTIVE"
+          },
+          "block_balance_request_id": {
+            "type": "string",
+            "nullable": true,
+            "description": "Block balance request ID",
+            "format": "uuid-v4",
+            "example": "6d814c28-fe73-443c-bfe0-48d518aa32fa"
+          }
+        }
+      },
+      "AccountNotAllowed": {
+        "title": "Account not allowed for this operation",
+        "properties": {
+          "code": {
+            "type": "string",
+            "title": "Error code",
+            "description": "The type of error",
+            "example": "ACCOUNT_NOT_ALLOWED",
+            "enum": [
+              "ACCOUNT_NOT_ALLOWED"
+            ]
+          },
+          "message": {
+            "type": "string",
+            "title": "Error message",
+            "description": "Describes a message informing a reason for the error",
+            "example": "Account not allowed for this operation"
+          },
+          "status_code": {
+            "type": "number",
+            "description": "Error status code",
+            "example": "403"
+          }
+        }
+      },
+      "LimitFileSizeError": {
+        "title": "File too large",
+        "properties": {
+          "code": {
+            "type": "string",
+            "title": "Error code",
+            "description": "The type of error",
+            "example": "LIMIT_FILE_SIZE",
+            "enum": [
+              "LIMIT_FILE_SIZE"
+            ]
+          },
+          "message": {
+            "type": "string",
+            "title": "Error message",
+            "description": "Describes a message informing a reason for the error",
+            "example": "File too large."
+          },
+          "status_code": {
+            "type": "number",
+            "description": "Error status code",
+            "example": "413"
+          }
+        }
+      }
+    },
+    "parameters": {
+      "AccountId": {
+        "name": "account_id",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "description": "Unique identifier of the account.",
+          "format": "uuid-v4",
+          "example": "6d814c28-fe73-443c-bfe0-48d518aa32fa"
+        }
       }
     }
   }
