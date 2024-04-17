@@ -1,7 +1,7 @@
 {
   "openapi": "3.0.2",
   "info": {
-    "version": "1.1.0",
+    "version": "1.0.0",
     "title": "BaaS Backoffice",
     "description": "BaaS Backoffice\n\nApi responsible for managing backoffice operations, reports, etc.\n\n## Internal Operation Status\n\n| Status | Description | Final Status | Notification Event Type |\n| ------ | ----------- | ------------ | ----------------------  |\n| CREATED       | Operation created | | |\n| CONFIRMING    | Operation begin verified with the client if it was requested by him | | |\n| CONFIRMED     | Operation confirmed by the client | | |\n| NOT_CONFIRMED | Operation denied by the client | Yes | backoffice_internal_operation_not_confirmed |\n| PROCESSING    | Processing bank operation | | |\n| REJECTED      | Operation rejected due internal validation | Yes | backoffice_internal_operation_rejected |\n| ERROR         | Failure to process | Yes | backoffice_internal_operation_error | |\n| DONE          | Operation completed successfully | Yes | backoffice_internal_operation_done |\n\n## Internal Operation Confirmation Call\n\nTo receive the confirmation, its necessary the previous registration of the client url.\n  This object will be sent as an HTTP call with the POST method, of which the client must respond with a 202 status and within 10 seconds.\n\n**Internal Operation Confirmation Call Scheme**\n\n  Headers:\n  ```json\n  {\n    X-R4-Application: GUID // Application Unique Identifier\n    X-R4-Delivery: GUID // Attempt Unique Identifier\n    X-R4-Event: internal_operation_confirmation\n    User-Agent: R4-Hookshot\n  }\n  ```\n  Body\n  ```json\n  {\n    \"object_kind\": \"internal_operation_confirmation\",\n    \"object_id\": \"GUID\", // Internal Operation Unique Identifier\n    \"application_id\": \"GUID\", // Application Unique Identifier\n    \"account_id\": \"GUID\", // Account Unique Identifier\n    \"account_number\": 1234567,\n    \"account_digit\": 7,\n    \"agency_number\": 1,\n    \"value\": 10.12,\n    \"history_code\": \"PAYROLL_LOAN_RELEASE_CREDIT\"\n  }\n  ```\n\n## Internal Operation Status Change Notification\n\nSome statuses changes will fire a notification call to the client.\n\nTo receive this notifications, its necessary to request the registration of the service URL which will receive the notification object.\n\nThis object will be sent as a HTTP call with the POST method, of which the client must respond with a 200 status.\n\n| Event Type          | Internal Operation Status     |\n|-------------------- | -------------- |\n| `backoffice_internal_operation_not_confirmed` | NOT_CONFIRMED |\n| `backoffice_internal_operation_rejected` | REJECTED |\n| `backoffice_internal_operation_error` | ERROR |\n| `backoffice_internal_operation_done` | DONE |\n\n### Notification Call Scheme\n\n#### *Header*\n```json\n{\n  X-R4-Application: GUID, // Application Unique Identifier\n  X-R4-Delivery: GUID, // Attempt Unique Identifier\n  X-R4-Event: {event_type}, // Event Type for the Notification (as described in Event Type table)\n  User-Agent: R4-Hookshot\n}\n```\n\n#### *Body*\n```\n{\n  \"object_kind\": \"{event_type}\", // Event Type for the Notification (as described in Event Type table)\n  \"object_id\": \"GUID\", // Operation Unique Identifier\n  \"account_id\": \"GUID\" // Account Unique Identifier\n  \"application_id\": \"GUID\" // Application Unique Identifier\n}\n```\n\n## Generic errors\n\nEvery request may return one of the following error formats:\n\n### 400\n\nReturned when the request schema is not valid.\n\n```json\n{\n  \"error\": {\n    \"code\": \"VALIDATION_FAILED\",\n    \"message\": \"Invalid request data\",\n    \"details\": [\n      {\n        \"message\": \"Some error message\",\n        \"path\": [\n          \"query\",\n          \"status\",\n          0\n        ],\n        \"type\": \"any.only\",\n        \"context\": {\n          \"valids\": [\n            \"CREATED\",\n            \"PROCESSING\",\n            \"PROCESSED\",\n            \"ERROR\"\n          ],\n          \"label\": \"query.status[0]\",\n          \"value\": \"ERRORe\",\n          \"key\": 0\n        }\n      }\n    ]\n  }\n}\n```\n\n### 401\n\nReturned when request is unauthorized\n\n```json\n{\n  \"code\": \"AUTHENTICATION_FAILED\",\n  \"message\": \"Authentication failed.\"\n}\n```\n\n### 403\n\nReturned when request is forbidden\n\n```json\n{\n  \"code\": \"MISSING_PRODUCT_PERMISSION\",\n  \"message\": \"Missing product permission.\"\n}\n```\n```json\n{\n  \"code\": \"PRODUCT_DISABLED\",\n  \"message\": \"Product is not enabled.\"\n}\n```\n```json\n{\n  \"code\": \"APPLICATION_PRODUCT_NOT_FOUND\",\n  \"message\": \"Product not found for given application id.\"\n}\n```\n```json\n{\n  \"code\": \"PROFILE_NOT_FOUND\",\n  \"message\": \"Profile not found.\"\n}\n```\n\n### 404\n\nReturned when resource is not found\n\n```json\n\n{\n  \"code\": \"NOT_FOUND\",\n  \"message\": \"Unable to found the requested account.\"\n}\n```\n\n### 5xx\n\nReturned when a request fails and it is our fault\n\n```json\n{\n  \"statusCode\": 500,\n  \"message\": \"Unexpected error with our service\",\n  \"code\": \"INTERNAL_SERVER_ERROR\"\n}\n```\n"
   },
@@ -15,14 +15,15 @@
       "url": "https://api.r4digital.cloud/backoffice"
     }
   ],
-  "tags": [
-    {
-      "name": "BaaS Backoffice"
-    }
-  ],
   "security": [
     {
       "BearerAuth": []
+    }
+  ],
+  "tags": [
+    {
+      "name": "BaaS Backoffice",
+      "description": "BaaS Backoffice"
     }
   ],
   "paths": {
@@ -32,6 +33,7 @@
           "BaaS Backoffice"
         ],
         "summary": "API Health Check",
+        "operationId": "GetStatus",
         "description": "API Health Check",
         "security": [
           {
@@ -51,6 +53,7 @@
           "IN32 File"
         ],
         "summary": "Get in32 File",
+        "operationId": "GetIn32YearMonth",
         "description": "IN32 Report",
         "parameters": [
           {
@@ -80,7 +83,7 @@
             "name": "name",
             "schema": {
               "type": "string",
-              "example": "Jos\u00e9 Silva"
+              "example": "Jose Silva"
             }
           },
           {
@@ -150,7 +153,7 @@
                     },
                     "NomeResp": {
                       "type": "string",
-                      "example": "Jos\u00e9 Silva",
+                      "example": "Jose Silva",
                       "xml": {
                         "attribute": true
                       }
@@ -336,6 +339,12 @@
                           "xml": {
                             "attribute": true
                           }
+                        },
+                        "PercTempoAberturaNotificacao": {
+                          "type": "integer",
+                          "xml": {
+                            "attribute": true
+                          }
                         }
                       }
                     },
@@ -378,6 +387,7 @@
           "Internal Operation"
         ],
         "summary": "Create an internal operation in specific account",
+        "operationId": "PostInternalOperation",
         "description": "Allows to create an internal banking operation in specific account.",
         "security": [
           {
@@ -585,6 +595,7 @@
           "Internal Operation"
         ],
         "summary": "Get an operation",
+        "operationId": "GeInternalOperationId",
         "description": "Return an operation",
         "parameters": [
           {
@@ -750,6 +761,7 @@
           "Antifraud Analysis"
         ],
         "summary": "Get a list payments with pending antifraud analysis",
+        "operationId": "GetAntifraudPix",
         "description": "List payments with pending antifraud analysis",
         "security": [
           {
@@ -1211,9 +1223,10 @@
     "/antifraud/pix/{id}/unblock": {
       "post": {
         "tags": [
-          "Antifraud"
+          "Antifraud Analysis"
         ],
         "summary": "Unblock a transaction.",
+        "operationId": "PostAntifraudPixIdUnblock",
         "description": "Unblock a transaction.",
         "parameters": [
           {
@@ -1280,12 +1293,13 @@
         }
       }
     },
-    "/fraud": {
+    "/antifraud/pix/fraud": {
       "post": {
         "tags": [
-          "Infraction"
+          "Antifraud Analysis"
         ],
         "summary": "Create fraud mark",
+        "operationId": "PostAntifraudPixFraud",
         "description": "Create and returns information about created fraud mark",
         "parameters": [
           {
@@ -1487,9 +1501,10 @@
       },
       "get": {
         "tags": [
-          "Infraction"
+          "Antifraud Analysis"
         ],
         "summary": "List frauds",
+        "operationId": "GetAntifraudAnalysis",
         "description": "List information about fraud marks",
         "parameters": [
           {
@@ -1754,12 +1769,170 @@
         }
       }
     },
-    "/fraud/{id}/cancel": {
+    "/antifraud/pix/fraud/{id}": {
+      "get": {
+        "tags": [
+          "Antifraud Analysis"
+        ],
+        "summary": "Get a fraud marking by id",
+        "operationId": "GetAntifraudPixFraudId",
+        "description": "Get a fraud marking for a specific id",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "string",
+              "format": "uuid-v4"
+            },
+            "required": true,
+            "description": "ID of the fraud marking to get."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully get fraud marking",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "description": "Describes the properties of fraud marking",
+                  "required": [
+                    "fraud_id",
+                    "correlation_id",
+                    "document_number",
+                    "document_type",
+                    "kind",
+                    "situation",
+                    "responded_at",
+                    "created_at",
+                    "updated_at"
+                  ],
+                  "properties": {
+                    "fraud_id": {
+                      "type": "string",
+                      "description": "Created fraud id",
+                      "example": "59bfea43-95f1-4f44-8ec9-254d9109de81"
+                    },
+                    "correlation_id": {
+                      "type": "string",
+                      "description": "Correlation id from fraud",
+                      "example": "B2023102010013637811476673153F13"
+                    },
+                    "document_number": {
+                      "type": "number",
+                      "description": "User document number to which the fraud marking.",
+                      "example": 37722745091
+                    },
+                    "document_type": {
+                      "type": "string",
+                      "description": "User document type.",
+                      "enum": [
+                        "CPF",
+                        "CNPJ"
+                      ]
+                    },
+                    "key": {
+                      "type": "string",
+                      "description": "Pix key to which the fraud. It must be entered, if known",
+                      "example": "+55519999999"
+                    },
+                    "kind": {
+                      "type": "string",
+                      "description": "Kind of fraud marking",
+                      "enum": [
+                        "APPLICATION_FRAUD",
+                        "MULE_ACCOUNT",
+                        "SCAMMER_ACCOUNT",
+                        "OTHERS",
+                        "UNKNOWN"
+                      ],
+                      "example": "APPLICATION_FRAUD"
+                    },
+                    "situation": {
+                      "type": "string",
+                      "description": "Situation from fraud Mark",
+                      "enum": [
+                        "REGISTERED",
+                        "CANCELLED"
+                      ],
+                      "example": "CANCELLED"
+                    },
+                    "responded_at": {
+                      "type": "string",
+                      "description": "Dict responded at",
+                      "example": "2023-10-20T13:01:36.411Z"
+                    },
+                    "created_at": {
+                      "type": "string",
+                      "description": "Fraud mark created at",
+                      "example": "2023-10-20T13:01:36.411Z"
+                    },
+                    "updated_at": {
+                      "type": "string",
+                      "description": "Fraud mark last update",
+                      "example": "2023-10-20T13:01:36.411Z"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "title": "Not Found",
+                      "properties": {
+                        "error": {
+                          "type": "object",
+                          "properties": {
+                            "code": {
+                              "type": "string",
+                              "title": "Error code",
+                              "description": "The type of error",
+                              "example": "NOT_FOUND",
+                              "enum": [
+                                "NOT_FOUND"
+                              ]
+                            },
+                            "message": {
+                              "type": "string",
+                              "title": "Error message",
+                              "description": "Describes a message informing a reason for the error",
+                              "example": "Unable to found the requested account"
+                            },
+                            "status_code": {
+                              "type": "number",
+                              "description": "Error status code",
+                              "example": "404"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                },
+                "example": {
+                  "code": "FRAUD_MARKING_NOT_FOUND",
+                  "message": "The provided fraud marking was not found or does not exist"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/antifraud/pix/fraud/{id}/cancel": {
       "post": {
         "tags": [
-          "Infraction"
+          "Antifraud Analysis"
         ],
         "summary": "Cancel fraud mark",
+        "operationId": "PostAntifraudPixFraudIdCancel",
         "description": "Cancel and returns information about canceled fraud mark",
         "parameters": [
           {
@@ -2053,108 +2226,594 @@
         }
       }
     },
-    "/fraud/{id}": {
-      "get": {
+    "/invest/products/{product_id}": {
+      "patch": {
         "tags": [
-          "Infraction"
+          "Invest Operation"
         ],
-        "summary": "Get a fraud marking by id",
-        "description": "Get a fraud marking for a specific id",
+        "summary": "Update a product from invest operation",
+        "operationId": "PatchInvestProductsProductId",
+        "description": "Update a product from invest operation.",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
         "parameters": [
           {
             "in": "path",
-            "name": "id",
+            "name": "product_id",
             "schema": {
               "type": "string",
-              "format": "uuid-v4"
+              "format": "uuid-v4",
+              "example": "e9f9d165-a9cd-4e87-bf72-805ecee5ded0"
             },
-            "required": true,
-            "description": "ID of the fraud marking to get."
+            "description": "Product identification code",
+            "required": true
           }
         ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "expiration_term": {
+                    "type": "number",
+                    "description": "Indicates the time of investment have to expire",
+                    "example": 360
+                  }
+                },
+                "required": [
+                  "expiration_term"
+                ]
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
-            "description": "Successfully get fraud marking",
+            "description": "Updated with success",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "object",
-                  "description": "Describes the properties of fraud marking",
-                  "required": [
-                    "fraud_id",
-                    "correlation_id",
-                    "document_number",
-                    "document_type",
-                    "kind",
-                    "situation",
-                    "responded_at",
-                    "created_at",
-                    "updated_at"
-                  ],
                   "properties": {
-                    "fraud_id": {
+                    "id": {
                       "type": "string",
-                      "description": "Created fraud id",
-                      "example": "59bfea43-95f1-4f44-8ec9-254d9109de81"
+                      "format": "uuid-v4",
+                      "example": "f6ee2b64-1c5d-4504-bb52-6f79e02d1006",
+                      "description": "Product's id"
                     },
-                    "correlation_id": {
+                    "person_kind": {
                       "type": "string",
-                      "description": "Correlation id from fraud",
-                      "example": "B2023102010013637811476673153F13"
-                    },
-                    "document_number": {
-                      "type": "number",
-                      "description": "User document number to which the fraud marking.",
-                      "example": 37722745091
-                    },
-                    "document_type": {
-                      "type": "string",
-                      "description": "User document type.",
                       "enum": [
-                        "CPF",
-                        "CNPJ"
-                      ]
+                        "NATURAL_PERSON",
+                        "LEGAL_PERSON"
+                      ],
+                      "description": "Person kind"
                     },
-                    "key": {
+                    "status": {
                       "type": "string",
-                      "description": "Pix key to which the fraud. It must be entered, if known",
-                      "example": "+55519999999"
+                      "enum": [
+                        "ACTIVE",
+                        "INACTIVE"
+                      ],
+                      "description": "Status from product"
+                    },
+                    "product": {
+                      "type": "string",
+                      "description": "The name or identifier of the investment product",
+                      "example": "CDB - CDI - Taxa Flutuante"
                     },
                     "kind": {
                       "type": "string",
-                      "description": "Kind of fraud marking",
+                      "description": "The type or category of the investment product",
+                      "example": "Pos-Fixada"
+                    },
+                    "profitability": {
+                      "type": "number",
+                      "description": "The profitability or interest rate of the investment product",
+                      "example": 5.2
+                    },
+                    "indexer": {
+                      "type": "string",
+                      "description": "The financial index used to calculate the profitability",
+                      "example": "CDI"
+                    },
+                    "term": {
+                      "type": "number",
+                      "description": "The duration or term of the investment product in days",
+                      "example": 9998
+                    },
+                    "maturity_date": {
+                      "type": "string",
+                      "description": "The date when the investment product matures",
+                      "example": "2050-09-24"
+                    },
+                    "minimum_value": {
+                      "type": "number",
+                      "description": "The minimum investment amount required for the product",
+                      "example": 100
+                    },
+                    "grace_period": {
+                      "type": "number",
+                      "description": "The grace period in days for the investment product",
+                      "example": 1
+                    },
+                    "liquidity": {
+                      "type": "string",
+                      "description": "The liquidity frequency of the investment product",
+                      "example": "Diaria"
+                    },
+                    "repurchase_grace_period": {
+                      "type": "number",
+                      "description": "The repurchase grace period in days for the investment product",
+                      "example": 1
+                    },
+                    "calculation_criteria": {
+                      "type": "string",
+                      "description": "The criteria used for calculating the investment product",
+                      "example": "PRE"
+                    },
+                    "criteria_type": {
+                      "type": "string",
+                      "description": "The type of criteria used",
+                      "example": "CONTABIL"
+                    },
+                    "paper_type": {
+                      "type": "string",
+                      "description": "The type of financial instrument",
+                      "example": "CDB"
+                    },
+                    "income_type": {
+                      "type": "string",
+                      "description": "The type of income generated by the investment product",
+                      "example": "PRE"
+                    },
+                    "tax_rate_sequence_number": {
+                      "type": "number",
+                      "description": "The sequence number for the tax rate applied to the investment product",
+                      "example": 4
+                    },
+                    "automatic_application_available": {
+                      "type": "boolean",
+                      "description": "Indicates whether automatic application is available for the investment product"
+                    },
+                    "escalated": {
+                      "type": "boolean",
+                      "description": "Indicates whether the investment product has escalated features"
+                    },
+                    "redemption_form_identifier": {
+                      "type": "string",
+                      "description": "The identifier for the redemption form associated with the investment product",
+                      "example": "FIN"
+                    },
+                    "scheduling_available": {
+                      "type": "boolean",
+                      "description": "Indicates whether scheduling is available for the investment product"
+                    },
+                    "expiration_term": {
+                      "type": "number",
+                      "description": "Indicates the time of investment have to expire",
+                      "example": 360
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "BadRequest",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "title": "Expiration Term Invalid",
+                      "type": "object",
+                      "description": "Representation of an bad request error",
+                      "properties": {
+                        "code": {
+                          "description": "The type of error",
+                          "type": "string",
+                          "example": "EXPIRATION_TERM_INVALID"
+                        },
+                        "message": {
+                          "description": "Describes a message informing a reason for the error",
+                          "type": "string",
+                          "example": "Expiration term invalid, is greater then term"
+                        }
+                      }
+                    }
+                  ]
+                },
+                "example": {
+                  "code": "EXPIRATION_TERM_INVALID",
+                  "message": "Expiration term invalid, is greater then term"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Error with types [ProductNotFound].",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "title": "Product not found",
+                      "type": "object",
+                      "description": "Representation of an not found error",
+                      "properties": {
+                        "code": {
+                          "description": "The type of error",
+                          "type": "string",
+                          "example": "PRODUCT_NOT_FOUND"
+                        },
+                        "message": {
+                          "description": "Describes a message informing a reason for the error",
+                          "type": "string",
+                          "example": "Product was not found."
+                        }
+                      }
+                    }
+                  ]
+                },
+                "example": {
+                  "code": "PRODUCT_NOT_FOUND",
+                  "message": "Product not found."
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/invest/products": {
+      "get": {
+        "tags": [
+          "Invest Operation"
+        ],
+        "summary": "List products to invest",
+        "operationId": "GetInvestProducts",
+        "description": "List products to invest.",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "person_kind",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "NATURAL_PERSON",
+                "LEGAL_PERSON"
+              ]
+            },
+            "description": "Person kind",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "status",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "ACTIVE",
+                "INACTIVE"
+              ]
+            },
+            "description": "Status from product",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "after",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Base64 filter to bring only products after the provided value",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "order_by[field]",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "MINIMUM_VALUE",
+                "PROFITABILITY",
+                "GRACE_PERIOD"
+              ]
+            },
+            "description": "The field to be ordered",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "order_by[orientation]",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "ASC",
+                "DESC"
+              ]
+            },
+            "description": "The orientation of the order",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "minimum_value",
+            "schema": {
+              "type": "number",
+              "example": 100.12
+            },
+            "description": "The filter to bring only the exact or greater minimum value",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "before",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Base64 filter to bring only products before the provided value",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The numbers of products to return. Can be omitted if provided before or after filters with limit embedded in them. If nothing is provided, the default will be 50 as limit",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "with_expiration_term",
+            "schema": {
+              "type": "boolean",
+              "default": false
+            },
+            "description": "Indicates when products will return only with expiration time is not null",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Updated with success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "format": "uuid-v4",
+                          "example": "f6ee2b64-1c5d-4504-bb52-6f79e02d1006",
+                          "description": "Product's id"
+                        },
+                        "person_kind": {
+                          "type": "string",
+                          "enum": [
+                            "NATURAL_PERSON",
+                            "LEGAL_PERSON"
+                          ],
+                          "description": "Person kind"
+                        },
+                        "status": {
+                          "type": "string",
+                          "enum": [
+                            "ACTIVE",
+                            "INACTIVE"
+                          ],
+                          "description": "Status from product"
+                        },
+                        "product": {
+                          "type": "string",
+                          "description": "The name or identifier of the investment product",
+                          "example": "CDB - CDI - Taxa Flutuante"
+                        },
+                        "kind": {
+                          "type": "string",
+                          "description": "The type or category of the investment product",
+                          "example": "Pos-Fixada"
+                        },
+                        "profitability": {
+                          "type": "number",
+                          "description": "The profitability or interest rate of the investment product",
+                          "example": 5.2
+                        },
+                        "indexer": {
+                          "type": "string",
+                          "description": "The financial index used to calculate the profitability",
+                          "example": "CDI"
+                        },
+                        "term": {
+                          "type": "number",
+                          "description": "The duration or term of the investment product in days",
+                          "example": 9998
+                        },
+                        "maturity_date": {
+                          "type": "string",
+                          "description": "The date when the investment product matures",
+                          "example": "2050-09-24"
+                        },
+                        "minimum_value": {
+                          "type": "number",
+                          "description": "The minimum investment amount required for the product",
+                          "example": 100
+                        },
+                        "grace_period": {
+                          "type": "number",
+                          "description": "The grace period in days for the investment product",
+                          "example": 1
+                        },
+                        "liquidity": {
+                          "type": "string",
+                          "description": "The liquidity frequency of the investment product",
+                          "example": "Diaria"
+                        },
+                        "repurchase_grace_period": {
+                          "type": "number",
+                          "description": "The repurchase grace period in days for the investment product",
+                          "example": 1
+                        },
+                        "calculation_criteria": {
+                          "type": "string",
+                          "description": "The criteria used for calculating the investment product",
+                          "example": "PRE"
+                        },
+                        "criteria_type": {
+                          "type": "string",
+                          "description": "The type of criteria used",
+                          "example": "CONTABIL"
+                        },
+                        "paper_type": {
+                          "type": "string",
+                          "description": "The type of financial instrument",
+                          "example": "CDB"
+                        },
+                        "income_type": {
+                          "type": "string",
+                          "description": "The type of income generated by the investment product",
+                          "example": "PRE"
+                        },
+                        "tax_rate_sequence_number": {
+                          "type": "number",
+                          "description": "The sequence number for the tax rate applied to the investment product",
+                          "example": 4
+                        },
+                        "automatic_application_available": {
+                          "type": "boolean",
+                          "description": "Indicates whether automatic application is available for the investment product"
+                        },
+                        "escalated": {
+                          "type": "boolean",
+                          "description": "Indicates whether the investment product has escalated features"
+                        },
+                        "redemption_form_identifier": {
+                          "type": "string",
+                          "description": "The identifier for the redemption form associated with the investment product",
+                          "example": "FIN"
+                        },
+                        "scheduling_available": {
+                          "type": "boolean",
+                          "description": "Indicates whether scheduling is available for the investment product"
+                        },
+                        "expiration_term": {
+                          "type": "number",
+                          "description": "Indicates the time of investment have to expire",
+                          "example": 360
+                        }
+                      }
+                    },
+                    "cursor": {
+                      "type": "object",
+                      "description": "Describes properties of a cursor",
+                      "properties": {
+                        "after": {
+                          "type": "string",
+                          "format": "base64",
+                          "description": "cursor pointing at the last item of the list. If no more items exist, the property is removed from the response",
+                          "example": "eyJmaWVsZCI6ImNyZWF0ZWRfYXQiLCJ2YWx1ZSI6IjIwMjMtMTEtMDlUMTM6MDM6NDAuMDAwWiIsImxpbWl0IjoyfQ=="
+                        },
+                        "before": {
+                          "type": "string",
+                          "format": "base64",
+                          "description": "cursor pointing at the first item of the list. If its the first available item, the property is removed from the response",
+                          "example": "eyJmaWVsZCI6ImNyZWF0ZWRfYXQiLCJ2YWx1ZSI6IjIwMjMtMTEtMDlUMTM6MDM6NDAuMDAwWiIsImxpbWl0IjoyfQ=="
+                        },
+                        "limit": {
+                          "type": "number",
+                          "format": "base64",
+                          "description": "number of items to return.",
+                          "example": 10
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/employees/{document_number}": {
+      "get": {
+        "tags": [
+          "Employees"
+        ],
+        "summary": "Get an employee by CPF",
+        "operationId": "GetEmployeesDocumentNumber",
+        "description": "Return an employee",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "document_number",
+            "schema": {
+              "type": "string",
+              "description": "A valid CPF from employee.",
+              "minLength": 11,
+              "example": 12345678911
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Employee returned",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "document_number": {
+                      "type": "string",
+                      "description": "Employee's document number",
+                      "example": "01234567891"
+                    },
+                    "origin": {
+                      "type": "string",
                       "enum": [
-                        "APPLICATION_FRAUD",
-                        "MULE_ACCOUNT",
-                        "SCAMMER_ACCOUNT",
-                        "OTHERS",
-                        "UNKNOWN"
+                        "SAP",
+                        "PLURYA"
                       ],
-                      "example": "APPLICATION_FRAUD"
+                      "description": "Origin of the register"
                     },
-                    "situation": {
-                      "type": "string",
-                      "description": "Situation from fraud Mark",
-                      "enum": [
-                        "REGISTERED",
-                        "CANCELLED"
-                      ],
-                      "example": "CANCELLED"
+                    "enabled": {
+                      "type": "boolean",
+                      "description": "Indicates if the employee is enabled"
                     },
-                    "responded_at": {
+                    "admissional_date": {
                       "type": "string",
-                      "description": "Dict responded at",
-                      "example": "2023-10-20T13:01:36.411Z"
+                      "description": "The admissional date from employee",
+                      "example": "2021-01-01"
                     },
-                    "created_at": {
+                    "registration_code": {
                       "type": "string",
-                      "description": "Fraud mark created at",
-                      "example": "2023-10-20T13:01:36.411Z"
+                      "description": "Employee's registration code",
+                      "example": "12345"
                     },
-                    "updated_at": {
+                    "city": {
                       "type": "string",
-                      "description": "Fraud mark last update",
-                      "example": "2023-10-20T13:01:36.411Z"
+                      "description": "Employee's city",
+                      "example": "Caxias do Sul"
+                    },
+                    "company": {
+                      "type": "string",
+                      "description": "Employee's company",
+                      "example": "DBSERVER ASSESSORIA EM SISTEMAS DE INFORMACAO LTDA"
                     }
                   }
                 }
@@ -2162,46 +2821,41 @@
             }
           },
           "404": {
-            "description": "Not found",
+            "description": "Error with types [EmployeeNotFound].",
             "content": {
               "application/json": {
                 "schema": {
                   "oneOf": [
                     {
-                      "title": "Not Found",
+                      "title": "Employee Not Found",
                       "properties": {
-                        "error": {
-                          "type": "object",
-                          "properties": {
-                            "code": {
-                              "type": "string",
-                              "title": "Error code",
-                              "description": "The type of error",
-                              "example": "NOT_FOUND",
-                              "enum": [
-                                "NOT_FOUND"
-                              ]
-                            },
-                            "message": {
-                              "type": "string",
-                              "title": "Error message",
-                              "description": "Describes a message informing a reason for the error",
-                              "example": "Unable to found the requested account"
-                            },
-                            "status_code": {
-                              "type": "number",
-                              "description": "Error status code",
-                              "example": "404"
-                            }
-                          }
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "EMPLOYEE_NOT_FOUND",
+                          "enum": [
+                            "EMPLOYEE_NOT_FOUND"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "Employee not found"
+                        },
+                        "status_code": {
+                          "type": "number",
+                          "description": "Error status code",
+                          "example": "404"
                         }
                       }
                     }
                   ]
                 },
                 "example": {
-                  "code": "FRAUD_MARKING_NOT_FOUND",
-                  "message": "The provided fraud marking was not found or does not exist"
+                  "code": "EMPLOYEE_NOT_FOUND",
+                  "message": "Employee not found."
                 }
               }
             }
@@ -2729,6 +3383,320 @@
                 }
               }
             }
+          }
+        }
+      },
+      "AccountNotFound": {
+        "title": "Account Not Found",
+        "properties": {
+          "code": {
+            "type": "string",
+            "title": "Error code",
+            "description": "The type of error",
+            "example": "ACCOUNT_NOT_FOUND",
+            "enum": [
+              "ACCOUNT_NOT_FOUND"
+            ]
+          },
+          "message": {
+            "type": "string",
+            "title": "Error message",
+            "description": "Describes a message informing a reason for the error",
+            "example": "Account not found"
+          },
+          "status_code": {
+            "type": "number",
+            "description": "Error status code",
+            "example": "404"
+          }
+        }
+      },
+      "InternalOperationExists": {
+        "title": "Internal Operation already exists",
+        "properties": {
+          "code": {
+            "type": "string",
+            "title": "Error code",
+            "description": "The type of error",
+            "example": "Internal Operation already exists",
+            "enum": [
+              "INTERNAL_OPERATION_ALREADY_EXISTS"
+            ]
+          },
+          "message": {
+            "type": "string",
+            "title": "Error message",
+            "description": "Describes a message informing a reason for the error",
+            "example": "Internal Operation already exists"
+          },
+          "status_code": {
+            "type": "number",
+            "description": "Error status code",
+            "example": "409"
+          }
+        }
+      },
+      "OperationNotFound": {
+        "title": "Operation Not Found",
+        "properties": {
+          "code": {
+            "type": "string",
+            "title": "Error code",
+            "description": "The type of error",
+            "example": "OPERATION_NOT_FOUND",
+            "enum": [
+              "OPERATION_NOT_FOUND"
+            ]
+          },
+          "message": {
+            "type": "string",
+            "title": "Error message",
+            "description": "Describes a message informing a reason for the error",
+            "example": "Operation not found"
+          },
+          "status_code": {
+            "type": "number",
+            "description": "Error status code",
+            "example": "404"
+          }
+        }
+      },
+      "CursorDecoderError": {
+        "title": "Cursor Decoder Error",
+        "properties": {
+          "code": {
+            "description": "The type of error",
+            "type": "string",
+            "example": "CURSOR_DECODED"
+          },
+          "message": {
+            "description": "Describes a message informing a reason for the error",
+            "type": "string",
+            "example": "Error to decode cursor"
+          }
+        }
+      },
+      "NotFound": {
+        "title": "Not Found",
+        "properties": {
+          "error": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "string",
+                "title": "Error code",
+                "description": "The type of error",
+                "example": "NOT_FOUND",
+                "enum": [
+                  "NOT_FOUND"
+                ]
+              },
+              "message": {
+                "type": "string",
+                "title": "Error message",
+                "description": "Describes a message informing a reason for the error",
+                "example": "Unable to found the requested account"
+              },
+              "status_code": {
+                "type": "number",
+                "description": "Error status code",
+                "example": "404"
+              }
+            }
+          }
+        }
+      },
+      "InvalidDataError": {
+        "title": "Invalid Data Error",
+        "properties": {
+          "error": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "string",
+                "title": "Error code",
+                "description": "The type of error",
+                "example": "INVALID_DATA",
+                "enum": [
+                  "INVALID_DATA"
+                ]
+              },
+              "message": {
+                "type": "string",
+                "title": "Error message",
+                "description": "Describes a message informing a reason for the error",
+                "example": "The data provided has an invalid format"
+              },
+              "status_code": {
+                "type": "number",
+                "description": "Error status code",
+                "example": "400"
+              }
+            }
+          }
+        }
+      },
+      "InvalidIdempotenceKeyError": {
+        "title": "Invalid Idempotence Key Error",
+        "properties": {
+          "error": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "string",
+                "title": "Error code",
+                "description": "The type of error",
+                "example": "INVALID_IDEMPOTENCE_KEY",
+                "enum": [
+                  "INVALID_IDEMPOTENCE_KEY"
+                ]
+              },
+              "message": {
+                "type": "string",
+                "title": "Error message",
+                "description": "Describes a message informing a reason for the error",
+                "example": "The data provided has an invalid format"
+              },
+              "status_code": {
+                "type": "number",
+                "description": "Error status code",
+                "example": "400"
+              }
+            }
+          }
+        }
+      },
+      "IspbNotPermitedError": {
+        "title": "The fraud mark can only be canceled by creator ispb or ispb who close the fraud mark",
+        "properties": {
+          "code": {
+            "type": "string",
+            "title": "Error code",
+            "description": "The type of error",
+            "example": "ISPB_NOT_PERMITED",
+            "enum": [
+              "ISPB_NOT_PERMITED"
+            ]
+          },
+          "message": {
+            "type": "string",
+            "title": "Error message",
+            "description": "Describes a message informing a reason for the error",
+            "example": "The fraud mark can only be canceled by creator ispb or ispb who close the fraud mark"
+          },
+          "status_code": {
+            "type": "number",
+            "description": "Error status code",
+            "example": "403"
+          }
+        }
+      },
+      "FraudMarkingNotFound": {
+        "title": "The provided fraud marking was not found or does not exist",
+        "properties": {
+          "code": {
+            "type": "string",
+            "title": "Error code",
+            "description": "The type of error",
+            "example": "FRAUD_MARKING_NOT_FOUND",
+            "enum": [
+              "FRAUD_MARKING_NOT_FOUND"
+            ]
+          },
+          "message": {
+            "type": "string",
+            "title": "Error message",
+            "description": "Describes a message informing a reason for the error",
+            "example": "The provided fraud marking was not found or does not exist"
+          },
+          "status_code": {
+            "type": "number",
+            "description": "Error status code",
+            "example": "404"
+          }
+        }
+      },
+      "FraudMarkingAlreadyCanceledError": {
+        "title": "The fraud mark was already canceled.",
+        "properties": {
+          "code": {
+            "type": "string",
+            "title": "Error code",
+            "description": "The type of error",
+            "example": "FRAUD_MARKING_ALREADY_CANCELED",
+            "enum": [
+              "FRAUD_MARKING_ALREADY_CANCELED"
+            ]
+          },
+          "message": {
+            "type": "string",
+            "title": "Error message",
+            "description": "Describes a message informing a reason for the error",
+            "example": "The fraud mark was already canceled."
+          },
+          "status_code": {
+            "type": "number",
+            "description": "Error status code",
+            "example": "409"
+          }
+        }
+      },
+      "ExpirationTermInvalid": {
+        "title": "Expiration Term Invalid",
+        "type": "object",
+        "description": "Representation of an bad request error",
+        "properties": {
+          "code": {
+            "description": "The type of error",
+            "type": "string",
+            "example": "EXPIRATION_TERM_INVALID"
+          },
+          "message": {
+            "description": "Describes a message informing a reason for the error",
+            "type": "string",
+            "example": "Expiration term invalid, is greater then term"
+          }
+        }
+      },
+      "ProductNotFound": {
+        "title": "Product not found",
+        "type": "object",
+        "description": "Representation of an not found error",
+        "properties": {
+          "code": {
+            "description": "The type of error",
+            "type": "string",
+            "example": "PRODUCT_NOT_FOUND"
+          },
+          "message": {
+            "description": "Describes a message informing a reason for the error",
+            "type": "string",
+            "example": "Product was not found."
+          }
+        }
+      },
+      "EmployeeNotFound": {
+        "title": "Employee Not Found",
+        "properties": {
+          "code": {
+            "type": "string",
+            "title": "Error code",
+            "description": "The type of error",
+            "example": "EMPLOYEE_NOT_FOUND",
+            "enum": [
+              "EMPLOYEE_NOT_FOUND"
+            ]
+          },
+          "message": {
+            "type": "string",
+            "title": "Error message",
+            "description": "Describes a message informing a reason for the error",
+            "example": "Employee not found"
+          },
+          "status_code": {
+            "type": "number",
+            "description": "Error status code",
+            "example": "404"
           }
         }
       }
