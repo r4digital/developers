@@ -2,7 +2,7 @@
   "openapi": "3.0.2",
   "info": {
     "version": "$APP_VERSION",
-    "title": "Open Banking Payments",
+    "title": "BaaS - Open Banking Payments",
     "description": ""
   },
   "servers": [
