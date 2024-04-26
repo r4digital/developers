@@ -1,8 +1,8 @@
 {
   "openapi": "3.0.0",
   "info": {
-    "version": "1.2.0",
-    "title": "BaaS Transfer",
+    "version": "1.0.0",
+    "title": "BaaS - Transfer",
     "description": "Api responsible for soliciting transfers between bank accounts (TED/TEF)\n\nTransfer Status\n\n<table>\n  <tr>\n    <td>Status</td>\n    <td>Description</td>\n    <td>Final Status</td>\n    <td>Notification Event Type</td>\n  </tr>\n  <tr>\n    <td>CREATED</td>\n    <td>Created Transfer</td>\n    <td></td>\n    <td>transfer_created</td>\n  </tr>\n  <tr>\n    <td>CONFIRMING</td>\n    <td>Transfer begin verified with the client if it was requested by him</td>\n    <td></td>\n    <td></td>\n  </tr>\n  <tr>\n    <td>CONFIRMED</td>\n    <td>Transfer confirmed by the client</td>\n    <td></td>\n    <td>transfer_confirmed</td>\n  </tr>\n  <tr>\n    <td>NOT_CONFIRMED</td>\n    <td>Transfer denied by the client</td>\n    <td>Yes</td>\n    <td>transfer_not_confirmed</td>\n  </tr>\n  <tr>\n    <td>PROCESSING</td>\n    <td>Sending transfer to the integrator</td>\n    <td></td>\n    <td></td>\n  </tr>\n  <tr>\n    <td>PROCESSED</td>\n    <td>Transfer sent to the integrator</td>\n    <td></td>\n    <td></td>\n  </tr>\n  <tr>\n    <td>REJECTED</td>\n    <td>Transfer with missing or invalid data</td>\n    <td>Yes</td>\n    <td>transfer_rejected</td>\n  </tr>\n  <tr>\n    <td>ERROR</td>\n    <td>Failure to process transfer</td>\n    <td>Yes</td>\n    <td>transfer_error</td>\n  </tr>\n  <tr>\n    <td>DONE</td>\n    <td>Transfer confirmed by the integrator</td>\n    <td>Yes</td>\n    <td>transfer_done</td>\n  </tr>\n</table>\n\n<h2> Status Change Notification </h2>\n\nAs described in the status table, some statuses will fire a notification call to the owner of the transfer.\nTo receive this notifications, its necessary to request the registration of the service URL which will receive the notification object.\nThis object will be sent as an HTTP call with the POST method, of which the client must respond with a 200 status and within 5 seconds.\n\nNotification Call Scheme\n\nHeaders:\n```json\n  {\n    X-R4-Application: GUID // Application Unique Identifier\n    X-R4-Delivery: GUID // Attempt Unique Identifier\n    X-R4-Event: {event_type} // Event Type for the Notification (As describe in the Transfer Status Table)\n    User-Agent: R4-Hookshot\n  }\n```\n\nBody\n  ```json\n  {\n    \"object_kind\": \"{event_type}\", //Event Type for the Notification (As describe in the Transfer Status Table)\n    \"object_id\": \"GUID\", // Transfer Unique Identifier\n    \"application_id\": \"GUID\", // Application Unique Identifier\n    \"account_id\": \"GUID\" // Account Unique Identifier\n  }\n  ```\n\n<h2> Debit Confirmation </h2>\n\nTo receive the confirmation, its necessary the previous registration of the client url.\nThis object will be sent as an HTTP call with the POST method, of which the client must respond with a 202 status and within 10 seconds.\n\nDebit Confirmation Call Scheme\n\nHeaders:\n```json\n  {\n    X-R4-Application: GUID // Application Unique Identifier\n    X-R4-Delivery: GUID // Attempt Unique Identifier\n    X-R4-Event: \"transfer_debit_confirmation\" // Event Type for the Notification\n    User-Agent: R4-Hookshot\n  }\n```\n\nBody\n ```json\n  {\n    \"object_kind\": \"transfer_debit_confirmation\", //Event Type for the Notification (As describe in the Transfer Status Table)\n    \"object_id\": \"GUID\", // Transfer Unique Identifier\n    \"application_id\": \"GUID\", // Application Unique Identifier\n    \"account_id\": \"GUID\" // Account Unique Identifier\n    \"metadata\": { // Transfer notification metadata\n      \"id\": \"GUID\" // Transfer metadata unique identifier,\n      \"value\": number // Transfer notification value,\n      \"goal\": 10 // Goal code for the transfer,\n      \"sender\": {\n          \"name\": string // Transfer sender Name,\n          \"bank_code\": number // Bank Code,\n          \"agency\": number // Bank agency,\n          \"account\": number // Account number,\n          \"account_digit\": number // Account digit,\n          \"account_type\": \"CHECKING_ACCOUNT\" | \"SAVINGS_ACCOUNT\" // Account type enum\n          \"document_type\": \"CNPJ\" | \"CPF\" // Document type,\n          \"document_number\": number // Document number\n      },\n      \"recipient\": {\n          \"name\":  string // Transfer recipient name\n          \"bank_code\": number, // Bank code\n          \"agency\": number, // Bank agency\n          \"account\": number, //  Account number\n          \"account_digit\": number, // Account digit\n          \"account_type\": \"CHECKING_ACCOUNT\" | \"SAVINGS_ACCOUNT\" // Account type enum\n          \"document_type\": \"CNPJ\" | \"CPF\" // Document type,\n          \"document_number\": number // Document number\n        }\n      }\n   }\n  ```\n"
   },
   "servers": [
@@ -15,14 +15,15 @@
       "url": "https://api.r4digital.cloud/transfer"
     }
   ],
-  "tags": [
-    {
-      "name": "Transfer"
-    }
-  ],
   "security": [
     {
       "BearerAuth": []
+    }
+  ],
+  "tags": [
+    {
+      "name": "Transfer",
+      "description": "Transfer"
     }
   ],
   "paths": {
@@ -103,7 +104,7 @@
                       "account": {
                         "type": "number",
                         "description": "Account number without the digit",
-                        "example": 266305
+                        "example": 1010101
                       },
                       "account_digit": {
                         "type": "number",
@@ -228,7 +229,7 @@
                             "account": {
                               "type": "number",
                               "description": "Account number without the digit",
-                              "example": 266305
+                              "example": 1010101
                             },
                             "account_digit": {
                               "type": "number",
@@ -867,7 +868,7 @@
                             "account": {
                               "type": "number",
                               "description": "Account number without the digit",
-                              "example": 266305
+                              "example": 1010101
                             },
                             "account_digit": {
                               "type": "number",
@@ -1109,7 +1110,7 @@
                                   "account": {
                                     "type": "number",
                                     "description": "Account number without the digit",
-                                    "example": 266305
+                                    "example": 1010101
                                   },
                                   "account_digit": {
                                     "type": "number",
@@ -1390,6 +1391,7 @@
       "get": {
         "summary": "Transfer/id",
         "description": "Retrieves a transfer response for given account id",
+        "operationId": "GetTransferId",
         "tags": [
           "Transfer"
         ],
@@ -1553,7 +1555,7 @@
                             "account": {
                               "type": "number",
                               "description": "Account number without the digit",
-                              "example": 266305
+                              "example": 1010101
                             },
                             "account_digit": {
                               "type": "number",
@@ -1925,6 +1927,368 @@
       }
     },
     "schemas": {
+      "TransferStatus": {
+        "type": "string",
+        "enum": [
+          "CREATED",
+          "CONFIRMING",
+          "CONFIRMED",
+          "NOT_CONFIRMED",
+          "PROCESSING",
+          "PROCESSED",
+          "REJECTED",
+          "ERROR",
+          "DONE"
+        ]
+      },
+      "TransferAll": {
+        "type": "object",
+        "required": [
+          "data",
+          "cursor"
+        ],
+        "properties": {
+          "cursor": {
+            "type": "object",
+            "properties": {
+              "after": {
+                "type": "string"
+              },
+              "before": {
+                "type": "string"
+              },
+              "limit": {
+                "type": "number"
+              }
+            }
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "format": "guid",
+                  "description": "Transfer Unique Identifier\nMust be sent by the client as an Global Unique Identifier (http://guid.one/guid) as it will be used as identification for the transfer in all other routes\n",
+                  "example": "ad731b07-8863-4a9f-9d7b-a5a3c551378d"
+                },
+                "account_id": {
+                  "type": "string",
+                  "format": "guid",
+                  "description": "Sender account unique identifier",
+                  "example": "68e1316e-6f9b-4935-8743-488573813edb"
+                },
+                "value": {
+                  "type": "number",
+                  "format": "float",
+                  "description": "Value of the transfer",
+                  "example": 200.5
+                },
+                "goal": {
+                  "type": "number",
+                  "format": "integer",
+                  "description": "Goal code for the transfer",
+                  "example": 10
+                },
+                "sender": {
+                  "type": "object",
+                  "description": "Sender of transfer",
+                  "required": [
+                    "name",
+                    "bank_code",
+                    "account",
+                    "account_digit",
+                    "account_type",
+                    "document_type",
+                    "document_number"
+                  ],
+                  "properties": {
+                    "name": {
+                      "type": "string",
+                      "description": "Name of the recipient",
+                      "example": "Amelia Davies"
+                    },
+                    "bank_code": {
+                      "type": "number",
+                      "description": "Bank Code",
+                      "example": 260
+                    },
+                    "agency": {
+                      "type": "number",
+                      "description": "Agency number with digit",
+                      "example": 1001
+                    },
+                    "account": {
+                      "type": "number",
+                      "description": "Account number without the digit",
+                      "example": 22010111
+                    },
+                    "account_digit": {
+                      "type": "number",
+                      "description": "Account Digit",
+                      "example": 2
+                    },
+                    "account_type": {
+                      "type": "string",
+                      "description": "Account Type - `CHECKING_ACCOUNT`: Checking Account Type - `SAVINGS_ACCOUNT`: Savings Account Type - `CONTROL_ACCOUNT`: Control Account Type - `GRAPHIC_ACCOUNT`: Graphic Account Type - `PAYMENT_ACCOUNT`: Payment Account Type\n",
+                      "enum": [
+                        "CHECKING_ACCOUNT",
+                        "SAVINGS_ACCOUNT",
+                        "CONTROL_ACCOUNT",
+                        "GRAPHIC_ACCOUNT",
+                        "PAYMENT_ACCOUNT"
+                      ]
+                    },
+                    "document_type": {
+                      "type": "string",
+                      "description": "Document Type\n- `CPF`: Individual Taxpayer's Registry - `CNPJ`: Corporate Taxpayer's Registry\n",
+                      "enum": [
+                        "CPF",
+                        "CNPJ"
+                      ]
+                    },
+                    "document_number": {
+                      "type": "number",
+                      "description": "Document number with only its numbers",
+                      "example": 88753480066
+                    }
+                  }
+                },
+                "recipient": {
+                  "type": "object",
+                  "description": "Recipient for the transfer",
+                  "required": [
+                    "name",
+                    "bank_code",
+                    "account",
+                    "account_digit",
+                    "account_type",
+                    "document_type",
+                    "document_number"
+                  ],
+                  "properties": {
+                    "name": {
+                      "type": "string",
+                      "description": "Name of the recipient",
+                      "example": "John Doe"
+                    },
+                    "bank_code": {
+                      "type": "number",
+                      "description": "Bank Code",
+                      "example": 260
+                    },
+                    "agency": {
+                      "type": "number",
+                      "description": "Agency number with digit",
+                      "example": 1001
+                    },
+                    "account": {
+                      "type": "number",
+                      "description": "Account number without the digit",
+                      "example": 1010101
+                    },
+                    "account_digit": {
+                      "type": "number",
+                      "description": "Account Digit",
+                      "example": 1
+                    },
+                    "account_type": {
+                      "type": "string",
+                      "description": "Account Type - `CHECKING_ACCOUNT`: Checking Account Type - `SAVINGS_ACCOUNT`: Savings Account Type - `CONTROL_ACCOUNT`: Control Account Type - `GRAPHIC_ACCOUNT`: Graphic Account Type - `PAYMENT_ACCOUNT`: Payment Account Type\n",
+                      "enum": [
+                        "CHECKING_ACCOUNT",
+                        "SAVINGS_ACCOUNT",
+                        "CONTROL_ACCOUNT",
+                        "GRAPHIC_ACCOUNT",
+                        "PAYMENT_ACCOUNT"
+                      ]
+                    },
+                    "document_type": {
+                      "type": "string",
+                      "description": "Document Type\n- `CPF`: Individual Taxpayer's Registry - `CNPJ`: Corporate Taxpayer's Registry\n",
+                      "enum": [
+                        "CPF",
+                        "CNPJ"
+                      ]
+                    },
+                    "document_number": {
+                      "type": "number",
+                      "description": "Document number with only its numbers",
+                      "example": 44769510071
+                    }
+                  }
+                },
+                "type": {
+                  "type": "string",
+                  "description": "Transfer type - `TED`: To a different bank - `TEF`: To the same bank\n",
+                  "enum": [
+                    "TED",
+                    "TEF"
+                  ]
+                },
+                "status": {
+                  "type": "string",
+                  "enum": [
+                    "CREATED",
+                    "CONFIRMING",
+                    "CONFIRMED",
+                    "NOT_CONFIRMED",
+                    "PROCESSING",
+                    "PROCESSED",
+                    "REJECTED",
+                    "ERROR",
+                    "DONE"
+                  ]
+                },
+                "created_at": {
+                  "type": "string",
+                  "description": "Creation date of transfer",
+                  "example": "2020-08-06T22:10:00Z"
+                },
+                "updated_at": {
+                  "type": "string",
+                  "description": "Update date of transfer",
+                  "example": "2021-04-06T22:10:10Z"
+                },
+                "initiation_channel": {
+                  "type": "string",
+                  "description": "The property indicates the transfer initiation channel",
+                  "enum": [
+                    "AGENCY",
+                    "APP",
+                    "ATM",
+                    "CALL_CENTER",
+                    "INTERNET_BANKING"
+                  ],
+                  "example": "INTERNET_BANKING"
+                },
+                "open_banking": {
+                  "type": "boolean",
+                  "description": "Indicates that the transfer was initiated in the Open Banking",
+                  "example": true,
+                  "default": false
+                }
+              }
+            }
+          }
+        }
+      },
+      "BadRequest": {
+        "title": "Bad Request",
+        "properties": {
+          "error": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "string",
+                "title": "Error code",
+                "example": "VALIDATION_FAILED",
+                "enum": [
+                  "VALIDATION_FAILED"
+                ]
+              },
+              "message": {
+                "type": "string",
+                "title": "Error message",
+                "description": "Bad Request",
+                "example": "Bad Request"
+              },
+              "status_code": {
+                "type": "number",
+                "description": "400",
+                "example": "400"
+              }
+            }
+          }
+        }
+      },
+      "Forbidden": {
+        "title": "Forbidden",
+        "properties": {
+          "error": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "string",
+                "title": "Error code",
+                "example": "FORBIDDEN",
+                "enum": [
+                  "FORBIDDEN"
+                ]
+              },
+              "message": {
+                "type": "string",
+                "title": "Error message",
+                "description": "Forbidden",
+                "example": "Forbidden"
+              },
+              "status_code": {
+                "type": "number",
+                "description": "403",
+                "example": "403"
+              }
+            }
+          }
+        }
+      },
+      "MissingProductPermission": {
+        "title": "Missing Product Permission",
+        "properties": {
+          "error": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "string",
+                "title": "Error code",
+                "example": "MISSING_PRODUCT_PERMISSION",
+                "enum": [
+                  "MISSING_PRODUCT_PERMISSION"
+                ]
+              },
+              "message": {
+                "type": "string",
+                "title": "Error message",
+                "description": "Missing product permission",
+                "example": "Missing product permission"
+              },
+              "status_code": {
+                "type": "number",
+                "description": "403",
+                "example": "403"
+              }
+            }
+          }
+        }
+      },
+      "AccountDisabled": {
+        "title": "Account Disabled",
+        "properties": {
+          "error": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "string",
+                "title": "Error code",
+                "example": "ACCOUNT_DISABLED",
+                "enum": [
+                  "ACCOUNT_DISABLED"
+                ]
+              },
+              "message": {
+                "type": "string",
+                "title": "Error message",
+                "description": "Account disabled",
+                "example": "Account disabled"
+              },
+              "status_code": {
+                "type": "number",
+                "description": "422",
+                "example": "422"
+              }
+            }
+          }
+        }
+      },
       "Transfer": {
         "type": "object",
         "required": [
@@ -1990,7 +2354,7 @@
               "account": {
                 "type": "number",
                 "description": "Account number without the digit",
-                "example": 266305
+                "example": 1010101
               },
               "account_digit": {
                 "type": "number",
@@ -2040,19 +2404,540 @@
           }
         }
       },
-      "TransferStatus": {
-        "type": "string",
-        "enum": [
-          "CREATED",
-          "CONFIRMING",
-          "CONFIRMED",
-          "NOT_CONFIRMED",
-          "PROCESSING",
-          "PROCESSED",
-          "REJECTED",
-          "ERROR",
-          "DONE"
-        ]
+      "BusinessDayOnly": {
+        "title": "Business Day Only",
+        "properties": {
+          "error": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "string",
+                "title": "Error code",
+                "example": "BUSINESS_DAY_ONLY_ERROR",
+                "enum": [
+                  "BUSINESS_DAY_ONLY_ERROR"
+                ]
+              },
+              "message": {
+                "type": "string",
+                "title": "Error message",
+                "description": "The current day is not a business day"
+              },
+              "status_code": {
+                "type": "number",
+                "description": "400",
+                "example": "400"
+              }
+            }
+          }
+        }
+      },
+      "TimeOutOfRange": {
+        "title": "Time Out of Range",
+        "properties": {
+          "error": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "string",
+                "title": "Error code",
+                "example": "TIME_OUT_OF_RANGE",
+                "enum": [
+                  "TIME_OUT_OF_RANGE"
+                ]
+              },
+              "message": {
+                "type": "string",
+                "title": "Error message",
+                "description": "The current time is out of range"
+              },
+              "status_code": {
+                "type": "number",
+                "description": "400",
+                "example": "400"
+              }
+            }
+          }
+        }
+      },
+      "InvalidRecipientInformation": {
+        "title": "Invalid Recipient Information",
+        "properties": {
+          "error": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "string",
+                "title": "Error code",
+                "example": "INVALID_RECIPIENT_INFORMATION",
+                "enum": [
+                  "INVALID_RECIPIENT_INFORMATION"
+                ]
+              },
+              "message": {
+                "type": "string",
+                "title": "Error message",
+                "description": "Divergence in recipient's document number"
+              },
+              "status_code": {
+                "type": "number",
+                "description": "400",
+                "example": "400"
+              }
+            }
+          }
+        }
+      },
+      "NotAllowedRequest": {
+        "title": "Request not allowed",
+        "properties": {
+          "error": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "string",
+                "title": "Error code",
+                "description": "The type of error",
+                "example": "REQUEST_NOT_ALLOWED",
+                "enum": [
+                  "REQUEST_NOT_ALLOWED"
+                ]
+              },
+              "message": {
+                "type": "string",
+                "title": "Error message",
+                "description": "Describes a message informing a reason for the error",
+                "example": "The request is not allowed"
+              },
+              "status_code": {
+                "type": "number",
+                "description": "Error status code",
+                "example": "400"
+              }
+            }
+          }
+        }
+      },
+      "AccountNotFound": {
+        "title": "Account Not Found",
+        "properties": {
+          "error": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "string",
+                "title": "Error code",
+                "example": "ACCOUNT_NOT_FOUND",
+                "enum": [
+                  "ACCOUNT_NOT_FOUND"
+                ]
+              },
+              "message": {
+                "type": "string",
+                "title": "Error message",
+                "description": "Account not found",
+                "example": "Account not found"
+              },
+              "status_code": {
+                "type": "number",
+                "description": "404",
+                "example": "404"
+              }
+            }
+          }
+        }
+      },
+      "ApplicationProductNotFound": {
+        "title": "Application Product Not Found",
+        "properties": {
+          "error": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "string",
+                "title": "Error code",
+                "example": "APPLICATION_PRODUCT_NOT_FOUND",
+                "enum": [
+                  "APPLICATION_PRODUCT_NOT_FOUND"
+                ]
+              },
+              "message": {
+                "type": "string",
+                "title": "Error message",
+                "description": "Product not found for given application id",
+                "example": "Product not found for given application id"
+              },
+              "status_code": {
+                "type": "number",
+                "description": "404",
+                "example": "404"
+              }
+            }
+          }
+        }
+      },
+      "Conflict": {
+        "title": "Conflict",
+        "properties": {
+          "error": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "string",
+                "title": "Error code",
+                "example": "CONFLICT_ERROR",
+                "enum": [
+                  "CONFLICT_ERROR"
+                ]
+              },
+              "message": {
+                "type": "string",
+                "title": "Error message",
+                "description": "Requested id already exists",
+                "example": "Transfer id already exists'"
+              },
+              "status_code": {
+                "type": "number",
+                "description": "409",
+                "example": "409"
+              }
+            }
+          }
+        }
+      },
+      "Occurrences": {
+        "type": "object",
+        "description": "Occurrences",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique identifier of the application which the account is bound.",
+            "format": "uuid-v4",
+            "example": "6d814c28-ff73-443c-bfe0-48d518aa32fa"
+          },
+          "code": {
+            "type": "string",
+            "description": "Code identifying the account's bank.",
+            "example": "160"
+          },
+          "status": {
+            "example": "CREATED",
+            "type": "string",
+            "enum": [
+              "CREATED",
+              "CONFIRMING",
+              "CONFIRMED",
+              "NOT_CONFIRMED",
+              "PROCESSING",
+              "PROCESSED",
+              "REJECTED",
+              "ERROR",
+              "DONE"
+            ]
+          },
+          "created_at": {
+            "type": "string",
+            "description": "Creation date of occurrence",
+            "example": "2020-08-06T22:10:00Z"
+          },
+          "updated_at": {
+            "type": "string",
+            "description": "Update date of occurrence",
+            "example": "2021-04-06T22:10:10Z"
+          }
+        }
+      },
+      "TransferById": {
+        "type": "object",
+        "required": [
+          "id",
+          "account_id",
+          "application_id",
+          "value",
+          "operation",
+          "goal",
+          "sender",
+          "recipient",
+          "type",
+          "status",
+          "created_at",
+          "updated_at",
+          "occurrences"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "guid",
+            "description": "Transfer Unique Identifier\nMust be sent by the client as an Global Unique Identifier (http://guid.one/guid) as it will be used as identification for the transfer in all other routes\n",
+            "example": "ad731b07-8863-4a9f-9d7b-a5a3c551378d"
+          },
+          "account_id": {
+            "type": "string",
+            "format": "guid",
+            "description": "Sender account unique identifier",
+            "example": "68e1316e-6f9b-4935-8743-488573813edb"
+          },
+          "value": {
+            "type": "number",
+            "format": "float",
+            "description": "Value of the transfer",
+            "example": 200.5
+          },
+          "goal": {
+            "type": "number",
+            "format": "integer",
+            "description": "Goal code for the transfer",
+            "example": 10
+          },
+          "sender": {
+            "type": "object",
+            "description": "Sender of transfer",
+            "required": [
+              "name",
+              "bank_code",
+              "account",
+              "account_digit",
+              "account_type",
+              "document_type",
+              "document_number"
+            ],
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "Name of the recipient",
+                "example": "Amelia Davies"
+              },
+              "bank_code": {
+                "type": "number",
+                "description": "Bank Code",
+                "example": 260
+              },
+              "agency": {
+                "type": "number",
+                "description": "Agency number with digit",
+                "example": 1001
+              },
+              "account": {
+                "type": "number",
+                "description": "Account number without the digit",
+                "example": 22010111
+              },
+              "account_digit": {
+                "type": "number",
+                "description": "Account Digit",
+                "example": 2
+              },
+              "account_type": {
+                "type": "string",
+                "description": "Account Type - `CHECKING_ACCOUNT`: Checking Account Type - `SAVINGS_ACCOUNT`: Savings Account Type - `PAYMENT_ACCOUNT`: Payment Account Type\n",
+                "enum": [
+                  "CHECKING_ACCOUNT",
+                  "SAVINGS_ACCOUNT",
+                  "PAYMENT_ACCOUNT"
+                ]
+              },
+              "document_type": {
+                "type": "string",
+                "description": "Document Type\n- `CPF`: Individual Taxpayer's Registry - `CNPJ`: Corporate Taxpayer's Registry\n",
+                "enum": [
+                  "CPF",
+                  "CNPJ"
+                ]
+              },
+              "document_number": {
+                "type": "number",
+                "description": "Document number with only its numbers",
+                "example": 88753480066
+              }
+            }
+          },
+          "recipient": {
+            "type": "object",
+            "description": "Recipient for the transfer",
+            "required": [
+              "name",
+              "bank_code",
+              "account",
+              "account_digit",
+              "account_type",
+              "document_type",
+              "document_number"
+            ],
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "Name of the recipient",
+                "example": "John Doe"
+              },
+              "bank_code": {
+                "type": "number",
+                "description": "Bank Code",
+                "example": 260
+              },
+              "agency": {
+                "type": "number",
+                "description": "Agency number with digit",
+                "example": 1001
+              },
+              "account": {
+                "type": "number",
+                "description": "Account number without the digit",
+                "example": 1010101
+              },
+              "account_digit": {
+                "type": "number",
+                "description": "Account Digit",
+                "example": 1
+              },
+              "account_type": {
+                "type": "string",
+                "description": "Account Type - `CHECKING_ACCOUNT`: Checking Account Type - `SAVINGS_ACCOUNT`: Savings Account Type - `PAYMENT_ACCOUNT`: Payment Account Type\n",
+                "enum": [
+                  "CHECKING_ACCOUNT",
+                  "SAVINGS_ACCOUNT",
+                  "PAYMENT_ACCOUNT"
+                ]
+              },
+              "document_type": {
+                "type": "string",
+                "description": "Document Type\n- `CPF`: Individual Taxpayer's Registry - `CNPJ`: Corporate Taxpayer's Registry\n",
+                "enum": [
+                  "CPF",
+                  "CNPJ"
+                ]
+              },
+              "document_number": {
+                "type": "number",
+                "description": "Document number with only its numbers",
+                "example": 44769510071
+              }
+            }
+          },
+          "type": {
+            "type": "string",
+            "description": "Transfer type - `TED`: To a different bank - `TEF`: To the same bank\n",
+            "enum": [
+              "TED",
+              "TEF"
+            ]
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "CREATED",
+              "CONFIRMING",
+              "CONFIRMED",
+              "NOT_CONFIRMED",
+              "PROCESSING",
+              "PROCESSED",
+              "REJECTED",
+              "ERROR",
+              "DONE"
+            ]
+          },
+          "created_at": {
+            "type": "string",
+            "description": "Creation date of transfer",
+            "example": "2020-08-06T22:10:00Z"
+          },
+          "updated_at": {
+            "type": "string",
+            "description": "Update date of transfer",
+            "example": "2021-04-06T22:10:10Z"
+          },
+          "initiation_channel": {
+            "type": "string",
+            "description": "The property indicates the transfer initiation channel",
+            "enum": [
+              "AGENCY",
+              "APP",
+              "ATM",
+              "CALL_CENTER",
+              "INTERNET_BANKING"
+            ],
+            "example": "INTERNET_BANKING"
+          },
+          "open_banking": {
+            "type": "boolean",
+            "description": "Indicates that the transfer was initiated in the Open Banking",
+            "example": true,
+            "default": false
+          },
+          "occurrences": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "description": "Occurrences",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "Unique identifier of the application which the account is bound.",
+                  "format": "uuid-v4",
+                  "example": "6d814c28-ff73-443c-bfe0-48d518aa32fa"
+                },
+                "code": {
+                  "type": "string",
+                  "description": "Code identifying the account's bank.",
+                  "example": "160"
+                },
+                "status": {
+                  "example": "CREATED",
+                  "type": "string",
+                  "enum": [
+                    "CREATED",
+                    "CONFIRMING",
+                    "CONFIRMED",
+                    "NOT_CONFIRMED",
+                    "PROCESSING",
+                    "PROCESSED",
+                    "REJECTED",
+                    "ERROR",
+                    "DONE"
+                  ]
+                },
+                "created_at": {
+                  "type": "string",
+                  "description": "Creation date of occurrence",
+                  "example": "2020-08-06T22:10:00Z"
+                },
+                "updated_at": {
+                  "type": "string",
+                  "description": "Update date of occurrence",
+                  "example": "2021-04-06T22:10:10Z"
+                }
+              }
+            }
+          }
+        }
+      },
+      "TransferNotFound": {
+        "title": "Transfer Not Found",
+        "properties": {
+          "error": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "string",
+                "title": "Error code",
+                "example": "TRANSFER_NOT_FOUND",
+                "enum": [
+                  "TRANSFER_NOT_FOUND"
+                ]
+              },
+              "message": {
+                "type": "string",
+                "title": "Error message",
+                "description": "Transfer not found",
+                "example": "Transfer not found"
+              },
+              "status_code": {
+                "type": "number",
+                "description": "404",
+                "example": "404"
+              }
+            }
+          }
+        }
       },
       "Error": {
         "type": "object",
@@ -2067,38 +2952,245 @@
       }
     },
     "responses": {
-      "BadRequest": {
-        "description": "Bad Request",
+      "TransferAll": {
+        "description": "Expected response to a valid request",
         "content": {
           "application/json": {
             "schema": {
-              "title": "Bad Request",
-              "properties": {
-                "error": {
+              "allOf": [
+                {
                   "type": "object",
+                  "required": [
+                    "data",
+                    "cursor"
+                  ],
                   "properties": {
-                    "code": {
-                      "type": "string",
-                      "title": "Error code",
-                      "example": "VALIDATION_FAILED",
-                      "enum": [
-                        "VALIDATION_FAILED"
-                      ]
+                    "cursor": {
+                      "type": "object",
+                      "properties": {
+                        "after": {
+                          "type": "string"
+                        },
+                        "before": {
+                          "type": "string"
+                        },
+                        "limit": {
+                          "type": "number"
+                        }
+                      }
                     },
-                    "message": {
-                      "type": "string",
-                      "title": "Error message",
-                      "description": "Bad Request",
-                      "example": "Bad Request"
-                    },
-                    "status_code": {
-                      "type": "number",
-                      "description": "400",
-                      "example": "400"
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "format": "guid",
+                            "description": "Transfer Unique Identifier\nMust be sent by the client as an Global Unique Identifier (http://guid.one/guid) as it will be used as identification for the transfer in all other routes\n",
+                            "example": "ad731b07-8863-4a9f-9d7b-a5a3c551378d"
+                          },
+                          "account_id": {
+                            "type": "string",
+                            "format": "guid",
+                            "description": "Sender account unique identifier",
+                            "example": "68e1316e-6f9b-4935-8743-488573813edb"
+                          },
+                          "value": {
+                            "type": "number",
+                            "format": "float",
+                            "description": "Value of the transfer",
+                            "example": 200.5
+                          },
+                          "goal": {
+                            "type": "number",
+                            "format": "integer",
+                            "description": "Goal code for the transfer",
+                            "example": 10
+                          },
+                          "sender": {
+                            "type": "object",
+                            "description": "Sender of transfer",
+                            "required": [
+                              "name",
+                              "bank_code",
+                              "account",
+                              "account_digit",
+                              "account_type",
+                              "document_type",
+                              "document_number"
+                            ],
+                            "properties": {
+                              "name": {
+                                "type": "string",
+                                "description": "Name of the recipient",
+                                "example": "Amelia Davies"
+                              },
+                              "bank_code": {
+                                "type": "number",
+                                "description": "Bank Code",
+                                "example": 260
+                              },
+                              "agency": {
+                                "type": "number",
+                                "description": "Agency number with digit",
+                                "example": 1001
+                              },
+                              "account": {
+                                "type": "number",
+                                "description": "Account number without the digit",
+                                "example": 22010111
+                              },
+                              "account_digit": {
+                                "type": "number",
+                                "description": "Account Digit",
+                                "example": 2
+                              },
+                              "account_type": {
+                                "type": "string",
+                                "description": "Account Type - `CHECKING_ACCOUNT`: Checking Account Type - `SAVINGS_ACCOUNT`: Savings Account Type - `CONTROL_ACCOUNT`: Control Account Type - `GRAPHIC_ACCOUNT`: Graphic Account Type - `PAYMENT_ACCOUNT`: Payment Account Type\n",
+                                "enum": [
+                                  "CHECKING_ACCOUNT",
+                                  "SAVINGS_ACCOUNT",
+                                  "CONTROL_ACCOUNT",
+                                  "GRAPHIC_ACCOUNT",
+                                  "PAYMENT_ACCOUNT"
+                                ]
+                              },
+                              "document_type": {
+                                "type": "string",
+                                "description": "Document Type\n- `CPF`: Individual Taxpayer's Registry - `CNPJ`: Corporate Taxpayer's Registry\n",
+                                "enum": [
+                                  "CPF",
+                                  "CNPJ"
+                                ]
+                              },
+                              "document_number": {
+                                "type": "number",
+                                "description": "Document number with only its numbers",
+                                "example": 88753480066
+                              }
+                            }
+                          },
+                          "recipient": {
+                            "type": "object",
+                            "description": "Recipient for the transfer",
+                            "required": [
+                              "name",
+                              "bank_code",
+                              "account",
+                              "account_digit",
+                              "account_type",
+                              "document_type",
+                              "document_number"
+                            ],
+                            "properties": {
+                              "name": {
+                                "type": "string",
+                                "description": "Name of the recipient",
+                                "example": "John Doe"
+                              },
+                              "bank_code": {
+                                "type": "number",
+                                "description": "Bank Code",
+                                "example": 260
+                              },
+                              "agency": {
+                                "type": "number",
+                                "description": "Agency number with digit",
+                                "example": 1001
+                              },
+                              "account": {
+                                "type": "number",
+                                "description": "Account number without the digit",
+                                "example": 1010101
+                              },
+                              "account_digit": {
+                                "type": "number",
+                                "description": "Account Digit",
+                                "example": 1
+                              },
+                              "account_type": {
+                                "type": "string",
+                                "description": "Account Type - `CHECKING_ACCOUNT`: Checking Account Type - `SAVINGS_ACCOUNT`: Savings Account Type - `CONTROL_ACCOUNT`: Control Account Type - `GRAPHIC_ACCOUNT`: Graphic Account Type - `PAYMENT_ACCOUNT`: Payment Account Type\n",
+                                "enum": [
+                                  "CHECKING_ACCOUNT",
+                                  "SAVINGS_ACCOUNT",
+                                  "CONTROL_ACCOUNT",
+                                  "GRAPHIC_ACCOUNT",
+                                  "PAYMENT_ACCOUNT"
+                                ]
+                              },
+                              "document_type": {
+                                "type": "string",
+                                "description": "Document Type\n- `CPF`: Individual Taxpayer's Registry - `CNPJ`: Corporate Taxpayer's Registry\n",
+                                "enum": [
+                                  "CPF",
+                                  "CNPJ"
+                                ]
+                              },
+                              "document_number": {
+                                "type": "number",
+                                "description": "Document number with only its numbers",
+                                "example": 44769510071
+                              }
+                            }
+                          },
+                          "type": {
+                            "type": "string",
+                            "description": "Transfer type - `TED`: To a different bank - `TEF`: To the same bank\n",
+                            "enum": [
+                              "TED",
+                              "TEF"
+                            ]
+                          },
+                          "status": {
+                            "type": "string",
+                            "enum": [
+                              "CREATED",
+                              "CONFIRMING",
+                              "CONFIRMED",
+                              "NOT_CONFIRMED",
+                              "PROCESSING",
+                              "PROCESSED",
+                              "REJECTED",
+                              "ERROR",
+                              "DONE"
+                            ]
+                          },
+                          "created_at": {
+                            "type": "string",
+                            "description": "Creation date of transfer",
+                            "example": "2020-08-06T22:10:00Z"
+                          },
+                          "updated_at": {
+                            "type": "string",
+                            "description": "Update date of transfer",
+                            "example": "2021-04-06T22:10:10Z"
+                          },
+                          "initiation_channel": {
+                            "type": "string",
+                            "description": "The property indicates the transfer initiation channel",
+                            "enum": [
+                              "AGENCY",
+                              "APP",
+                              "ATM",
+                              "CALL_CENTER",
+                              "INTERNET_BANKING"
+                            ],
+                            "example": "INTERNET_BANKING"
+                          },
+                          "open_banking": {
+                            "type": "boolean",
+                            "description": "Indicates that the transfer was initiated in the Open Banking",
+                            "example": true,
+                            "default": false
+                          }
+                        }
+                      }
                     }
                   }
                 }
-              }
+              ]
             }
           }
         }
@@ -2139,6 +3231,428 @@
           }
         }
       },
+      "TransferCreated": {
+        "description": "Expected response to a valid request",
+        "content": {
+          "application/json": {
+            "schema": {
+              "allOf": [
+                {
+                  "type": "object",
+                  "required": [
+                    "id",
+                    "account_id",
+                    "value",
+                    "goal",
+                    "recipient"
+                  ],
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "format": "guid",
+                      "description": "Transfer Unique Identifier\nMust be sent by the client as an Global Unique Identifier (http://guid.one/guid) as it will be used as identification for the transfer in all other routes\n",
+                      "example": "ad731b07-8863-4a9f-9d7b-a5a3c551378d"
+                    },
+                    "account_id": {
+                      "type": "string",
+                      "format": "guid",
+                      "description": "Sender account unique identifier",
+                      "example": "68e1316e-6f9b-4935-8743-488573813edb"
+                    },
+                    "value": {
+                      "type": "number",
+                      "format": "float",
+                      "description": "Value of the transfer",
+                      "example": 200.5
+                    },
+                    "goal": {
+                      "type": "number",
+                      "format": "integer",
+                      "description": "Goal code for the transfer",
+                      "example": 10
+                    },
+                    "recipient": {
+                      "type": "object",
+                      "description": "Recipient for the transfer",
+                      "required": [
+                        "name",
+                        "bank_code",
+                        "account",
+                        "account_digit",
+                        "account_type",
+                        "document_type",
+                        "document_number"
+                      ],
+                      "properties": {
+                        "name": {
+                          "type": "string",
+                          "description": "Name of the recipient",
+                          "example": "John Doe"
+                        },
+                        "bank_code": {
+                          "type": "number",
+                          "description": "Bank Code",
+                          "example": 260
+                        },
+                        "agency": {
+                          "type": "number",
+                          "description": "Agency number with digit",
+                          "example": 1001
+                        },
+                        "account": {
+                          "type": "number",
+                          "description": "Account number without the digit",
+                          "example": 1010101
+                        },
+                        "account_digit": {
+                          "type": "number",
+                          "description": "Account Digit",
+                          "example": 1
+                        },
+                        "account_type": {
+                          "type": "string",
+                          "description": "Account Type - `CHECKING_ACCOUNT`: Checking Account Type - `SAVINGS_ACCOUNT`: Savings Account Type\n",
+                          "enum": [
+                            "CHECKING_ACCOUNT",
+                            "SAVINGS_ACCOUNT"
+                          ]
+                        },
+                        "document_type": {
+                          "type": "string",
+                          "description": "Document Type\n- `CPF`: Individual Taxpayer's Registry - `CNPJ`: Corporate Taxpayer's Registry\n",
+                          "enum": [
+                            "CPF",
+                            "CNPJ"
+                          ]
+                        },
+                        "document_number": {
+                          "type": "number",
+                          "description": "Document number with only its numbers",
+                          "example": 44769510071
+                        }
+                      }
+                    },
+                    "initiation_channel": {
+                      "type": "string",
+                      "description": "The property indicates the transfer initiation channel",
+                      "enum": [
+                        "AGENCY",
+                        "APP",
+                        "ATM",
+                        "CALL_CENTER",
+                        "INTERNET_BANKING"
+                      ],
+                      "example": "INTERNET_BANKING"
+                    },
+                    "open_banking": {
+                      "type": "boolean",
+                      "description": "Indicates that the transfer was initiated in the Open Banking",
+                      "example": true,
+                      "default": false
+                    }
+                  }
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "enum": [
+                        "CREATED",
+                        "CONFIRMING",
+                        "CONFIRMED",
+                        "NOT_CONFIRMED",
+                        "PROCESSING",
+                        "PROCESSED",
+                        "REJECTED",
+                        "ERROR",
+                        "DONE"
+                      ]
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      },
+      "TransferWithOccurrences": {
+        "description": "Expected response to a valid request",
+        "content": {
+          "application/json": {
+            "schema": {
+              "allOf": [
+                {
+                  "type": "object",
+                  "required": [
+                    "id",
+                    "account_id",
+                    "application_id",
+                    "value",
+                    "operation",
+                    "goal",
+                    "sender",
+                    "recipient",
+                    "type",
+                    "status",
+                    "created_at",
+                    "updated_at",
+                    "occurrences"
+                  ],
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "format": "guid",
+                      "description": "Transfer Unique Identifier\nMust be sent by the client as an Global Unique Identifier (http://guid.one/guid) as it will be used as identification for the transfer in all other routes\n",
+                      "example": "ad731b07-8863-4a9f-9d7b-a5a3c551378d"
+                    },
+                    "account_id": {
+                      "type": "string",
+                      "format": "guid",
+                      "description": "Sender account unique identifier",
+                      "example": "68e1316e-6f9b-4935-8743-488573813edb"
+                    },
+                    "value": {
+                      "type": "number",
+                      "format": "float",
+                      "description": "Value of the transfer",
+                      "example": 200.5
+                    },
+                    "goal": {
+                      "type": "number",
+                      "format": "integer",
+                      "description": "Goal code for the transfer",
+                      "example": 10
+                    },
+                    "sender": {
+                      "type": "object",
+                      "description": "Sender of transfer",
+                      "required": [
+                        "name",
+                        "bank_code",
+                        "account",
+                        "account_digit",
+                        "account_type",
+                        "document_type",
+                        "document_number"
+                      ],
+                      "properties": {
+                        "name": {
+                          "type": "string",
+                          "description": "Name of the recipient",
+                          "example": "Amelia Davies"
+                        },
+                        "bank_code": {
+                          "type": "number",
+                          "description": "Bank Code",
+                          "example": 260
+                        },
+                        "agency": {
+                          "type": "number",
+                          "description": "Agency number with digit",
+                          "example": 1001
+                        },
+                        "account": {
+                          "type": "number",
+                          "description": "Account number without the digit",
+                          "example": 22010111
+                        },
+                        "account_digit": {
+                          "type": "number",
+                          "description": "Account Digit",
+                          "example": 2
+                        },
+                        "account_type": {
+                          "type": "string",
+                          "description": "Account Type - `CHECKING_ACCOUNT`: Checking Account Type - `SAVINGS_ACCOUNT`: Savings Account Type - `PAYMENT_ACCOUNT`: Payment Account Type\n",
+                          "enum": [
+                            "CHECKING_ACCOUNT",
+                            "SAVINGS_ACCOUNT",
+                            "PAYMENT_ACCOUNT"
+                          ]
+                        },
+                        "document_type": {
+                          "type": "string",
+                          "description": "Document Type\n- `CPF`: Individual Taxpayer's Registry - `CNPJ`: Corporate Taxpayer's Registry\n",
+                          "enum": [
+                            "CPF",
+                            "CNPJ"
+                          ]
+                        },
+                        "document_number": {
+                          "type": "number",
+                          "description": "Document number with only its numbers",
+                          "example": 88753480066
+                        }
+                      }
+                    },
+                    "recipient": {
+                      "type": "object",
+                      "description": "Recipient for the transfer",
+                      "required": [
+                        "name",
+                        "bank_code",
+                        "account",
+                        "account_digit",
+                        "account_type",
+                        "document_type",
+                        "document_number"
+                      ],
+                      "properties": {
+                        "name": {
+                          "type": "string",
+                          "description": "Name of the recipient",
+                          "example": "John Doe"
+                        },
+                        "bank_code": {
+                          "type": "number",
+                          "description": "Bank Code",
+                          "example": 260
+                        },
+                        "agency": {
+                          "type": "number",
+                          "description": "Agency number with digit",
+                          "example": 1001
+                        },
+                        "account": {
+                          "type": "number",
+                          "description": "Account number without the digit",
+                          "example": 1010101
+                        },
+                        "account_digit": {
+                          "type": "number",
+                          "description": "Account Digit",
+                          "example": 1
+                        },
+                        "account_type": {
+                          "type": "string",
+                          "description": "Account Type - `CHECKING_ACCOUNT`: Checking Account Type - `SAVINGS_ACCOUNT`: Savings Account Type - `PAYMENT_ACCOUNT`: Payment Account Type\n",
+                          "enum": [
+                            "CHECKING_ACCOUNT",
+                            "SAVINGS_ACCOUNT",
+                            "PAYMENT_ACCOUNT"
+                          ]
+                        },
+                        "document_type": {
+                          "type": "string",
+                          "description": "Document Type\n- `CPF`: Individual Taxpayer's Registry - `CNPJ`: Corporate Taxpayer's Registry\n",
+                          "enum": [
+                            "CPF",
+                            "CNPJ"
+                          ]
+                        },
+                        "document_number": {
+                          "type": "number",
+                          "description": "Document number with only its numbers",
+                          "example": 44769510071
+                        }
+                      }
+                    },
+                    "type": {
+                      "type": "string",
+                      "description": "Transfer type - `TED`: To a different bank - `TEF`: To the same bank\n",
+                      "enum": [
+                        "TED",
+                        "TEF"
+                      ]
+                    },
+                    "status": {
+                      "type": "string",
+                      "enum": [
+                        "CREATED",
+                        "CONFIRMING",
+                        "CONFIRMED",
+                        "NOT_CONFIRMED",
+                        "PROCESSING",
+                        "PROCESSED",
+                        "REJECTED",
+                        "ERROR",
+                        "DONE"
+                      ]
+                    },
+                    "created_at": {
+                      "type": "string",
+                      "description": "Creation date of transfer",
+                      "example": "2020-08-06T22:10:00Z"
+                    },
+                    "updated_at": {
+                      "type": "string",
+                      "description": "Update date of transfer",
+                      "example": "2021-04-06T22:10:10Z"
+                    },
+                    "initiation_channel": {
+                      "type": "string",
+                      "description": "The property indicates the transfer initiation channel",
+                      "enum": [
+                        "AGENCY",
+                        "APP",
+                        "ATM",
+                        "CALL_CENTER",
+                        "INTERNET_BANKING"
+                      ],
+                      "example": "INTERNET_BANKING"
+                    },
+                    "open_banking": {
+                      "type": "boolean",
+                      "description": "Indicates that the transfer was initiated in the Open Banking",
+                      "example": true,
+                      "default": false
+                    },
+                    "occurrences": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "description": "Occurrences",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "description": "Unique identifier of the application which the account is bound.",
+                            "format": "uuid-v4",
+                            "example": "6d814c28-ff73-443c-bfe0-48d518aa32fa"
+                          },
+                          "code": {
+                            "type": "string",
+                            "description": "Code identifying the account's bank.",
+                            "example": "160"
+                          },
+                          "status": {
+                            "example": "CREATED",
+                            "type": "string",
+                            "enum": [
+                              "CREATED",
+                              "CONFIRMING",
+                              "CONFIRMED",
+                              "NOT_CONFIRMED",
+                              "PROCESSING",
+                              "PROCESSED",
+                              "REJECTED",
+                              "ERROR",
+                              "DONE"
+                            ]
+                          },
+                          "created_at": {
+                            "type": "string",
+                            "description": "Creation date of occurrence",
+                            "example": "2020-08-06T22:10:00Z"
+                          },
+                          "updated_at": {
+                            "type": "string",
+                            "description": "Update date of occurrence",
+                            "example": "2021-04-06T22:10:10Z"
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                {
+                  "type": "object"
+                }
+              ]
+            }
+          }
+        }
+      },
       "AccessingAccountWithoutPermission": {
         "description": "Account Without Permission",
         "content": {
@@ -2167,6 +3681,42 @@
                       "type": "number",
                       "description": "403",
                       "example": "403"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "BadRequest": {
+        "description": "Bad Request",
+        "content": {
+          "application/json": {
+            "schema": {
+              "title": "Bad Request",
+              "properties": {
+                "error": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "title": "Error code",
+                      "example": "VALIDATION_FAILED",
+                      "enum": [
+                        "VALIDATION_FAILED"
+                      ]
+                    },
+                    "message": {
+                      "type": "string",
+                      "title": "Error message",
+                      "description": "Bad Request",
+                      "example": "Bad Request"
+                    },
+                    "status_code": {
+                      "type": "number",
+                      "description": "400",
+                      "example": "400"
                     }
                   }
                 }
