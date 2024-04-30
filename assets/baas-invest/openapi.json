@@ -112,6 +112,11 @@
                             "description": "Grace period",
                             "example": 1
                           },
+                          "grace_date": {
+                            "type": "string",
+                            "description": "Calculated grace date from grace period",
+                            "example": "2024-04-30T00:00:00.000Z"
+                          },
                           "operation_term": {
                             "type": "number",
                             "description": "Operation term",
@@ -445,7 +450,8 @@
                     "redemption_minimum_date",
                     "redemption_minimum_value",
                     "remaining_minimum_value",
-                    "occurrences"
+                    "occurrences",
+                    "grace_date"
                   ],
                   "properties": {
                     "id": {
@@ -492,6 +498,11 @@
                       "type": "number",
                       "description": "Investment value",
                       "example": 11000.98
+                    },
+                    "grace_date": {
+                      "type": "string",
+                      "description": "Calculated grace date from grace period",
+                      "example": "2024-04-30T00:00:00.000Z"
                     },
                     "repurchase_grace_period": {
                       "type": "number",
@@ -812,7 +823,8 @@
                     "redemption_minimum_date",
                     "redemption_minimum_value",
                     "remaining_minimum_value",
-                    "occurrences"
+                    "occurrences",
+                    "grace_date"
                   ],
                   "properties": {
                     "id": {
@@ -859,6 +871,11 @@
                       "type": "number",
                       "description": "Investment value",
                       "example": 11000.98
+                    },
+                    "grace_date": {
+                      "type": "string",
+                      "description": "Calculated grace date from grace period",
+                      "example": "2024-04-30T00:00:00.000Z"
                     },
                     "repurchase_grace_period": {
                       "type": "number",
@@ -1355,6 +1372,11 @@
             "description": "Grace period",
             "example": 1
           },
+          "grace_date": {
+            "type": "string",
+            "description": "Calculated grace date from grace period",
+            "example": "2024-04-30T00:00:00.000Z"
+          },
           "operation_term": {
             "type": "number",
             "description": "Operation term",
@@ -1638,7 +1660,8 @@
           "redemption_minimum_date",
           "redemption_minimum_value",
           "remaining_minimum_value",
-          "occurrences"
+          "occurrences",
+          "grace_date"
         ],
         "properties": {
           "id": {
@@ -1685,6 +1708,11 @@
             "type": "number",
             "description": "Investment value",
             "example": 11000.98
+          },
+          "grace_date": {
+            "type": "string",
+            "description": "Calculated grace date from grace period",
+            "example": "2024-04-30T00:00:00.000Z"
           },
           "repurchase_grace_period": {
             "type": "number",
