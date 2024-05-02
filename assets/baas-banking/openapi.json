@@ -2781,6 +2781,38 @@
               }
             }
           },
+          "409": {
+            "description": "Error with types [BatchFileAlreadyExists].",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Batch file already exists",
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "title": "Error code",
+                      "description": "The type of error",
+                      "example": "BATCH_FILE_ALREADY_EXISTS",
+                      "enum": [
+                        "BATCH_FILE_ALREADY_EXISTS"
+                      ]
+                    },
+                    "message": {
+                      "type": "string",
+                      "title": "Error message",
+                      "description": "Describes a message informing a reason for the error",
+                      "example": "Batch file already exists."
+                    },
+                    "status_code": {
+                      "type": "number",
+                      "description": "Error status code",
+                      "example": "409"
+                    }
+                  }
+                }
+              }
+            }
+          },
           "413": {
             "description": "Error with types [LimitFileSizeError].",
             "content": {
@@ -3609,6 +3641,31 @@
             "type": "number",
             "description": "Error status code",
             "example": "403"
+          }
+        }
+      },
+      "BatchFileAlreadyExistsError": {
+        "title": "Batch file already exists",
+        "properties": {
+          "code": {
+            "type": "string",
+            "title": "Error code",
+            "description": "The type of error",
+            "example": "BATCH_FILE_ALREADY_EXISTS",
+            "enum": [
+              "BATCH_FILE_ALREADY_EXISTS"
+            ]
+          },
+          "message": {
+            "type": "string",
+            "title": "Error message",
+            "description": "Describes a message informing a reason for the error",
+            "example": "Batch file already exists."
+          },
+          "status_code": {
+            "type": "number",
+            "description": "Error status code",
+            "example": "409"
           }
         }
       },
