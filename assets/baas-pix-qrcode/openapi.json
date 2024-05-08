@@ -1501,7 +1501,7 @@
             }
           },
           "400": {
-            "description": "Error with types [ValidationFailedError, InvalidDataError, EMVMerchantAccountSizeExceededError, InvalidIdempotenceKeyError, InvalidUUIDError].",
+            "description": "Error with types [ValidationFailedError, InvalidDataError, EMVMerchantAccountSizeExceededError, InvalidUUIDError].",
             "content": {
               "application/json": {
                 "schema": {
@@ -1592,36 +1592,6 @@
                       }
                     },
                     {
-                      "title": "Invalid Idempotence Key Error",
-                      "properties": {
-                        "error": {
-                          "type": "object",
-                          "properties": {
-                            "code": {
-                              "type": "string",
-                              "title": "Error code",
-                              "description": "The type of error",
-                              "example": "INVALID_IDEMPOTENCE_KEY",
-                              "enum": [
-                                "INVALID_IDEMPOTENCE_KEY"
-                              ]
-                            },
-                            "message": {
-                              "type": "string",
-                              "title": "Error message",
-                              "description": "Describes a message informing a reason for the error",
-                              "example": "Idempotence Key is missing or is not a valid uuid."
-                            },
-                            "status_code": {
-                              "type": "number",
-                              "description": "Error status code",
-                              "example": "400"
-                            }
-                          }
-                        }
-                      }
-                    },
-                    {
                       "title": "Invalid uuid",
                       "properties": {
                         "error": {
@@ -1672,13 +1642,7 @@
                       "message": "EMV Merchant Account Information field exceeded the maximum size"
                     }
                   },
-                  "Example 4 - InvalidIdempotenceKeyError": {
-                    "value": {
-                      "code": "INVALID_IDEMPOTENCE_KEY",
-                      "message": "Idempotence Key is missing or is not a valid uuid."
-                    }
-                  },
-                  "Example 5 - InvalidUUIDError": {
+                  "Example 4 - InvalidUUIDError": {
                     "value": {
                       "code": "INVALID_UUID",
                       "message": "Invalid uuid"
@@ -1883,46 +1847,6 @@
                     "value": {
                       "code": "ACCOUNT_NOT_FOUND",
                       "message": "Account not found."
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "409": {
-            "description": "Conflict Error with types [IdempotenceKeyAlreadyExistsError]",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "title": "Idempotence Key Already Exists Error",
-                  "properties": {
-                    "code": {
-                      "type": "string",
-                      "title": "Error code",
-                      "description": "The type of error",
-                      "example": "IDEMPOTENCE_KEY_ALREADY_EXISTS",
-                      "enum": [
-                        "IDEMPOTENCE_KEY_ALREADY_EXISTS"
-                      ]
-                    },
-                    "message": {
-                      "type": "string",
-                      "title": "Error message",
-                      "description": "Describes a message informing a reason for the error",
-                      "example": "The idempotence key provided already exists"
-                    },
-                    "status_code": {
-                      "type": "number",
-                      "description": "Error status code",
-                      "example": "409"
-                    }
-                  }
-                },
-                "examples": {
-                  "Example 1 - IdempotenceKeyAlreadyExistsError": {
-                    "value": {
-                      "code": "IDEMPOTENCE_KEY_ALREADY_EXISTS",
-                      "message": "The idempotence key provided already exists"
                     }
                   }
                 }
@@ -2033,7 +1957,7 @@
                   "original_value": {
                     "type": "number",
                     "format": "double",
-                    "description": "The original value of the QR Code"
+                    "description": "The original value of the QR Code, if modality is informad the field needs to be equal to 0.00"
                   },
                   "text_to_payer": {
                     "type": "string",
@@ -2050,6 +1974,8 @@
                       },
                       "recipient_conciliation_id": {
                         "type": "string",
+                        "minLength": 26,
+                        "maxLength": 36,
                         "description": "The recipient conciliation ID"
                       }
                     },
@@ -2114,7 +2040,7 @@
                   "allow_value_alteration": {
                     "type": "boolean",
                     "default": false,
-                    "description": "Whether value alteration is allowed"
+                    "description": "Whether value alteration is allowed, if modality is informad the field needs to be equal to false"
                   },
                   "expiration_seconds": {
                     "type": "number",
@@ -2196,7 +2122,7 @@
               "application/json": {
                 "schema": {
                   "type": "object",
-                  "description": "Dynamic Immediate QR Code",
+                  "description": "Dynamic QR Code",
                   "properties": {
                     "external_id": {
                       "type": "string",
@@ -2206,12 +2132,12 @@
                     "image_qr_code_base_64": {
                       "type": "string",
                       "format": "base64",
-                      "description": "Dynamic Immediate QR Code image"
+                      "description": "Dynamic QR Code image"
                     },
                     "payload_base_64": {
                       "type": "string",
                       "format": "base64",
-                      "description": "Dynamic Immediate QR Code payload"
+                      "description": "Dynamic QR Code payload"
                     },
                     "payload_jws": {
                       "type": "string",
@@ -2247,7 +2173,7 @@
             }
           },
           "400": {
-            "description": "Error with types [ValidationFailedError, InvalidDataError, EMVMerchantAccountSizeExceededError, InvalidIdempotenceKeyError, InvalidUUIDError].",
+            "description": "Error with types [ValidationFailedError, InvalidDataError, EMVMerchantAccountSizeExceededError, InvalidUUIDError].",
             "content": {
               "application/json": {
                 "schema": {
@@ -2338,36 +2264,6 @@
                       }
                     },
                     {
-                      "title": "Invalid Idempotence Key Error",
-                      "properties": {
-                        "error": {
-                          "type": "object",
-                          "properties": {
-                            "code": {
-                              "type": "string",
-                              "title": "Error code",
-                              "description": "The type of error",
-                              "example": "INVALID_IDEMPOTENCE_KEY",
-                              "enum": [
-                                "INVALID_IDEMPOTENCE_KEY"
-                              ]
-                            },
-                            "message": {
-                              "type": "string",
-                              "title": "Error message",
-                              "description": "Describes a message informing a reason for the error",
-                              "example": "Idempotence Key is missing or is not a valid uuid."
-                            },
-                            "status_code": {
-                              "type": "number",
-                              "description": "Error status code",
-                              "example": "400"
-                            }
-                          }
-                        }
-                      }
-                    },
-                    {
                       "title": "Invalid uuid",
                       "properties": {
                         "error": {
@@ -2418,13 +2314,7 @@
                       "message": "EMV Merchant Account Information field exceeded the maximum size"
                     }
                   },
-                  "Example 4 - InvalidIdempotenceKeyError": {
-                    "value": {
-                      "code": "INVALID_IDEMPOTENCE_KEY",
-                      "message": "Idempotence Key is missing or is not a valid uuid."
-                    }
-                  },
-                  "Example 5 - InvalidUUIDError": {
+                  "Example 4 - InvalidUUIDError": {
                     "value": {
                       "code": "INVALID_UUID",
                       "message": "Invalid uuid"
@@ -2636,26 +2526,26 @@
             }
           },
           "409": {
-            "description": "Conflict Error with types [IdempotenceKeyAlreadyExistsError]",
+            "description": "Conflict Error with types [QrCodeAlreadyExistsError]",
             "content": {
               "application/json": {
                 "schema": {
-                  "title": "Idempotence Key Already Exists Error",
+                  "title": "Qr Code Already Exists Error",
                   "properties": {
                     "code": {
                       "type": "string",
                       "title": "Error code",
                       "description": "The type of error",
-                      "example": "IDEMPOTENCE_KEY_ALREADY_EXISTS",
+                      "example": "QR_CODE_ALREADY_EXISTS",
                       "enum": [
-                        "IDEMPOTENCE_KEY_ALREADY_EXISTS"
+                        "QR_CODE_ALREADY_EXISTS"
                       ]
                     },
                     "message": {
                       "type": "string",
                       "title": "Error message",
                       "description": "Describes a message informing a reason for the error",
-                      "example": "The idempotence key provided already exists"
+                      "example": "Qr code already exists"
                     },
                     "status_code": {
                       "type": "number",
@@ -2665,10 +2555,693 @@
                   }
                 },
                 "examples": {
-                  "Example 1 - IdempotenceKeyAlreadyExistsError": {
+                  "Example 1 - QrCodeAlreadyExistsError": {
                     "value": {
-                      "code": "IDEMPOTENCE_KEY_ALREADY_EXISTS",
-                      "message": "The idempotence key provided already exists"
+                      "code": "QR_CODE_ALREADY_EXISTS",
+                      "message": "Qr code already exists"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/dynamics/cobv": {
+      "post": {
+        "tags": [
+          "create_qr_code"
+        ],
+        "summary": "Create a Dynamic With Due Date QR Code",
+        "description": "Create a Dynamic With Due Date QR Code",
+        "operationId": "create_dynamic_with_due_date_qr_code",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Idempotence-Key",
+            "schema": {
+              "example": "69F963C6-7487-4363-9406-A1DE2A9636D4",
+              "type": "string",
+              "format": "uuid"
+            },
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "description": "Params to create a new dynamic with due date QR Code",
+                "properties": {
+                  "account_id": {
+                    "type": "string",
+                    "description": "Unique identifier of the account.",
+                    "format": "uuid-v4",
+                    "example": "6d814c28-fe73-443c-bfe0-48d518aa32fa"
+                  },
+                  "format": {
+                    "type": "string",
+                    "enum": [
+                      "IMAGE",
+                      "PAYLOAD_BASE_64",
+                      "IMAGE_AND_PAYLOAD_BASE_64"
+                    ],
+                    "description": "Sets request return format:\n* IMAGE: Dynamic With Due Date QR Code image\n* PAYLOAD_BASE_64: Dynamic With Due Date QR Code payload\n* IMAGE_AND_PAYLOAD_BASE_64: Dynamic With Due Date QR Code image and payload\n",
+                    "example": "IMAGE_AND_PAYLOAD_BASE_64"
+                  },
+                  "key": {
+                    "type": "string",
+                    "description": "Pix key",
+                    "minLength": 5,
+                    "maxLength": 77,
+                    "example": "30937116068"
+                  },
+                  "category_code": {
+                    "type": "string",
+                    "description": "Recipient category code",
+                    "maxLength": 4,
+                    "default": "0000",
+                    "example": "0000"
+                  },
+                  "original_value": {
+                    "type": "number",
+                    "format": "double",
+                    "description": "The original value of the QR Code"
+                  },
+                  "text_to_payer": {
+                    "type": "string",
+                    "maxLength": 140,
+                    "description": "The text from recipient to payer"
+                  },
+                  "recipient": {
+                    "type": "object",
+                    "properties": {
+                      "name": {
+                        "type": "string",
+                        "maxLength": 25,
+                        "description": "The name of the recipient"
+                      },
+                      "recipient_conciliation_id": {
+                        "type": "string",
+                        "description": "The recipient conciliation ID"
+                      },
+                      "document_type": {
+                        "type": "string",
+                        "enum": [
+                          "CPF",
+                          "CNPJ"
+                        ],
+                        "description": "The document type of the recipient"
+                      },
+                      "document_number": {
+                        "type": "string",
+                        "description": "The document number of the recipient"
+                      },
+                      "street_name": {
+                        "type": "string",
+                        "maxLength": 150,
+                        "description": "The street name of the recipient"
+                      }
+                    },
+                    "required": [
+                      "name",
+                      "recipient_conciliation_id",
+                      "document_number",
+                      "document_type"
+                    ]
+                  },
+                  "payer": {
+                    "type": "object",
+                    "properties": {
+                      "name": {
+                        "type": "string",
+                        "maxLength": 200,
+                        "description": "The name of the payer"
+                      },
+                      "document_type": {
+                        "type": "string",
+                        "enum": [
+                          "CPF",
+                          "CNPJ"
+                        ],
+                        "description": "The document type of the payer"
+                      },
+                      "document_number": {
+                        "type": "string",
+                        "description": "The document number of the payer"
+                      }
+                    },
+                    "required": [
+                      "document_number"
+                    ]
+                  },
+                  "uf": {
+                    "type": "string",
+                    "maxLength": 2,
+                    "description": "The uf of the QR Code"
+                  },
+                  "city": {
+                    "type": "string",
+                    "maxLength": 15,
+                    "description": "The city of the QR Code"
+                  },
+                  "zip_code": {
+                    "type": "string",
+                    "minLength": 5,
+                    "maxLength": 10,
+                    "description": "The zip code of the QR Code"
+                  },
+                  "deduction": {
+                    "type": "number",
+                    "example": 12.23,
+                    "description": "Deduction value applied in the Qr Code"
+                  },
+                  "discount": {
+                    "type": "number",
+                    "example": 12.23,
+                    "description": "Discount value applied in the Qr Code"
+                  },
+                  "interest": {
+                    "type": "number",
+                    "example": 12.23,
+                    "description": "Interest value applied in the Qr Code"
+                  },
+                  "fine": {
+                    "type": "number",
+                    "example": 12.23,
+                    "description": "Fine value applied in the Qr Code"
+                  },
+                  "final_value": {
+                    "type": "number",
+                    "example": 12.23,
+                    "description": "QR Code's final value"
+                  },
+                  "due_date": {
+                    "type": "string",
+                    "example": "2024-06-02",
+                    "description": "QR Code's due date"
+                  },
+                  "days_after_due_date": {
+                    "type": "number",
+                    "example": 12,
+                    "description": "QR Code's days after the due date that qr code is enabled to be payed"
+                  },
+                  "additional_data": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "name": {
+                          "type": "string",
+                          "maxLength": 100,
+                          "description": "The name of the additional data"
+                        },
+                        "value": {
+                          "type": "string",
+                          "maxLength": 400,
+                          "description": "The value of the additional data"
+                        }
+                      }
+                    }
+                  },
+                  "reusable": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Whether the QR Code is reusable"
+                  },
+                  "url_payload_json": {
+                    "type": "string",
+                    "maxLength": 77,
+                    "description": "The URL payload JSON of the QR Code"
+                  }
+                },
+                "required": [
+                  "format",
+                  "key",
+                  "uf",
+                  "recipient",
+                  "payer",
+                  "city",
+                  "final_value",
+                  "days_after_due_date",
+                  "due_date",
+                  "url_payload_json"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Dynamic With Due Date QR Code successfully created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "description": "Dynamic QR Code",
+                  "properties": {
+                    "external_id": {
+                      "type": "string",
+                      "format": "uuid-v4",
+                      "description": "Unique identifier from charge"
+                    },
+                    "image_qr_code_base_64": {
+                      "type": "string",
+                      "format": "base64",
+                      "description": "Dynamic QR Code image"
+                    },
+                    "payload_base_64": {
+                      "type": "string",
+                      "format": "base64",
+                      "description": "Dynamic QR Code payload"
+                    },
+                    "payload_jws": {
+                      "type": "string",
+                      "description": "Signed JWS payload"
+                    }
+                  }
+                },
+                "examples": {
+                  "Format 0": {
+                    "value": {
+                      "external_id": "d5491f95-e254-44bf-b428-704365825f02",
+                      "image_qr_code_base_64": "iVBORw0KGgoAAAANSUhEUgAABMQAAATECAYAAACEMNn6AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAIABJREFUeJzs2luO3MqyYMGORs5/ynE/99GPAIEu0SuX2QAIjwdZhYU89977/wAAAAAg4v+/PQAAAAAA/EuCGAAAAAApghgAAAAAKYIYAAAAACmCGAAAAAApghgAAAAAKYIYAAAAACmCGAAAAAApghgAAAAAKYIYAAAAACmCGAAAAAApghgAAAAAKYIYAAAAACmCGAAAAAApghgAAAAAKYIYAAAAACmCGAAAAAApghgAAAAAKYIYAAAAACmCGAAAAAApghgAAAAAKYIYAAAAACmCGAAAAAApghgAAAAAKYIYAAAAACmCGAAAAAApghgAAAAAKYIYAAAAACmCGAAAAAApghgAAAAAKYIYAAAAACmCGAAAAAApghgAAAAAKYIYAAAAACmCGAAAAAApghgAAAAAKYIYAAAAACmCGAAAAAApghgAAAAAKYIYAAAAACmCGAAAAAApghgAAAAAKYIYAAAAACmCGAAAAAApghgAAAAAKYIYAAAAACmCGAAAAAApghgAAAAAKYIYAAAAACmCGAAAAAApghgAAAAAKYIYAAAAACmCGAAAAAApghgAAAAAKYIYAAAAACmCGAAAAAApghgAAAAAKYIYAAAAACmCGAAAAAApghgAAAAAKYIYAAAAACmCGAAAAAApghgAAAAAKYIYAAAAACmCGAAAAAApghgAAAAAKYIYAAAAACmCGAAAAAApghgAAAAAKYIYAAAAACmCGAAAAAApghgAAAAAKYIYAAAAACmCGAAAAAApghgAAAAAKYIYAAAAACmCGAAAAAApghgAAAAAKYIYAAAAACmftwf46c45b4/AD3LvHX1e7f5N719N7b5sV/seeH+f2X6+fLfa92ra9v2rzbdd7f3gmdr7Mc0vxAAAAABIEcQAAAAASBHEAAAAAEgRxAAAAABIEcQAAAAASBHEAAAAAEgRxAAAAABIEcQAAAAASBHEAAAAAEgRxAAAAABIEcQAAAAASBHEAAAAAEgRxAAAAABIEcQAAAAASBHEAAAAAEgRxAAAAABIEcQAAAAASBHEAAAAAEgRxAAA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AAAAKYIYAAAAACmCGAAAAAApghgAAAAAKYIYAAAAACmCGAAAAAApghgAAAAAKYIYAAAAACmCGAAAAAApghgAAAAAKYIYAAAAACmftweASffe0eedc0afNz3fdtP7N237eWy/f9vPt8Z5PDP9fmx/37bPN833/pnafNO2f1+2235fzPeM+Z6pfQ+m+YUYAAAAACmCGAAAAAApghgAAAAAKYIYAAAAACmCGAAAAAApghgAAAAAKYIYAAAAACmCGAAAAAApghgAAAAAKYIYAAAAACmCGAAAAAApghgAAAAAKYIYAAAAACmCGAAAAAApghgAAAAAKYIYAAAAACmCGAAAAAApghgAAAAAKYIYAAAAACmftwf46e69o88754w+b7vt+zc93zT3hT+x/b5sn692/3yfv9v285ier/Z92X6+NdvvH88432dq36vt89X4hRgAAAAAKYIYAAAAACmCGAAAAAApghgAAAAAKYIYAAAAACmCGAAAAAApghgAAAAAKYIYAAAAACmCGAAAAAApghgAAAAAKYIYAAAAACmCGAAAAAApghgAAAAAKYIYAAAAACmCGAAAAAApghgAAAAAKYIYAAAAACmCGAAAAAApghgAAAAAKefee98egv+cc94e4bemr8v29W63/fWdPt/a/audL99t+/u7fT6e2f49nbb9/jmPZ3yvntl+/9yX77b9/tX4hRgAAAAAKYIYAAAAACmCGAAAAAApghgAAAAAKYIYAAAAACmCGAAAAAApghgAAAAAKYIYAAAAACmCGAAAAAApghgAAAAAKYIYAAAAACmCGAAAAAApghgAAAAAKYIYAAAAACmCGAAAAAApghgAAAAAKYIYAAAAACmCGAAAAAApghgAAAAAKZ+3B/jpzjlvj/Bb9963R/jRtu/f9vs3bft6t9+XabX1Tt+/6f3bPt+07fNNc192qf092r5e+Cbb39/a936a89jFL8QAAAAASBHEAAAAAEgRxAAAAABIEcQAAAAASBHEAAAAAEgRxAAAAABIEcQAAAAASBHEAAAAAEgRxAAAAABIEcQAAAAASBHEAAAAAEgRxAAAAABIEcQAAAAASBHEAAAAAEgRxAAAAABIEcQAAAAASBHEAAAAAEgRxAAAAABIEcQAAAAASPm8PQA/yznn7RH+qdp6771vj/Bb289j+3zT51tb73a19W6/f9Os95nt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AAAAKYIYAAAAACmCGAAAAAApghgAAAAAKYIYAAAAACmCGAAAAAApn7cH4J/OOW+PwBe5947+3vT5236ep9dvu9rzTp+/7fdtu9r545nt93da7XnZZfvft9p5rj1vjf3dxRdiAAAAAKQIYgAAAACkCGIAAAAApAhiAAAAAKQIYgAAAACkCGIAAAAApAhiAAAAAKQIYgAAAACkCGIAAAAApAhiAAAAAKQIYgAAAACkCGIAAAAApAhiAAAAAKQIYgAAAACkCGIAAAAApAhiAAAAAKQIYgAAAACkCGIAAAAApAhiAAAAAKSce+99ewgAAAAA+Ft8IQYAAABAiiAGAAAAQIogBgAAAECKIAYAAABAiiAGAAAAQIogBgAAAECKIAYAAABAiiAGAAAAQIogBgAAAECKIAYAAABAiiAGAAAAQIogBgAAAECKIAYAAABAiiAGAAAAQIogBgAAAECKIAYAAABAiiAGAAAAQIogBgAAAECKIAYAAABAiiAGAAAAQIogBgAAAECKIAYAAABAiiAGAAAAQIogBgAAAECKIAYAAABAiiAGAAAAQIogBgAAAECKIAYAAABAiiAGAAAAQIogBgAAAECKIAYAAABAiiAGAAAAQIogBgAAAECKIAYAAABAiiAGAAAAQIogBgAAAECKIAYAAABAiiAGAAAAQIogBgAAAECKIAYAAABAiiAGAAAAQIogBgAAAECKIAYAAABAiiAGAAAAQIogBgAAAECKIAYAAABAiiAGAAAAQIogBgAAAECKIAYAAABAiiAGAAAAQIogBgAAAECKIAYAAABAiiAGAAAAQIogBgAAAECKIAYAAABAiiAGAAAAQIogBgAAAECKIAYAAABAiiAGAAAAQIogBgAAAECKIAYAAABAiiAGAAAAQIogBgAAAECKIAYAAABAiiAGAAAAQIogBgAAAECKIAYAAABAiiAGAAAAQIogBgAAAECKIAYAAABAiiAGAAAAQIogBgAAAECKIAYAAABAiiAGAAAAQIogBgAAAECKIAYAAABAiiAGAAAAQIogBgAAAECKIAYAAABAyn8A05nDafaS6uUAAAAASUVORK5CYII=",
+                      "payload_jws": "eyJhbGciOiJQUzUxMiIsImtpZCI6IjUwQTM5Qzc0MUE0RTFDQjQxN0Y2OEM2Q0MwMkY2M0JFODg2RDg1MzIi LCJ0eXAiOiJKV1QiLCJ4NXQiOiJVS09jZEJwT0hMUVg5b3hzd0M5anZvaHRoVEkiLCJqa3UiOiJodHRwczovL2V4ZW1wbG8uY29t L3BpeC9qZHBpL3FyYy9qd2tzIn0.eyJ2ZXJzYW8iOiIxLjAuMCIsImRvY3VtZW50byI6eyJpZCI6IjNmOTk0YTY2LTgyMzAtNGM5 YS1hZDJhLTBmZmU0YjY5YWQ2OCIsInJldmlzYW8iOjB9LCJjYWxlbmRhcmlvIjp7ImNyaWFjYW8iOiIxMy8xMC8yMDIwIDE4OjQ0 OjExIiwiYXByZXNlbnRhY2FvIjoiMTMvMTAvMjAyMCAxODo0NDoxMSIsImV4cGlyYWNhbyI6IjIzLzEyLzIwMjAgMjM6NTk6MDUi LCJ2ZW5jaW1lbnRvIjoiMjMvMDEvMjAyMCAwMDowMDowMCIsInJlY2ViaXZlbEFwb3NWZW5jaW1lbnRvIjp0cnVlfSwicGFnYWRv ciI6eyJjbnBqIjoiNDM1Odc5ODAwMDEwNyIsIm5vbWUiOiJDaWNsYW5vIGRlIFRhbCJ9LCJ2YwxvciI6eyJvcmlnaW5hbCI6MTAw MC4wMSwiZmluYWwiOjExMDAuMDEsImp1cm9zIjoxMDAuMCwibXVsdGEiOjEwLjAsImRlc2NvbnRvIjoxMC4wLCJwZXJtaXRlQWx0 ZXJhY2FvIjpmYWxzZX0sImNoYXZlIjoiZnVsYW5vLnRhbEBwcm92ZWRvci5jb20uYnIiLCJ0eGlkIjoiSkRQSTIwMjAwMTAzMDAw MDAwMDAwMDAwMDAwMDAwMDAwMDEiLCJzb2xpY2l0YWNhb1BhZ2Fkb3IiOiJQZXNxdWlzYSBkZSBzYXRpc2Zhw6fDo28iLCJpbmZv QWRpY2lvbmFpcyI6W3sibm9tZSI6IkRldGFsaGVzIGRvIFBhZ2FtZW50byIsInZhbG9yIjoiSW5mb3JtYcOnw6NvIEFkaWNpb25h bCBkbyBQU1AgZG8gUmVjZWJlZG9yIn0seyJub21lIjoiRGV0YWxoZXMgZG8gUGFnYW1lbnRvIDIiLCJ2YwxvciI6IkluZm9ybWHD p8OjbyBBZGljaW9uYWwgZG8gUFNQIGRvIFJlY2ViZWRvciJ9XswiZXhwIjoxNjA4Nzc4NzQ1LCJuYmYiOjE2MDI2MTQ2NTYsImlh dCI6MTYwMjYxNDY1Nn0.Ml RauOQlIqPxRf4sjnoMuJRzbFLcEaF4KQmP5Hm9ilCht89kXQCiGdNHQZ3cU0_Civf2zQsNwe3w98nDvjasw0XBmBkCCAAY46H4Cb Xk26qROxeE9wiOavBq-O47C5s hlmg_fhbdJX7xdmTdtuHN6RWqCII0JzIGcTyiEwJxsKt5Qb1dYWFINnh9xhb3J9KsWJRwESK4jB WyIIGLr7zVKot5lFUt7hTgU8c6QeQijwjwqmxMUF8z2h-y7dV0prCt7o-JpbdcdTXAL7CuTte8WfH7nGiljeiDRdEkY neBvzBRpd84RMR1392bQ4gppaxHU7S-ZkakJ5hSHoQKzg"
+                    }
+                  },
+                  "Format 1": {
+                    "value": {
+                      "external_id": "d5491f95-e254-44bf-b428-704365825f02",
+                      "payload_base_64": "MDAwMjAxMjYzMzAwMTRici5nb3YuYmNiLnBpeDAxMTE5MDIyNjM5NTA5MDUyMDQwMDAwNTMwMzk4NjU0MDQyLjAwNTgwMkJSNTkxM0Z1bGFubyBkZSBUYWw2MDEyUE9SVE8gQUxFR1JFNjIwNzA1MDMqKio2MzA0RDNDQg",
+                      "payload_jws": "eyJhbGciOiJQUzUxMiIsImtpZCI6IjUwQTM5Qzc0MUE0RTFDQjQxN0Y2OEM2Q0MwMkY2M0JFODg2RDg1MzIi LCJ0eXAiOiJKV1QiLCJ4NXQiOiJVS09jZEJwT0hMUVg5b3hzd0M5anZvaHRoVEkiLCJqa3UiOiJodHRwczovL2V4ZW1wbG8uY29t L3BpeC9qZHBpL3FyYy9qd2tzIn0.eyJ2ZXJzYW8iOiIxLjAuMCIsImRvY3VtZW50byI6eyJpZCI6IjNmOTk0YTY2LTgyMzAtNGM5 YS1hZDJhLTBmZmU0YjY5YWQ2OCIsInJldmlzYW8iOjB9LCJjYWxlbmRhcmlvIjp7ImNyaWFjYW8iOiIxMy8xMC8yMDIwIDE4OjQ0 OjExIiwiYXByZXNlbnRhY2FvIjoiMTMvMTAvMjAyMCAxODo0NDoxMSIsImV4cGlyYWNhbyI6IjIzLzEyLzIwMjAgMjM6NTk6MDUi LCJ2ZW5jaW1lbnRvIjoiMjMvMDEvMjAyMCAwMDowMDowMCIsInJlY2ViaXZlbEFwb3NWZW5jaW1lbnRvIjp0cnVlfSwicGFnYWRv ciI6eyJjbnBqIjoiNDM1Odc5ODAwMDEwNyIsIm5vbWUiOiJDaWNsYW5vIGRlIFRhbCJ9LCJ2YwxvciI6eyJvcmlnaW5hbCI6MTAw MC4wMSwiZmluYWwiOjExMDAuMDEsImp1cm9zIjoxMDAuMCwibXVsdGEiOjEwLjAsImRlc2NvbnRvIjoxMC4wLCJwZXJtaXRlQWx0 ZXJhY2FvIjpmYWxzZX0sImNoYXZlIjoiZnVsYW5vLnRhbEBwcm92ZWRvci5jb20uYnIiLCJ0eGlkIjoiSkRQSTIwMjAwMTAzMDAw MDAwMDAwMDAwMDAwMDAwMDAwMDEiLCJzb2xpY2l0YWNhb1BhZ2Fkb3IiOiJQZXNxdWlzYSBkZSBzYXRpc2Zhw6fDo28iLCJpbmZv QWRpY2lvbmFpcyI6W3sibm9tZSI6IkRldGFsaGVzIGRvIFBhZ2FtZW50byIsInZhbG9yIjoiSW5mb3JtYcOnw6NvIEFkaWNpb25h bCBkbyBQU1AgZG8gUmVjZWJlZG9yIn0seyJub21lIjoiRGV0YWxoZXMgZG8gUGFnYW1lbnRvIDIiLCJ2YwxvciI6IkluZm9ybWHD p8OjbyBBZGljaW9uYWwgZG8gUFNQIGRvIFJlY2ViZWRvciJ9XswiZXhwIjoxNjA4Nzc4NzQ1LCJuYmYiOjE2MDI2MTQ2NTYsImlh dCI6MTYwMjYxNDY1Nn0.Ml RauOQlIqPxRf4sjnoMuJRzbFLcEaF4KQmP5Hm9ilCht89kXQCiGdNHQZ3cU0_Civf2zQsNwe3w98nDvjasw0XBmBkCCAAY46H4Cb Xk26qROxeE9wiOavBq-O47C5s hlmg_fhbdJX7xdmTdtuHN6RWqCII0JzIGcTyiEwJxsKt5Qb1dYWFINnh9xhb3J9KsWJRwESK4jB WyIIGLr7zVKot5lFUt7hTgU8c6QeQijwjwqmxMUF8z2h-y7dV0prCt7o-JpbdcdTXAL7CuTte8WfH7nGiljeiDRdEkY neBvzBRpd84RMR1392bQ4gppaxHU7S-ZkakJ5hSHoQKzg"
+                    }
+                  },
+                  "Format 2": {
+                    "value": {
+                      "external_id": "d5491f95-e254-44bf-b428-704365825f02",
+                      "payload_base_64": "MDAwMjAxMjYzMzAwMTRici5nb3YuYmNiLnBpeDAxMTE5MDIyNjM5NTA5MDUyMDQwMDAwNTMwMzk4NjU0MDQyLjAwNTgwMkJSNTkxM0Z1bGFubyBkZSBUYWw2MDEyUE9SVE8gQUxFR1JFNjIwNzA1MDMqKio2MzA0RDNDQg",
+                      "image_qr_code_base_64": "iVBORw0KGgoAAAANSUhEUgAABMQAAATECAYAAACEMNn6AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAIABJREFUeJzs2luO3MqyYMGORs5/ynE/99GPAIEu0SuX2QAIjwdZhYU89977/wAAAAAg4v+/PQAAAAAA/EuCGAAAAAApghgAAAAAKYIYAAAAACmCGAAAAAApghgAAAAAKYIYAAAAACmCGAAAAAApghgAAAAAKYIYAAAAACmCGAAAAAApghgAAAAAKYIYAAAAACmCGAAAAAApghgAAAAAKYIYAAAAACmCGAAAAAApghgAAAAAKYIYAAAAACmCGAAAAAApghgAAAAAKYIYAAAAACmCGAAAAAApghgAAAAAKYIYAAAAACmCGAAAAAApghgAAAAAKYIYAAAAACmCGAAAAAApghgAAAAAKYIYAAAAACmCGAAAAAApghgAAAAAKYIYAAAAACmCGAAAAAApghgAAAAAKYIYAAAAACmCGAAAAAApghgAAAAAKYIYAAAAACmCGAAAAAApghgAAAAAKYIYAAAAACmCGAAAAAApghgAAAAAKYIYAAAAACmCGAAAAAApghgAAAAAKYIYAAAAACmCGAAAAAApghgAAAAAKYIYAAAAACmCGAAAAAApghgAAAAAKYIYAAAAACmCGAAAAAApghgAAAAAKYIYAAAAACmCGAAAAAApghgAAAAAKYIYAAAAACmCGAAAAAApghgAAAAAKYIYAAAAACmCGAAAAAApghgAAAAAKYIYAAAAACmCGAAAAAApghgAAAAAKYIYAAAAACmCGAAAAAApghgAAAAAKYIYAAAAACmCGAAAAAApghgAAAAAKYIYAAAAACmCGAAAAAApghgAAAAAKYIYAAAAACmftwf46c45b4/AD3LvHX1e7f5N719N7b5sV/seeH+f2X6+fLfa92ra9v2rzbdd7f3gmdr7Mc0vxAAAAABIEcQAAAAASBHEAAAAAEgRxAAAAABIEcQAAAAASBHEAAAAAEgRxAAAAABIEcQAAAAASBHEAAAAAEgRxAAAAABIEcQAAAAASBHEAAAAAEgRxAAAAABIEcQAAAAASBHEAAAAAEgRxAAAAABIEcQAAAAASBHEAAAAAEgRxAAA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AAAAKYIYAAAAACmCGAAAAAApghgAAAAAKYIYAAAAACmCGAAAAAApghgAAAAAKYIYAAAAACmCGAAAAAApghgAAAAAKYIYAAAAACmftweASffe0eedc0afNz3fdtP7N237eWy/f9vPt8Z5PDP9fmx/37bPN833/pnafNO2f1+2235fzPeM+Z6pfQ+m+YUYAAAAACmCGAAAAAApghgAAAAAKYIYAAAAACmCGAAAAAApghgAAAAAKYIYAAAAACmCGAAAAAApghgAAAAAKYIYAAAAACmCGAAAAAApghgAAAAAKYIYAAAAACmCGAAAAAApghgAAAAAKYIYAAAAACmCGAAAAAApghgAAAAAKYIYAAAAACmftwf46e69o88754w+b7vt+zc93zT3hT+x/b5sn692/3yfv9v285ier/Z92X6+NdvvH88432dq36vt89X4hRgAAAAAKYIYAAAAACmCGAAAAAApghgAAAAAKYIYAAAAACmCGAAAAAApghgAAAAAKYIYAAAAACmCGAAAAAApghgAAAAAKYIYAAAAACmCGAAAAAApghgAAAAAKYIYAAAAACmCGAAAAAApghgAAAAAKYIYAAAAACmCGAAAAAApghgAAAAAKefee98egv+cc94e4bemr8v29W63/fWdPt/a/audL99t+/u7fT6e2f49nbb9/jmPZ3yvntl+/9yX77b9/tX4hRgAAAAAKYIYAAAAACmCGAAAAAApghgAAAAAKYIYAAAAACmCGAAAAAApghgAAAAAKYIYAAAAACmCGAAAAAApghgAAAAAKYIYAAAAACmCGAAAAAApghgAAAAAKYIYAAAAACmCGAAAAAApghgAAAAAKYIYAAAAACmCGAAAAAApghgAAAAAKZ+3B/jpzjlvj/Bb9963R/jRtu/f9vs3bft6t9+XabX1Tt+/6f3bPt+07fNNc192qf092r5e+Cbb39/a936a89jFL8QAAAAASBHEAAAAAEgRxAAAAABIEcQAAAAASBHEAAAAAEgRxAAAAABIEcQAAAAASBHEAAAAAEgRxAAAAABIEcQAAAAASBHEAAAAAEgRxAAAAABIEcQAAAAASBHEAAAAAEgRxAAAAABIEcQAAAAASBHEAAAAAEgRxAAAAABIEcQAAAAASPm8PQA/yznn7RH+qdp6771vj/Bb289j+3zT51tb73a19W6/f9Os95nt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AAAAKYIYAAAAACmCGAAAAAApghgAAAAAKYIYAAAAACmCGAAAAAApn7cH4J/OOW+PwBe5947+3vT5236ep9dvu9rzTp+/7fdtu9r545nt93da7XnZZfvft9p5rj1vjf3dxRdiAAAAAKQIYgAAAACkCGIAAAAApAhiAAAAAKQIYgAAAACkCGIAAAAApAhiAAAAAKQIYgAAAACkCGIAAAAApAhiAAAAAKQIYgAAAACkCGIAAAAApAhiAAAAAKQIYgAAAACkCGIAAAAApAhiAAAAAKQIYgAAAACkCGIAAAAApAhiAAAAAKSce+99ewgAAAAA+Ft8IQYAAABAiiAGAAAAQIogBgAAAECKIAYAAABAiiAGAAAAQIogBgAAAECKIAYAAABAiiAGAAAAQIogBgAAAECKIAYAAABAiiAGAAAAQIogBgAAAECKIAYAAABAiiAGAAAAQIogBgAAAECKIAYAAABAiiAGAAAAQIogBgAAAECKIAYAAABAiiAGAAAAQIogBgAAAECKIAYAAABAiiAGAAAAQIogBgAAAECKIAYAAABAiiAGAAAAQIogBgAAAECKIAYAAABAiiAGAAAAQIogBgAAAECKIAYAAABAiiAGAAAAQIogBgAAAECKIAYAAABAiiAGAAAAQIogBgAAAECKIAYAAABAiiAGAAAAQIogBgAAAECKIAYAAABAiiAGAAAAQIogBgAAAECKIAYAAABAiiAGAAAAQIogBgAAAECKIAYAAABAiiAGAAAAQIogBgAAAECKIAYAAABAiiAGAAAAQIogBgAAAECKIAYAAABAiiAGAAAAQIogBgAAAECKIAYAAABAiiAGAAAAQIogBgAAAECKIAYAAABAiiAGAAAAQIogBgAAAECKIAYAAABAiiAGAAAAQIogBgAAAECKIAYAAABAiiAGAAAAQIogBgAAAECKIAYAAABAiiAGAAAAQIogBgAAAECKIAYAAABAiiAGAAAAQIogBgAAAECKIAYAAABAiiAGAAAAQIogBgAAAECKIAYAAABAiiAGAAAAQIogBgAAAECKIAYAAABAyn8A05nDafaS6uUAAAAASUVORK5CYII=",
+                      "payload_jws": "eyJhbGciOiJQUzUxMiIsImtpZCI6IjUwQTM5Qzc0MUE0RTFDQjQxN0Y2OEM2Q0MwMkY2M0JFODg2RDg1MzIi LCJ0eXAiOiJKV1QiLCJ4NXQiOiJVS09jZEJwT0hMUVg5b3hzd0M5anZvaHRoVEkiLCJqa3UiOiJodHRwczovL2V4ZW1wbG8uY29t L3BpeC9qZHBpL3FyYy9qd2tzIn0.eyJ2ZXJzYW8iOiIxLjAuMCIsImRvY3VtZW50byI6eyJpZCI6IjNmOTk0YTY2LTgyMzAtNGM5 YS1hZDJhLTBmZmU0YjY5YWQ2OCIsInJldmlzYW8iOjB9LCJjYWxlbmRhcmlvIjp7ImNyaWFjYW8iOiIxMy8xMC8yMDIwIDE4OjQ0 OjExIiwiYXByZXNlbnRhY2FvIjoiMTMvMTAvMjAyMCAxODo0NDoxMSIsImV4cGlyYWNhbyI6IjIzLzEyLzIwMjAgMjM6NTk6MDUi LCJ2ZW5jaW1lbnRvIjoiMjMvMDEvMjAyMCAwMDowMDowMCIsInJlY2ViaXZlbEFwb3NWZW5jaW1lbnRvIjp0cnVlfSwicGFnYWRv ciI6eyJjbnBqIjoiNDM1Odc5ODAwMDEwNyIsIm5vbWUiOiJDaWNsYW5vIGRlIFRhbCJ9LCJ2YwxvciI6eyJvcmlnaW5hbCI6MTAw MC4wMSwiZmluYWwiOjExMDAuMDEsImp1cm9zIjoxMDAuMCwibXVsdGEiOjEwLjAsImRlc2NvbnRvIjoxMC4wLCJwZXJtaXRlQWx0 ZXJhY2FvIjpmYWxzZX0sImNoYXZlIjoiZnVsYW5vLnRhbEBwcm92ZWRvci5jb20uYnIiLCJ0eGlkIjoiSkRQSTIwMjAwMTAzMDAw MDAwMDAwMDAwMDAwMDAwMDAwMDEiLCJzb2xpY2l0YWNhb1BhZ2Fkb3IiOiJQZXNxdWlzYSBkZSBzYXRpc2Zhw6fDo28iLCJpbmZv QWRpY2lvbmFpcyI6W3sibm9tZSI6IkRldGFsaGVzIGRvIFBhZ2FtZW50byIsInZhbG9yIjoiSW5mb3JtYcOnw6NvIEFkaWNpb25h bCBkbyBQU1AgZG8gUmVjZWJlZG9yIn0seyJub21lIjoiRGV0YWxoZXMgZG8gUGFnYW1lbnRvIDIiLCJ2YwxvciI6IkluZm9ybWHD p8OjbyBBZGljaW9uYWwgZG8gUFNQIGRvIFJlY2ViZWRvciJ9XswiZXhwIjoxNjA4Nzc4NzQ1LCJuYmYiOjE2MDI2MTQ2NTYsImlh dCI6MTYwMjYxNDY1Nn0.Ml RauOQlIqPxRf4sjnoMuJRzbFLcEaF4KQmP5Hm9ilCht89kXQCiGdNHQZ3cU0_Civf2zQsNwe3w98nDvjasw0XBmBkCCAAY46H4Cb Xk26qROxeE9wiOavBq-O47C5s hlmg_fhbdJX7xdmTdtuHN6RWqCII0JzIGcTyiEwJxsKt5Qb1dYWFINnh9xhb3J9KsWJRwESK4jB WyIIGLr7zVKot5lFUt7hTgU8c6QeQijwjwqmxMUF8z2h-y7dV0prCt7o-JpbdcdTXAL7CuTte8WfH7nGiljeiDRdEkY neBvzBRpd84RMR1392bQ4gppaxHU7S-ZkakJ5hSHoQKzg"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Error with types [ValidationFailedError, InvalidDataError, EMVMerchantAccountSizeExceededError, InvalidUUIDError].",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "title": "The provided data is invalid",
+                      "properties": {
+                        "error": {
+                          "type": "object",
+                          "properties": {
+                            "code": {
+                              "type": "string",
+                              "title": "Error code",
+                              "description": "The type of error",
+                              "example": "VALIDATION_FAILED",
+                              "enum": [
+                                "VALIDATION_FAILED"
+                              ]
+                            },
+                            "message": {
+                              "type": "string",
+                              "title": "Error message",
+                              "description": "Describes a message informing a reason for the error",
+                              "example": "Invalid request data"
+                            },
+                            "status_code": {
+                              "type": "number",
+                              "description": "Error status code",
+                              "example": "400"
+                            }
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "title": "Invalid Data Error",
+                      "properties": {
+                        "error": {
+                          "type": "object",
+                          "properties": {
+                            "code": {
+                              "type": "string",
+                              "title": "Error code",
+                              "description": "The type of error",
+                              "example": "INVALID_DATA",
+                              "enum": [
+                                "INVALID_DATA"
+                              ]
+                            },
+                            "message": {
+                              "type": "string",
+                              "title": "Error message",
+                              "description": "Describes a message informing a reason for the error",
+                              "example": "The data provided has an invalid format"
+                            },
+                            "status_code": {
+                              "type": "number",
+                              "description": "Error status code",
+                              "example": "400"
+                            }
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "title": "EMV Merchant Account Size Exceeded",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "EMV_MERCHANT_ACCOUNT_SIZE_EXCEEDED",
+                          "enum": [
+                            "EMV_MERCHANT_ACCOUNT_SIZE_EXCEEDED"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "EMV Merchant Account Information field exceeded the maximum size."
+                        },
+                        "status_code": {
+                          "type": "number",
+                          "description": "Error status code",
+                          "example": "400"
+                        }
+                      }
+                    },
+                    {
+                      "title": "Invalid uuid",
+                      "properties": {
+                        "error": {
+                          "type": "object",
+                          "properties": {
+                            "code": {
+                              "type": "string",
+                              "title": "Error code",
+                              "description": "The type of error",
+                              "example": "INVALID_UUID",
+                              "enum": [
+                                "INVALID_UUID"
+                              ]
+                            },
+                            "message": {
+                              "type": "string",
+                              "title": "Error message",
+                              "description": "Describes a message informing a reason for the error",
+                              "example": "Invalid uuid"
+                            },
+                            "status_code": {
+                              "type": "number",
+                              "description": "Error status code",
+                              "example": "400"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                },
+                "examples": {
+                  "Example 1 - ValidationFailed": {
+                    "value": {
+                      "code": "VALIDATION_FAILED",
+                      "message": "Invalid request data"
+                    }
+                  },
+                  "Example 2 - InvalidDataError": {
+                    "value": {
+                      "code": "INVALID_DATA",
+                      "message": "The data provided has an invalid format"
+                    }
+                  },
+                  "Example 3 - EMVMerchantAccountSizeExceededError": {
+                    "value": {
+                      "code": "EMV_MERCHANT_ACCOUNT_SIZE_EXCEEDED",
+                      "message": "EMV Merchant Account Information field exceeded the maximum size"
+                    }
+                  },
+                  "Example 4 - InvalidUUIDError": {
+                    "value": {
+                      "code": "INVALID_UUID",
+                      "message": "Invalid uuid"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Error with types [AuthenticationError].",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Authentication error",
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "title": "Error code",
+                      "description": "The type of error",
+                      "example": "AUTHENTICATION_FAILED",
+                      "enum": [
+                        "AUTHENTICATION_FAILED"
+                      ]
+                    },
+                    "message": {
+                      "type": "string",
+                      "title": "Error message",
+                      "description": "Describes a message informing a reason for the error",
+                      "example": "Authentication failed."
+                    }
+                  }
+                },
+                "examples": {
+                  "Example 1 - AuthenticationError": {
+                    "value": {
+                      "code": "AUTHENTICATION_FAILED",
+                      "message": "Authentication failed."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Error with types [ProductDisabledError, ApplicationNotFound, ProfileNotFound].",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "title": "Bad Request",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "PRODUCT_DISABLED",
+                          "enum": [
+                            "PRODUCT_DISABLED"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "Product is not enabled."
+                        }
+                      }
+                    },
+                    {
+                      "title": "Application product not found",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "APPLICATION_PRODUCT_NOT_FOUND",
+                          "enum": [
+                            "APPLICATION_PRODUCT_NOT_FOUND"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "Product not found for given application id."
+                        }
+                      }
+                    },
+                    {
+                      "title": "Bad Request",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "PROFILE_NOT_FOUND",
+                          "enum": [
+                            "PROFILE_NOT_FOUND"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "Profile not found."
+                        }
+                      }
+                    }
+                  ]
+                },
+                "examples": {
+                  "Example 1 - ProductDisabledError": {
+                    "value": {
+                      "code": "PRODUCT_DISABLED",
+                      "message": "Product is not enabled."
+                    }
+                  },
+                  "Example 2 - ApplicationNotFound": {
+                    "value": {
+                      "code": "APPLICATION_PRODUCT_NOT_FOUND",
+                      "message": "Product not found for given application id."
+                    }
+                  },
+                  "Example 3 - ProfileNotFound": {
+                    "value": {
+                      "code": "PROFILE_NOT_FOUND",
+                      "message": "Profile not found."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Error with types [KeyNotFoundError, AccountNotFoundError]",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "title": "Key Not Found",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "KEY_NOT_FOUND",
+                          "enum": [
+                            "KEY_NOT_FOUND"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "The key provided wasn't found or doesn't exist"
+                        },
+                        "status_code": {
+                          "type": "number",
+                          "description": "Error status code",
+                          "example": "404"
+                        }
+                      }
+                    },
+                    {
+                      "title": "Account Not Found",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "ACCOUNT_NOT_FOUND",
+                          "enum": [
+                            "ACCOUNT_NOT_FOUND"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "Account not found"
+                        },
+                        "status_code": {
+                          "type": "number",
+                          "description": "Error status code",
+                          "example": "404"
+                        }
+                      }
+                    }
+                  ]
+                },
+                "examples": {
+                  "Example 1 - KeyNotFoundError": {
+                    "value": {
+                      "code": "KEY_NOT_FOUND",
+                      "message": "The key provided wasn't found or doesn't exist"
+                    }
+                  },
+                  "Example 2 - AccountNotFoundError": {
+                    "value": {
+                      "code": "ACCOUNT_NOT_FOUND",
+                      "message": "Account not found."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict Error with types [QrCodeAlreadyExistsError]",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Qr Code Already Exists Error",
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "title": "Error code",
+                      "description": "The type of error",
+                      "example": "QR_CODE_ALREADY_EXISTS",
+                      "enum": [
+                        "QR_CODE_ALREADY_EXISTS"
+                      ]
+                    },
+                    "message": {
+                      "type": "string",
+                      "title": "Error message",
+                      "description": "Describes a message informing a reason for the error",
+                      "example": "Qr code already exists"
+                    },
+                    "status_code": {
+                      "type": "number",
+                      "description": "Error status code",
+                      "example": "409"
+                    }
+                  }
+                },
+                "examples": {
+                  "Example 1 - QrCodeAlreadyExistsError": {
+                    "value": {
+                      "code": "QR_CODE_ALREADY_EXISTS",
+                      "message": "Qr code already exists"
                     }
                   }
                 }
@@ -4553,7 +5126,7 @@
           "original_value": {
             "type": "number",
             "format": "double",
-            "description": "The original value of the QR Code"
+            "description": "The original value of the QR Code, if modality is informad the field needs to be equal to 0.00"
           },
           "text_to_payer": {
             "type": "string",
@@ -4570,6 +5143,8 @@
               },
               "recipient_conciliation_id": {
                 "type": "string",
+                "minLength": 26,
+                "maxLength": 36,
                 "description": "The recipient conciliation ID"
               }
             },
@@ -4634,7 +5209,7 @@
           "allow_value_alteration": {
             "type": "boolean",
             "default": false,
-            "description": "Whether value alteration is allowed"
+            "description": "Whether value alteration is allowed, if modality is informad the field needs to be equal to false"
           },
           "expiration_seconds": {
             "type": "number",
@@ -4706,9 +5281,9 @@
           "url_jwk"
         ]
       },
-      "DynamicImmediateQRCode": {
+      "DynamicQRCode": {
         "type": "object",
-        "description": "Dynamic Immediate QR Code",
+        "description": "Dynamic QR Code",
         "properties": {
           "external_id": {
             "type": "string",
@@ -4718,18 +5293,242 @@
           "image_qr_code_base_64": {
             "type": "string",
             "format": "base64",
-            "description": "Dynamic Immediate QR Code image"
+            "description": "Dynamic QR Code image"
           },
           "payload_base_64": {
             "type": "string",
             "format": "base64",
-            "description": "Dynamic Immediate QR Code payload"
+            "description": "Dynamic QR Code payload"
           },
           "payload_jws": {
             "type": "string",
             "description": "Signed JWS payload"
           }
         }
+      },
+      "QrCodeAlreadyExistsError": {
+        "title": "Qr Code Already Exists Error",
+        "properties": {
+          "code": {
+            "type": "string",
+            "title": "Error code",
+            "description": "The type of error",
+            "example": "QR_CODE_ALREADY_EXISTS",
+            "enum": [
+              "QR_CODE_ALREADY_EXISTS"
+            ]
+          },
+          "message": {
+            "type": "string",
+            "title": "Error message",
+            "description": "Describes a message informing a reason for the error",
+            "example": "Qr code already exists"
+          },
+          "status_code": {
+            "type": "number",
+            "description": "Error status code",
+            "example": "409"
+          }
+        }
+      },
+      "CreateDynamicWithDueDateQRCodeSchema": {
+        "type": "object",
+        "description": "Params to create a new dynamic with due date QR Code",
+        "properties": {
+          "account_id": {
+            "type": "string",
+            "description": "Unique identifier of the account.",
+            "format": "uuid-v4",
+            "example": "6d814c28-fe73-443c-bfe0-48d518aa32fa"
+          },
+          "format": {
+            "type": "string",
+            "enum": [
+              "IMAGE",
+              "PAYLOAD_BASE_64",
+              "IMAGE_AND_PAYLOAD_BASE_64"
+            ],
+            "description": "Sets request return format:\n* IMAGE: Dynamic With Due Date QR Code image\n* PAYLOAD_BASE_64: Dynamic With Due Date QR Code payload\n* IMAGE_AND_PAYLOAD_BASE_64: Dynamic With Due Date QR Code image and payload\n",
+            "example": "IMAGE_AND_PAYLOAD_BASE_64"
+          },
+          "key": {
+            "type": "string",
+            "description": "Pix key",
+            "minLength": 5,
+            "maxLength": 77,
+            "example": "30937116068"
+          },
+          "category_code": {
+            "type": "string",
+            "description": "Recipient category code",
+            "maxLength": 4,
+            "default": "0000",
+            "example": "0000"
+          },
+          "original_value": {
+            "type": "number",
+            "format": "double",
+            "description": "The original value of the QR Code"
+          },
+          "text_to_payer": {
+            "type": "string",
+            "maxLength": 140,
+            "description": "The text from recipient to payer"
+          },
+          "recipient": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "maxLength": 25,
+                "description": "The name of the recipient"
+              },
+              "recipient_conciliation_id": {
+                "type": "string",
+                "description": "The recipient conciliation ID"
+              },
+              "document_type": {
+                "type": "string",
+                "enum": [
+                  "CPF",
+                  "CNPJ"
+                ],
+                "description": "The document type of the recipient"
+              },
+              "document_number": {
+                "type": "string",
+                "description": "The document number of the recipient"
+              },
+              "street_name": {
+                "type": "string",
+                "maxLength": 150,
+                "description": "The street name of the recipient"
+              }
+            },
+            "required": [
+              "name",
+              "recipient_conciliation_id",
+              "document_number",
+              "document_type"
+            ]
+          },
+          "payer": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "maxLength": 200,
+                "description": "The name of the payer"
+              },
+              "document_type": {
+                "type": "string",
+                "enum": [
+                  "CPF",
+                  "CNPJ"
+                ],
+                "description": "The document type of the payer"
+              },
+              "document_number": {
+                "type": "string",
+                "description": "The document number of the payer"
+              }
+            },
+            "required": [
+              "document_number"
+            ]
+          },
+          "uf": {
+            "type": "string",
+            "maxLength": 2,
+            "description": "The uf of the QR Code"
+          },
+          "city": {
+            "type": "string",
+            "maxLength": 15,
+            "description": "The city of the QR Code"
+          },
+          "zip_code": {
+            "type": "string",
+            "minLength": 5,
+            "maxLength": 10,
+            "description": "The zip code of the QR Code"
+          },
+          "deduction": {
+            "type": "number",
+            "example": 12.23,
+            "description": "Deduction value applied in the Qr Code"
+          },
+          "discount": {
+            "type": "number",
+            "example": 12.23,
+            "description": "Discount value applied in the Qr Code"
+          },
+          "interest": {
+            "type": "number",
+            "example": 12.23,
+            "description": "Interest value applied in the Qr Code"
+          },
+          "fine": {
+            "type": "number",
+            "example": 12.23,
+            "description": "Fine value applied in the Qr Code"
+          },
+          "final_value": {
+            "type": "number",
+            "example": 12.23,
+            "description": "QR Code's final value"
+          },
+          "due_date": {
+            "type": "string",
+            "example": "2024-06-02",
+            "description": "QR Code's due date"
+          },
+          "days_after_due_date": {
+            "type": "number",
+            "example": 12,
+            "description": "QR Code's days after the due date that qr code is enabled to be payed"
+          },
+          "additional_data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "maxLength": 100,
+                  "description": "The name of the additional data"
+                },
+                "value": {
+                  "type": "string",
+                  "maxLength": 400,
+                  "description": "The value of the additional data"
+                }
+              }
+            }
+          },
+          "reusable": {
+            "type": "boolean",
+            "default": false,
+            "description": "Whether the QR Code is reusable"
+          },
+          "url_payload_json": {
+            "type": "string",
+            "maxLength": 77,
+            "description": "The URL payload JSON of the QR Code"
+          }
+        },
+        "required": [
+          "format",
+          "key",
+          "uf",
+          "recipient",
+          "payer",
+          "city",
+          "final_value",
+          "days_after_due_date",
+          "due_date",
+          "url_payload_json"
+        ]
       },
       "UpdateDynamicImmediateQRCodeSchema": {
         "type": "object",
