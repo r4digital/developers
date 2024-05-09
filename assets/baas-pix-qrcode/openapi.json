@@ -3351,7 +3351,7 @@
                         "description": "The document type of the payer"
                       },
                       "document_number": {
-                        "type": "string",
+                        "type": "number",
                         "description": "The document number of the payer"
                       }
                     }
@@ -5603,7 +5603,7 @@
                 "description": "The document type of the payer"
               },
               "document_number": {
-                "type": "string",
+                "type": "number",
                 "description": "The document number of the payer"
               }
             }
