@@ -2699,6 +2699,7 @@
                       }
                     },
                     "required": [
+                      "name",
                       "document_number"
                     ]
                   },
@@ -2783,12 +2784,14 @@
                   }
                 },
                 "required": [
+                  "account_id",
                   "format",
                   "key",
                   "uf",
                   "recipient",
                   "payer",
                   "city",
+                  "zip_code",
                   "final_value",
                   "days_after_due_date",
                   "due_date",
@@ -5434,6 +5437,7 @@
               }
             },
             "required": [
+              "name",
               "document_number"
             ]
           },
@@ -5518,12 +5522,14 @@
           }
         },
         "required": [
+          "account_id",
           "format",
           "key",
           "uf",
           "recipient",
           "payer",
           "city",
+          "zip_code",
           "final_value",
           "days_after_due_date",
           "due_date",
