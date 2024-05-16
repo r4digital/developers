@@ -3292,7 +3292,7 @@
                 "properties": {
                   "account_id": {
                     "type": "string",
-                    "description": "Unique identifier of the account.",
+                    "description": "Unique account identifier. Mandatory when providing the key.",
                     "format": "uuid-v4",
                     "example": "6d814c28-fe73-443c-bfe0-48d518aa32fa"
                   },
@@ -4005,7 +4005,7 @@
                 "properties": {
                   "account_id": {
                     "type": "string",
-                    "description": "Unique identifier of the account.",
+                    "description": "Unique account identifier. Mandatory when providing the key.",
                     "format": "uuid-v4",
                     "example": "6d814c28-fe73-443c-bfe0-48d518aa32fa"
                   },
@@ -6306,7 +6306,7 @@
         "properties": {
           "account_id": {
             "type": "string",
-            "description": "Unique identifier of the account.",
+            "description": "Unique account identifier. Mandatory when providing the key.",
             "format": "uuid-v4",
             "example": "6d814c28-fe73-443c-bfe0-48d518aa32fa"
           },
@@ -6547,7 +6547,7 @@
         "properties": {
           "account_id": {
             "type": "string",
-            "description": "Unique identifier of the account.",
+            "description": "Unique account identifier. Mandatory when providing the key.",
             "format": "uuid-v4",
             "example": "6d814c28-fe73-443c-bfe0-48d518aa32fa"
           },
