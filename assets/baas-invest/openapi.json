@@ -699,6 +699,57 @@
                           "example": "Product without expiration term."
                         }
                       }
+                    },
+                    {
+                      "title": "Business Day Rule",
+                      "type": "object",
+                      "description": "Representation of an bad request error",
+                      "properties": {
+                        "code": {
+                          "description": "The type of error",
+                          "type": "string",
+                          "example": "BUSINESS_DAY_ONLY_ERROR"
+                        },
+                        "message": {
+                          "description": "Describes a message informing a reason for the error",
+                          "type": "string",
+                          "example": "The current day is not a business day"
+                        }
+                      }
+                    },
+                    {
+                      "title": "Request Not Allowed",
+                      "type": "object",
+                      "description": "Representation of an bad request error",
+                      "properties": {
+                        "code": {
+                          "description": "The type of error",
+                          "type": "string",
+                          "example": "REQUEST_NOT_ALLOWED"
+                        },
+                        "message": {
+                          "description": "Describes a message informing a reason for the error",
+                          "type": "string",
+                          "example": "The request is not allowed"
+                        }
+                      }
+                    },
+                    {
+                      "title": "Time Range to Invest",
+                      "type": "object",
+                      "description": "Representation of an bad request error",
+                      "properties": {
+                        "code": {
+                          "description": "The type of error",
+                          "type": "string",
+                          "example": "TIME_OUT_OF_RANGE"
+                        },
+                        "message": {
+                          "description": "Describes a message informing a reason for the error",
+                          "type": "string",
+                          "example": "The current time is out of range"
+                        }
+                      }
                     }
                   ]
                 },
@@ -719,6 +770,24 @@
                     "value": {
                       "code": "INVALID_PRODUCT",
                       "message": "Product without expiration term."
+                    }
+                  },
+                  "Example 4 - BusinessDayOnlyError": {
+                    "value": {
+                      "code": "BUSINESS_DAY_ONLY_ERROR",
+                      "message": "The current day is not a business day."
+                    }
+                  },
+                  "Example 5 - RequestNotAllowed": {
+                    "value": {
+                      "code": "REQUEST_NOT_ALLOWED",
+                      "message": "The request is not allowed."
+                    }
+                  },
+                  "Example 6 - TimeOutOfRange": {
+                    "value": {
+                      "code": "TIME_OUT_OF_RANGE",
+                      "message": "The current time is out of range."
                     }
                   }
                 }
@@ -1898,6 +1967,57 @@
             "description": "Describes a message informing a reason for the error",
             "type": "string",
             "example": "Product without expiration term."
+          }
+        }
+      },
+      "not-business-day": {
+        "title": "Business Day Rule",
+        "type": "object",
+        "description": "Representation of an bad request error",
+        "properties": {
+          "code": {
+            "description": "The type of error",
+            "type": "string",
+            "example": "BUSINESS_DAY_ONLY_ERROR"
+          },
+          "message": {
+            "description": "Describes a message informing a reason for the error",
+            "type": "string",
+            "example": "The current day is not a business day"
+          }
+        }
+      },
+      "request-not-allowed": {
+        "title": "Request Not Allowed",
+        "type": "object",
+        "description": "Representation of an bad request error",
+        "properties": {
+          "code": {
+            "description": "The type of error",
+            "type": "string",
+            "example": "REQUEST_NOT_ALLOWED"
+          },
+          "message": {
+            "description": "Describes a message informing a reason for the error",
+            "type": "string",
+            "example": "The request is not allowed"
+          }
+        }
+      },
+      "time-out-of-range": {
+        "title": "Time Range to Invest",
+        "type": "object",
+        "description": "Representation of an bad request error",
+        "properties": {
+          "code": {
+            "description": "The type of error",
+            "type": "string",
+            "example": "TIME_OUT_OF_RANGE"
+          },
+          "message": {
+            "description": "Describes a message informing a reason for the error",
+            "type": "string",
+            "example": "The current time is out of range"
           }
         }
       },
