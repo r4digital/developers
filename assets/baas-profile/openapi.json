@@ -1711,8 +1711,7 @@
                         "description": "The Type of the secondary document.",
                         "enum": [
                           "CNH",
-                          "RG",
-                          "RNE"
+                          "RG"
                         ]
                       },
                       "marital_status": {
@@ -3783,8 +3782,7 @@
                 "description": "The Type of the secondary document.",
                 "enum": [
                   "CNH",
-                  "RG",
-                  "RNE"
+                  "RG"
                 ]
               },
               "marital_status": {
