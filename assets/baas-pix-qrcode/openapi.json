@@ -1930,6 +1930,12 @@
                 "type": "object",
                 "description": "Params to create a new dynamic immediate QR Code",
                 "properties": {
+                  "id": {
+                    "type": "string",
+                    "description": "Unique identifier of the QR Code.",
+                    "format": "uuid-v4",
+                    "example": "6d814c28-fe73-443c-bfe0-48d518aa32fa"
+                  },
                   "account_id": {
                     "type": "string",
                     "description": "Unique identifier of the account.",
@@ -2101,25 +2107,15 @@
                     "type": "boolean",
                     "default": false,
                     "description": "Whether the QR Code is reusable"
-                  },
-                  "url_payload_json": {
-                    "type": "string",
-                    "maxLength": 77,
-                    "description": "The URL payload JSON of the QR Code"
-                  },
-                  "url_jwk": {
-                    "type": "string",
-                    "description": "The URL JWK of the QR Code"
                   }
                 },
                 "required": [
+                  "id",
                   "account_id",
                   "format",
                   "key",
                   "recipient",
-                  "city",
-                  "url_payload_json",
-                  "url_jwk"
+                  "city"
                 ]
               }
             }
@@ -2610,6 +2606,12 @@
                 "type": "object",
                 "description": "Params to create a new dynamic with due date QR Code",
                 "properties": {
+                  "id": {
+                    "type": "string",
+                    "description": "Unique identifier of the QR Code.",
+                    "format": "uuid-v4",
+                    "example": "6d814c28-fe73-443c-bfe0-48d518aa32fa"
+                  },
                   "account_id": {
                     "type": "string",
                     "description": "Unique identifier of the account.",
@@ -2786,14 +2788,10 @@
                     "type": "boolean",
                     "default": false,
                     "description": "Whether the QR Code is reusable"
-                  },
-                  "url_payload_json": {
-                    "type": "string",
-                    "maxLength": 77,
-                    "description": "The URL payload JSON of the QR Code"
                   }
                 },
                 "required": [
+                  "id",
                   "account_id",
                   "format",
                   "key",
@@ -2804,8 +2802,7 @@
                   "zip_code",
                   "final_value",
                   "days_after_due_date",
-                  "due_date",
-                  "url_payload_json"
+                  "due_date"
                 ]
               }
             }
@@ -3264,7 +3261,7 @@
         }
       }
     },
-    "/dynamics/immediate/{external_id}": {
+    "/dynamics/immediate/{id}": {
       "patch": {
         "tags": [
           "update_qr_code"
@@ -3280,10 +3277,11 @@
         "parameters": [
           {
             "in": "path",
-            "name": "external_id",
+            "name": "id",
             "schema": {
               "type": "string",
-              "format": "uuid"
+              "format": "uuid",
+              "description": "ID from QR Code"
             },
             "required": true
           }
@@ -3452,15 +3450,6 @@
                     "type": "boolean",
                     "default": false,
                     "description": "Whether the QR Code is reusable"
-                  },
-                  "url_payload_json": {
-                    "type": "string",
-                    "maxLength": 77,
-                    "description": "The URL payload JSON of the QR Code"
-                  },
-                  "url_jwk": {
-                    "type": "string",
-                    "description": "The URL JWK of the QR Code"
                   },
                   "status": {
                     "type": "string",
@@ -3977,7 +3966,7 @@
         }
       }
     },
-    "/dynamics/cobv/{external_id}": {
+    "/dynamics/cobv/{id}": {
       "patch": {
         "tags": [
           "update_qr_code"
@@ -3993,10 +3982,11 @@
         "parameters": [
           {
             "in": "path",
-            "name": "external_id",
+            "name": "id",
             "schema": {
               "type": "string",
-              "format": "uuid"
+              "format": "uuid",
+              "description": "ID from QR Code"
             },
             "required": true
           }
@@ -4178,11 +4168,6 @@
                     "type": "boolean",
                     "default": false,
                     "description": "Whether the QR Code is reusable"
-                  },
-                  "url_payload_json": {
-                    "type": "string",
-                    "maxLength": 77,
-                    "description": "The URL payload JSON of the QR Code"
                   },
                   "status": {
                     "type": "string",
@@ -4699,7 +4684,7 @@
         }
       }
     },
-    "/dynamics/{external_id}/jws": {
+    "/dynamics/{id}/jws": {
       "get": {
         "tags": [
           "get_qr_code"
@@ -4715,11 +4700,12 @@
         "parameters": [
           {
             "in": "path",
-            "name": "external_id",
+            "name": "id",
             "schema": {
               "example": "69F963C6-7487-4363-9406-A1DE2A9636D4",
               "type": "string",
-              "format": "uuid"
+              "format": "uuid",
+              "description": "ID from QR Code"
             },
             "required": true
           },
@@ -6094,6 +6080,12 @@
         "type": "object",
         "description": "Params to create a new dynamic immediate QR Code",
         "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique identifier of the QR Code.",
+            "format": "uuid-v4",
+            "example": "6d814c28-fe73-443c-bfe0-48d518aa32fa"
+          },
           "account_id": {
             "type": "string",
             "description": "Unique identifier of the account.",
@@ -6265,25 +6257,15 @@
             "type": "boolean",
             "default": false,
             "description": "Whether the QR Code is reusable"
-          },
-          "url_payload_json": {
-            "type": "string",
-            "maxLength": 77,
-            "description": "The URL payload JSON of the QR Code"
-          },
-          "url_jwk": {
-            "type": "string",
-            "description": "The URL JWK of the QR Code"
           }
         },
         "required": [
+          "id",
           "account_id",
           "format",
           "key",
           "recipient",
-          "city",
-          "url_payload_json",
-          "url_jwk"
+          "city"
         ]
       },
       "DynamicQRCode": {
@@ -6340,6 +6322,12 @@
         "type": "object",
         "description": "Params to create a new dynamic with due date QR Code",
         "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique identifier of the QR Code.",
+            "format": "uuid-v4",
+            "example": "6d814c28-fe73-443c-bfe0-48d518aa32fa"
+          },
           "account_id": {
             "type": "string",
             "description": "Unique identifier of the account.",
@@ -6516,14 +6504,10 @@
             "type": "boolean",
             "default": false,
             "description": "Whether the QR Code is reusable"
-          },
-          "url_payload_json": {
-            "type": "string",
-            "maxLength": 77,
-            "description": "The URL payload JSON of the QR Code"
           }
         },
         "required": [
+          "id",
           "account_id",
           "format",
           "key",
@@ -6534,8 +6518,7 @@
           "zip_code",
           "final_value",
           "days_after_due_date",
-          "due_date",
-          "url_payload_json"
+          "due_date"
         ]
       },
       "UpdateDynamicImmediateQRCodeSchema": {
@@ -6699,15 +6682,6 @@
             "type": "boolean",
             "default": false,
             "description": "Whether the QR Code is reusable"
-          },
-          "url_payload_json": {
-            "type": "string",
-            "maxLength": 77,
-            "description": "The URL payload JSON of the QR Code"
-          },
-          "url_jwk": {
-            "type": "string",
-            "description": "The URL JWK of the QR Code"
           },
           "status": {
             "type": "string",
@@ -6953,11 +6927,6 @@
             "type": "boolean",
             "default": false,
             "description": "Whether the QR Code is reusable"
-          },
-          "url_payload_json": {
-            "type": "string",
-            "maxLength": 77,
-            "description": "The URL payload JSON of the QR Code"
           },
           "status": {
             "type": "string",
