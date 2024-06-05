@@ -4684,14 +4684,227 @@
         }
       }
     },
-    "/dynamics/{id}/jws": {
+    "/v1/cob/{id}": {
       "get": {
         "tags": [
           "get_qr_code"
         ],
-        "summary": "Get a JWS from Dynamic QR Code",
-        "description": "Get a JWS from Dynamic QR Code",
-        "operationId": "get_jws_dynamic_qr_code",
+        "summary": "Get a JWS from Dynamic Immediate QR Code",
+        "description": "Get a JWS from Dynamic Immediate QR Code",
+        "operationId": "get_jws_dynamic_cob_qr_code",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "example": "69F963C6-7487-4363-9406-A1DE2A9636D4",
+              "type": "string",
+              "format": "uuid",
+              "description": "ID from QR Code"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "QR Code JWS successfully returned",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string",
+                  "example": "eyJhbGciOiJQUzUxMiIsImtpZCI6IjUwQTM5Qzc0MUE0RTFDQjQxN0Y2OEM2Q0MwMkY2M0JFODg2RDg1MzIiLCJ0eXAiOiJKV1QiLCJ4NXQiOiJVS09jZEJwT0hMUVg5b3hzd0M5anZvaHRoVEkiLCJqa3UiOiJodHRwczovL2V4ZW1wbG8uY29tL3BpeC9qZHBpL3FyYy9qd2tzIn0.eyJ2ZXJzYW8iOiIxLjAuMCIsImRvY3VtZW50byI6eyJpZCI6IjNmOTk0YTY2LTgyMzAtNGM5YS1hZDJhLTBmZmU0YjY5YWQ2OCIsInJldmlzYW8iOjB9LCJjYWxlbmRhcmlvIjp7ImNyaWFjYW8iOiIxMy8xMC8yMDIwIDE4OjQ0OjExIiwiYXByZXNlbnRhY2FvIjoiMTMvMTAvMjAyMCAxODo0NDoxMSIsImV4cGlyYWNhbyI6IjIzLzEyLzIwMjAgMjM6NTk6MDUiLCJ2ZW5jaW1lbnRvIjoiMjMvMDEvMjAyMCAwMDowMDowMCIsInJlY2ViaXZlbEFwb3NWZW5jaW1lbnRvIjp0cnVlfSwicGFnYWRvciI6eyJjbnBqIjoiNDM1Odc5ODAwMDEwNyIsIm5vbWUiOiJDaWNsYW5vIGRlIFRhbCJ9LCJ2YwxvciI6eyJvcmlnaW5hbCI6MTAwMC4wMSwiZmluYWwiOjExMDAuMDEsImp1cm9zIjoxMDAuMCwibXVsdGEiOjEwLjAsImRlc2NvbnRvIjoxMC4wLCJwZXJtaXRlQWx0ZXJhY2FvIjpmYWxzZX0sImNoYXZlIjoiZnVsYW5vLnRhbEBwcm92ZWRvci5jb20uYnIiLCJ0eGlkIjoiSkRQSTIwMjAwMTAzMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDEiLCJzb2xpY2l0YWNhb1BhZ2Fkb3IiOiJQZXNxdWlzYSBkZSBzYXRpc2Zhw6fDo28iLCJpbmZvQWRpY2lvbmFpcyI6W3sibm9tZSI6IkRldGFsaGVzIGRvIFBhZ2FtZW50byIsInZhbG9yIjoiSW5mb3JtYcOnw6NvIEFkaWNpb25hbCBkbyBQU1AgZG8gUmVjZWJlZG9yIn0seyJub21lIjoiRGV0YWxoZXMgZG8gUGFnYW1lbnRvIDIiLCJ2YwxvciI6IkluZm9ybWHDp8OjbyBBZGljaW9uYWwgZG8gUFNQIGRvIFJlY2ViZWRvciJ9XswiZXhwIjoxNjA4Nzc4NzQ1LCJuYmYiOjE2MDI2MTQ2NTYsImlhdCI6MTYwMjYxNDY1Nn0.MlRauOQlIqPxRf4sjnoMuJRzbFLcEaF4KQmP5Hm9ilCht89kXQCiGdNHQZ3cU0_Civf2zQsNwe3w98nDvjasw0XBmBkCCAAY46H4CbXk26qROxeE9wiOavBq-O47C5shlmg_fhbdJX7xdmTdtuHN6RWqCII0JzIGcTyiEwJxsKt5Qb1dYWFINnh9xhb3J9KsWJRwESK4jBWyIIGLr7zVKot5lFUt7hTgU8c6QeQijwjwqmxMUF8z2h-y7dV0prCt7o-JpbdcdTXAL7CuTte8WfH7nGiljeiDRdEkYneBvzBRpd84RMR1392bQ4gppaxHU7S-ZkakJ5hSHoQKzg"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Error with types [BacenInvalidDataError].",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Invalid Data Error",
+                  "properties": {
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "type": {
+                          "type": "string",
+                          "description": "The type of error",
+                          "example": "https://pix.bcb.gov.br/api/v2/error/CobPayloadOperacaoInvalida"
+                        },
+                        "title": {
+                          "type": "string",
+                          "description": "Describes a title informing a reason for the error",
+                          "example": "Requisicao invalida."
+                        },
+                        "detail": {
+                          "type": "string",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "A cobranca existe, mas a requisicao e invalida."
+                        },
+                        "status": {
+                          "type": "number",
+                          "description": "Error status code",
+                          "example": 400
+                        },
+                        "violacoes": {
+                          "type": "array",
+                          "description": "Array of violations",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "propriedade": {
+                                "type": "string",
+                                "description": "Field property from error",
+                                "example": "id"
+                              },
+                              "razao": {
+                                "type": "string",
+                                "description": "Reason of the error",
+                                "example": "Formato id invalido"
+                              },
+                              "valor": {
+                                "type": "string",
+                                "description": "Value of the property",
+                                "example": "cd1e31ab234234234"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "examples": {
+                  "Example 1 - BacenInvalidDataError": {
+                    "value": {
+                      "type": "https://pix.bcb.gov.br/api/v2/error/CobPayloadOperacaoInvalida",
+                      "title": "Requisicao invalida.",
+                      "detail": "A cobranca existe, mas a requisicao e invalida.",
+                      "status": 400,
+                      "violacoes": [
+                        {
+                          "propriedade": "id",
+                          "razao": "Formato id invalido",
+                          "valor": "cd1e31ab234234234"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Error with types [BacenNotFoundError]",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Not Found Error",
+                  "properties": {
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "type": {
+                          "type": "string",
+                          "description": "The type of error",
+                          "example": "https://pix.bcb.gov.br/api/v2/error/CobPayloadNaoEncontrado"
+                        },
+                        "title": {
+                          "type": "string",
+                          "description": "Describes a title informing a reason for the error",
+                          "example": "Cobranca nao encontrada."
+                        },
+                        "detail": {
+                          "type": "string",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "A cobranca em questao nao foi encontrada para a location requisitada."
+                        },
+                        "status": {
+                          "type": "number",
+                          "description": "Error status code",
+                          "example": 404
+                        }
+                      }
+                    }
+                  }
+                },
+                "examples": {
+                  "Example 1 - BacenNotFoundError": {
+                    "value": {
+                      "type": "https://pix.bcb.gov.br/api/v2/error/CobPayloadNaoEncontrado",
+                      "title": "Cobranca nao encontrada.",
+                      "status": 404,
+                      "detail": "A cobranca em questao nao foi encontrada para a location requisitada."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "410": {
+            "description": "Error with types [BacenGoneError]",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Gone Error",
+                  "properties": {
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "type": {
+                          "type": "string",
+                          "description": "The type of error",
+                          "example": "https://pix.bcb.gov.br/api/v2/error/CobPayloadNaoEncontrado"
+                        },
+                        "title": {
+                          "type": "string",
+                          "description": "Describes a title informing a reason for the error",
+                          "example": "Cobranca nao encontrada."
+                        },
+                        "detail": {
+                          "type": "string",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "A cobranca em questao nao foi encontrada para a location requisitada."
+                        },
+                        "status": {
+                          "type": "number",
+                          "description": "Error status code",
+                          "example": 410
+                        }
+                      }
+                    }
+                  }
+                },
+                "examples": {
+                  "Example 1 - BacenGoneError": {
+                    "value": {
+                      "type": "https://pix.bcb.gov.br/api/v2/error/CobPayloadNaoEncontrado",
+                      "title": "Cobranca nao encontrada.",
+                      "status": 410,
+                      "detail": "A cobranca em questao nao foi encontrada para a location requisitada."
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/cobv/{id}": {
+      "get": {
+        "tags": [
+          "get_qr_code"
+        ],
+        "summary": "Get a JWS from Dynamic With Due Date QR Code",
+        "description": "Get a JWS from Dynamic With Due Date QR Code",
+        "operationId": "get_jws_dynamic_cobv_qr_code",
         "security": [
           {
             "BearerAuth": []
