@@ -37,9 +37,9 @@
       "x-displayName": "Create QR Code"
     },
     {
-      "name": "get_qr_code",
-      "description": "Get QR Code",
-      "x-displayName": "Get QR Code"
+      "name": "get_qr_code_jws",
+      "description": "Get QR Code JWS",
+      "x-displayName": "Get QR Code JWS"
     },
     {
       "name": "update_qr_code",
@@ -4687,7 +4687,7 @@
     "/v1/cob/{id}": {
       "get": {
         "tags": [
-          "get_qr_code"
+          "get_qr_code_jws"
         ],
         "summary": "Get a JWS from Dynamic Immediate QR Code",
         "description": "Get a JWS from Dynamic Immediate QR Code",
@@ -4900,7 +4900,7 @@
     "/v1/cobv/{id}": {
       "get": {
         "tags": [
-          "get_qr_code"
+          "get_qr_code_jws"
         ],
         "summary": "Get a JWS from Dynamic With Due Date QR Code",
         "description": "Get a JWS from Dynamic With Due Date QR Code",
