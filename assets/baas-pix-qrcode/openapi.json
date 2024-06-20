@@ -3791,6 +3791,31 @@
                           "example": "Profile not found."
                         }
                       }
+                    },
+                    {
+                      "title": "The provided account has been disabled.",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "ACCOUNT_DISABLED",
+                          "enum": [
+                            "ACCOUNT_DISABLED"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "The provided account has been disabled."
+                        },
+                        "status_code": {
+                          "type": "number",
+                          "description": "Error status code",
+                          "example": "400"
+                        }
+                      }
                     }
                   ]
                 },
@@ -3811,6 +3836,12 @@
                     "value": {
                       "code": "PROFILE_NOT_FOUND",
                       "message": "Profile not found."
+                    }
+                  },
+                  "Example 4 - AccountDisabledError": {
+                    "value": {
+                      "code": "ACCOUNT_DISABLED",
+                      "message": "The provided account has been disabled."
                     }
                   }
                 }
@@ -4258,7 +4289,7 @@
             }
           },
           "400": {
-            "description": "Error with types [ValidationFailedError, InvalidDataError, EMVMerchantAccountSizeExceededError, InvalidUUIDError].",
+            "description": "Error with types [ValidationFailedError, InvalidDataError, EMVMerchantAccountSizeExceededError, InvalidUUIDError, AccountDisabledError].",
             "content": {
               "application/json": {
                 "schema": {
@@ -4377,6 +4408,31 @@
                           }
                         }
                       }
+                    },
+                    {
+                      "title": "The provided account has been disabled.",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "ACCOUNT_DISABLED",
+                          "enum": [
+                            "ACCOUNT_DISABLED"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "The provided account has been disabled."
+                        },
+                        "status_code": {
+                          "type": "number",
+                          "description": "Error status code",
+                          "example": "400"
+                        }
+                      }
                     }
                   ]
                 },
@@ -4403,6 +4459,12 @@
                     "value": {
                       "code": "INVALID_UUID",
                       "message": "Invalid uuid"
+                    }
+                  },
+                  "Example 5 - AccountDisabledError": {
+                    "value": {
+                      "code": "ACCOUNT_DISABLED",
+                      "message": "The provided account has been disabled."
                     }
                   }
                 }
@@ -7018,6 +7080,31 @@
           "payload_jws": {
             "type": "string",
             "description": "Signed JWS payload"
+          }
+        }
+      },
+      "AccountDisabledError": {
+        "title": "The provided account has been disabled.",
+        "properties": {
+          "code": {
+            "type": "string",
+            "title": "Error code",
+            "description": "The type of error",
+            "example": "ACCOUNT_DISABLED",
+            "enum": [
+              "ACCOUNT_DISABLED"
+            ]
+          },
+          "message": {
+            "type": "string",
+            "title": "Error message",
+            "description": "Describes a message informing a reason for the error",
+            "example": "The provided account has been disabled."
+          },
+          "status_code": {
+            "type": "number",
+            "description": "Error status code",
+            "example": "400"
           }
         }
       },
