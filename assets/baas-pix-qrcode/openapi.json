@@ -1246,6 +1246,46 @@
               }
             }
           },
+          "410": {
+            "description": "Conflict Error with types [QrCodeGoneError]",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Qr Code Gone Error",
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "title": "Error code",
+                      "description": "The type of error",
+                      "example": "QR_CODE_GONE",
+                      "enum": [
+                        "QR_CODE_GONE"
+                      ]
+                    },
+                    "message": {
+                      "type": "string",
+                      "title": "Error message",
+                      "description": "Describes a message informing a reason for the error",
+                      "example": "The QR Code is no longer available"
+                    },
+                    "status_code": {
+                      "type": "number",
+                      "description": "Error status code",
+                      "example": "410"
+                    }
+                  }
+                },
+                "examples": {
+                  "Example 1 - QrCodeGoneError": {
+                    "value": {
+                      "code": "QR_CODE_GONE",
+                      "message": "The QR Code is no longer available"
+                    }
+                  }
+                }
+              }
+            }
+          },
           "500": {
             "description": "Internal server error.",
             "content": {
@@ -6204,6 +6244,31 @@
             "type": "number",
             "description": "Error status code",
             "example": "409"
+          }
+        }
+      },
+      "QrCodeGoneError": {
+        "title": "Qr Code Gone Error",
+        "properties": {
+          "code": {
+            "type": "string",
+            "title": "Error code",
+            "description": "The type of error",
+            "example": "QR_CODE_GONE",
+            "enum": [
+              "QR_CODE_GONE"
+            ]
+          },
+          "message": {
+            "type": "string",
+            "title": "Error message",
+            "description": "Describes a message informing a reason for the error",
+            "example": "The QR Code is no longer available"
+          },
+          "status_code": {
+            "type": "number",
+            "description": "Error status code",
+            "example": "410"
           }
         }
       },
