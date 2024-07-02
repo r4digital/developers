@@ -3098,7 +3098,7 @@
             }
           },
           "403": {
-            "description": "Error with types [ProductDisabledError, ApplicationNotFound, ProfileNotFound].",
+            "description": "Error with types [ProductDisabledError, ApplicationNotFound, ProfileNotFound, QrCodeWithDueDateDisabled].",
             "content": {
               "application/json": {
                 "schema": {
@@ -3162,6 +3162,23 @@
                           "example": "Profile not found."
                         }
                       }
+                    },
+                    {
+                      "title": "Qr code with  with due date is not available",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "QR_CODE_WITH_DUE_DATE_DISABLED"
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "Qr code with due date is not available"
+                        }
+                      }
                     }
                   ]
                 },
@@ -3182,6 +3199,12 @@
                     "value": {
                       "code": "PROFILE_NOT_FOUND",
                       "message": "Profile not found."
+                    }
+                  },
+                  "Example 4 - QrCodeWithDueDateDisabled": {
+                    "value": {
+                      "code": "QR_CODE_WITH_DUE_DATE_DISABLED",
+                      "message": "Qr code with due date is not available."
                     }
                   }
                 }
@@ -6940,6 +6963,23 @@
           "days_after_due_date",
           "due_date"
         ]
+      },
+      "QrCodeWithDueDateDisabled": {
+        "title": "Qr code with  with due date is not available",
+        "properties": {
+          "code": {
+            "type": "string",
+            "title": "Error code",
+            "description": "The type of error",
+            "example": "QR_CODE_WITH_DUE_DATE_DISABLED"
+          },
+          "message": {
+            "type": "string",
+            "title": "Error message",
+            "description": "Describes a message informing a reason for the error",
+            "example": "Qr code with due date is not available"
+          }
+        }
       },
       "UpdateDynamicImmediateQRCodeSchema": {
         "type": "object",
