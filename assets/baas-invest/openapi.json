@@ -1159,6 +1159,12 @@
                   "value"
                 ],
                 "properties": {
+                  "id": {
+                    "type": "string",
+                    "format": "uuid-v4",
+                    "example": "e9f9d165-a9cd-4e87-bf72-805ecee5ded0",
+                    "description": "Calculation identifier, will need to be sent in the redeem request"
+                  },
                   "value": {
                     "type": "number",
                     "description": "Redemption value",
