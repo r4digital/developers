@@ -4951,6 +4951,15 @@
             },
             "description": "The register limit",
             "example": 10
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "schema": {
+              "type": "number"
+            },
+            "description": "The page from claims",
+            "example": 1
           }
         ],
         "responses": {
@@ -4970,10 +4979,33 @@
                       "description": "Requested at",
                       "example": "2021-07-23T16:58:27.000Z"
                     },
-                    "has_more_items": {
-                      "type": "boolean",
-                      "description": "Has more items to list",
-                      "example": false
+                    "pagination": {
+                      "type": "object",
+                      "properties": {
+                        "total": {
+                          "type": "number",
+                          "example": 100,
+                          "description": "Total number of registers"
+                        },
+                        "page": {
+                          "type": "number",
+                          "example": 1,
+                          "description": "Page number"
+                        },
+                        "limit": {
+                          "type": "number",
+                          "example": 50,
+                          "description": "Quantity of registers limited"
+                        },
+                        "has_previous_page": {
+                          "type": "boolean",
+                          "description": "Return if have more previous pages"
+                        },
+                        "has_next_page": {
+                          "type": "boolean",
+                          "description": "Return if have more next pages"
+                        }
+                      }
                     },
                     "data": {
                       "type": "array",
@@ -10430,10 +10462,33 @@
             "description": "Requested at",
             "example": "2021-07-23T16:58:27.000Z"
           },
-          "has_more_items": {
-            "type": "boolean",
-            "description": "Has more items to list",
-            "example": false
+          "pagination": {
+            "type": "object",
+            "properties": {
+              "total": {
+                "type": "number",
+                "example": 100,
+                "description": "Total number of registers"
+              },
+              "page": {
+                "type": "number",
+                "example": 1,
+                "description": "Page number"
+              },
+              "limit": {
+                "type": "number",
+                "example": 50,
+                "description": "Quantity of registers limited"
+              },
+              "has_previous_page": {
+                "type": "boolean",
+                "description": "Return if have more previous pages"
+              },
+              "has_next_page": {
+                "type": "boolean",
+                "description": "Return if have more next pages"
+              }
+            }
           },
           "data": {
             "type": "array",
