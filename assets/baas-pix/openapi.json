@@ -1,8 +1,8 @@
 {
   "openapi": "3.0.2",
   "info": {
-    "version": "1.2.0",
-    "title": "BaaS Pix",
+    "version": "1.0.0",
+    "title": "BaaS - Pix",
     "description": "**Description**: Api responsible for managing pix keys\n# Key kind\n\n  | Kind                | Description                                               |\n  |-------------------- | ----------------------------------------------------------|\n  | `CELLPHONE` | Cellphone number. |\n  | `CPF` | CPF number. |\n  | `CNPJ` | CNPJ number. |\n  | `EMAIL` | E-mail address. |\n  | `VIRTUAL` | Random key. |\n\n# Claim Status\nTo see how the claim flow is going, the client can get information about it\n\n  | Status                | Description                                             |\n  |---------------------- | --------------------------------------------------------|\n  | `OPEN` | Registered by claimer, but not yet read by the grantor |\n  | `WAITING_RESOLUTION` | Readed by the grantor, waiting for his decision. |\n  | `CONFIRMED` | Claim has been confirmed by the grantor. |\n  | `CANCELLED` | Claim has been cancelled by the grantor or by the claimer. |\n  | `DONE` | Claimer has been concluded the process. The key was migrated to him. |\n\n## Claim Status Change Notification\nAs described in the status table, some statuses will fire a notification call to the client.\n  To receive this notifications, its necessary to request the registration of the service URL which will receive the notification object.\n  This object will be sent as an HTTP call with the POST method, of which the client must respond with a 200 status, a body confirming the delivery status and within 5 seconds.\n\n  | Event Type          | Description                                               |\n  |-------------------- | ----------------------------------------------------------|\n  | `claim_canceled_due_to_lack_of_validation` | The claim request was canceled due to lack of validation of ownership. |\n  | `claim_canceled` | The request claim received has been cancelled. This means that the key remains linked to this participant. |\n  | `claim_confirmed_due_to_deadline` | The claim request received was confirmed due to expiration. This means that the key is no longer linked to this participant, but the user can still cancel the claim of possession by the other user by fraud until the conclusion date limit. |\n  | `claim_confirmed` | The claim for ownership has been confirmed by the grantor. This means that the active validation of the ownership of the key must be done, so that the request is completed after conclusion date limit. |\n  | `claim_done` | The incoming claim request has been completed. This key is no longer tied to this participant. |\n  | `claim_open` | A claim request was received. This means that another person has registered a request for this key to be linked to another account. To cancel this process and so that you can continue using this key, it is necessary that you make a new validation of ownership within 7 (seven) days. |\n  | `claim_request_canceled` | The claim was refused. The person who registered this key confirmed that he still uses it. |\n  | `claim_request_done` | The claim has been successfully completed. You can now use the key. |\n  | `claim_request_received` | The claim request was received by the other participant. Will be waiting for the resolution by the other participant until the resolution date limit, period in which, if desired, the order can be canceled. |\n  | `claim_waiting_ownership_validation` | Awaiting ownership validation for the claim request. |\n  | `claim_waiting_resolution_limit` | Waiting for the incoming claim request to close. This means that the key is no longer linked to this participant, but the user can still cancel the claim of possession by the other user by fraud until the conclusion date limit. |\n  | `claim_waiting_resolution` | Waiting for a response to the received claim request. This means that another person has requested for this key to be linked to another account. To cancel this process and so that you can continue using this key, it is necessary that you make a new validation of ownership within the resolution limit. |\n  | `portability_canceled_due_to_deadline` | The request for portability received was canceled due to expiry of time. This means that the key remains linked to this participant. |\n  | `portability_canceled` | The received portability request was cancelled. This means that the key remains linked to this participant. |\n  | `portability_confirmed` | Portability performed. You can now use the key. |\n  | `portability_done` | The received portability request has been completed. The key is no longer tied to this participant. |\n  | `portability_open` | A portability request was received. This means that another participant has registered a request for this key to be linked to another account. To complete this process, confirmation is required within 7 (seven) days. |\n  | `portability_request_done` | The request to change the key for this participant was refused. The portability was not completed, as we did not identify the confirmation at the home institution. |\n  | `portability_request_received` | The request for portability was received by the other participant. Will be waiting for the resolution by the other participant until the resolution date limit, period in which, if desired, the order can be canceled. |\n  | `portability_waiting_resolution` | Waiting for a response to the received portability request. This means that another participant has requested for this key to be linked to another account. To complete this process, your confirmation is required until the resolution date limit. |\n\n**Notification Call Scheme**\n\n  Headers:\n  ```json\n  {\n    X-R4-Application: GUID // Application Unique Identifier\n    X-R4-Delivery: GUID // Attempt Unique Identifier\n    X-R4-Event: \"{event_type}\" // Event Type for the Notification (As described in the Claim Status Change Notification Table)\n    User-Agent: R4-Hookshot\n  }\n  ```\n  Body\n  ```json\n  {\n    \"object_kind\": \"{event_type}\", Event Type for the Notification (As described in the Claim Status Change Notification Table)\n    \"object_id\": \"GUID\", // Bill payment Unique Identifier\n    \"application_id\": \"GUID\", // Application Unique Identifier\n    \"account_id\": \"GUID\", // Account Unique Identifier\n    \"delivery_confirmation\": true // Delivery confirmation response is required\n  }\n  ```\n\n**Notification Response Scheme**\n\n HTTP status: `200`\n\n Body:\n  ```json\n  {\n    \"status\": \"CONFIRMED\" // \"REGISTERED\", \"SENT\" or \"CONFIRMED\"\n  }\n  ```\n\n# Errors\nThis service uses [HTTP response status codes](https://en.wikipedia.org/wiki/List_of_HTTP_status_codes) to indicate the success or failure of your API requests.\nIn general, there are three status code ranges you can expect:\n\n  - `2xx` success status codes confirm that your request worked as expected\n\n  - `4xx` error status codes indicate an error because of the information provided (e.g., a required parameter was not provided)\n\n  - `5xx` error status codes are rare and indicate an error with R4's servers\n\n\n## HTTP Status code summary\nExtracted from [Stripe API codes](https://stripe.com/docs/api/errors)\n\n  - `200 - OK` Everything worked as expected.\n\n  - `400 - Bad Request` The request was unacceptable, often due to missing a required parameter.\n\n  - `401 - Unauthorized` No valid API key provided.\n\n  - `403 - Forbidden` The API key doesn't have permissions to perform the request.\n\n  - `404 - Not Found` The requested resource doesn't exist.\n  \n  - `408 - Request Timeout` The connection was ended by timeout.\n\n  - `429 - Too Many Requests` Too many requests hit the API too quickly. We recommend an exponential backoff of your requests.\n\n  - `500, 502, 503, 504 - Server Errors` Something went wrong on R4's end.\n\n## Error codes\nBelow is a list of possible error codes that can be returned:\n\n  | Code                | Description                                                 |\n  |-------------------- | ------------------------------------------------------------|\n  | `ACCOUNT_DISABLED` | The provided account has been disabled. |\n  | `ACCOUNT_NOT_FOUND` | Account not found |\n  | `APPLICATION_PRODUCT_NOT_FOUND` | Product not found for given application id |\n  | `AUTHENTICATION_FAILED` | Authentication failed |\n  | `CLAIM_ALREADY_BELONGS_TO_CLIENT` | The key already belongs to the client |\n  | `CLAIM_ALREADY_DONE` | Claim was already completed |\n  | `CLAIM_ALREADY_OPEN` | There is some claim with status different of done or cancelled for the revindicated key |\n  | `CLAIM_CANCELLATION_REASON_INVALID` | The reason to cancel your claim is not valid |\n  | `CLAIM_CANNOT_BE_CANCELLED` | The status of your claim does not allow for its cancellation |\n  | `CLAIM_CANNOT_BE_COMPLETED_BY_GRANTOR` | Claim cannot be completed by grantor |\n  | `CLAIM_CANNOT_BE_CONFIRMED_BY_CLAIMER` | The claim cannot be confirmed by claimer |\n  | `CLAIM_CANNOT_COMPLETE` | The status of your claim does not allow for its conclusion |\n  | `CLAIM_COMPLETION_PERIOD_NOT_ENDED` | Cannot complete ownership claim before the completition period ends |\n  | `CLAIM_INVALID` | There is an invalid field at creation of the claim |\n  | `CLAIM_KEY_NOT_FOUND` | There is no registered bond to the key being claimed |\n  | `CLAIM_NOT_FOUND` | The provided claim was not found or does not exist |\n  | `CLAIM_RESOLUTION_PERIOD_NOT_ENDED` | Cannot confirm ownership or cancel portability before the resolution period ends |\n  | `CLAIM_RESULTING_ENTRY_ALREADY_EXISTS` | The key is already in the possession of the given claimer |\n  | `CLAIM_TYPE_INCONSISTENT` | The requested claim type is inconsistent |\n  | `ENTRY_LOCKED_BY_CLAIM` | There is a claim with a status other than completed or canceled for the key |\n  | `IDEMPOTENCE_KEY_CONFLICT` | Two different contents have been sent with the same idempotence key |\n  | `INTERNAL_SERVER_ERROR` | Unexpected error with our service |\n  | `INVALID_CELLPHONE` | The provided cellphone is not valid |\n  | `INVALID_CNPJ` | The provided CNPJ is not valid |\n  | `INVALID_CPF` | The provided CPF is not valid |\n  | `INVALID_DATA` | The data provided has an invalid format |\n  | `INVALID_EMAIL` | The provided email is not valid |\n  | `INVALID_IDEMPOTENCE_KEY` | Idempotence Key is missing or is not a valid uuid. |\n  | `KEY_ALREADY_EXISTS` | There is already a bond for this key with the same participant and owner |\n  | `KEY_DATA_INCOMPLETE` | Incomplete data for key change. Inform \"account type, account number and date and time of opening of the new account\" and/or \"name and nickname\" |\n  | `KEY_DID_NOT_MATCH_DOCUMENT_NUMBER` | The key did not match the document number registered for the account provided |\n  | `KEY_IN_CUSTODY_OF_DIFFERENT_PARTICIPANT` | There is already a bond for this key with other participant and owner. It is indicated a claim of ownership |\n  | `KEY_LIMIT_EXCEEDED` | Number of links associated with transactional account exceeded maximum limit. |\n  | `KEY_MISSING_ACCOUNT_OR_CUSTOMER` | It is necessary to inform a new account and/or customer name to change the address key |\n  | `KEY_NICKNAME_INVALID` | The key to be changed does not accept nickname, as it is associated with the individual person type |\n  | `KEY_NOT_FOUND` | The provided key is not found or does not exist |\n  | `KEY_SAME_DOCUMENT_DIFFERENT_PSP` | This key is already linked to this document number, but in another PSP. Portability is recommended |\n  | `KEY_WITH_DIFFERENT_ACCOUNT` | There is already a link for this key on with the same owner and other account information. A key change is indicated |\n  | `KEY_WITH_SAME_DATA_INFORMED` | Data informed for key change is the same as the current data |\n  | `MISSING_PRODUCT_PERMISSION` | Missing product permission |\n  | `NO_KEY_LINKED_TO_ACCOUNT` | There arent key linked to the account informed |\n  | `NO_KEY_LINKED_TO_DOCUMENT_NUMBER` | There arent key linked to the document number informed |\n  | `PARTNERS_NOT_FOUND` | Partners was not found |\n  | `RECEIVED_CLAIM_CANCELLATION_REASON_INVALID` | The reason to cancel the claim you received is not valid |\n  | `RECEIVED_CLAIM_CANNOT_BE_CANCELLED` | The status of the ownership claim you received does not allow for its cancellation |\n  | `RECEIVED_CLAIM_CANNOT_BE_CONFIRMED` | The status of the claim you received, does not allow confirmation |\n  | `RECEIVED_CLAIM_CONFIRM_REASON_INVALID` | The reason for confirming the claim you received is not valid |\n  | `RECEIVED_OWNERSHIP_CANNOT_BE_CANCELLED` | The portability status you received does not allow its cancellation |\n  | `UNAUTHORIZED` | Unauthorized |\n  | `UNEXPECTED_ERROR` | Unexpected error with our service |\n  | `VALIDATION_FAILED` | Invalid request data |\n"
   },
   "servers": [
@@ -27,6 +27,7 @@
           "Keys"
         ],
         "summary": "Create a new key",
+        "operationId": "PostKeys",
         "description": "Returns a created key",
         "parameters": [
           {
@@ -744,6 +745,7 @@
           "Keys"
         ],
         "summary": "List keys",
+        "operationId": "GetKeys",
         "description": "Returns a list of keys belonging to the account",
         "security": [
           {
@@ -1031,6 +1033,7 @@
           "Keys"
         ],
         "summary": "Delete a key",
+        "operationId": "DeleteKeysKey",
         "parameters": [
           {
             "in": "header",
@@ -1388,6 +1391,7 @@
           "Keys"
         ],
         "summary": "Get a Pix Key",
+        "operationId": "GetKeysKey",
         "parameters": [
           {
             "in": "path",
@@ -2261,6 +2265,7 @@
           "Keys"
         ],
         "summary": "Get an Pix Key Statistics",
+        "operationId": "GetKeysKeyStatistics",
         "parameters": [
           {
             "in": "path",
@@ -2996,6 +3001,7 @@
           "Partners"
         ],
         "summary": "Get a list of partners",
+        "operationId": "GetPartners",
         "description": "Return a list of PSP partners registered on service provider",
         "responses": {
           "200": {
@@ -3269,6 +3275,7 @@
           "Partners"
         ],
         "summary": "Get specific PSP partner",
+        "operationId": "GetPartnersIspb",
         "description": "Return a specific PSP partner registered on service provider",
         "parameters": [
           {
@@ -3498,6 +3505,7 @@
           "Claims"
         ],
         "summary": "Create a claim",
+        "operationId": "PostClaims",
         "description": "It Returns the created claim",
         "security": [
           {
@@ -4272,6 +4280,7 @@
           "Claims"
         ],
         "summary": "Get a list of claims",
+        "operationId": "GetClaims",
         "description": "Get a list of claims for a specific account",
         "security": [
           {
@@ -4919,6 +4928,7 @@
         "tags": [
           "Claims"
         ],
+        "operationId": "GetPendingClaims",
         "summary": "Get a list of pending claims",
         "description": "It returns a list of pending claims",
         "parameters": [
@@ -5415,6 +5425,7 @@
           "Claims"
         ],
         "summary": "Get a claim by id",
+        "operationId": "GetClaimsClaimId",
         "description": "Get a claim for a specific id",
         "security": [
           {
@@ -5900,6 +5911,7 @@
           "Claims"
         ],
         "summary": "Confirm claim",
+        "operationId": "GetClaimsClaimIdConfirm",
         "description": "Returns the confirmed claim",
         "security": [
           {
@@ -6388,6 +6400,7 @@
           "Claims"
         ],
         "summary": "Complete claim",
+        "operationId": "PostClaimsClaimIdComplete",
         "description": "Returns the completed claim",
         "security": [
           {
@@ -6860,6 +6873,7 @@
           "Claims"
         ],
         "summary": "Cancel claim",
+        "operationId": "PostClaimsClaimIdCancel",
         "description": "Returns the cancel claim",
         "security": [
           {
@@ -7433,6 +7447,7 @@
           "Keys"
         ],
         "summary": "Check for pix keys",
+        "operationId": "PostCheckKeys",
         "description": "Returns key verification result",
         "security": [
           {
@@ -7735,6 +7750,3751 @@
         "bearerFormat": "JWT",
         "scheme": "bearer",
         "description": "Bearer auth (https://developer.mozilla.org/en-US/docs/Web/HTTP/Authentication)."
+      }
+    },
+    "schemas": {
+      "ListKeys": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "description": "Describes the properties of pix key.",
+              "required": [
+                "key",
+                "name",
+                "created_at",
+                "ownership_start_date"
+              ],
+              "properties": {
+                "key": {
+                  "type": "string",
+                  "description": "Value of pix key.",
+                  "example": "51981706022"
+                },
+                "name": {
+                  "type": "string",
+                  "description": "Trade Name of pix key owner.",
+                  "example": "John Doe"
+                },
+                "nickname": {
+                  "type": "string",
+                  "description": "Name of pix key owner.",
+                  "example": "John"
+                },
+                "created_at": {
+                  "type": "string",
+                  "description": "Pix key creation date.",
+                  "example": "2021-10-31T12:56:23.123Z"
+                },
+                "ownership_start_date": {
+                  "type": "string",
+                  "description": "Ownership start date.",
+                  "example": "2021-10-31T12:56:23.123Z"
+                },
+                "claim_opening_date": {
+                  "type": "string",
+                  "description": "Claim opening date.",
+                  "example": "2021-10-31T12:56:23.123Z"
+                },
+                "claim": {
+                  "type": "string",
+                  "enum": [
+                    "OWNERSHIP",
+                    "PORTABILITY"
+                  ],
+                  "description": "Claim reason.",
+                  "example": "PORTABILITY"
+                }
+              }
+            }
+          }
+        }
+      },
+      "AccountDisabled": {
+        "title": "Account Disabled",
+        "properties": {
+          "code": {
+            "type": "string",
+            "title": "Error code",
+            "description": "The type of error",
+            "example": "ACCOUNT_DISABLED",
+            "enum": [
+              "ACCOUNT_DISABLED"
+            ]
+          },
+          "message": {
+            "type": "string",
+            "title": "Error message",
+            "description": "Describes a message informing a reason for the error",
+            "example": "The provided account has been disabled."
+          }
+        }
+      },
+      "AuthenticationError": {
+        "title": "Authentication error",
+        "properties": {
+          "code": {
+            "type": "string",
+            "title": "Error code",
+            "description": "The type of error",
+            "example": "AUTHENTICATION_FAILED",
+            "enum": [
+              "AUTHENTICATION_FAILED"
+            ]
+          },
+          "message": {
+            "type": "string",
+            "title": "Error message",
+            "description": "Describes a message informing a reason for the error",
+            "example": "Authentication failed."
+          }
+        }
+      },
+      "MissingProduct": {
+        "title": "Missing Product Permission",
+        "properties": {
+          "code": {
+            "type": "string",
+            "title": "Error code",
+            "description": "The type of error",
+            "example": "MISSING_PRODUCT_PERMISSION",
+            "enum": [
+              "MISSING_PRODUCT_PERMISSION"
+            ]
+          },
+          "message": {
+            "type": "string",
+            "title": "Error message",
+            "description": "Describes a message informing a reason for the error",
+            "example": "Missing product permission."
+          }
+        }
+      },
+      "AccountNotFound": {
+        "title": "Account Not Found",
+        "properties": {
+          "code": {
+            "type": "string",
+            "title": "Error code",
+            "description": "The type of error",
+            "example": "ACCOUNT_NOT_FOUND",
+            "enum": [
+              "ACCOUNT_NOT_FOUND"
+            ]
+          },
+          "message": {
+            "type": "string",
+            "title": "Error message",
+            "description": "Describes a message informing a reason for the error",
+            "example": "Account not found"
+          },
+          "status_code": {
+            "type": "number",
+            "description": "Error status code",
+            "example": "404"
+          }
+        }
+      },
+      "InternalServerError": {
+        "title": "Internal Server Error",
+        "properties": {
+          "code": {
+            "type": "string",
+            "title": "Error code",
+            "description": "The type of error",
+            "example": "INTERNAL_SERVER_ERROR",
+            "enum": [
+              "INTERNAL_SERVER_ERROR"
+            ]
+          },
+          "message": {
+            "type": "string",
+            "title": "Error message",
+            "description": "Describes a message informing a reason for the error",
+            "example": "Unexpected error with our service"
+          }
+        }
+      },
+      "CreateKey": {
+        "type": "object",
+        "description": "Describes the properties of pix key.",
+        "required": [
+          "kind",
+          "account_id"
+        ],
+        "properties": {
+          "kind": {
+            "type": "string",
+            "description": "Kind of the Pix key.\n",
+            "enum": [
+              "CELLPHONE",
+              "CPF",
+              "CNPJ",
+              "EMAIL",
+              "VIRTUAL"
+            ],
+            "example": "CELLPHONE"
+          },
+          "key": {
+            "type": "string",
+            "description": "Value of pix key.",
+            "example": "51981706022"
+          },
+          "account_id": {
+            "type": "string",
+            "description": "Unique identifier of the account.",
+            "format": "uuid-v4",
+            "example": "6d814c28-fe73-443c-bfe0-48d518aa32fa"
+          },
+          "key_ownership_elapsed_time": {
+            "type": "number",
+            "format": "float",
+            "description": "Number of seconds it took the client to trigger the key ownership confirmation email/sms.\nRequired if kind: [CELLPHONE, EMAIL]\n",
+            "example": 1.5
+          }
+        }
+      },
+      "CreateKey-2": {
+        "type": "object",
+        "description": "Describes the properties of pix key.",
+        "required": [
+          "key",
+          "created_at",
+          "ownership_start_date",
+          "claim_opening_date"
+        ],
+        "properties": {
+          "key": {
+            "type": "string",
+            "description": "Value of pix key.",
+            "example": "51981706022"
+          },
+          "created_at": {
+            "type": "string",
+            "description": "Pix key creation date.",
+            "example": "2021-10-31T12:56:23.123Z"
+          },
+          "ownership_start_date": {
+            "type": "string",
+            "description": "Ownership start date.",
+            "example": "2021-10-31T12:56:23.123Z"
+          },
+          "claim_opening_date": {
+            "type": "string",
+            "description": "Claim opening date.",
+            "example": "2021-10-31T12:56:23.123Z"
+          }
+        }
+      },
+      "InvalidCPF": {
+        "title": "Invalid CPF",
+        "properties": {
+          "code": {
+            "type": "string",
+            "title": "Error code",
+            "description": "The type of error",
+            "example": "INVALID_CPF",
+            "enum": [
+              "INVALID_CPF"
+            ]
+          },
+          "message": {
+            "type": "string",
+            "title": "Error message",
+            "description": "Describes a message informing a reason for the error",
+            "example": "The provided CPF is not valid."
+          }
+        }
+      },
+      "InvalidCNPJ": {
+        "title": "Invalid CNPJ",
+        "properties": {
+          "code": {
+            "type": "string",
+            "title": "Error code",
+            "description": "The type of error",
+            "example": "INVALID_CNPJ",
+            "enum": [
+              "INVALID_CNPJ"
+            ]
+          },
+          "message": {
+            "type": "string",
+            "title": "Error message",
+            "description": "Describes a message informing a reason for the error",
+            "example": "The provided CNPJ is not valid."
+          }
+        }
+      },
+      "InvalidCellPhone": {
+        "title": "Invalid Cellphone",
+        "properties": {
+          "code": {
+            "type": "string",
+            "title": "Error code",
+            "description": "The type of error",
+            "example": "INVALID_CELLPHONE",
+            "enum": [
+              "INVALID_CELLPHONE"
+            ]
+          },
+          "message": {
+            "type": "string",
+            "title": "Error message",
+            "description": "Describes a message informing a reason for the error",
+            "example": "The provided cellphone is not valid."
+          }
+        }
+      },
+      "InvalidEmail": {
+        "title": "Invalid Email",
+        "properties": {
+          "code": {
+            "type": "string",
+            "title": "Error code",
+            "description": "The type of error",
+            "example": "INVALID_EMAIL",
+            "enum": [
+              "INVALID_EMAIL"
+            ]
+          },
+          "message": {
+            "type": "string",
+            "title": "Error message",
+            "description": "Describes a message informing a reason for the error",
+            "example": "The provided email is not valid."
+          }
+        }
+      },
+      "KeyAlreadyExists": {
+        "title": "Key already exist",
+        "properties": {
+          "code": {
+            "type": "string",
+            "title": "Error code",
+            "description": "The type of error",
+            "example": "KEY_ALREADY_EXISTS",
+            "enum": [
+              "KEY_ALREADY_EXISTS"
+            ]
+          },
+          "message": {
+            "type": "string",
+            "title": "Error message",
+            "description": "Describes a message informing a reason for the error",
+            "example": "There is already a bond for this key with the same participant and owner"
+          }
+        }
+      },
+      "EntryLockedByClaim": {
+        "title": "There is a claim locking the given key",
+        "properties": {
+          "code": {
+            "type": "string",
+            "title": "Error code",
+            "description": "The type of error",
+            "example": "ENTRY_LOCKED_BY_CLAIM",
+            "enum": [
+              "ENTRY_LOCKED_BY_CLAIM"
+            ]
+          },
+          "message": {
+            "type": "string",
+            "title": "Error message",
+            "description": "Describes a message informing a reason for the error",
+            "example": "There is a claim with a status other than completed or canceled for the key"
+          }
+        }
+      },
+      "KeyInCustodyOfDifferentParticipant": {
+        "title": "Key in custody of different participant",
+        "properties": {
+          "code": {
+            "type": "string",
+            "title": "Error code",
+            "description": "The type of error",
+            "example": "KEY_IN_CUSTODY_OF_DIFFERENT_PARTICIPANT",
+            "enum": [
+              "KEY_IN_CUSTODY_OF_DIFFERENT_PARTICIPANT"
+            ]
+          },
+          "message": {
+            "type": "string",
+            "title": "Error message",
+            "description": "Describes a message informing a reason for the error",
+            "example": "There is already a bond for this key with other participant and owner. It is indicated a claim of ownership"
+          }
+        }
+      },
+      "KeyWithDifferentAccount": {
+        "title": "Key with different account",
+        "properties": {
+          "code": {
+            "type": "string",
+            "title": "Error code",
+            "description": "The type of error",
+            "example": "KEY_WITH_DIFFERENT_ACCOUNT",
+            "enum": [
+              "KEY_WITH_DIFFERENT_ACCOUNT"
+            ]
+          },
+          "message": {
+            "type": "string",
+            "title": "Error message",
+            "description": "Describes a message informing a reason for the error",
+            "example": "There is already a link for this key on with the same owner and other account information. A key change is indicated"
+          }
+        }
+      },
+      "KeyNicknameInvalid": {
+        "title": "The key to be changed does not accept nickname",
+        "properties": {
+          "code": {
+            "type": "string",
+            "title": "Error code",
+            "description": "The type of error",
+            "example": "KEY_NICKNAME_INVALID",
+            "enum": [
+              "KEY_NICKNAME_INVALID"
+            ]
+          },
+          "message": {
+            "type": "string",
+            "title": "Error message",
+            "description": "Describes a message informing a reason for the error",
+            "example": "The key to be changed does not accept nickname, as it is associated with the individual person type"
+          }
+        }
+      },
+      "KeyDataIncomplete": {
+        "title": "Invalid data",
+        "properties": {
+          "code": {
+            "type": "string",
+            "title": "Error code",
+            "description": "The type of error",
+            "example": "KEY_DATA_INCOMPLETE",
+            "enum": [
+              "KEY_DATA_INCOMPLETE"
+            ]
+          },
+          "message": {
+            "type": "string",
+            "title": "Error message",
+            "description": "Describes a message informing a reason for the error",
+            "example": "Incomplete data for key change. Inform \"account type, account number and date and time of opening of the new account\" and/or \"name and nickname\""
+          }
+        }
+      },
+      "KeySameDocumentDifferentPSP": {
+        "title": "This key is already linked to this document, but in another PSP",
+        "properties": {
+          "code": {
+            "type": "string",
+            "title": "Error code",
+            "description": "The type of error",
+            "example": "KEY_SAME_DOCUMENT_DIFFERENT_PSP",
+            "enum": [
+              "KEY_SAME_DOCUMENT_DIFFERENT_PSP"
+            ]
+          },
+          "message": {
+            "type": "string",
+            "title": "Error message",
+            "description": "Describes a message informing a reason for the error",
+            "example": "This key is already linked to this document number, but in another PSP. Portability is recommended"
+          }
+        }
+      },
+      "InvalidIdempotenceKey": {
+        "title": "Invalid Idempotence Key",
+        "properties": {
+          "code": {
+            "type": "string",
+            "title": "Error code",
+            "description": "The type of error",
+            "example": "INVALID_IDEMPOTENCE_KEY",
+            "enum": [
+              "INVALID_IDEMPOTENCE_KEY"
+            ]
+          },
+          "message": {
+            "type": "string",
+            "title": "Error message",
+            "description": "Describes a message informing a reason for the error",
+            "example": "Idempotence Key is missing or is not a valid uuid."
+          }
+        }
+      },
+      "IdempotenceKeyConflict": {
+        "title": "Idempotence key conflict",
+        "properties": {
+          "code": {
+            "type": "string",
+            "title": "Error code",
+            "description": "The type of error",
+            "example": "IDEMPOTENCE_KEY_CONFLICT",
+            "enum": [
+              "IDEMPOTENCE_KEY_CONFLICT"
+            ]
+          },
+          "message": {
+            "type": "string",
+            "title": "Error message",
+            "description": "Describes a message informing a reason for the error",
+            "example": "Two different contents have been sent with the same idempotence key"
+          }
+        }
+      },
+      "KeyLimitExceededError": {
+        "title": "Key Limit exceeded",
+        "properties": {
+          "code": {
+            "type": "string",
+            "title": "Error code",
+            "description": "The type of error",
+            "example": "KEY_LIMIT_EXCEEDED",
+            "enum": [
+              "KEY_LIMIT_EXCEEDED"
+            ]
+          },
+          "message": {
+            "type": "string",
+            "title": "Error message",
+            "description": "Describes a message informing a reason for the error",
+            "example": "Number of links associated with transactional account exceeded maximum limit."
+          }
+        }
+      },
+      "EntryKeyInCustodyOfDifferentParticipant": {
+        "title": "entry key in custody off different participant",
+        "properties": {
+          "code": {
+            "type": "string",
+            "title": "Error code",
+            "description": "The type of error",
+            "example": "ENTRY_KEY_IN_CUSTODY_OF_DIFFERENT_PARTICIPANT",
+            "enum": [
+              "ENTRY_KEY_IN_CUSTODY_OF_DIFFERENT_PARTICIPANT"
+            ]
+          },
+          "message": {
+            "type": "string",
+            "title": "Error message",
+            "description": "Describes a message informing a reason for the error",
+            "example": "There is already a link for this key with the same owner, but it is associated with another participant. It is indicated that a portability solution is made."
+          }
+        }
+      },
+      "KeyDidNotMatchDocumentNumberError": {
+        "title": "Key did not match document number",
+        "properties": {
+          "code": {
+            "type": "string",
+            "title": "Error code",
+            "description": "The type of error",
+            "example": "KEY_DID_NOT_MATCH_DOCUMENT_NUMBER",
+            "enum": [
+              "KEY_DID_NOT_MATCH_DOCUMENT_NUMBER"
+            ]
+          },
+          "message": {
+            "type": "string",
+            "title": "Error message",
+            "description": "Describes a message informing a reason for the error",
+            "example": "The key did not match the document number registered for the account provided."
+          }
+        }
+      },
+      "ApplicationNotFound": {
+        "title": "Application product not found",
+        "properties": {
+          "code": {
+            "type": "string",
+            "title": "Error code",
+            "description": "The type of error",
+            "example": "APPLICATION_PRODUCT_NOT_FOUND",
+            "enum": [
+              "APPLICATION_PRODUCT_NOT_FOUND"
+            ]
+          },
+          "message": {
+            "type": "string",
+            "title": "Error message",
+            "description": "Describes a message informing a reason for the error",
+            "example": "Product not found for given application id."
+          }
+        }
+      },
+      "StatisticsPeriod": {
+        "type": "object",
+        "description": "Describes the properties of pix key statistics",
+        "properties": {
+          "d90": {
+            "type": "number",
+            "description": "90 days"
+          },
+          "m12": {
+            "type": "number",
+            "description": "12 months"
+          },
+          "m60": {
+            "type": "number",
+            "description": "60 months"
+          }
+        }
+      },
+      "Spi": {
+        "type": "object",
+        "properties": {
+          "updated_at": {
+            "type": "string",
+            "format": "dateTime",
+            "example": "2021-10-31T12:56:23.123Z"
+          },
+          "transactions": {
+            "type": "object",
+            "description": "Describes the properties of pix key statistics",
+            "properties": {
+              "d90": {
+                "type": "number",
+                "description": "90 days"
+              },
+              "m12": {
+                "type": "number",
+                "description": "12 months"
+              },
+              "m60": {
+                "type": "number",
+                "description": "60 months"
+              }
+            }
+          }
+        }
+      },
+      "FraudMarking": {
+        "type": "object",
+        "properties": {
+          "updated_at": {
+            "type": "string",
+            "format": "dateTime",
+            "example": "2021-10-31T12:56:23.123Z"
+          },
+          "application_fraud": {
+            "type": "object",
+            "description": "Quantity of reports from application frauds in a period",
+            "properties": {
+              "d90": {
+                "type": "number",
+                "description": "90 days"
+              },
+              "m12": {
+                "type": "number",
+                "description": "12 months"
+              },
+              "m60": {
+                "type": "number",
+                "description": "60 months"
+              }
+            }
+          },
+          "mule_account": {
+            "type": "object",
+            "description": "Quantity of reports from mule accounts in a period",
+            "properties": {
+              "d90": {
+                "type": "number",
+                "description": "90 days"
+              },
+              "m12": {
+                "type": "number",
+                "description": "12 months"
+              },
+              "m60": {
+                "type": "number",
+                "description": "60 months"
+              }
+            }
+          },
+          "scammer_account": {
+            "type": "object",
+            "description": "Quantity of reports from scammer accounts in a period",
+            "properties": {
+              "d90": {
+                "type": "number",
+                "description": "90 days"
+              },
+              "m12": {
+                "type": "number",
+                "description": "12 months"
+              },
+              "m60": {
+                "type": "number",
+                "description": "60 months"
+              }
+            }
+          },
+          "other": {
+            "type": "object",
+            "description": "Quantity of reports from other types in a period",
+            "properties": {
+              "d90": {
+                "type": "number",
+                "description": "90 days"
+              },
+              "m12": {
+                "type": "number",
+                "description": "12 months"
+              },
+              "m60": {
+                "type": "number",
+                "description": "60 months"
+              }
+            }
+          },
+          "fraud_unknown": {
+            "type": "object",
+            "description": "Quantity of reports from unknown frauds in a period",
+            "properties": {
+              "d90": {
+                "type": "number",
+                "description": "90 days"
+              },
+              "m12": {
+                "type": "number",
+                "description": "12 months"
+              },
+              "m60": {
+                "type": "number",
+                "description": "60 months"
+              }
+            }
+          },
+          "fraud_total_spi": {
+            "type": "object",
+            "description": "Quantity of reports from frauds spi in a period",
+            "properties": {
+              "d90": {
+                "type": "number",
+                "description": "90 days"
+              },
+              "m12": {
+                "type": "number",
+                "description": "12 months"
+              },
+              "m60": {
+                "type": "number",
+                "description": "60 months"
+              }
+            }
+          },
+          "fraud_distinct_psp": {
+            "type": "object",
+            "description": "Quantity of reports from distincts psp in a period",
+            "properties": {
+              "d90": {
+                "type": "number",
+                "description": "90 days"
+              },
+              "m12": {
+                "type": "number",
+                "description": "12 months"
+              },
+              "m60": {
+                "type": "number",
+                "description": "60 months"
+              }
+            }
+          }
+        }
+      },
+      "InfractionReports": {
+        "type": "object",
+        "properties": {
+          "updated_at": {
+            "type": "string",
+            "format": "dateTime",
+            "example": "2021-10-31T12:56:23.123Z"
+          },
+          "opened": {
+            "type": "number",
+            "example": 10,
+            "description": "Quantity of infraction reports opened"
+          },
+          "opened_distinct_psp": {
+            "type": "number",
+            "example": 10,
+            "description": "Quantity of infraction reports opened from distincts psp"
+          },
+          "rejected": {
+            "type": "object",
+            "description": "Quantity of infraction reports rejected in a period",
+            "properties": {
+              "d90": {
+                "type": "number",
+                "description": "90 days"
+              },
+              "m12": {
+                "type": "number",
+                "description": "12 months"
+              },
+              "m60": {
+                "type": "number",
+                "description": "60 months"
+              }
+            }
+          }
+        }
+      },
+      "GetKey": {
+        "type": "object",
+        "description": "Describes the properties of pix key",
+        "required": [
+          "reason"
+        ],
+        "properties": {
+          "kind": {
+            "type": "string",
+            "description": "Kind of the key.",
+            "enum": [
+              "CELLPHONE",
+              "CPF",
+              "CNPJ",
+              "EMAIL",
+              "VIRTUAL"
+            ],
+            "example": "CELLPHONE"
+          },
+          "key": {
+            "type": "string",
+            "description": "Value of pix key.",
+            "example": "+5551981706022"
+          },
+          "ispb": {
+            "type": "number",
+            "description": "ISPB number",
+            "example": 11476673
+          },
+          "agency_number": {
+            "type": "number",
+            "description": "Owner's agency number"
+          },
+          "account_type": {
+            "type": "string",
+            "description": "Owner's account type",
+            "enum": [
+              "CHECKING_ACCOUNT",
+              "SALARY_ACCOUNT",
+              "SAVINGS_ACCOUNT",
+              "PAYMENT_ACCOUNT"
+            ]
+          },
+          "account_number": {
+            "type": "number",
+            "description": "Owner's account number"
+          },
+          "account_digit": {
+            "type": "number",
+            "description": "Owner's account digit"
+          },
+          "account_opening_date": {
+            "type": "string",
+            "description": "Owner's account opening date"
+          },
+          "document_type": {
+            "type": "string",
+            "description": "Owner's document type",
+            "enum": [
+              "CPF",
+              "CNPJ"
+            ],
+            "example": "CPF"
+          },
+          "document_number": {
+            "type": "number",
+            "description": "Owner's document number",
+            "example": 31851631097
+          },
+          "name": {
+            "type": "string",
+            "description": "Owner's name"
+          },
+          "nickname": {
+            "type": "string",
+            "description": "Owner's nickname"
+          },
+          "created_at": {
+            "type": "string",
+            "description": "Date and time of inclusion",
+            "example": "2021-07-23T16:58:27.000Z"
+          },
+          "ownership_start_date": {
+            "type": "number",
+            "description": "Ownership start date",
+            "example": "2021-07-23T16:58:27.000Z"
+          },
+          "claim_opening_date": {
+            "type": "number",
+            "description": "When informed, it indicates the date and time of the start of the process of claim or portability of the key.",
+            "example": "2021-07-23T16:58:27.000Z"
+          },
+          "end_to_end_id": {
+            "type": "string",
+            "description": "Unique identifier of the payment transaction"
+          },
+          "key_statistics": {
+            "type": "object",
+            "description": "Statistics from key",
+            "properties": {
+              "spi": {
+                "type": "object",
+                "properties": {
+                  "updated_at": {
+                    "type": "string",
+                    "format": "dateTime",
+                    "example": "2021-10-31T12:56:23.123Z"
+                  },
+                  "transactions": {
+                    "type": "object",
+                    "description": "Describes the properties of pix key statistics",
+                    "properties": {
+                      "d90": {
+                        "type": "number",
+                        "description": "90 days"
+                      },
+                      "m12": {
+                        "type": "number",
+                        "description": "12 months"
+                      },
+                      "m60": {
+                        "type": "number",
+                        "description": "60 months"
+                      }
+                    }
+                  }
+                }
+              },
+              "fraud_markings": {
+                "type": "object",
+                "properties": {
+                  "updated_at": {
+                    "type": "string",
+                    "format": "dateTime",
+                    "example": "2021-10-31T12:56:23.123Z"
+                  },
+                  "application_fraud": {
+                    "type": "object",
+                    "description": "Quantity of reports from application frauds in a period",
+                    "properties": {
+                      "d90": {
+                        "type": "number",
+                        "description": "90 days"
+                      },
+                      "m12": {
+                        "type": "number",
+                        "description": "12 months"
+                      },
+                      "m60": {
+                        "type": "number",
+                        "description": "60 months"
+                      }
+                    }
+                  },
+                  "mule_account": {
+                    "type": "object",
+                    "description": "Quantity of reports from mule accounts in a period",
+                    "properties": {
+                      "d90": {
+                        "type": "number",
+                        "description": "90 days"
+                      },
+                      "m12": {
+                        "type": "number",
+                        "description": "12 months"
+                      },
+                      "m60": {
+                        "type": "number",
+                        "description": "60 months"
+                      }
+                    }
+                  },
+                  "scammer_account": {
+                    "type": "object",
+                    "description": "Quantity of reports from scammer accounts in a period",
+                    "properties": {
+                      "d90": {
+                        "type": "number",
+                        "description": "90 days"
+                      },
+                      "m12": {
+                        "type": "number",
+                        "description": "12 months"
+                      },
+                      "m60": {
+                        "type": "number",
+                        "description": "60 months"
+                      }
+                    }
+                  },
+                  "other": {
+                    "type": "object",
+                    "description": "Quantity of reports from other types in a period",
+                    "properties": {
+                      "d90": {
+                        "type": "number",
+                        "description": "90 days"
+                      },
+                      "m12": {
+                        "type": "number",
+                        "description": "12 months"
+                      },
+                      "m60": {
+                        "type": "number",
+                        "description": "60 months"
+                      }
+                    }
+                  },
+                  "fraud_unknown": {
+                    "type": "object",
+                    "description": "Quantity of reports from unknown frauds in a period",
+                    "properties": {
+                      "d90": {
+                        "type": "number",
+                        "description": "90 days"
+                      },
+                      "m12": {
+                        "type": "number",
+                        "description": "12 months"
+                      },
+                      "m60": {
+                        "type": "number",
+                        "description": "60 months"
+                      }
+                    }
+                  },
+                  "fraud_total_spi": {
+                    "type": "object",
+                    "description": "Quantity of reports from frauds spi in a period",
+                    "properties": {
+                      "d90": {
+                        "type": "number",
+                        "description": "90 days"
+                      },
+                      "m12": {
+                        "type": "number",
+                        "description": "12 months"
+                      },
+                      "m60": {
+                        "type": "number",
+                        "description": "60 months"
+                      }
+                    }
+                  },
+                  "fraud_distinct_psp": {
+                    "type": "object",
+                    "description": "Quantity of reports from distincts psp in a period",
+                    "properties": {
+                      "d90": {
+                        "type": "number",
+                        "description": "90 days"
+                      },
+                      "m12": {
+                        "type": "number",
+                        "description": "12 months"
+                      },
+                      "m60": {
+                        "type": "number",
+                        "description": "60 months"
+                      }
+                    }
+                  }
+                }
+              },
+              "infraction_reports": {
+                "type": "object",
+                "properties": {
+                  "updated_at": {
+                    "type": "string",
+                    "format": "dateTime",
+                    "example": "2021-10-31T12:56:23.123Z"
+                  },
+                  "opened": {
+                    "type": "number",
+                    "example": 10,
+                    "description": "Quantity of infraction reports opened"
+                  },
+                  "opened_distinct_psp": {
+                    "type": "number",
+                    "example": 10,
+                    "description": "Quantity of infraction reports opened from distincts psp"
+                  },
+                  "rejected": {
+                    "type": "object",
+                    "description": "Quantity of infraction reports rejected in a period",
+                    "properties": {
+                      "d90": {
+                        "type": "number",
+                        "description": "90 days"
+                      },
+                      "m12": {
+                        "type": "number",
+                        "description": "12 months"
+                      },
+                      "m60": {
+                        "type": "number",
+                        "description": "60 months"
+                      }
+                    }
+                  }
+                }
+              },
+              "accounts": {
+                "type": "object",
+                "properties": {
+                  "updated_at": {
+                    "type": "string",
+                    "format": "dateTime",
+                    "example": "2021-10-31T12:56:23.123Z"
+                  },
+                  "different_accounts": {
+                    "type": "object",
+                    "description": "Describes the properties of pix key statistics",
+                    "properties": {
+                      "d90": {
+                        "type": "number",
+                        "description": "90 days"
+                      },
+                      "m12": {
+                        "type": "number",
+                        "description": "12 months"
+                      },
+                      "m60": {
+                        "type": "number",
+                        "description": "60 months"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "user_statistics": {
+            "type": "object",
+            "description": "Statistics from user",
+            "properties": {
+              "spi": {
+                "type": "object",
+                "properties": {
+                  "updated_at": {
+                    "type": "string",
+                    "format": "dateTime",
+                    "example": "2021-10-31T12:56:23.123Z"
+                  },
+                  "transactions": {
+                    "type": "object",
+                    "description": "Describes the properties of pix key statistics",
+                    "properties": {
+                      "d90": {
+                        "type": "number",
+                        "description": "90 days"
+                      },
+                      "m12": {
+                        "type": "number",
+                        "description": "12 months"
+                      },
+                      "m60": {
+                        "type": "number",
+                        "description": "60 months"
+                      }
+                    }
+                  }
+                }
+              },
+              "fraud_markings": {
+                "type": "object",
+                "properties": {
+                  "updated_at": {
+                    "type": "string",
+                    "format": "dateTime",
+                    "example": "2021-10-31T12:56:23.123Z"
+                  },
+                  "application_fraud": {
+                    "type": "object",
+                    "description": "Quantity of reports from application frauds in a period",
+                    "properties": {
+                      "d90": {
+                        "type": "number",
+                        "description": "90 days"
+                      },
+                      "m12": {
+                        "type": "number",
+                        "description": "12 months"
+                      },
+                      "m60": {
+                        "type": "number",
+                        "description": "60 months"
+                      }
+                    }
+                  },
+                  "mule_account": {
+                    "type": "object",
+                    "description": "Quantity of reports from mule accounts in a period",
+                    "properties": {
+                      "d90": {
+                        "type": "number",
+                        "description": "90 days"
+                      },
+                      "m12": {
+                        "type": "number",
+                        "description": "12 months"
+                      },
+                      "m60": {
+                        "type": "number",
+                        "description": "60 months"
+                      }
+                    }
+                  },
+                  "scammer_account": {
+                    "type": "object",
+                    "description": "Quantity of reports from scammer accounts in a period",
+                    "properties": {
+                      "d90": {
+                        "type": "number",
+                        "description": "90 days"
+                      },
+                      "m12": {
+                        "type": "number",
+                        "description": "12 months"
+                      },
+                      "m60": {
+                        "type": "number",
+                        "description": "60 months"
+                      }
+                    }
+                  },
+                  "other": {
+                    "type": "object",
+                    "description": "Quantity of reports from other types in a period",
+                    "properties": {
+                      "d90": {
+                        "type": "number",
+                        "description": "90 days"
+                      },
+                      "m12": {
+                        "type": "number",
+                        "description": "12 months"
+                      },
+                      "m60": {
+                        "type": "number",
+                        "description": "60 months"
+                      }
+                    }
+                  },
+                  "fraud_unknown": {
+                    "type": "object",
+                    "description": "Quantity of reports from unknown frauds in a period",
+                    "properties": {
+                      "d90": {
+                        "type": "number",
+                        "description": "90 days"
+                      },
+                      "m12": {
+                        "type": "number",
+                        "description": "12 months"
+                      },
+                      "m60": {
+                        "type": "number",
+                        "description": "60 months"
+                      }
+                    }
+                  },
+                  "fraud_total_spi": {
+                    "type": "object",
+                    "description": "Quantity of reports from frauds spi in a period",
+                    "properties": {
+                      "d90": {
+                        "type": "number",
+                        "description": "90 days"
+                      },
+                      "m12": {
+                        "type": "number",
+                        "description": "12 months"
+                      },
+                      "m60": {
+                        "type": "number",
+                        "description": "60 months"
+                      }
+                    }
+                  },
+                  "fraud_distinct_psp": {
+                    "type": "object",
+                    "description": "Quantity of reports from distincts psp in a period",
+                    "properties": {
+                      "d90": {
+                        "type": "number",
+                        "description": "90 days"
+                      },
+                      "m12": {
+                        "type": "number",
+                        "description": "12 months"
+                      },
+                      "m60": {
+                        "type": "number",
+                        "description": "60 months"
+                      }
+                    }
+                  }
+                }
+              },
+              "infraction_reports": {
+                "type": "object",
+                "properties": {
+                  "updated_at": {
+                    "type": "string",
+                    "format": "dateTime",
+                    "example": "2021-10-31T12:56:23.123Z"
+                  },
+                  "opened": {
+                    "type": "number",
+                    "example": 10,
+                    "description": "Quantity of infraction reports opened"
+                  },
+                  "opened_distinct_psp": {
+                    "type": "number",
+                    "example": 10,
+                    "description": "Quantity of infraction reports opened from distincts psp"
+                  },
+                  "rejected": {
+                    "type": "object",
+                    "description": "Quantity of infraction reports rejected in a period",
+                    "properties": {
+                      "d90": {
+                        "type": "number",
+                        "description": "90 days"
+                      },
+                      "m12": {
+                        "type": "number",
+                        "description": "12 months"
+                      },
+                      "m60": {
+                        "type": "number",
+                        "description": "60 months"
+                      }
+                    }
+                  }
+                }
+              },
+              "accounts": {
+                "type": "object",
+                "properties": {
+                  "updated_at": {
+                    "type": "string",
+                    "format": "dateTime",
+                    "example": "2021-10-31T12:56:23.123Z",
+                    "description": "Date time from last update"
+                  },
+                  "total": {
+                    "type": "number",
+                    "example": 10,
+                    "description": "Total number of accounts"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "KeyNotFound": {
+        "title": "Key Not Found",
+        "properties": {
+          "code": {
+            "type": "string",
+            "title": "Error code",
+            "description": "The type of error",
+            "example": "KEY_NOT_FOUND",
+            "enum": [
+              "KEY_NOT_FOUND"
+            ]
+          },
+          "message": {
+            "type": "string",
+            "title": "Error message",
+            "description": "Describes a message informing a reason for the error",
+            "example": "Key not found."
+          },
+          "status_code": {
+            "type": "number",
+            "description": "Error status code",
+            "example": "404"
+          }
+        }
+      },
+      "NoKeyLinkedToDocumentNumber": {
+        "title": "There arent key linked to the document number informed",
+        "properties": {
+          "code": {
+            "type": "string",
+            "title": "Error code",
+            "description": "The type of error",
+            "example": "NO_KEY_LINKED_TO_DOCUMENT_NUMBER",
+            "enum": [
+              "NO_KEY_LINKED_TO_DOCUMENT_NUMBER"
+            ]
+          },
+          "message": {
+            "type": "string",
+            "title": "Error message",
+            "description": "Describes a message informing a reason for the error",
+            "example": "There arent key linked to the document number informed"
+          }
+        }
+      },
+      "DeleteKey": {
+        "type": "object",
+        "description": "Describes the properties to remove a key.",
+        "required": [
+          "reason"
+        ],
+        "properties": {
+          "reason": {
+            "type": "string",
+            "description": "Reason to remove a key.\n",
+            "enum": [
+              "CUSTOMER_REQUEST",
+              "FRAUD",
+              "RECONCILIATION"
+            ],
+            "example": "CUSTOMER_REQUEST"
+          }
+        }
+      },
+      "GetKeyStatistics": {
+        "type": "object",
+        "description": "Describes the properties of pix key statistics",
+        "required": [
+          "responded_at",
+          "correlation_id",
+          "key",
+          "key_statistics",
+          "spi",
+          "fraud_markings",
+          "infraction_reports",
+          "accounts"
+        ],
+        "properties": {
+          "responded_at": {
+            "type": "string",
+            "example": "2021-10-31T12:56:23.123Z",
+            "description": "The responded at request"
+          },
+          "correlation_id": {
+            "type": "string",
+            "format": "uuid-v4",
+            "description": "Id from correlation",
+            "example": "343635c2-7a88-41d7-8f4a-847df863aeeb"
+          },
+          "key": {
+            "type": "string",
+            "description": "Key from request",
+            "example": "+5554999999999"
+          },
+          "key_statistics": {
+            "type": "object",
+            "description": "Statistics from key",
+            "properties": {
+              "spi": {
+                "type": "object",
+                "properties": {
+                  "updated_at": {
+                    "type": "string",
+                    "format": "dateTime",
+                    "example": "2021-10-31T12:56:23.123Z"
+                  },
+                  "transactions": {
+                    "type": "object",
+                    "description": "Describes the properties of pix key statistics",
+                    "properties": {
+                      "d90": {
+                        "type": "number",
+                        "description": "90 days"
+                      },
+                      "m12": {
+                        "type": "number",
+                        "description": "12 months"
+                      },
+                      "m60": {
+                        "type": "number",
+                        "description": "60 months"
+                      }
+                    }
+                  }
+                }
+              },
+              "fraud_markings": {
+                "type": "object",
+                "properties": {
+                  "updated_at": {
+                    "type": "string",
+                    "format": "dateTime",
+                    "example": "2021-10-31T12:56:23.123Z"
+                  },
+                  "application_fraud": {
+                    "type": "object",
+                    "description": "Quantity of reports from application frauds in a period",
+                    "properties": {
+                      "d90": {
+                        "type": "number",
+                        "description": "90 days"
+                      },
+                      "m12": {
+                        "type": "number",
+                        "description": "12 months"
+                      },
+                      "m60": {
+                        "type": "number",
+                        "description": "60 months"
+                      }
+                    }
+                  },
+                  "mule_account": {
+                    "type": "object",
+                    "description": "Quantity of reports from mule accounts in a period",
+                    "properties": {
+                      "d90": {
+                        "type": "number",
+                        "description": "90 days"
+                      },
+                      "m12": {
+                        "type": "number",
+                        "description": "12 months"
+                      },
+                      "m60": {
+                        "type": "number",
+                        "description": "60 months"
+                      }
+                    }
+                  },
+                  "scammer_account": {
+                    "type": "object",
+                    "description": "Quantity of reports from scammer accounts in a period",
+                    "properties": {
+                      "d90": {
+                        "type": "number",
+                        "description": "90 days"
+                      },
+                      "m12": {
+                        "type": "number",
+                        "description": "12 months"
+                      },
+                      "m60": {
+                        "type": "number",
+                        "description": "60 months"
+                      }
+                    }
+                  },
+                  "other": {
+                    "type": "object",
+                    "description": "Quantity of reports from other types in a period",
+                    "properties": {
+                      "d90": {
+                        "type": "number",
+                        "description": "90 days"
+                      },
+                      "m12": {
+                        "type": "number",
+                        "description": "12 months"
+                      },
+                      "m60": {
+                        "type": "number",
+                        "description": "60 months"
+                      }
+                    }
+                  },
+                  "fraud_unknown": {
+                    "type": "object",
+                    "description": "Quantity of reports from unknown frauds in a period",
+                    "properties": {
+                      "d90": {
+                        "type": "number",
+                        "description": "90 days"
+                      },
+                      "m12": {
+                        "type": "number",
+                        "description": "12 months"
+                      },
+                      "m60": {
+                        "type": "number",
+                        "description": "60 months"
+                      }
+                    }
+                  },
+                  "fraud_total_spi": {
+                    "type": "object",
+                    "description": "Quantity of reports from frauds spi in a period",
+                    "properties": {
+                      "d90": {
+                        "type": "number",
+                        "description": "90 days"
+                      },
+                      "m12": {
+                        "type": "number",
+                        "description": "12 months"
+                      },
+                      "m60": {
+                        "type": "number",
+                        "description": "60 months"
+                      }
+                    }
+                  },
+                  "fraud_distinct_psp": {
+                    "type": "object",
+                    "description": "Quantity of reports from distincts psp in a period",
+                    "properties": {
+                      "d90": {
+                        "type": "number",
+                        "description": "90 days"
+                      },
+                      "m12": {
+                        "type": "number",
+                        "description": "12 months"
+                      },
+                      "m60": {
+                        "type": "number",
+                        "description": "60 months"
+                      }
+                    }
+                  }
+                }
+              },
+              "infraction_reports": {
+                "type": "object",
+                "properties": {
+                  "updated_at": {
+                    "type": "string",
+                    "format": "dateTime",
+                    "example": "2021-10-31T12:56:23.123Z"
+                  },
+                  "opened": {
+                    "type": "number",
+                    "example": 10,
+                    "description": "Quantity of infraction reports opened"
+                  },
+                  "opened_distinct_psp": {
+                    "type": "number",
+                    "example": 10,
+                    "description": "Quantity of infraction reports opened from distincts psp"
+                  },
+                  "rejected": {
+                    "type": "object",
+                    "description": "Quantity of infraction reports rejected in a period",
+                    "properties": {
+                      "d90": {
+                        "type": "number",
+                        "description": "90 days"
+                      },
+                      "m12": {
+                        "type": "number",
+                        "description": "12 months"
+                      },
+                      "m60": {
+                        "type": "number",
+                        "description": "60 months"
+                      }
+                    }
+                  }
+                }
+              },
+              "accounts": {
+                "type": "object",
+                "properties": {
+                  "updated_at": {
+                    "type": "string",
+                    "format": "dateTime",
+                    "example": "2021-10-31T12:56:23.123Z"
+                  },
+                  "different_accounts": {
+                    "type": "object",
+                    "description": "Describes the properties of pix key statistics",
+                    "properties": {
+                      "d90": {
+                        "type": "number",
+                        "description": "90 days"
+                      },
+                      "m12": {
+                        "type": "number",
+                        "description": "12 months"
+                      },
+                      "m60": {
+                        "type": "number",
+                        "description": "60 months"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "user_statistics": {
+            "type": "object",
+            "description": "Statistics from user",
+            "properties": {
+              "spi": {
+                "type": "object",
+                "properties": {
+                  "updated_at": {
+                    "type": "string",
+                    "format": "dateTime",
+                    "example": "2021-10-31T12:56:23.123Z"
+                  },
+                  "transactions": {
+                    "type": "object",
+                    "description": "Describes the properties of pix key statistics",
+                    "properties": {
+                      "d90": {
+                        "type": "number",
+                        "description": "90 days"
+                      },
+                      "m12": {
+                        "type": "number",
+                        "description": "12 months"
+                      },
+                      "m60": {
+                        "type": "number",
+                        "description": "60 months"
+                      }
+                    }
+                  }
+                }
+              },
+              "fraud_markings": {
+                "type": "object",
+                "properties": {
+                  "updated_at": {
+                    "type": "string",
+                    "format": "dateTime",
+                    "example": "2021-10-31T12:56:23.123Z"
+                  },
+                  "application_fraud": {
+                    "type": "object",
+                    "description": "Quantity of reports from application frauds in a period",
+                    "properties": {
+                      "d90": {
+                        "type": "number",
+                        "description": "90 days"
+                      },
+                      "m12": {
+                        "type": "number",
+                        "description": "12 months"
+                      },
+                      "m60": {
+                        "type": "number",
+                        "description": "60 months"
+                      }
+                    }
+                  },
+                  "mule_account": {
+                    "type": "object",
+                    "description": "Quantity of reports from mule accounts in a period",
+                    "properties": {
+                      "d90": {
+                        "type": "number",
+                        "description": "90 days"
+                      },
+                      "m12": {
+                        "type": "number",
+                        "description": "12 months"
+                      },
+                      "m60": {
+                        "type": "number",
+                        "description": "60 months"
+                      }
+                    }
+                  },
+                  "scammer_account": {
+                    "type": "object",
+                    "description": "Quantity of reports from scammer accounts in a period",
+                    "properties": {
+                      "d90": {
+                        "type": "number",
+                        "description": "90 days"
+                      },
+                      "m12": {
+                        "type": "number",
+                        "description": "12 months"
+                      },
+                      "m60": {
+                        "type": "number",
+                        "description": "60 months"
+                      }
+                    }
+                  },
+                  "other": {
+                    "type": "object",
+                    "description": "Quantity of reports from other types in a period",
+                    "properties": {
+                      "d90": {
+                        "type": "number",
+                        "description": "90 days"
+                      },
+                      "m12": {
+                        "type": "number",
+                        "description": "12 months"
+                      },
+                      "m60": {
+                        "type": "number",
+                        "description": "60 months"
+                      }
+                    }
+                  },
+                  "fraud_unknown": {
+                    "type": "object",
+                    "description": "Quantity of reports from unknown frauds in a period",
+                    "properties": {
+                      "d90": {
+                        "type": "number",
+                        "description": "90 days"
+                      },
+                      "m12": {
+                        "type": "number",
+                        "description": "12 months"
+                      },
+                      "m60": {
+                        "type": "number",
+                        "description": "60 months"
+                      }
+                    }
+                  },
+                  "fraud_total_spi": {
+                    "type": "object",
+                    "description": "Quantity of reports from frauds spi in a period",
+                    "properties": {
+                      "d90": {
+                        "type": "number",
+                        "description": "90 days"
+                      },
+                      "m12": {
+                        "type": "number",
+                        "description": "12 months"
+                      },
+                      "m60": {
+                        "type": "number",
+                        "description": "60 months"
+                      }
+                    }
+                  },
+                  "fraud_distinct_psp": {
+                    "type": "object",
+                    "description": "Quantity of reports from distincts psp in a period",
+                    "properties": {
+                      "d90": {
+                        "type": "number",
+                        "description": "90 days"
+                      },
+                      "m12": {
+                        "type": "number",
+                        "description": "12 months"
+                      },
+                      "m60": {
+                        "type": "number",
+                        "description": "60 months"
+                      }
+                    }
+                  }
+                }
+              },
+              "infraction_reports": {
+                "type": "object",
+                "properties": {
+                  "updated_at": {
+                    "type": "string",
+                    "format": "dateTime",
+                    "example": "2021-10-31T12:56:23.123Z"
+                  },
+                  "opened": {
+                    "type": "number",
+                    "example": 10,
+                    "description": "Quantity of infraction reports opened"
+                  },
+                  "opened_distinct_psp": {
+                    "type": "number",
+                    "example": 10,
+                    "description": "Quantity of infraction reports opened from distincts psp"
+                  },
+                  "rejected": {
+                    "type": "object",
+                    "description": "Quantity of infraction reports rejected in a period",
+                    "properties": {
+                      "d90": {
+                        "type": "number",
+                        "description": "90 days"
+                      },
+                      "m12": {
+                        "type": "number",
+                        "description": "12 months"
+                      },
+                      "m60": {
+                        "type": "number",
+                        "description": "60 months"
+                      }
+                    }
+                  }
+                }
+              },
+              "accounts": {
+                "type": "object",
+                "properties": {
+                  "updated_at": {
+                    "type": "string",
+                    "format": "dateTime",
+                    "example": "2021-10-31T12:56:23.123Z",
+                    "description": "Date time from last update"
+                  },
+                  "total": {
+                    "type": "number",
+                    "example": 10,
+                    "description": "Total number of accounts"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "InvalidData": {
+        "title": "Invalid data",
+        "properties": {
+          "code": {
+            "type": "string",
+            "title": "Error code",
+            "description": "The type of error",
+            "example": "INVALID_DATA",
+            "enum": [
+              "INVALID_DATA"
+            ]
+          },
+          "message": {
+            "type": "string",
+            "title": "Error message",
+            "description": "Describes a message informing a reason for the error",
+            "example": "The data provided has an invalid format"
+          }
+        }
+      },
+      "ListPartners": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "description": "Describes the properties of partner",
+              "required": [
+                "ispb",
+                "nickname",
+                "kind",
+                "status"
+              ],
+              "properties": {
+                "ispb": {
+                  "type": "number",
+                  "description": "ISPB of partner",
+                  "example": 11476673
+                },
+                "name": {
+                  "type": "string",
+                  "description": "Name of partner.",
+                  "example": "R4 Digital"
+                },
+                "nickname": {
+                  "type": "string",
+                  "description": "nickname of partner",
+                  "example": "R4"
+                },
+                "kind": {
+                  "type": "string",
+                  "description": "Kind of partner",
+                  "enum": [
+                    "DIRECT,",
+                    "INDIRECT,"
+                  ],
+                  "example": "DIRECT"
+                },
+                "modality": {
+                  "type": "string",
+                  "description": "Modality of partner.",
+                  "enum": [
+                    "TRANSACTION_ACCOUNT_PROVIDER",
+                    "GOVERNMENT_ENTITY",
+                    "SPECIAL_LIQUIDATOR"
+                  ],
+                  "example": "GOVERNMENT_ENTITY"
+                },
+                "started_at": {
+                  "type": "string",
+                  "format": "Date",
+                  "description": "Date and time of initial partner registration",
+                  "example": "2021-10-31T12:56:23.123Z"
+                },
+                "ended_at": {
+                  "type": "string",
+                  "description": "Date and time of end partner registration",
+                  "example": "2021-10-31T12:56:23.123Z"
+                },
+                "status": {
+                  "type": "string",
+                  "description": "Status of partner.",
+                  "enum": [
+                    "ACTIVE",
+                    "INACTIVE",
+                    "WAITING_ACTIVATION",
+                    "ACTIVATION_FAILED"
+                  ],
+                  "example": "ACTIVE"
+                }
+              }
+            }
+          }
+        }
+      },
+      "PartnersNotFound": {
+        "title": "Partners Not Found",
+        "properties": {
+          "code": {
+            "type": "string",
+            "title": "Error code",
+            "description": "The type of error",
+            "example": "PARTNERS_NOT_FOUND",
+            "enum": [
+              "PARTNERS_NOT_FOUND"
+            ]
+          },
+          "message": {
+            "type": "string",
+            "title": "Error message",
+            "description": "Describes a message informing a reason for the error",
+            "example": "Partners not found."
+          },
+          "status_code": {
+            "type": "number",
+            "description": "Error status code",
+            "example": "404"
+          }
+        }
+      },
+      "GetPartnerByIspb": {
+        "type": "object",
+        "description": "Describes the properties of partner",
+        "required": [
+          "ispb",
+          "nickname",
+          "kind",
+          "status"
+        ],
+        "properties": {
+          "ispb": {
+            "type": "number",
+            "description": "ISPB of partner",
+            "example": 11476673
+          },
+          "name": {
+            "type": "string",
+            "description": "Name of partner.",
+            "example": "R4 Digital"
+          },
+          "nickname": {
+            "type": "string",
+            "description": "nickname of partner",
+            "example": "R4"
+          },
+          "kind": {
+            "type": "string",
+            "description": "Kind of partner",
+            "enum": [
+              "DIRECT,",
+              "INDIRECT,"
+            ],
+            "example": "DIRECT"
+          },
+          "modality": {
+            "type": "string",
+            "description": "Modality of partner.",
+            "enum": [
+              "TRANSACTION_ACCOUNT_PROVIDER",
+              "GOVERNMENT_ENTITY",
+              "SPECIAL_LIQUIDATOR"
+            ],
+            "example": "GOVERNMENT_ENTITY"
+          },
+          "started_at": {
+            "type": "string",
+            "format": "Date",
+            "description": "Date and time of initial partner registration",
+            "example": "2021-10-31T12:56:23.123Z"
+          },
+          "ended_at": {
+            "type": "string",
+            "description": "Date and time of end partner registration",
+            "example": "2021-10-31T12:56:23.123Z"
+          },
+          "status": {
+            "type": "string",
+            "description": "Status of partner.",
+            "enum": [
+              "ACTIVE",
+              "INACTIVE",
+              "WAITING_ACTIVATION",
+              "ACTIVATION_FAILED"
+            ],
+            "example": "ACTIVE"
+          }
+        }
+      },
+      "ListClaims": {
+        "type": "object",
+        "required": [
+          "data",
+          "pagination"
+        ],
+        "properties": {
+          "data": {
+            "required": [
+              "requested_at"
+            ],
+            "properties": {
+              "requested_at": {
+                "type": "string",
+                "example": "2021-01-10T11:30:17.001Z"
+              },
+              "claims": {
+                "type": "array",
+                "items": {
+                  "required": [
+                    "reason",
+                    "participation_flow",
+                    "key",
+                    "kind",
+                    "ispb",
+                    "account_type",
+                    "account_number",
+                    "account_opening_date",
+                    "document_type",
+                    "document_number",
+                    "grantor_ispb",
+                    "claim_id",
+                    "status",
+                    "resolution_limit",
+                    "updated_at"
+                  ],
+                  "properties": {
+                    "reason": {
+                      "type": "string",
+                      "description": "Claim reason type",
+                      "example": "PORTABILITY",
+                      "enum": [
+                        "PORTABILITY",
+                        "OWNERSHIP"
+                      ]
+                    },
+                    "participation_flow": {
+                      "type": "string",
+                      "description": "Date and time of inclusion",
+                      "example": "CLAIMER",
+                      "enum": [
+                        "CLAIMER",
+                        "GRANTOR"
+                      ]
+                    },
+                    "key": {
+                      "type": "string",
+                      "description": "Pix key identifier",
+                      "example": "+5547989991111"
+                    },
+                    "kind": {
+                      "type": "string",
+                      "description": "Kind of the key",
+                      "enum": [
+                        "CPF",
+                        "CNPJ",
+                        "EMAIL",
+                        "CELLPHONE"
+                      ]
+                    },
+                    "ispb": {
+                      "type": "number",
+                      "description": "ISPB number",
+                      "example": 11476673
+                    },
+                    "agency_number": {
+                      "type": "number",
+                      "description": "Owner's agency number",
+                      "example": 1
+                    },
+                    "account_type": {
+                      "type": "string",
+                      "description": "Owner's account type",
+                      "enum": [
+                        "CHECKING_ACCOUNT",
+                        "SALARY_ACCOUNT",
+                        "SAVINGS_ACCOUNT",
+                        "PAYMENT_ACCOUNT"
+                      ]
+                    },
+                    "account_number": {
+                      "type": "number",
+                      "description": "Owner's account number",
+                      "example": 531
+                    },
+                    "account_digit": {
+                      "type": "number",
+                      "description": "Owner's account digit",
+                      "example": 1
+                    },
+                    "account_opening_date": {
+                      "type": "number",
+                      "description": "Account opening date",
+                      "example": "2021-07-23T16:58:27.000Z"
+                    },
+                    "document_type": {
+                      "type": "string",
+                      "description": "Owner's document type",
+                      "enum": [
+                        "CPF",
+                        "CNPJ"
+                      ],
+                      "example": "CPF"
+                    },
+                    "document_number": {
+                      "type": "number",
+                      "description": "Owner's document number",
+                      "example": 39033905000
+                    },
+                    "name": {
+                      "type": "string",
+                      "description": "Owner's name"
+                    },
+                    "nickname": {
+                      "type": "string",
+                      "description": "Owner's nickname"
+                    },
+                    "grantor_ispb": {
+                      "type": "number",
+                      "description": "ISPB grantor number",
+                      "example": 114761213
+                    },
+                    "grantor": {
+                      "type": "object",
+                      "properties": {
+                        "agency_number": {
+                          "type": "number",
+                          "description": "Owner's agency number",
+                          "example": 32
+                        },
+                        "account_type": {
+                          "type": "string",
+                          "description": "Owner's account type",
+                          "enum": [
+                            "CHECKING_ACCOUNT",
+                            "SALARY_ACCOUNT",
+                            "SAVINGS_ACCOUNT",
+                            "PAYMENT_ACCOUNT"
+                          ]
+                        },
+                        "account_number": {
+                          "type": "number",
+                          "description": "Grantor's account number",
+                          "example": 2314
+                        },
+                        "account_digit": {
+                          "type": "number",
+                          "description": "Grantor's account digit",
+                          "example": 1
+                        },
+                        "account_opening_date": {
+                          "type": "number",
+                          "description": "Account opening date",
+                          "example": "2021-07-23T16:58:27.000Z"
+                        },
+                        "document_type": {
+                          "type": "string",
+                          "description": "Owner's document type",
+                          "enum": [
+                            "CPF",
+                            "CNPJ"
+                          ],
+                          "example": "CPF"
+                        },
+                        "document_number": {
+                          "type": "number",
+                          "description": "Owner's document number",
+                          "example": 39033905000
+                        },
+                        "name": {
+                          "type": "string",
+                          "description": "Owner's name",
+                          "example": "Name"
+                        },
+                        "nickname": {
+                          "type": "string",
+                          "description": "Owner's nickname",
+                          "example": "Nick Name"
+                        },
+                        "notified_at": {
+                          "type": "string",
+                          "description": "When grantor was notified.",
+                          "example": "2021-07-23T16:58:27.000Z"
+                        }
+                      }
+                    },
+                    "claim_id": {
+                      "type": "string",
+                      "description": "Id of claim",
+                      "example": "4af9af0f-4935-454e-b3ee-af5b9d85c914"
+                    },
+                    "status": {
+                      "type": "string",
+                      "description": "Status of claim",
+                      "example": "OPEN",
+                      "enum": [
+                        "OPEN",
+                        "WAITING_RESOLUTION",
+                        "CONFIRMED",
+                        "CANCELED",
+                        "DONE"
+                      ]
+                    },
+                    "confirmation_reason": {
+                      "type": "string",
+                      "description": "Reason for confirmation",
+                      "example": "CUSTOMER_REQUEST",
+                      "enum": [
+                        "CUSTOMER_REQUEST",
+                        "ENDING_ACCOUNT",
+                        "FRAUD",
+                        "ANSWER_DEFAULT"
+                      ]
+                    },
+                    "cancellation_reason": {
+                      "type": "string",
+                      "description": "Reason for cancellation",
+                      "example": "FRAUD",
+                      "enum": [
+                        "CUSTOMER_REQUEST",
+                        "ENDING_ACCOUNT",
+                        "FRAUD",
+                        "ANSWER_DEFAULT",
+                        "RECONCILIATION"
+                      ]
+                    },
+                    "cancelled_by": {
+                      "type": "string",
+                      "description": "Canceled by",
+                      "example": "GRANTOR",
+                      "enum": [
+                        "GRANTOR",
+                        "CLAIMER"
+                      ]
+                    },
+                    "resolution_limit": {
+                      "type": "string",
+                      "description": "Claim resolution date limit.",
+                      "example": "2021-10-31T12:56:23.123Z"
+                    },
+                    "completion_limit": {
+                      "type": "string",
+                      "description": "Claim conclusion date limit.",
+                      "example": "2021-10-31T12:56:23.123Z"
+                    },
+                    "updated_at": {
+                      "type": "string",
+                      "description": "Claim update date.",
+                      "example": "2021-10-31T12:56:23.123Z"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "pagination": {
+            "required": [
+              "total",
+              "page",
+              "limit",
+              "has_next_page",
+              "has_previous_page"
+            ],
+            "properties": {
+              "total": {
+                "type": "number",
+                "description": "Total of records found",
+                "example": 8
+              },
+              "page": {
+                "type": "number",
+                "description": "Actual page",
+                "example": 1
+              },
+              "limit": {
+                "type": "number",
+                "description": "Limit of records per page",
+                "example": 100
+              },
+              "has_next_page": {
+                "type": "boolean",
+                "description": "Indicate if exists next pages",
+                "example": false
+              },
+              "has_previous_page": {
+                "type": "boolean",
+                "description": "Indicate if exists previous pages",
+                "example": true
+              }
+            }
+          }
+        }
+      },
+      "CreateClaim": {
+        "type": "object",
+        "description": "Describes the properties of claim.",
+        "required": [
+          "kind",
+          "key",
+          "claim",
+          "account_id"
+        ],
+        "properties": {
+          "kind": {
+            "type": "string",
+            "enum": [
+              "CELLPHONE",
+              "CPF",
+              "CNPJ",
+              "EMAIL"
+            ],
+            "description": "[CPF, CNPJ] are only allowed if claim [PORTABILITY].\n",
+            "example": "CELLPHONE"
+          },
+          "key": {
+            "type": "string",
+            "description": "Value of pix key.",
+            "example": "51981706022"
+          },
+          "claim": {
+            "type": "string",
+            "description": "Key claim.\n",
+            "enum": [
+              "PORTABILITY",
+              "OWNERSHIP"
+            ],
+            "example": "PORTABILITY"
+          },
+          "account_id": {
+            "type": "string",
+            "description": "Unique identifier of the account.",
+            "format": "uuid-v4",
+            "example": "6d814c28-fe73-443c-bfe0-48d518aa32fa"
+          },
+          "key_ownership_elapsed_time": {
+            "type": "number",
+            "format": "float",
+            "description": "Number of seconds it took the client to trigger the key ownership confirmation email/sms.\nOnly allowed if claim [PORTABILITY] and kind [CELLPHONE, EMAIL].\n",
+            "example": 1.5
+          }
+        }
+      },
+      "CreateClaim-2": {
+        "type": "object",
+        "description": "Describes the properties of claim.",
+        "required": [
+          "claim_id",
+          "resolution_limit",
+          "updated_at"
+        ],
+        "properties": {
+          "claim_id": {
+            "type": "string",
+            "description": "Claim id.",
+            "example": "d630c863-bfa4-4546-ada0-3b501c3a1572"
+          },
+          "confirmation_reason": {
+            "type": "string",
+            "description": "Confirmation reason",
+            "enum": [
+              "CUSTOMER_REQUEST",
+              "ENDING_ACCOUNT",
+              "FRAUD",
+              "ANSWER_DEFAULT"
+            ],
+            "example": "CUSTOMER_REQUEST"
+          },
+          "status": {
+            "type": "string",
+            "description": "Status of claim",
+            "example": "OPEN",
+            "enum": [
+              "OPEN",
+              "WAITING_RESOLUTION",
+              "CONFIRMED",
+              "CANCELED",
+              "DONE"
+            ]
+          },
+          "cancellation_reason": {
+            "type": "string",
+            "description": "Cancellation reason",
+            "enum": [
+              "CUSTOMER_REQUEST",
+              "ENDING_ACCOUNT",
+              "FRAUD",
+              "ANSWER_DEFAULT",
+              "RECONCILIATION"
+            ],
+            "example": "CUSTOMER_REQUEST"
+          },
+          "cancelled_by": {
+            "type": "string",
+            "description": "The cancellation origin",
+            "enum": [
+              "GRANTOR",
+              "CLAIMER"
+            ],
+            "example": "CLAIMER"
+          },
+          "resolution_limit": {
+            "type": "string",
+            "description": "Claim resolution date limit.",
+            "example": "2021-10-31T12:56:23.123Z"
+          },
+          "completion_limit": {
+            "type": "string",
+            "description": "Claim conclusion date limit.",
+            "example": "2021-10-31T12:56:23.123Z"
+          },
+          "updated_at": {
+            "type": "string",
+            "description": "Claim update date.",
+            "example": "2021-10-31T12:56:23.123Z"
+          }
+        }
+      },
+      "ClaimInvalid": {
+        "title": "Invalid Claim",
+        "properties": {
+          "code": {
+            "type": "string",
+            "title": "Error code",
+            "description": "The type of error",
+            "example": "CLAIM_INVALID",
+            "enum": [
+              "CLAIM_INVALID"
+            ]
+          },
+          "message": {
+            "type": "string",
+            "title": "Error message",
+            "description": "Describes a message informing a reason for the error",
+            "example": "There is an invalid field at creation of the claim"
+          }
+        }
+      },
+      "ClaimTypeInconsistent": {
+        "title": "Inconsistent claim type",
+        "properties": {
+          "code": {
+            "type": "string",
+            "title": "Error code",
+            "description": "The type of error",
+            "example": "CLAIM_TYPE_INCONSISTENT",
+            "enum": [
+              "CLAIM_TYPE_INCONSISTENT"
+            ]
+          },
+          "message": {
+            "type": "string",
+            "title": "Error message",
+            "description": "Describes a message informing a reason for the error",
+            "example": "The requested claim type is inconsistent"
+          }
+        }
+      },
+      "ClaimAlreadyExistForKey": {
+        "title": "Claim already exists",
+        "properties": {
+          "code": {
+            "type": "string",
+            "title": "Error code",
+            "description": "The type of error",
+            "example": "CLAIM_ALREADY_EXIST_FOR_KEY",
+            "enum": [
+              "CLAIM_ALREADY_EXIST_FOR_KEY"
+            ]
+          },
+          "message": {
+            "type": "string",
+            "title": "Error message",
+            "description": "Describes a message informing a reason for the error",
+            "example": "There is some claim with status different of done or cancelled for the revindicated key"
+          }
+        }
+      },
+      "ClaimAlreadyBelongsToClient": {
+        "title": "The key already belongs to the client",
+        "properties": {
+          "code": {
+            "type": "string",
+            "title": "Error code",
+            "description": "The type of error",
+            "example": "CLAIM_ALREADY_BELONGS_TO_CLIENT",
+            "enum": [
+              "CLAIM_ALREADY_BELONGS_TO_CLIENT"
+            ]
+          },
+          "message": {
+            "type": "string",
+            "title": "Error message",
+            "description": "Describes a message informing a reason for the error",
+            "example": "The key already belongs to the client"
+          }
+        }
+      },
+      "ClaimAlreadyOpen": {
+        "title": "Claim already exists",
+        "properties": {
+          "code": {
+            "type": "string",
+            "title": "Error code",
+            "description": "The type of error",
+            "example": "CLAIM_ALREADY_OPEN",
+            "enum": [
+              "CLAIM_ALREADY_OPEN"
+            ]
+          },
+          "message": {
+            "type": "string",
+            "title": "Error message",
+            "description": "Describes a message informing a reason for the error",
+            "example": "There is already an open claim for the key"
+          }
+        }
+      },
+      "ClaimResultingEntryAlreadyExists": {
+        "title": "Claim Resulting Entry Already Exists",
+        "properties": {
+          "code": {
+            "type": "string",
+            "title": "Error code",
+            "description": "The type of error",
+            "example": "CLAIM_RESULTING_ENTRY_ALREADY_EXISTS",
+            "enum": [
+              "CLAIM_RESULTING_ENTRY_ALREADY_EXISTS"
+            ]
+          },
+          "message": {
+            "type": "string",
+            "title": "Error message",
+            "description": "Describes a message informing a reason for the error",
+            "example": "The key is already in the possession of the given claimer"
+          }
+        }
+      },
+      "ClaimKeyNotFound": {
+        "title": "There is no registered bond to the key being claimed",
+        "properties": {
+          "code": {
+            "type": "string",
+            "title": "Error code",
+            "description": "The type of error",
+            "example": "CLAIM_KEY_NOT_FOUND",
+            "enum": [
+              "CLAIM_KEY_NOT_FOUND"
+            ]
+          },
+          "message": {
+            "type": "string",
+            "title": "Error message",
+            "description": "Describes a message informing a reason for the error",
+            "example": "There is no registered bond to the key being claimed"
+          }
+        }
+      },
+      "ListPendingClaims": {
+        "type": "object",
+        "description": "Describes the properties of claim.",
+        "required": [
+          "data"
+        ],
+        "properties": {
+          "consulted_at": {
+            "type": "string",
+            "description": "Requested at",
+            "example": "2021-07-23T16:58:27.000Z"
+          },
+          "has_more_items": {
+            "type": "boolean",
+            "description": "Has more items to list",
+            "example": false
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "reason": {
+                  "type": "string",
+                  "description": "Claim's type",
+                  "enum": [
+                    "PORTABILITY",
+                    "OWNERSHIP"
+                  ],
+                  "example": "PORTABILITY"
+                },
+                "participation_flow": {
+                  "type": "string",
+                  "description": "Participation flow",
+                  "enum": [
+                    "CLAIMENT",
+                    "GRANTOR"
+                  ],
+                  "example": "CLAIMENT"
+                },
+                "key": {
+                  "type": "string",
+                  "description": "Value of pix key.",
+                  "example": "51981706022"
+                },
+                "kind": {
+                  "type": "string",
+                  "description": "Kind of key.",
+                  "enum": [
+                    "CELLPHONE",
+                    "CPF",
+                    "CNPJ",
+                    "EMAIL",
+                    "VIRTUAL"
+                  ],
+                  "example": "CPF"
+                },
+                "ispb": {
+                  "type": "number",
+                  "description": "ISPB number",
+                  "example": 11476673
+                },
+                "agency_number": {
+                  "type": "number",
+                  "description": "Owner's agency number",
+                  "example": 23
+                },
+                "account_number": {
+                  "type": "number",
+                  "description": "Owner's account number",
+                  "example": 2451
+                },
+                "account_digit": {
+                  "type": "number",
+                  "description": "Owner's account digit",
+                  "example": 0
+                },
+                "account_type": {
+                  "type": "string",
+                  "description": "Grantor's account type",
+                  "enum": [
+                    "CHECKING_ACCOUNT",
+                    "SALARY_ACCOUNT",
+                    "SAVINGS_ACCOUNT",
+                    "PAYMENT_ACCOUNT"
+                  ],
+                  "example": "PAYMENT_ACCOUNT"
+                },
+                "account_opening_date": {
+                  "type": "string",
+                  "description": "Owner's account opening date",
+                  "example": "2021-12-01T19:15:11.006Z"
+                },
+                "document_type": {
+                  "type": "string",
+                  "enum": [
+                    "CPF",
+                    "CNPJ"
+                  ],
+                  "description": "Owner's document type",
+                  "example": "CPF"
+                },
+                "document_number": {
+                  "type": "number",
+                  "description": "Owner's document number",
+                  "example": 31851631097
+                },
+                "grantor_ispb": {
+                  "type": "number",
+                  "description": "ISPB Grantor",
+                  "example": 12421
+                },
+                "grantor": {
+                  "type": "object",
+                  "description": "Grantor's data",
+                  "properties": {
+                    "agency_number": {
+                      "type": "number",
+                      "description": "Grantor's agency number",
+                      "example": 1
+                    },
+                    "account_number": {
+                      "type": "number",
+                      "description": "Grantor's account number",
+                      "example": 12345
+                    },
+                    "account_digit": {
+                      "type": "number",
+                      "description": "Grantor's account digit",
+                      "example": 1
+                    },
+                    "account_type": {
+                      "type": "string",
+                      "description": "Grantor's account type",
+                      "enum": [
+                        "CHECKING_ACCOUNT",
+                        "SALARY_ACCOUNT",
+                        "SAVINGS_ACCOUNT",
+                        "PAYMENT_ACCOUNT"
+                      ],
+                      "example": "PAYMENT_ACCOUNT"
+                    },
+                    "document_type": {
+                      "type": "string",
+                      "enum": [
+                        "CPF",
+                        "CNPJ"
+                      ],
+                      "description": "Grantor's document type",
+                      "example": "CPF"
+                    },
+                    "document_number": {
+                      "type": "number",
+                      "description": "Grantor's document number",
+                      "example": 31851631097
+                    },
+                    "name": {
+                      "type": "string",
+                      "description": "Grantor's name",
+                      "example": "Test"
+                    },
+                    "nickname": {
+                      "type": "string",
+                      "description": "Grantor's nickname",
+                      "example": "Test"
+                    }
+                  }
+                },
+                "claim_id": {
+                  "type": "string",
+                  "description": "Claim id",
+                  "example": "69F963C6-7487-4363-9406-A1DE2A9636D4"
+                },
+                "status": {
+                  "type": "string",
+                  "description": "Claim Status",
+                  "enum": [
+                    "OPEN",
+                    "WAITING_RESOLUTION",
+                    "CONFIRMED",
+                    "CANCELLED",
+                    "DONE"
+                  ],
+                  "example": "WAITING_RESOLUTION"
+                },
+                "confirmation_reason": {
+                  "type": "string",
+                  "description": "Confirmation reason",
+                  "enum": [
+                    "CUSTOMER_REQUEST",
+                    "ENDING_ACCOUNT",
+                    "FRAUD",
+                    "ANSWER_DEFAULT"
+                  ],
+                  "example": "CUSTOMER_REQUEST"
+                },
+                "cancellation_reason": {
+                  "type": "string",
+                  "description": "Cancellation reason",
+                  "enum": [
+                    "CUSTOMER_REQUEST",
+                    "ENDING_ACCOUNT",
+                    "FRAUD",
+                    "ANSWER_DEFAULT",
+                    "RECONCILIATION"
+                  ],
+                  "example": "CUSTOMER_REQUEST"
+                },
+                "cancelled_by": {
+                  "type": "string",
+                  "description": "Cancelled by",
+                  "enum": [
+                    "CLAIMER",
+                    "GRANTOR"
+                  ],
+                  "example": "CLAIMER"
+                },
+                "resolution_limit": {
+                  "type": "string",
+                  "description": "Claim resolution date limit.",
+                  "example": "2021-10-31T12:56:23.123Z"
+                },
+                "completion_limit": {
+                  "type": "string",
+                  "description": "Claim conclusion date limit.",
+                  "example": "2021-10-31T12:56:23.123Z"
+                },
+                "updated_at": {
+                  "type": "string",
+                  "description": "Claim update date.",
+                  "example": "2021-10-31T12:56:23.123Z"
+                }
+              }
+            }
+          }
+        }
+      },
+      "GetClaim": {
+        "type": "object",
+        "required": [
+          "reason",
+          "participation_flow",
+          "key",
+          "kind",
+          "ispb",
+          "account_type",
+          "account_number",
+          "account_opening_date",
+          "document_type",
+          "document_number",
+          "grantor_ispb",
+          "claim_id",
+          "status",
+          "resolution_limit",
+          "updated_at"
+        ],
+        "properties": {
+          "participation_flow": {
+            "type": "string",
+            "description": "Date and time of inclusion",
+            "example": "CLAIMER",
+            "enum": [
+              "PORTABILITY",
+              "CLAIMER",
+              "GRANTOR"
+            ]
+          },
+          "key": {
+            "type": "string",
+            "description": "Pix key identifier",
+            "example": "+5547989991111"
+          },
+          "kind": {
+            "type": "string",
+            "description": "Kind of the key",
+            "enum": [
+              "CPF",
+              "CNPJ",
+              "EMAIL",
+              "CELLPHONE"
+            ],
+            "example": "CPF"
+          },
+          "ispb": {
+            "type": "number",
+            "description": "ISPB number",
+            "example": 11476673
+          },
+          "agency_number": {
+            "type": "number",
+            "description": "Owner's agency number",
+            "example": 31
+          },
+          "account_type": {
+            "type": "string",
+            "description": "Owner's account type",
+            "enum": [
+              "CHECKING_ACCOUNT",
+              "SALARY_ACCOUNT",
+              "SAVINGS_ACCOUNT",
+              "PAYMENT_ACCOUNT"
+            ],
+            "example": "CHECKING_ACCOUNT"
+          },
+          "account_number": {
+            "type": "number",
+            "description": "Owner's account number",
+            "example": 3201
+          },
+          "account_opening_date": {
+            "type": "number",
+            "description": "Account opening date",
+            "example": "2021-07-23T16:58:27.000Z"
+          },
+          "document_type": {
+            "type": "string",
+            "description": "Owner's document type",
+            "enum": [
+              "CPF",
+              "CNPJ"
+            ],
+            "example": "CPF"
+          },
+          "document_number": {
+            "type": "number",
+            "description": "Owner's document number",
+            "example": 24093302073
+          },
+          "grantor_ispb": {
+            "type": "number",
+            "description": "ISPB grantor number",
+            "example": 114761213
+          },
+          "grantor": {
+            "type": "object",
+            "properties": {
+              "agency_number": {
+                "type": "number",
+                "description": "Owner's agency number",
+                "example": 34
+              },
+              "account_type": {
+                "type": "string",
+                "description": "Owner's account type",
+                "enum": [
+                  "CHECKING_ACCOUNT",
+                  "SALARY_ACCOUNT",
+                  "SAVINGS_ACCOUNT",
+                  "PAYMENT_ACCOUNT"
+                ],
+                "example": "SAVINGS_ACCOUNT"
+              },
+              "account_number": {
+                "type": "number",
+                "description": "Owner's account number",
+                "example": 91092
+              },
+              "account_digit": {
+                "type": "number",
+                "description": "Owner's account digit",
+                "example": 1
+              },
+              "account_opening_date": {
+                "type": "number",
+                "description": "Account opening date",
+                "example": "2021-07-23T16:58:27.000Z"
+              },
+              "document_type": {
+                "type": "string",
+                "description": "Owner's document type",
+                "enum": [
+                  "CPF",
+                  "CNPJ"
+                ],
+                "example": "CPF"
+              },
+              "document_number": {
+                "type": "number",
+                "description": "Owner's document number",
+                "example": 39033905000
+              },
+              "name": {
+                "type": "string",
+                "description": "Owner's name",
+                "example": "Name"
+              },
+              "nickname": {
+                "type": "string",
+                "description": "Owner's nickname",
+                "example": "Nick Name"
+              },
+              "notified_at": {
+                "type": "string",
+                "description": "When grantor was notified.",
+                "example": "2021-07-23T16:58:27.000Z"
+              }
+            }
+          },
+          "claim_id": {
+            "type": "string",
+            "description": "Id of claim",
+            "example": "72e605d3-1f84-4384-b7f6-9c3c1f9e224d"
+          },
+          "status": {
+            "type": "string",
+            "description": "Status of claim",
+            "enum": [
+              "OPEN",
+              "WAITING_RESOLUTION",
+              "CONFIRMED",
+              "CANCELED",
+              "DONE"
+            ],
+            "example": "OPEN"
+          },
+          "confirmation_reason": {
+            "type": "string",
+            "description": "Reason for confirmation",
+            "enum": [
+              "CUSTOMER_REQUEST",
+              "ENDING_ACCOUNT",
+              "FRAUD",
+              "ANSWER_DEFAULT"
+            ],
+            "example": "CUSTOMER_REQUEST"
+          },
+          "cancellation_reason": {
+            "type": "string",
+            "description": "Reason for cancellation",
+            "enum": [
+              "CUSTOMER_REQUEST",
+              "ENDING_ACCOUNT",
+              "FRAUD",
+              "ANSWER_DEFAULT",
+              "RECONCILIATION"
+            ],
+            "example": "FRAUD"
+          },
+          "cancelled_by": {
+            "type": "string",
+            "description": "Canceled by",
+            "enum": [
+              "GRANTOR",
+              "CLAIMER"
+            ],
+            "example": "GRANTOR"
+          },
+          "resolution_limit": {
+            "type": "string",
+            "description": "Claim resolution date limit.",
+            "example": "2021-10-31T12:56:23.123Z"
+          },
+          "completion_limit": {
+            "type": "string",
+            "description": "Claim conclusion date limit.",
+            "example": "2021-10-31T12:56:23.123Z"
+          },
+          "updated_at": {
+            "type": "string",
+            "description": "Claim update date.",
+            "example": "2021-10-31T12:56:23.123Z"
+          }
+        }
+      },
+      "ClaimNotFound": {
+        "title": "Claim not found",
+        "properties": {
+          "code": {
+            "type": "string",
+            "title": "Error code",
+            "description": "The type of error",
+            "example": "CLAIM_NOT_FOUND",
+            "enum": [
+              "CLAIM_NOT_FOUND"
+            ]
+          },
+          "message": {
+            "type": "string",
+            "title": "Error message",
+            "description": "Describes a message informing a reason for the error",
+            "example": "Claim was not found or does not exist"
+          }
+        }
+      },
+      "ConfirmClaim": {
+        "type": "object",
+        "description": "Describes the properties of claim.",
+        "required": [
+          "claim_id",
+          "resolution_limit",
+          "updated_at"
+        ],
+        "properties": {
+          "claim_id": {
+            "type": "string",
+            "description": "Claim id.",
+            "example": "d630c863-bfa4-4546-ada0-3b501c3a1572"
+          },
+          "confirmation_reason": {
+            "type": "string",
+            "description": "Confirmation reason",
+            "enum": [
+              "CUSTOMER_REQUEST",
+              "ENDING_ACCOUNT",
+              "FRAUD",
+              "ANSWER_DEFAULT"
+            ],
+            "example": "CUSTOMER_REQUEST"
+          },
+          "status": {
+            "type": "string",
+            "description": "Status of claim",
+            "example": "OPEN",
+            "enum": [
+              "OPEN",
+              "WAITING_RESOLUTION",
+              "CONFIRMED",
+              "CANCELED",
+              "DONE"
+            ]
+          },
+          "cancellation_reason": {
+            "type": "string",
+            "description": "Cancellation reason",
+            "enum": [
+              "CUSTOMER_REQUEST",
+              "ENDING_ACCOUNT",
+              "FRAUD",
+              "ANSWER_DEFAULT",
+              "RECONCILIATION"
+            ],
+            "example": "CUSTOMER_REQUEST"
+          },
+          "cancelled_by": {
+            "type": "string",
+            "description": "The cancellation origin",
+            "enum": [
+              "GRANTOR",
+              "CLAIMER"
+            ],
+            "example": "CLAIMER"
+          },
+          "resolution_limit": {
+            "type": "string",
+            "description": "Claim resolution date limit.",
+            "example": "2021-10-31T12:56:23.123Z"
+          },
+          "completion_limit": {
+            "type": "string",
+            "description": "Claim conclusion date limit.",
+            "example": "2021-10-31T12:56:23.123Z"
+          },
+          "updated_at": {
+            "type": "string",
+            "description": "Claim update date.",
+            "example": "2021-10-31T12:56:23.123Z"
+          }
+        }
+      },
+      "ClaimCannotBeConfirmedByClaimer": {
+        "title": "The claim cannot be confirmed by claimer",
+        "properties": {
+          "code": {
+            "type": "string",
+            "title": "Error code",
+            "description": "The type of error",
+            "example": "CLAIM_CANNOT_BE_CONFIRMED_BY_CLAIMER",
+            "enum": [
+              "CLAIM_CANNOT_BE_CONFIRMED_BY_CLAIMER"
+            ]
+          },
+          "message": {
+            "type": "string",
+            "title": "Error message",
+            "description": "Describes a message informing a reason for the error",
+            "example": "The claim cannot be confirmed by claimer"
+          }
+        }
+      },
+      "ReceivedClaimCannotBeConfirmed": {
+        "title": "The claim status does not allow confirmation",
+        "properties": {
+          "code": {
+            "type": "string",
+            "title": "Error code",
+            "description": "The type of error",
+            "example": "RECEIVED_CLAIM_CANNOT_BE_CONFIRMED",
+            "enum": [
+              "RECEIVED_CLAIM_CANNOT_BE_CONFIRMED"
+            ]
+          },
+          "message": {
+            "type": "string",
+            "title": "Error message",
+            "description": "Describes a message informing a reason for the error",
+            "example": "The status of the claim you received, does not allow confirmation"
+          }
+        }
+      },
+      "ReceivedClaimConfirmReasonInvalid": {
+        "title": "The reason for confirming the claim you received is not valid",
+        "properties": {
+          "code": {
+            "type": "string",
+            "title": "Error code",
+            "description": "The type of error",
+            "example": "RECEIVED_CLAIM_CONFIRM_REASON_INVALID",
+            "enum": [
+              "RECEIVED_CLAIM_CONFIRM_REASON_INVALID"
+            ]
+          },
+          "message": {
+            "type": "string",
+            "title": "Error message",
+            "description": "Describes a message informing a reason for the error",
+            "example": "The reason for confirming the claim you received is not valid"
+          }
+        }
+      },
+      "ClaimAlreadyDone": {
+        "title": "Claim was already completed",
+        "properties": {
+          "code": {
+            "type": "string",
+            "title": "Error code",
+            "description": "The type of error",
+            "example": "CLAIM_ALREADY_DONE",
+            "enum": [
+              "CLAIM_ALREADY_DONE"
+            ]
+          },
+          "message": {
+            "type": "string",
+            "title": "Error message",
+            "description": "Describes a message informing a reason for the error",
+            "example": "Claim was already completed"
+          }
+        }
+      },
+      "ClaimResolutionPeriodNotEnded": {
+        "title": "Claim Resolution Period Not Ended",
+        "properties": {
+          "code": {
+            "type": "string",
+            "title": "Error code",
+            "description": "The type of error",
+            "example": "CLAIM_RESOLUTION_PERIOD_NOT_ENDED",
+            "enum": [
+              "CLAIM_RESOLUTION_PERIOD_NOT_ENDED"
+            ]
+          },
+          "message": {
+            "type": "string",
+            "title": "Error message",
+            "description": "Describes a message informing a reason for the error",
+            "example": "Cannot confirm ownership or cancel portability before the resolution period ends"
+          }
+        }
+      },
+      "CompleteClaim": {
+        "type": "object",
+        "required": [
+          "claim_id",
+          "status",
+          "resolution_limit",
+          "updated_at"
+        ],
+        "properties": {
+          "claim_id": {
+            "type": "string",
+            "description": "Id of claim",
+            "example": "4af9af0f-4935-454e-b3ee-af5b9d85c914"
+          },
+          "status": {
+            "type": "string",
+            "description": "Status of claim",
+            "example": "DONE",
+            "enum": [
+              "OPEN",
+              "WAITING_RESOLUTION",
+              "CONFIRMED",
+              "CANCELED",
+              "DONE"
+            ]
+          },
+          "confirmation_reason": {
+            "type": "string",
+            "description": "Reason for confirmation",
+            "example": "CUSTOMER_REQUEST",
+            "enum": [
+              "CUSTOMER_REQUEST",
+              "ENDING_ACCOUNT",
+              "FRAUD",
+              "ANSWER_DEFAULT"
+            ]
+          },
+          "cancellation_reason": {
+            "type": "string",
+            "description": "Reason for cancellation",
+            "example": "CUSTOMER_REQUEST",
+            "enum": [
+              "CUSTOMER_REQUEST",
+              "ENDING_ACCOUNT",
+              "FRAUD",
+              "ANSWER_DEFAULT",
+              "RECONCILIATION"
+            ]
+          },
+          "cancelled_by": {
+            "type": "string",
+            "description": "Canceled by",
+            "example": "GRANTOR",
+            "enum": [
+              "GRANTOR",
+              "CLAIMER"
+            ]
+          },
+          "created_at": {
+            "type": "string",
+            "description": "Date and time of inclusion",
+            "example": "2021-07-23T16:58:27.000Z"
+          },
+          "ownership_start_date": {
+            "type": "number",
+            "description": "Ownership start date",
+            "example": "2021-07-23T16:58:27.000Z"
+          },
+          "resolution_limit": {
+            "type": "string",
+            "description": "Resolution date limit",
+            "example": "2021-10-31T12:56:23.123Z"
+          },
+          "completion_limit": {
+            "type": "string",
+            "description": "Completion date limit",
+            "example": "2021-10-31T12:56:23.123Z"
+          },
+          "updated_at": {
+            "type": "string",
+            "description": "Claim modified date",
+            "example": "2021-07-23T16:58:27.000Z"
+          }
+        }
+      },
+      "ClaimCannotBeCompletedByGrantor": {
+        "title": "Claim not found",
+        "properties": {
+          "code": {
+            "type": "string",
+            "title": "Error code",
+            "description": "The type of error",
+            "example": "CLAIM_CANNOT_BE_COMPLETED_BY_GRANTOR",
+            "enum": [
+              "CLAIM_CANNOT_BE_COMPLETED_BY_GRANTOR"
+            ]
+          },
+          "message": {
+            "type": "string",
+            "title": "Error message",
+            "description": "Describes a message informing a reason for the error",
+            "example": "Claim cannot be completed by grantor"
+          }
+        }
+      },
+      "ClaimCannotComplete": {
+        "title": "The status of your claim does not allow for its conclusion",
+        "properties": {
+          "code": {
+            "type": "string",
+            "title": "Error code",
+            "description": "The type of error",
+            "example": "CLAIM_CANNOT_COMPLETE",
+            "enum": [
+              "CLAIM_CANNOT_COMPLETE"
+            ]
+          },
+          "message": {
+            "type": "string",
+            "title": "Error message",
+            "description": "Describes a message informing a reason for the error",
+            "example": "The status of your claim does not allow for its conclusion"
+          }
+        }
+      },
+      "ClaimCompletitionPeriodNotEnded": {
+        "title": "Claim Completition Period Not Ended",
+        "properties": {
+          "code": {
+            "type": "string",
+            "title": "Error code",
+            "description": "The type of error",
+            "example": "CLAIM_COMPLETION_PERIOD_NOT_ENDED",
+            "enum": [
+              "CLAIM_COMPLETION_PERIOD_NOT_ENDED"
+            ]
+          },
+          "message": {
+            "type": "string",
+            "title": "Error message",
+            "description": "Describes a message informing a reason for the error",
+            "example": "Cannot complete ownership claim before the completition period ends"
+          }
+        }
+      },
+      "CancelClaim": {
+        "type": "object",
+        "description": "Describes the properties to cancel the claim.",
+        "required": [
+          "claimer",
+          "reason"
+        ],
+        "properties": {
+          "reason": {
+            "type": "string",
+            "description": "Cancellation reason.",
+            "enum": [
+              "CUSTOMER_REQUEST",
+              "ENDING_ACCOUNT",
+              "FRAUD",
+              "ANSWER_DEFAULT",
+              "RECONCILIATION"
+            ],
+            "example": "CUSTOMER_REQUEST"
+          },
+          "claimer": {
+            "type": "boolean",
+            "description": "Define if the user is a claimer",
+            "example": true
+          }
+        }
+      },
+      "CancelClaim-2": {
+        "type": "object",
+        "description": "Describes the properties of claim.",
+        "required": [
+          "claim_id",
+          "resolution_limit",
+          "updated_at"
+        ],
+        "properties": {
+          "claim_id": {
+            "type": "string",
+            "description": "Claim id.",
+            "example": "d630c863-bfa4-4546-ada0-3b501c3a1572"
+          },
+          "confirmation_reason": {
+            "type": "string",
+            "description": "Confirmation reason",
+            "enum": [
+              "CUSTOMER_REQUEST",
+              "ENDING_ACCOUNT",
+              "FRAUD",
+              "ANSWER_DEFAULT"
+            ],
+            "example": "CUSTOMER_REQUEST"
+          },
+          "status": {
+            "type": "string",
+            "description": "Status of claim",
+            "example": "CANCELLED",
+            "enum": [
+              "OPEN",
+              "WAITING_RESOLUTION",
+              "CONFIRMED",
+              "CANCELED",
+              "DONE"
+            ]
+          },
+          "cancellation_reason": {
+            "type": "string",
+            "description": "Cancellation reason",
+            "enum": [
+              "CUSTOMER_REQUEST",
+              "ENDING_ACCOUNT",
+              "FRAUD",
+              "ANSWER_DEFAULT",
+              "RECONCILIATION"
+            ],
+            "example": "CUSTOMER_REQUEST"
+          },
+          "cancelled_by": {
+            "type": "string",
+            "description": "The cancellation origin",
+            "enum": [
+              "GRANTOR",
+              "CLAIMER"
+            ],
+            "example": "CLAIMER"
+          },
+          "resolution_limit": {
+            "type": "string",
+            "description": "Claim resolution date.",
+            "example": "2021-10-31T12:56:23.123Z"
+          },
+          "completion_limit": {
+            "type": "string",
+            "description": "Claim conclusion date.",
+            "example": "2021-10-31T12:56:23.123Z"
+          },
+          "updated_at": {
+            "type": "string",
+            "description": "Claim update date.",
+            "example": "2021-10-31T12:56:23.123Z"
+          }
+        }
+      },
+      "ClaimCannotBeCancelled": {
+        "title": "The status of your claim does not allow for its cancellation",
+        "properties": {
+          "code": {
+            "type": "string",
+            "title": "Error code",
+            "description": "The type of error",
+            "example": "CLAIM_CANNOT_BE_CANCELLED",
+            "enum": [
+              "CLAIM_CANNOT_BE_CANCELLED"
+            ]
+          },
+          "message": {
+            "type": "string",
+            "title": "Error message",
+            "description": "Describes a message informing a reason for the error",
+            "example": "The status of your claim does not allow for its cancellation"
+          }
+        }
+      },
+      "ClaimCancellationReasonInvalid": {
+        "title": "The reason to cancel your claim is not valid",
+        "properties": {
+          "code": {
+            "type": "string",
+            "title": "Error code",
+            "description": "The type of error",
+            "example": "CLAIM_CANCELLATION_REASON_INVALID",
+            "enum": [
+              "CLAIM_CANCELLATION_REASON_INVALID"
+            ]
+          },
+          "message": {
+            "type": "string",
+            "title": "Error message",
+            "description": "Describes a message informing a reason for the error",
+            "example": "The reason to cancel your claim is not valid"
+          }
+        }
+      },
+      "ReceivedClaimCannotBeCancelled": {
+        "title": "The status of the ownership claim you received does not allow for its cancellation",
+        "properties": {
+          "code": {
+            "type": "string",
+            "title": "Error code",
+            "description": "The type of error",
+            "example": "RECEIVED_CLAIM_CANNOT_BE_CANCELLED",
+            "enum": [
+              "RECEIVED_CLAIM_CANNOT_BE_CANCELLED"
+            ]
+          },
+          "message": {
+            "type": "string",
+            "title": "Error message",
+            "description": "Describes a message informing a reason for the error",
+            "example": "The status of the ownership claim you received does not allow for its cancellation"
+          }
+        }
+      },
+      "ReceivedOwnershipCannotBeCancelled": {
+        "title": "The portability status you received does not allow its cancellation",
+        "properties": {
+          "code": {
+            "type": "string",
+            "title": "Error code",
+            "description": "The type of error",
+            "example": "RECEIVED_OWNERSHIP_CANNOT_BE_CANCELLED",
+            "enum": [
+              "RECEIVED_OWNERSHIP_CANNOT_BE_CANCELLED"
+            ]
+          },
+          "message": {
+            "type": "string",
+            "title": "Error message",
+            "description": "Describes a message informing a reason for the error",
+            "example": "The portability status you received does not allow its cancellation"
+          }
+        }
+      },
+      "ReceivedClaimCancellationReasonInvalid": {
+        "title": "The reason to cancel the claim you received is not valid",
+        "properties": {
+          "code": {
+            "type": "string",
+            "title": "Error code",
+            "description": "The type of error",
+            "example": "RECEIVED_CLAIM_CANCELLATION_REASON_INVALID",
+            "enum": [
+              "RECEIVED_CLAIM_CANCELLATION_REASON_INVALID"
+            ]
+          },
+          "message": {
+            "type": "string",
+            "title": "Error message",
+            "description": "Describes a message informing a reason for the error",
+            "example": "The reason to cancel the claim you received is not valid"
+          }
+        }
+      },
+      "CheckKeys": {
+        "type": "object",
+        "description": "Describes the properties.",
+        "required": [
+          "keys"
+        ],
+        "properties": {
+          "keys": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Pix keys",
+            "example": [
+              "+5547989991111"
+            ]
+          }
+        }
+      },
+      "CheckKeys-2": {
+        "type": "object",
+        "description": "Describes the properties of key verification.",
+        "required": [
+          "keys"
+        ],
+        "properties": {
+          "correlation_id": {
+            "type": "string",
+            "description": "ID for support",
+            "example": "r29b389283r98h12echuhy23r48u23"
+          },
+          "keys": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "key": {
+                  "type": "string",
+                  "example": "+556584811516"
+                },
+                "exists": {
+                  "type": "boolean",
+                  "example": false
+                }
+              }
+            }
+          }
+        }
+      },
+      "ValidationFailed": {
+        "title": "Invalid request data",
+        "properties": {
+          "code": {
+            "type": "string",
+            "title": "Error code",
+            "description": "The type of error",
+            "example": "VALIDATION_FAILED"
+          },
+          "message": {
+            "type": "string",
+            "title": "Error message",
+            "description": "Describes a message informing a reason for the error",
+            "example": "Invalid request data."
+          },
+          "details": {
+            "type": "array",
+            "title": "Error details",
+            "description": "Informs error details",
+            "example": "Invalid request data."
+          }
+        }
       }
     }
   }
