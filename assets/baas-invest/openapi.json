@@ -1156,7 +1156,8 @@
                 "type": "object",
                 "description": "Describes properties of investment redemption",
                 "required": [
-                  "value"
+                  "value",
+                  "id"
                 ],
                 "properties": {
                   "id": {
