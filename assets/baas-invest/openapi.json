@@ -1469,6 +1469,38 @@
                 }
               }
             }
+          },
+          "410": {
+            "description": "Gone",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "The investment is already redeemed",
+                  "type": "object",
+                  "description": "Representation of an gone error",
+                  "properties": {
+                    "code": {
+                      "description": "The type of error",
+                      "type": "string",
+                      "example": "INVESTMENT_ALREADY_REDEEMED"
+                    },
+                    "message": {
+                      "description": "Describes a message informing a reason for the error",
+                      "type": "string",
+                      "example": "The investment is already redeemed"
+                    }
+                  }
+                },
+                "examples": {
+                  "Example 1 - InvestmentAlreadyRedeemed": {
+                    "value": {
+                      "code": "INVESTMENT_ALREADY_REDEEMED",
+                      "message": "The investment is already redeemed."
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -2525,6 +2557,23 @@
             "description": "Describes a message informing a reason for the error",
             "type": "string",
             "example": "Invalid investment status"
+          }
+        }
+      },
+      "investment-already-redeemed": {
+        "title": "The investment is already redeemed",
+        "type": "object",
+        "description": "Representation of an gone error",
+        "properties": {
+          "code": {
+            "description": "The type of error",
+            "type": "string",
+            "example": "INVESTMENT_ALREADY_REDEEMED"
+          },
+          "message": {
+            "description": "Describes a message informing a reason for the error",
+            "type": "string",
+            "example": "The investment is already redeemed"
           }
         }
       },
