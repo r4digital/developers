@@ -291,6 +291,11 @@
                             "type": "boolean",
                             "description": "Repurchase allowed",
                             "example": true
+                          },
+                          "liquid_income": {
+                            "type": "number",
+                            "description": "Liquid income from the application, difference between liquid value and applied value",
+                            "example": 68717.71
                           }
                         }
                       }
@@ -2415,6 +2420,11 @@
             "type": "boolean",
             "description": "Repurchase allowed",
             "example": true
+          },
+          "liquid_income": {
+            "type": "number",
+            "description": "Liquid income from the application, difference between liquid value and applied value",
+            "example": 68717.71
           }
         }
       },
