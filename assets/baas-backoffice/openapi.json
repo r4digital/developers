@@ -211,18 +211,23 @@
                       }
                     },
                     "Devolucoes": {
-                      "type": "object",
-                      "properties": {
-                        "QtdDevolucoes": {
-                          "type": "integer",
-                          "xml": {
-                            "attribute": true
-                          }
-                        },
-                        "ValorDevolucoes": {
-                          "type": "number",
-                          "xml": {
-                            "attribute": true
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "Devolucao": {
+                            "type": "object",
+                            "properties": {
+                              "QtdDevolucoes": {
+                                "type": "integer"
+                              },
+                              "ValorDevolucoes": {
+                                "type": "number"
+                              },
+                              "DetalhamentoDevolucoes": {
+                                "type": "number"
+                              }
+                            }
                           }
                         }
                       }
