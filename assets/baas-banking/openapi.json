@@ -997,6 +997,106 @@
                 "schema": {
                   "oneOf": [
                     {
+                      "title": "Transfer Processing Error",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "TRANSFER_PROCESSING_ERROR",
+                          "enum": [
+                            "TRANSFER_PROCESSING_ERROR"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "There are transfers in processing."
+                        },
+                        "status_code": {
+                          "type": "number",
+                          "description": "Error status code",
+                          "example": "400"
+                        }
+                      }
+                    },
+                    {
+                      "title": "Returns Med Processing Error",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "RETURNS_MED_PROCESSING_ERROR",
+                          "enum": [
+                            "RETURNS_MED_PROCESSING_ERROR"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "There are returns in processing."
+                        },
+                        "status_code": {
+                          "type": "number",
+                          "description": "Error status code",
+                          "example": "400"
+                        }
+                      }
+                    },
+                    {
+                      "title": "Infraction Processing Error",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "INFRACTION_PROCESSING_ERROR",
+                          "enum": [
+                            "INFRACTION_PROCESSING_ERROR"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "There are infractions in processing."
+                        },
+                        "status_code": {
+                          "type": "number",
+                          "description": "Error status code",
+                          "example": "400"
+                        }
+                      }
+                    },
+                    {
+                      "title": "Bill Payment Processing Error",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "BILL_PAYMENT_PROCESSING_ERROR",
+                          "enum": [
+                            "BILL_PAYMENT_PROCESSING_ERROR"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "There are payments in processing."
+                        },
+                        "status_code": {
+                          "type": "number",
+                          "description": "Error status code",
+                          "example": "400"
+                        }
+                      }
+                    },
+                    {
                       "title": "Account Balance Error",
                       "properties": {
                         "code": {
@@ -1072,6 +1172,44 @@
                       }
                     }
                   ]
+                },
+                "examples": {
+                  "Example1 - BillPaymentProcessingError": {
+                    "value": {
+                      "code": "BILL_PAYMENT_PROCESSING_ERROR",
+                      "message": "There are payments in processing."
+                    }
+                  },
+                  "Example2 - InfractionProcessingError": {
+                    "value": {
+                      "code": "INFRACTION_PROCESSING_ERROR",
+                      "message": "There are infractions in processing."
+                    }
+                  },
+                  "Example3 - ReturnsMedProcessingError": {
+                    "value": {
+                      "code": "RETURNS_MED_PROCESSING_ERROR",
+                      "message": "There are returns in processing."
+                    }
+                  },
+                  "Example4 - TransferProcessingError": {
+                    "value": {
+                      "code": "TRANSFER_PROCESSING_ERROR",
+                      "message": "There are transfers in processing."
+                    }
+                  },
+                  "Example5 - InvalidUUIDError": {
+                    "value": {
+                      "code": "INVALID_UUID",
+                      "message": "Invalid uuid"
+                    }
+                  },
+                  "Example6 - AccountBalanceError": {
+                    "value": {
+                      "code": "ACCOUNT_BALANCE_ERROR",
+                      "message": "The account has a balance."
+                    }
+                  }
                 }
               }
             }
@@ -3453,6 +3591,106 @@
             "type": "number",
             "description": "Error status code",
             "example": "404"
+          }
+        }
+      },
+      "TransferProcessingError": {
+        "title": "Transfer Processing Error",
+        "properties": {
+          "code": {
+            "type": "string",
+            "title": "Error code",
+            "description": "The type of error",
+            "example": "TRANSFER_PROCESSING_ERROR",
+            "enum": [
+              "TRANSFER_PROCESSING_ERROR"
+            ]
+          },
+          "message": {
+            "type": "string",
+            "title": "Error message",
+            "description": "Describes a message informing a reason for the error",
+            "example": "There are transfers in processing."
+          },
+          "status_code": {
+            "type": "number",
+            "description": "Error status code",
+            "example": "400"
+          }
+        }
+      },
+      "ReturnsMedProcessingError": {
+        "title": "Returns Med Processing Error",
+        "properties": {
+          "code": {
+            "type": "string",
+            "title": "Error code",
+            "description": "The type of error",
+            "example": "RETURNS_MED_PROCESSING_ERROR",
+            "enum": [
+              "RETURNS_MED_PROCESSING_ERROR"
+            ]
+          },
+          "message": {
+            "type": "string",
+            "title": "Error message",
+            "description": "Describes a message informing a reason for the error",
+            "example": "There are returns in processing."
+          },
+          "status_code": {
+            "type": "number",
+            "description": "Error status code",
+            "example": "400"
+          }
+        }
+      },
+      "InfractionProcessingError": {
+        "title": "Infraction Processing Error",
+        "properties": {
+          "code": {
+            "type": "string",
+            "title": "Error code",
+            "description": "The type of error",
+            "example": "INFRACTION_PROCESSING_ERROR",
+            "enum": [
+              "INFRACTION_PROCESSING_ERROR"
+            ]
+          },
+          "message": {
+            "type": "string",
+            "title": "Error message",
+            "description": "Describes a message informing a reason for the error",
+            "example": "There are infractions in processing."
+          },
+          "status_code": {
+            "type": "number",
+            "description": "Error status code",
+            "example": "400"
+          }
+        }
+      },
+      "BillPaymentProcessingError": {
+        "title": "Bill Payment Processing Error",
+        "properties": {
+          "code": {
+            "type": "string",
+            "title": "Error code",
+            "description": "The type of error",
+            "example": "BILL_PAYMENT_PROCESSING_ERROR",
+            "enum": [
+              "BILL_PAYMENT_PROCESSING_ERROR"
+            ]
+          },
+          "message": {
+            "type": "string",
+            "title": "Error message",
+            "description": "Describes a message informing a reason for the error",
+            "example": "There are payments in processing."
+          },
+          "status_code": {
+            "type": "number",
+            "description": "Error status code",
+            "example": "400"
           }
         }
       },
