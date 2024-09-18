@@ -57,6 +57,12 @@
                         "type": "object",
                         "description": "Describes properties of an investment",
                         "properties": {
+                          "id": {
+                            "type": "string",
+                            "format": "uuid",
+                            "description": "Unique identifier of the investment, returned if the investment was made by the APP",
+                            "example": "123e4567-e89b-12d3-a456-426655440000"
+                          },
                           "indicator_percentage": {
                             "type": "number",
                             "description": "Indicator percentage",
@@ -2373,6 +2379,12 @@
         "type": "object",
         "description": "Describes properties of an investment",
         "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Unique identifier of the investment, returned if the investment was made by the APP",
+            "example": "123e4567-e89b-12d3-a456-426655440000"
+          },
           "indicator_percentage": {
             "type": "number",
             "description": "Indicator percentage",
