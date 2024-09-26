@@ -2576,6 +2576,51 @@
               }
             }
           },
+          "408": {
+            "description": "Error with types [TimeoutExceeded]",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Timeout exceeded",
+                  "properties": {
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "TIMEOUT_EXCEEDED",
+                          "enum": [
+                            "TIMEOUT_EXCEEDED"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "Timeout exceeded"
+                        },
+                        "status_code": {
+                          "type": "number",
+                          "description": "Error status code",
+                          "example": "408"
+                        }
+                      }
+                    }
+                  }
+                },
+                "examples": {
+                  "Example 1 - DecodeTimeout": {
+                    "value": {
+                      "code": "TIMEOUT_EXCEEDED",
+                      "message": "Timeout exceeded"
+                    }
+                  }
+                }
+              }
+            }
+          },
           "409": {
             "description": "Conflict Error with types [QrCodeAlreadyExistsError]",
             "content": {
@@ -3280,6 +3325,51 @@
                     "value": {
                       "code": "ACCOUNT_NOT_FOUND",
                       "message": "Account not found."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "408": {
+            "description": "Error with types [TimeoutExceeded]",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Timeout exceeded",
+                  "properties": {
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "TIMEOUT_EXCEEDED",
+                          "enum": [
+                            "TIMEOUT_EXCEEDED"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "Timeout exceeded"
+                        },
+                        "status_code": {
+                          "type": "number",
+                          "description": "Error status code",
+                          "example": "408"
+                        }
+                      }
+                    }
+                  }
+                },
+                "examples": {
+                  "Example 1 - DecodeTimeout": {
+                    "value": {
+                      "code": "TIMEOUT_EXCEEDED",
+                      "message": "Timeout exceeded"
                     }
                   }
                 }
@@ -4018,11 +4108,11 @@
             }
           },
           "408": {
-            "description": "Error with types [DecodeTimeout]",
+            "description": "Error with types [TimeoutExceeded]",
             "content": {
               "application/json": {
                 "schema": {
-                  "title": "Timeout to decode the qr code by third party integration",
+                  "title": "Timeout exceeded",
                   "properties": {
                     "error": {
                       "type": "object",
@@ -4031,16 +4121,16 @@
                           "type": "string",
                           "title": "Error code",
                           "description": "The type of error",
-                          "example": "DECODE_TIMEOUT",
+                          "example": "TIMEOUT_EXCEEDED",
                           "enum": [
-                            "DECODE_TIMEOUT"
+                            "TIMEOUT_EXCEEDED"
                           ]
                         },
                         "message": {
                           "type": "string",
                           "title": "Error message",
                           "description": "Describes a message informing a reason for the error",
-                          "example": "Invalid request data"
+                          "example": "Timeout exceeded"
                         },
                         "status_code": {
                           "type": "number",
@@ -4054,8 +4144,8 @@
                 "examples": {
                   "Example 1 - DecodeTimeout": {
                     "value": {
-                      "code": "DECODE_TIMEOUT",
-                      "message": "Timeout to decode the qr code"
+                      "code": "TIMEOUT_EXCEEDED",
+                      "message": "Timeout exceeded"
                     }
                   }
                 }
@@ -4767,11 +4857,11 @@
             }
           },
           "408": {
-            "description": "Error with types [DecodeTimeout]",
+            "description": "Error with types [TimeoutExceeded]",
             "content": {
               "application/json": {
                 "schema": {
-                  "title": "Timeout to decode the qr code by third party integration",
+                  "title": "Timeout exceeded",
                   "properties": {
                     "error": {
                       "type": "object",
@@ -4780,16 +4870,16 @@
                           "type": "string",
                           "title": "Error code",
                           "description": "The type of error",
-                          "example": "DECODE_TIMEOUT",
+                          "example": "TIMEOUT_EXCEEDED",
                           "enum": [
-                            "DECODE_TIMEOUT"
+                            "TIMEOUT_EXCEEDED"
                           ]
                         },
                         "message": {
                           "type": "string",
                           "title": "Error message",
                           "description": "Describes a message informing a reason for the error",
-                          "example": "Invalid request data"
+                          "example": "Timeout exceeded"
                         },
                         "status_code": {
                           "type": "number",
@@ -4803,8 +4893,8 @@
                 "examples": {
                   "Example 1 - DecodeTimeout": {
                     "value": {
-                      "code": "DECODE_TIMEOUT",
-                      "message": "Timeout to decode the qr code"
+                      "code": "TIMEOUT_EXCEEDED",
+                      "message": "Timeout exceeded"
                     }
                   }
                 }
@@ -6733,6 +6823,36 @@
           "payload_jws": {
             "type": "string",
             "description": "Signed JWS payload"
+          }
+        }
+      },
+      "TimeoutExceeded": {
+        "title": "Timeout exceeded",
+        "properties": {
+          "error": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "string",
+                "title": "Error code",
+                "description": "The type of error",
+                "example": "TIMEOUT_EXCEEDED",
+                "enum": [
+                  "TIMEOUT_EXCEEDED"
+                ]
+              },
+              "message": {
+                "type": "string",
+                "title": "Error message",
+                "description": "Describes a message informing a reason for the error",
+                "example": "Timeout exceeded"
+              },
+              "status_code": {
+                "type": "number",
+                "description": "Error status code",
+                "example": "408"
+              }
+            }
           }
         }
       },
