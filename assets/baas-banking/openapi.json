@@ -507,7 +507,7 @@
             }
           },
           "400": {
-            "description": "Error with types [BadRequest, FailedToCreateAccountBalanceError, AccountTypeInvalid, PersonNotActive, InvalidClientCodeError, NotAllowedForThisDocumentNumber].",
+            "description": "Error with types [BadRequest, FailedToCreateAccountBalanceError, AccountTypeInvalid, PersonNotActive, InvalidClientCodeError, NotAllowedForThisDocumentNumber, JuricalPersonIncompleteData].",
             "content": {
               "application/json": {
                 "schema": {
@@ -679,6 +679,28 @@
                           "title": "Error message",
                           "description": "Describes a message informing a reason for the error",
                           "example": "Not allowed for this document number."
+                        },
+                        "status_code": {
+                          "type": "number",
+                          "description": "Error status code",
+                          "example": "400"
+                        }
+                      }
+                    },
+                    {
+                      "title": "Jurical person has incomplete data",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "JURICAL_PERSON_INCOMPLETE_DATA"
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "Jurical person has incomplete data."
                         },
                         "status_code": {
                           "type": "number",
@@ -3456,6 +3478,28 @@
             "title": "Error message",
             "description": "Describes a message informing a reason for the error",
             "example": "Not allowed for this document number."
+          },
+          "status_code": {
+            "type": "number",
+            "description": "Error status code",
+            "example": "400"
+          }
+        }
+      },
+      "JuricalPersonIncompleteData": {
+        "title": "Jurical person has incomplete data",
+        "properties": {
+          "code": {
+            "type": "string",
+            "title": "Error code",
+            "description": "The type of error",
+            "example": "JURICAL_PERSON_INCOMPLETE_DATA"
+          },
+          "message": {
+            "type": "string",
+            "title": "Error message",
+            "description": "Describes a message informing a reason for the error",
+            "example": "Jurical person has incomplete data."
           },
           "status_code": {
             "type": "number",
