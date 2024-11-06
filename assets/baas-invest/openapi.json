@@ -57,6 +57,12 @@
                         "type": "object",
                         "description": "Describes properties of an investment",
                         "properties": {
+                          "id": {
+                            "type": "string",
+                            "format": "uuid",
+                            "description": "Unique identifier of the investment, returned if the investment was made by the APP",
+                            "example": "123e4567-e89b-12d3-a456-426655440000"
+                          },
                           "indicator_percentage": {
                             "type": "number",
                             "description": "Indicator percentage",
@@ -2356,6 +2362,331 @@
           }
         }
       }
+    },
+    "/v1/accounts/{account_id}/profitability": {
+      "get": {
+        "summary": "Get Profitabilities",
+        "description": "Get Profitabilities",
+        "operationId": "GetProfitabilities",
+        "tags": [
+          "Investments"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "account_id",
+            "schema": {
+              "type": "string",
+              "format": "uuid-v4"
+            },
+            "description": "Account ID",
+            "required": true,
+            "example": "e49d8788-b068-4826-8408-6f95611220db"
+          },
+          {
+            "in": "query",
+            "name": "start_date",
+            "schema": {
+              "type": "string",
+              "format": "date"
+            },
+            "description": "Start date",
+            "required": true,
+            "example": "2021-01-01"
+          },
+          {
+            "in": "query",
+            "name": "final_date",
+            "schema": {
+              "type": "string",
+              "format": "date"
+            },
+            "description": "Final date",
+            "required": true,
+            "example": "2021-01-01"
+          },
+          {
+            "in": "query",
+            "name": "bill_number",
+            "schema": {
+              "type": "number"
+            },
+            "description": "Bill number",
+            "required": false,
+            "example": 15
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List profitabilites return with success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "title": "Profitabilities",
+                        "type": "object",
+                        "description": "List of profitabilities",
+                        "properties": {
+                          "previous_net_value": {
+                            "type": "number",
+                            "description": "The previous net value before transactions"
+                          },
+                          "current_net_value": {
+                            "type": "number",
+                            "description": "The current net value after transactions"
+                          },
+                          "investments": {
+                            "type": "number",
+                            "description": "Total investments made"
+                          },
+                          "redeems": {
+                            "type": "number",
+                            "description": "Total redeem values"
+                          },
+                          "repurchases": {
+                            "type": "number",
+                            "description": "Total repurchase values"
+                          },
+                          "interest_values": {
+                            "type": "number",
+                            "description": "Total interest values"
+                          },
+                          "iof_value": {
+                            "type": "number",
+                            "description": "Last IOF value from record"
+                          },
+                          "income_tax_value": {
+                            "type": "number",
+                            "description": "Last income tax value from record"
+                          },
+                          "historical": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "operation_date": {
+                                  "type": "string",
+                                  "format": "date",
+                                  "description": "The date of the operation"
+                                },
+                                "transaction_kind": {
+                                  "type": "string",
+                                  "description": "Type of the transaction",
+                                  "enum": [
+                                    "REDEEM",
+                                    "REPURCHASE",
+                                    "EXCLUDE_REPURCHASE",
+                                    "EXCLUDE_ISSUE",
+                                    "CANCEL_ISSUE",
+                                    "CANCEL_REPURCHASE",
+                                    "BLOCK",
+                                    "UNBLOCK",
+                                    "ISSUE",
+                                    "RENEGOTIATION",
+                                    "EARLY_REDEEM_DI",
+                                    "INTEREST_PAYMENT",
+                                    "FINAL_INTEREST_PAYMENT",
+                                    "TRANSFER",
+                                    "TREASURY",
+                                    "AAT",
+                                    "PROFITABILITY"
+                                  ]
+                                },
+                                "applied_value": {
+                                  "type": "number",
+                                  "description": "The value initially applied in the transaction"
+                                },
+                                "daily_interest_value": {
+                                  "type": "number",
+                                  "description": "The daily interest value of the transaction"
+                                },
+                                "current_value": {
+                                  "type": "number",
+                                  "description": "The current value of the investment"
+                                },
+                                "income_tax_value": {
+                                  "type": "number",
+                                  "description": "Income tax amount on the transaction"
+                                },
+                                "iof_value": {
+                                  "type": "number",
+                                  "description": "IOF tax amount on the transaction"
+                                },
+                                "net_value": {
+                                  "type": "number",
+                                  "description": "Net value after taxes"
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NotFound",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "title": "Account not found",
+                      "type": "object",
+                      "description": "Representation of an not found error",
+                      "properties": {
+                        "code": {
+                          "description": "The type of error",
+                          "type": "string",
+                          "example": "ACCOUNT_NOT_FOUND"
+                        },
+                        "message": {
+                          "description": "Describes a message informing a reason for the error",
+                          "type": "string",
+                          "example": "Account was not found."
+                        }
+                      }
+                    }
+                  ]
+                },
+                "examples": {
+                  "Example 1 - AccountNotFound": {
+                    "value": {
+                      "code": "ACCOUNT_NOT_FOUND",
+                      "message": "Account not found"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/accounts/{account_id}/redeem/{id}": {
+      "get": {
+        "summary": "Get Account Redeem",
+        "description": "Get Account Redeem",
+        "operationId": "GetAccountRedeem",
+        "tags": [
+          "Investments"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "account_id",
+            "schema": {
+              "type": "string",
+              "format": "uuid-v4",
+              "example": "24c7a78d-ed48-4f9a-82c8-051d662be415"
+            },
+            "description": "Account id",
+            "required": true
+          },
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "string",
+              "format": "uuid-v4",
+              "example": "24c7a78d-ed48-4f9a-82c8-051d662be415"
+            },
+            "description": "Redeem id",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Redeem successfully found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "Redeem Statement",
+                  "description": "Describes properties of an redeem statement",
+                  "properties": {
+                    "paper_type": {
+                      "type": "string",
+                      "description": "Paper type",
+                      "example": "CDB"
+                    },
+                    "net_value": {
+                      "type": "number",
+                      "description": "Net value",
+                      "example": 280844.36
+                    },
+                    "applied_value": {
+                      "type": "number",
+                      "description": "Applied value",
+                      "example": 200000
+                    },
+                    "income_tax_value": {
+                      "type": "number",
+                      "description": "income tax value",
+                      "example": 12126.65
+                    },
+                    "iof_value": {
+                      "type": "number",
+                      "description": "iof value",
+                      "example": 268717.71
+                    },
+                    "profitability": {
+                      "type": "number",
+                      "description": "Profitability",
+                      "example": 100
+                    },
+                    "maturity_date": {
+                      "type": "string",
+                      "description": "Investments maturity date",
+                      "example": "2024-10-29T00:00:00.000Z"
+                    },
+                    "operation_date": {
+                      "type": "string",
+                      "description": "Operation date",
+                      "example": "2024-10-29T00:00:00.000Z"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NotFound",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Redeem not found",
+                  "type": "object",
+                  "description": "Representation of an not found error",
+                  "properties": {
+                    "code": {
+                      "description": "The type of error",
+                      "type": "string",
+                      "example": "REDEEM_NOT_FOUND"
+                    },
+                    "message": {
+                      "description": "Describes a message informing a reason for the error",
+                      "type": "string",
+                      "example": "Redeem was not found."
+                    }
+                  }
+                },
+                "example": {
+                  "code": "REDEEM_NOT_FOUND",
+                  "message": "Redeem was not found."
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -2373,6 +2704,12 @@
         "type": "object",
         "description": "Describes properties of an investment",
         "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Unique identifier of the investment, returned if the investment was made by the APP",
+            "example": "123e4567-e89b-12d3-a456-426655440000"
+          },
           "indicator_percentage": {
             "type": "number",
             "description": "Indicator percentage",
@@ -3597,6 +3934,169 @@
             "description": "Describes a message informing a reason for the error",
             "type": "string",
             "example": "Failed to get operation settings"
+          }
+        }
+      },
+      "list-profitabilities.response": {
+        "title": "Profitabilities",
+        "type": "object",
+        "description": "List of profitabilities",
+        "properties": {
+          "previous_net_value": {
+            "type": "number",
+            "description": "The previous net value before transactions"
+          },
+          "current_net_value": {
+            "type": "number",
+            "description": "The current net value after transactions"
+          },
+          "investments": {
+            "type": "number",
+            "description": "Total investments made"
+          },
+          "redeems": {
+            "type": "number",
+            "description": "Total redeem values"
+          },
+          "repurchases": {
+            "type": "number",
+            "description": "Total repurchase values"
+          },
+          "interest_values": {
+            "type": "number",
+            "description": "Total interest values"
+          },
+          "iof_value": {
+            "type": "number",
+            "description": "Last IOF value from record"
+          },
+          "income_tax_value": {
+            "type": "number",
+            "description": "Last income tax value from record"
+          },
+          "historical": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "operation_date": {
+                  "type": "string",
+                  "format": "date",
+                  "description": "The date of the operation"
+                },
+                "transaction_kind": {
+                  "type": "string",
+                  "description": "Type of the transaction",
+                  "enum": [
+                    "REDEEM",
+                    "REPURCHASE",
+                    "EXCLUDE_REPURCHASE",
+                    "EXCLUDE_ISSUE",
+                    "CANCEL_ISSUE",
+                    "CANCEL_REPURCHASE",
+                    "BLOCK",
+                    "UNBLOCK",
+                    "ISSUE",
+                    "RENEGOTIATION",
+                    "EARLY_REDEEM_DI",
+                    "INTEREST_PAYMENT",
+                    "FINAL_INTEREST_PAYMENT",
+                    "TRANSFER",
+                    "TREASURY",
+                    "AAT",
+                    "PROFITABILITY"
+                  ]
+                },
+                "applied_value": {
+                  "type": "number",
+                  "description": "The value initially applied in the transaction"
+                },
+                "daily_interest_value": {
+                  "type": "number",
+                  "description": "The daily interest value of the transaction"
+                },
+                "current_value": {
+                  "type": "number",
+                  "description": "The current value of the investment"
+                },
+                "income_tax_value": {
+                  "type": "number",
+                  "description": "Income tax amount on the transaction"
+                },
+                "iof_value": {
+                  "type": "number",
+                  "description": "IOF tax amount on the transaction"
+                },
+                "net_value": {
+                  "type": "number",
+                  "description": "Net value after taxes"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get-account-redeem.response": {
+        "title": "Redeem Statement",
+        "type": "object",
+        "description": "Describes properties of an redeem statement",
+        "properties": {
+          "paper_type": {
+            "type": "string",
+            "description": "Paper type",
+            "example": "CDB"
+          },
+          "net_value": {
+            "type": "number",
+            "description": "Net value",
+            "example": 280844.36
+          },
+          "applied_value": {
+            "type": "number",
+            "description": "Applied value",
+            "example": 200000
+          },
+          "income_tax_value": {
+            "type": "number",
+            "description": "income tax value",
+            "example": 12126.65
+          },
+          "iof_value": {
+            "type": "number",
+            "description": "iof value",
+            "example": 268717.71
+          },
+          "profitability": {
+            "type": "number",
+            "description": "Profitability",
+            "example": 100
+          },
+          "maturity_date": {
+            "type": "string",
+            "description": "Investments maturity date",
+            "example": "2024-10-29T00:00:00.000Z"
+          },
+          "operation_date": {
+            "type": "string",
+            "description": "Operation date",
+            "example": "2024-10-29T00:00:00.000Z"
+          }
+        }
+      },
+      "redeem-not-found": {
+        "title": "Redeem not found",
+        "type": "object",
+        "description": "Representation of an not found error",
+        "properties": {
+          "code": {
+            "description": "The type of error",
+            "type": "string",
+            "example": "REDEEM_NOT_FOUND"
+          },
+          "message": {
+            "description": "Describes a message informing a reason for the error",
+            "type": "string",
+            "example": "Redeem was not found."
           }
         }
       }
