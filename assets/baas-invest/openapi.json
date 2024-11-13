@@ -2662,25 +2662,56 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "title": "Redeem not found",
-                  "type": "object",
-                  "description": "Representation of an not found error",
-                  "properties": {
-                    "code": {
-                      "description": "The type of error",
-                      "type": "string",
-                      "example": "REDEEM_NOT_FOUND"
+                  "oneOf": [
+                    {
+                      "title": "Account not found",
+                      "type": "object",
+                      "description": "Representation of an not found error",
+                      "properties": {
+                        "code": {
+                          "description": "The type of error",
+                          "type": "string",
+                          "example": "ACCOUNT_NOT_FOUND"
+                        },
+                        "message": {
+                          "description": "Describes a message informing a reason for the error",
+                          "type": "string",
+                          "example": "Account was not found."
+                        }
+                      }
                     },
-                    "message": {
-                      "description": "Describes a message informing a reason for the error",
-                      "type": "string",
-                      "example": "Redeem was not found."
+                    {
+                      "title": "Redeem not found",
+                      "type": "object",
+                      "description": "Representation of an not found error",
+                      "properties": {
+                        "code": {
+                          "description": "The type of error",
+                          "type": "string",
+                          "example": "REDEEM_NOT_FOUND"
+                        },
+                        "message": {
+                          "description": "Describes a message informing a reason for the error",
+                          "type": "string",
+                          "example": "Redeem was not found."
+                        }
+                      }
+                    }
+                  ]
+                },
+                "examples": {
+                  "Example 1 - AccountNotFound": {
+                    "value": {
+                      "code": "ACCOUNT_NOT_FOUND",
+                      "message": "Account not found"
+                    }
+                  },
+                  "Example 2 - RedeemNotFoundError": {
+                    "value": {
+                      "code": "REDEEM_NOT_FOUND",
+                      "message": "Redeem was not found."
                     }
                   }
-                },
-                "example": {
-                  "code": "REDEEM_NOT_FOUND",
-                  "message": "Redeem was not found."
                 }
               }
             }
