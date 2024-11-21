@@ -1632,21 +1632,13 @@
                           "type": "string",
                           "title": "Error code",
                           "description": "The type of error",
-                          "example": "ACCOUNT_NOT_FOUND",
-                          "enum": [
-                            "ACCOUNT_NOT_FOUND"
-                          ]
+                          "example": "ACCOUNT_NOT_FOUND"
                         },
                         "message": {
                           "type": "string",
                           "title": "Error message",
                           "description": "Describes a message informing a reason for the error",
                           "example": "Account not found"
-                        },
-                        "status_code": {
-                          "type": "number",
-                          "description": "Error status code",
-                          "example": "404"
                         }
                       }
                     }
@@ -1928,21 +1920,13 @@
                           "type": "string",
                           "title": "Error code",
                           "description": "The type of error",
-                          "example": "ACCOUNT_NOT_FOUND",
-                          "enum": [
-                            "ACCOUNT_NOT_FOUND"
-                          ]
+                          "example": "ACCOUNT_NOT_FOUND"
                         },
                         "message": {
                           "type": "string",
                           "title": "Error message",
                           "description": "Describes a message informing a reason for the error",
                           "example": "Account not found"
-                        },
-                        "status_code": {
-                          "type": "number",
-                          "description": "Error status code",
-                          "example": "404"
                         }
                       }
                     }
@@ -2315,21 +2299,13 @@
                           "type": "string",
                           "title": "Error code",
                           "description": "The type of error",
-                          "example": "ACCOUNT_NOT_FOUND",
-                          "enum": [
-                            "ACCOUNT_NOT_FOUND"
-                          ]
+                          "example": "ACCOUNT_NOT_FOUND"
                         },
                         "message": {
                           "type": "string",
                           "title": "Error message",
                           "description": "Describes a message informing a reason for the error",
                           "example": "Account not found"
-                        },
-                        "status_code": {
-                          "type": "number",
-                          "description": "Error status code",
-                          "example": "404"
                         }
                       }
                     }
@@ -2737,21 +2713,13 @@
                           "type": "string",
                           "title": "Error code",
                           "description": "The type of error",
-                          "example": "ACCOUNT_NOT_FOUND",
-                          "enum": [
-                            "ACCOUNT_NOT_FOUND"
-                          ]
+                          "example": "ACCOUNT_NOT_FOUND"
                         },
                         "message": {
                           "type": "string",
                           "title": "Error message",
                           "description": "Describes a message informing a reason for the error",
                           "example": "Account not found"
-                        },
-                        "status_code": {
-                          "type": "number",
-                          "description": "Error status code",
-                          "example": "404"
                         }
                       }
                     }
@@ -2870,11 +2838,6 @@
                       "title": "Error message",
                       "description": "Describes a message informing a reason for the error",
                       "example": "Account not allowed for this operation"
-                    },
-                    "status_code": {
-                      "type": "number",
-                      "description": "Error status code",
-                      "example": "403"
                     }
                   }
                 }
@@ -2924,21 +2887,13 @@
                           "type": "string",
                           "title": "Error code",
                           "description": "The type of error",
-                          "example": "ACCOUNT_NOT_FOUND",
-                          "enum": [
-                            "ACCOUNT_NOT_FOUND"
-                          ]
+                          "example": "ACCOUNT_NOT_FOUND"
                         },
                         "message": {
                           "type": "string",
                           "title": "Error message",
                           "description": "Describes a message informing a reason for the error",
                           "example": "Account not found"
-                        },
-                        "status_code": {
-                          "type": "number",
-                          "description": "Error status code",
-                          "example": "404"
                         }
                       }
                     }
@@ -3007,6 +2962,159 @@
                       "example": "413"
                     }
                   }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/income-tax/{account_id}": {
+      "post": {
+        "tags": [
+          "Income Tax"
+        ],
+        "summary": "Get an income tax",
+        "operationId": "GetIncomeTaxAccountId",
+        "description": "Get an income tax",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "account_id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "example": "e42aad74-8fbd-4ce3-8bdd-cb9052f0dadc"
+            },
+            "description": "Unique identifier of the account"
+          },
+          {
+            "in": "query",
+            "name": "year",
+            "required": true,
+            "schema": {
+              "type": "number",
+              "example": 2024
+            },
+            "description": "Reference year for income tax generation"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Income tax",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "income_tax_url": {
+                      "type": "string",
+                      "format": "binary",
+                      "example": "http://baas-url/ir-files-2022/00123456789.pdf"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Error with types [AccountNotActiveError].",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Account Not Active Error",
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "title": "Error code",
+                      "description": "The type of error",
+                      "example": "ACCOUNT_NOT_ACTIVE"
+                    },
+                    "message": {
+                      "type": "string",
+                      "title": "Error message",
+                      "description": "Describes a message informing a reason for the error",
+                      "example": "Account is not active."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Error with types [AccountNotAllowedError].",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Account not allowed for this operation",
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "title": "Error code",
+                      "description": "The type of error",
+                      "example": "ACCOUNT_NOT_ALLOWED",
+                      "enum": [
+                        "ACCOUNT_NOT_ALLOWED"
+                      ]
+                    },
+                    "message": {
+                      "type": "string",
+                      "title": "Error message",
+                      "description": "Describes a message informing a reason for the error",
+                      "example": "Account not allowed for this operation"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Error with types [IncomeTaxNotFoundError, AccountNotFound].",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "title": "Income Tax Not Found Error",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "INCOME_TAX_NOT_FOUND"
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "Income tax not found"
+                        }
+                      }
+                    },
+                    {
+                      "title": "Account Not Found",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "ACCOUNT_NOT_FOUND"
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "Account not found"
+                        }
+                      }
+                    }
+                  ]
                 }
               }
             }
@@ -3620,21 +3728,13 @@
             "type": "string",
             "title": "Error code",
             "description": "The type of error",
-            "example": "ACCOUNT_NOT_FOUND",
-            "enum": [
-              "ACCOUNT_NOT_FOUND"
-            ]
+            "example": "ACCOUNT_NOT_FOUND"
           },
           "message": {
             "type": "string",
             "title": "Error message",
             "description": "Describes a message informing a reason for the error",
             "example": "Account not found"
-          },
-          "status_code": {
-            "type": "number",
-            "description": "Error status code",
-            "example": "404"
           }
         }
       },
@@ -3924,11 +4024,6 @@
             "title": "Error message",
             "description": "Describes a message informing a reason for the error",
             "example": "Account not allowed for this operation"
-          },
-          "status_code": {
-            "type": "number",
-            "description": "Error status code",
-            "example": "403"
           }
         }
       },
@@ -3979,6 +4074,40 @@
             "type": "number",
             "description": "Error status code",
             "example": "413"
+          }
+        }
+      },
+      "AccountNotActiveError": {
+        "title": "Account Not Active Error",
+        "properties": {
+          "code": {
+            "type": "string",
+            "title": "Error code",
+            "description": "The type of error",
+            "example": "ACCOUNT_NOT_ACTIVE"
+          },
+          "message": {
+            "type": "string",
+            "title": "Error message",
+            "description": "Describes a message informing a reason for the error",
+            "example": "Account is not active."
+          }
+        }
+      },
+      "IncomeTaxNotFoundError": {
+        "title": "Income Tax Not Found Error",
+        "properties": {
+          "code": {
+            "type": "string",
+            "title": "Error code",
+            "description": "The type of error",
+            "example": "INCOME_TAX_NOT_FOUND"
+          },
+          "message": {
+            "type": "string",
+            "title": "Error message",
+            "description": "Describes a message informing a reason for the error",
+            "example": "Income tax not found"
           }
         }
       }
