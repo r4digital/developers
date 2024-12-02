@@ -1600,9 +1600,31 @@
             "in": "query",
             "name": "account_id",
             "schema": {
-              "type": "string"
+              "type": "string",
+              "format": "uuid-v4"
             },
             "description": "The id from specific account.",
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "conciliation_id",
+            "schema": {
+              "type": "string"
+            },
+            "description": "The payment conciliation id.",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "end_to_end_ids",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "description": "End to end id array to filter",
             "required": false
           }
         ],
