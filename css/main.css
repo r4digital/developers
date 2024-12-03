@@ -12,23 +12,30 @@ body {
   margin: 0;
   padding: 0;
 }
+
 .ms-CommandBar{
-  height: 100px!important;
+  height: 80px !important;
 }
+
 #logo {
-  height: 70px;
-  margin-top: 15px;
+  height: 40px;
+  margin-top: 20px;
   margin-left: 15px;
 }
-#linkApi{
+
+.link-api {
  color: white!important;
 }
+
 .btn-hover:hover{
-background-color: whitesmoke!important;
-color: #292929!important;
+  background-color: whitesmoke!important;
+  color: #292929!important;
 }
+
 .ms-CommandButton-button {
   width: 100%;
+  height: 100%;
+  padding-bottom: 20px;
 }
 
 .ms-CommandButton.ms-CommandButton--pivot.is-active:before, .ms-CommandButton.ms-CommandButton--pivot:hover:before{
@@ -44,10 +51,11 @@ color: #292929!important;
   border-radius: 10px;
   background-color: #292929;
 }
+
 .ms-CommandButton-label{
-  margin-left: 5%;
+  margin-left: 2%;
   font-size: 23px;
-  margin-top: 32px;
+  margin-top: 20px;
   font-weight: bold;
 }
 
