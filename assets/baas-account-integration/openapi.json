@@ -3,7 +3,7 @@
   "info": {
     "version": "0.0.1",
     "title": "Baas Edge Account Integration",
-    "description": "**Descricao**: Api responsavel pela integracao de sistemas de contas PJ diretamente com o BaaS.\n\n# Notificacao de troca de Status\n\nAlgumas trocas de status podem acionar notificacoes.\n\nPara receber estas notificacoes e necessario solicitar a configuracao da URL de notificacao.\n\n| Tipo do Evento                      | Status do Pagamento     | Descricao                                                                               |\n|------------------------------------ | ----------------------- | --------------------------------------------------------------------------------------- |\n| `integration_payment_created`       | CREATED                 | Pagamento foi criado.                                                                   |\n| `integration_payment_analyzed`      | ANALYZED                | Pagamento analizado pelo antifraude.                                                    |\n| `integration_payment_not_confirmed` | NOT_CONFIRMED           | Pagamento nao foi confirmado, por falha de assinatura ou payload divergente.            |\n| `integration_payment_refund`        | REFUND                  | Pagamento estornado.                                                                    |\n| `integration_payment_rejected`      | REJECTED                | Pagamento rejeitado, verificar campo reason para detalhes.                              |\n| `integration_payment_error`         | ERROR                   | Erro inesperado no pagamento.                                                           |\n| `integration_payment_done`          | DONE                    | Pagamento realizado e finalizado com sucesso.                                           |\n\n### Schema da chamada de notificacao\n\nEste objeto sera enviado via chamada HTTP no metodo POST, no qual deve ser respondida com status 200 em ate 5 segundos.\n\n#### *Header*\n```json\n{\n  X-R4-Application: GUID, // ID da aplicacao da conta\n  X-R4-Integration: GUID, // ID da integracao\n  X-R4-Delivery: GUID, // ID da tentativa de notificacao\n  X-R4-Event: {event_type}, // Tipo do evento da notificacao (Tipo do evento na tabela acima)\n  User-Agent: R4-Hookshot\n}\n```\n\n#### *Body*\n```\n{\n  \"object_kind\": \"{event_type}\", // Tipo do evento da notificacao (Tipo do evento na tabela acima)\n  \"object_id\": \"GUID\", // ID do pagamento\n  \"account_id\": \"GUID\" // ID da conta\n  \"application_id\": \"GUID\" // ID da aplicacao da conta\n  \"integration_id\": \"GUID\" // ID da integracao\n}\n```\n\n# Erros\n\nEste servico utiliza os [Codigos de status HTTP de resposta](https://en.wikipedia.org/wiki/List_of_HTTP_status_codes) para indicar o sucesso ou falha das requisicoes realizadas a API.\n\nNo geral possuem tres faixas de codigos de status:\n\n- `2xx` codigo de status de sucesso, confirmando que a requisicao realizada ocorreu como esperado.\n\n- `4xx` codigo de status de erro indicando que o problema esta nos dados informados.\n\n- `5xx` codigo de status de erro indicando que o problema se originou no servidor.\n\n<br>\n## Error Genericos\n\nEstes erros podem ocorrer em qualquer rota que for utilizada neste servico:\n\n<details>\n<summary>**401**</summary>\n<br>\nToken de autenticacao informado esta expirado.\n```json\n{\n  \"details\": {\n    \"reason\": \"Jwt is expired\"\n  },\n  \"status_code\": \"INVALID_AUTHENTICATION\",\n  \"message\": \"The provided authentication is invalid\"\n}\n```\n<br>\nErro ao tentar acessar a API sem enviar o header de autenticacao com formato Bearer token.\n```json\n{\n  \"code\":'AUTHENTICATION_FAILED'\n  \"message\": 'Authentication failed.'\n}\n```\n</details>\n\n<details>\n<summary>**403**</summary>\n<br>\nToken de autenticacao obrigatorio nao informado na requisicao ou nao possui acesso a esta rota.\n```json\n{\n  \"details\": {\n    \"reason\": \"RBAC: access denied\"\n  },\n  \"message\": \"You do not have permission to access the requested resource\",\n  \"status_code\": \"FORBIDDEN\"\n}\n```\n<br>\nEsta operacao nao e permitida para o token de autenticacao informado.\n```json\n{\n  \"code\":\"MISSING_PRODUCT_PERMISSION\"\n  \"message\": \"Missing product permission.\"\n}\n```\n</details>\n\n<details>\n<summary>**404**</summary>\n<br>\nA rota que esta sendo requisitada nao existe.\n```json\n{\n  \"code\":\"PAGE_NOT_FOUND\"\n  \"message\": \"Page not found.\"\n}\n```\n</details>\n\n<details>\n<summary>**408**</summary>\n<br>\nEste erro indica que o tempo de resposta para a requisicao chegou ao seu limite, recomenda-se retentar.\n```json\n{\n  \"code\":\"TIMEOUT_EXCEEDED\"\n  \"message\": \"Timeout exceeded\"\n}\n```\n</details>\n\n<details>\n<summary>**500**</summary>\n<br>\nErro indicando que houve uma falha interna no servidor, contatate o suporte.\n```json\n{\n  \"code\":\"INTERNAL_SERVER_ERROR\"\n  \"message\": \"Unexpected error with our service\"\n}\n```\n</details>\n</summary>\n"
+    "description": "**Descricao**: Api responsavel pela integracao de sistemas de contas PJ diretamente com o BaaS.\n\n# Notificacao de troca de Status\n\nAlgumas trocas de status podem acionar notificacoes.\n\nPara receber estas notificacoes e necessario solicitar a configuracao da URL de notificacao.\n\n| Tipo do Evento                      | Status do Pagamento     | Descricao                                                                               |\n|------------------------------------ | ----------------------- | --------------------------------------------------------------------------------------- |\n| `integration_payment_created`       | CREATED                 | Pagamento foi criado.                                                                   |\n| `integration_payment_analyzed`      | ANALYZED                | Pagamento analizado pelo antifraude.                                                    |\n| `integration_payment_not_confirmed` | NOT_CONFIRMED           | Pagamento nao foi confirmado, por falha de assinatura ou payload divergente.            |\n| `integration_payment_refund`        | REFUND                  | Pagamento estornado.                                                                    |\n| `integration_payment_rejected`      | REJECTED                | Pagamento rejeitado, verificar campo reason para detalhes.                              |\n| `integration_payment_error`         | ERROR                   | Erro inesperado no pagamento.                                                           |\n| `integration_payment_done`          | DONE                    | Pagamento realizado e finalizado com sucesso.                                           |\n\n### Schema da chamada de notificacao\n\nEste objeto sera enviado via chamada HTTP no metodo POST, no qual deve ser respondida com status 200 em ate 5 segundos.\n\n#### *Header*\n```json\n{\n  X-R4-Application: GUID, // ID da aplicacao da conta\n  X-R4-Integration: GUID, // ID da integracao\n  X-R4-Delivery: GUID, // ID da tentativa de notificacao\n  X-R4-Event: {event_type}, // Tipo do evento da notificacao (Tipo do evento na tabela acima)\n  User-Agent: R4-Hookshot\n}\n```\n\n#### *Body*\n```\n{\n  \"object_kind\": \"{event_type}\", // Tipo do evento da notificacao (Tipo do evento na tabela acima)\n  \"object_id\": \"GUID\", // ID do pagamento\n  \"account_id\": \"GUID\" // ID da conta\n  \"application_id\": \"GUID\" // ID da aplicacao da conta\n  \"integration_id\": \"GUID\" // ID da integracao\n}\n```\n\n# Erros\n\nEste servico utiliza os [Codigos de status HTTP de resposta](https://en.wikipedia.org/wiki/List_of_HTTP_status_codes) para indicar o sucesso ou falha das requisicoes realizadas a API.\n\nNo geral possuem tres faixas de codigos de status:\n\n- `2xx` codigo de status de sucesso, confirmando que a requisicao realizada ocorreu como esperado.\n\n- `4xx` codigo de status de erro indicando que o problema esta nos dados informados.\n\n- `5xx` codigo de status de erro indicando que o problema se originou no servidor.\n\n</br>\n\n## Erros Genericos\n\nEstes erros podem ocorrer em qualquer rota que for utilizada neste servico:\n\n<details>\n<summary><b>401</b></summary>\n</br>\n\nToken de autenticacao informado esta expirado.\n```json\n{\n  \"details\": {\n    \"reason\": \"Jwt is expired\"\n  },\n  \"status_code\": \"INVALID_AUTHENTICATION\",\n  \"message\": \"The provided authentication is invalid\"\n}\n```\n</br>\n\nErro ao tentar acessar a API sem enviar o header de autenticacao com formato Bearer token.\n```json\n{\n  \"code\":'AUTHENTICATION_FAILED'\n  \"message\": 'Authentication failed.'\n}\n```\n</details>\n\n<details>\n<summary><b>403</b></summary>\n</br>\n\nToken de autenticacao obrigatorio nao informado na requisicao ou nao possui acesso a esta rota.\n```json\n{\n  \"details\": {\n    \"reason\": \"RBAC: access denied\"\n  },\n  \"message\": \"You do not have permission to access the requested resource\",\n  \"status_code\": \"FORBIDDEN\"\n}\n```\n</br>\n\nEsta operacao nao e permitida para o token de autenticacao informado.\n```json\n{\n  \"code\":\"MISSING_PRODUCT_PERMISSION\"\n  \"message\": \"Missing product permission.\"\n}\n```\n</details>\n\n<details>\n<summary><b>404</b></summary>\n</br>\n\nA rota que esta sendo requisitada nao existe.\n```json\n{\n  \"code\":\"PAGE_NOT_FOUND\"\n  \"message\": \"Page not found.\"\n}\n```\n</details>\n\n<details>\n<summary><b>408</b></summary>\n</br>\n\nEste erro indica que o tempo de resposta para a requisicao chegou ao seu limite, recomenda-se retentar.\n```json\n{\n  \"code\":\"TIMEOUT_EXCEEDED\"\n  \"message\": \"Timeout exceeded\"\n}\n```\n</details>\n\n<details>\n<summary><b>500</b></summary>\n</br>\n\nErro indicando que houve uma falha interna no servidor, contatate o suporte.\n```json\n{\n  \"code\":\"INTERNAL_SERVER_ERROR\"\n  \"message\": \"Unexpected error with our service\"\n}\n```\n</details>\n</summary>\n"
   },
   "servers": [
     {
@@ -83,12 +83,16 @@
                 "schema": {
                   "oneOf": [
                     {
+                      "title": "Product Disable Error",
                       "description": "Representacao de um erro NotFound no qual nao foi possivel encontrar o produto de aplicacao correspondente.",
                       "properties": {
                         "code": {
                           "description": "Codigo do erro",
                           "type": "string",
-                          "example": "PRODUCT_DISABLED"
+                          "example": "PRODUCT_DISABLED",
+                          "enum": [
+                            "PRODUCT_DISABLED"
+                          ]
                         },
                         "message": {
                           "description": "Descricao do erro: 'Produto nao esta habilitado.'\n",
@@ -98,12 +102,16 @@
                       }
                     },
                     {
+                      "title": "Account Product Configuration Not Found Error",
                       "description": "Representacao de um erro NotFound no qual nao foi possivel encontrar o produto de aplicacao correspondente.",
                       "properties": {
                         "code": {
                           "description": "Codigo do erro",
                           "type": "string",
-                          "example": "ACCOUNT_PRODUCT_CONFIGURATION_NOT_FOUND"
+                          "example": "ACCOUNT_PRODUCT_CONFIGURATION_NOT_FOUND",
+                          "enum": [
+                            "ACCOUNT_PRODUCT_CONFIGURATION_NOT_FOUND"
+                          ]
                         },
                         "message": {
                           "description": "Descricao do erro: 'Configuracao do produto da conta nao encontrada.'\n",
@@ -113,13 +121,17 @@
                       }
                     },
                     {
+                      "title": "Invalid Data Error",
                       "description": "Representa um erro do tipo BadRequest onde a requisicao contem dados invalidos ou ausentes.",
                       "properties": {
                         "code": {
                           "type": "string",
                           "title": "Error code",
                           "description": "The type of error",
-                          "example": "INVALID_DATA"
+                          "example": "INVALID_DATA",
+                          "enum": [
+                            "INVALID_DATA"
+                          ]
                         },
                         "message": {
                           "description": "Descricao do erro: 'Os dados fornecidos tem um formato invalido.'\n",
@@ -129,13 +141,17 @@
                       }
                     },
                     {
+                      "title": "Invalid Uuiderror",
                       "description": "Representa um erro do tipo BadRequest onde a requisicao contem uuid invalidos.",
                       "properties": {
                         "code": {
                           "type": "string",
                           "title": "Error code",
                           "description": "The type of error",
-                          "example": "INVALID_UUID"
+                          "example": "INVALID_UUID",
+                          "enum": [
+                            "INVALID_UUID"
+                          ]
                         },
                         "message": {
                           "description": "Descricao do erro: 'UUID invalido.'\n",
@@ -186,12 +202,16 @@
                 "schema": {
                   "oneOf": [
                     {
+                      "title": "Account Not Found Error",
                       "description": "Representacao de um erro NotFound no qual nao foi possivel encontrar a conta correspondente.",
                       "properties": {
                         "code": {
                           "description": "Codigo do erro",
                           "type": "string",
-                          "example": "ACCOUNT_NOT_FOUND"
+                          "example": "ACCOUNT_NOT_FOUND",
+                          "enum": [
+                            "ACCOUNT_NOT_FOUND"
+                          ]
                         },
                         "message": {
                           "description": "Descricao do erro: 'Conta nao encontrada.'\n",
@@ -201,12 +221,16 @@
                       }
                     },
                     {
+                      "title": "Profile Not Found Error",
                       "description": "Representacao de um erro NotFound no qual nao foi possivel encontrar o perfil.",
                       "properties": {
                         "code": {
                           "description": "Codigo do erro",
                           "type": "string",
-                          "example": "PROFILE_NOT_FOUND"
+                          "example": "PROFILE_NOT_FOUND",
+                          "enum": [
+                            "PROFILE_NOT_FOUND"
+                          ]
                         },
                         "message": {
                           "description": "Descricao do erro: 'Perfil nao encontrado.'\n",
@@ -216,12 +240,16 @@
                       }
                     },
                     {
+                      "title": "Application Product Not Found Error",
                       "description": "Representacao de um erro NotFound no qual nao foi possivel encontrar o produto de aplicacao correspondente.",
                       "properties": {
                         "code": {
                           "description": "Codigo do erro",
                           "type": "string",
-                          "example": "APPLICATION_PRODUCT_NOT_FOUND"
+                          "example": "APPLICATION_PRODUCT_NOT_FOUND",
+                          "enum": [
+                            "APPLICATION_PRODUCT_NOT_FOUND"
+                          ]
                         },
                         "message": {
                           "description": "Descricao do erro: 'Produto de aplicacao nao encontrado.'\n",
@@ -231,12 +259,16 @@
                       }
                     },
                     {
+                      "title": "Balance Not Found Error",
                       "description": "Representacao de um erro NotFound no qual nao foi possivel encontrar o saldo da conta correspondente.",
                       "properties": {
                         "code": {
                           "description": "Codigo do erro",
                           "type": "string",
-                          "example": "BALANCE_NOT_FOUND"
+                          "example": "BALANCE_NOT_FOUND",
+                          "enum": [
+                            "BALANCE_NOT_FOUND"
+                          ]
                         },
                         "message": {
                           "description": "Descricao do erro: 'Saldo nao encontrado.'\n",
@@ -561,12 +593,16 @@
                 "schema": {
                   "oneOf": [
                     {
+                      "title": "Product Disable Error",
                       "description": "Representacao de um erro NotFound no qual nao foi possivel encontrar o produto de aplicacao correspondente.",
                       "properties": {
                         "code": {
                           "description": "Codigo do erro",
                           "type": "string",
-                          "example": "PRODUCT_DISABLED"
+                          "example": "PRODUCT_DISABLED",
+                          "enum": [
+                            "PRODUCT_DISABLED"
+                          ]
                         },
                         "message": {
                           "description": "Descricao do erro: 'Produto nao esta habilitado.'\n",
@@ -576,12 +612,16 @@
                       }
                     },
                     {
+                      "title": "Account Product Configuration Not Found Error",
                       "description": "Representacao de um erro NotFound no qual nao foi possivel encontrar o produto de aplicacao correspondente.",
                       "properties": {
                         "code": {
                           "description": "Codigo do erro",
                           "type": "string",
-                          "example": "ACCOUNT_PRODUCT_CONFIGURATION_NOT_FOUND"
+                          "example": "ACCOUNT_PRODUCT_CONFIGURATION_NOT_FOUND",
+                          "enum": [
+                            "ACCOUNT_PRODUCT_CONFIGURATION_NOT_FOUND"
+                          ]
                         },
                         "message": {
                           "description": "Descricao do erro: 'Configuracao do produto da conta nao encontrada.'\n",
@@ -591,13 +631,17 @@
                       }
                     },
                     {
+                      "title": "Invalid Data Error",
                       "description": "Representa um erro do tipo BadRequest onde a requisicao contem dados invalidos ou ausentes.",
                       "properties": {
                         "code": {
                           "type": "string",
                           "title": "Error code",
                           "description": "The type of error",
-                          "example": "INVALID_DATA"
+                          "example": "INVALID_DATA",
+                          "enum": [
+                            "INVALID_DATA"
+                          ]
                         },
                         "message": {
                           "description": "Descricao do erro: 'Os dados fornecidos tem um formato invalido.'\n",
@@ -607,12 +651,16 @@
                       }
                     },
                     {
+                      "title": "Payment To Same Account Error",
                       "description": "Representacao de um erro BadRequest no qual a conta de credito e igual a de debito.",
                       "properties": {
                         "code": {
                           "description": "Codigo do erro",
                           "type": "string",
-                          "example": "PAYMENT_TO_SAME_ACCOUNT"
+                          "example": "PAYMENT_TO_SAME_ACCOUNT",
+                          "enum": [
+                            "PAYMENT_TO_SAME_ACCOUNT"
+                          ]
                         },
                         "message": {
                           "description": "Descricao do erro: 'A conta recebedora nao pode ser a mesma que a pagadora.'\n",
@@ -622,12 +670,16 @@
                       }
                     },
                     {
+                      "title": "Invalid Recipient Account",
                       "description": "Representacao de um erro BadRequest no qual a o documento do recebedor informado nao e valido.",
                       "properties": {
                         "code": {
                           "description": "Codigo do erro",
                           "type": "string",
-                          "example": "INVALID_RECIPIENT_INFORMATION"
+                          "example": "INVALID_RECIPIENT_INFORMATION",
+                          "enum": [
+                            "INVALID_RECIPIENT_INFORMATION"
+                          ]
                         },
                         "message": {
                           "description": "Descricao do erro: 'Divergencia no documento do recebedor.'\n",
@@ -637,12 +689,16 @@
                       }
                     },
                     {
+                      "title": "Not Business Day Error",
                       "description": "Representacao de um erro BadRequest no qual o dia nao e valido para a operacao.",
                       "properties": {
                         "code": {
                           "description": "Codigo do erro",
                           "type": "string",
-                          "example": "BUSINESS_DAY_ONLY_ERROR"
+                          "example": "BUSINESS_DAY_ONLY_ERROR",
+                          "enum": [
+                            "BUSINESS_DAY_ONLY_ERROR"
+                          ]
                         },
                         "message": {
                           "description": "Descricao do erro: 'O dia atual nao e um dia util.'\n",
@@ -652,12 +708,16 @@
                       }
                     },
                     {
+                      "title": "Time Out Of Range Error",
                       "description": "Representacao de um erro BadRequest no qual a hora nao e valido para a operacao.",
                       "properties": {
                         "code": {
                           "description": "Codigo do erro",
                           "type": "string",
-                          "example": "TIME_OUT_OF_RANGE"
+                          "example": "TIME_OUT_OF_RANGE",
+                          "enum": [
+                            "TIME_OUT_OF_RANGE"
+                          ]
                         },
                         "message": {
                           "description": "Descricao do erro: 'O horario atual esta fora do range valido.'\n",
@@ -729,12 +789,16 @@
                 "schema": {
                   "oneOf": [
                     {
+                      "title": "Account Not Found Error",
                       "description": "Representacao de um erro NotFound no qual nao foi possivel encontrar a conta correspondente.",
                       "properties": {
                         "code": {
                           "description": "Codigo do erro",
                           "type": "string",
-                          "example": "ACCOUNT_NOT_FOUND"
+                          "example": "ACCOUNT_NOT_FOUND",
+                          "enum": [
+                            "ACCOUNT_NOT_FOUND"
+                          ]
                         },
                         "message": {
                           "description": "Descricao do erro: 'Conta nao encontrada.'\n",
@@ -744,12 +808,16 @@
                       }
                     },
                     {
+                      "title": "Profile Not Found Error",
                       "description": "Representacao de um erro NotFound no qual nao foi possivel encontrar o perfil.",
                       "properties": {
                         "code": {
                           "description": "Codigo do erro",
                           "type": "string",
-                          "example": "PROFILE_NOT_FOUND"
+                          "example": "PROFILE_NOT_FOUND",
+                          "enum": [
+                            "PROFILE_NOT_FOUND"
+                          ]
                         },
                         "message": {
                           "description": "Descricao do erro: 'Perfil nao encontrado.'\n",
@@ -759,12 +827,16 @@
                       }
                     },
                     {
+                      "title": "Application Product Not Found Error",
                       "description": "Representacao de um erro NotFound no qual nao foi possivel encontrar o produto de aplicacao correspondente.",
                       "properties": {
                         "code": {
                           "description": "Codigo do erro",
                           "type": "string",
-                          "example": "APPLICATION_PRODUCT_NOT_FOUND"
+                          "example": "APPLICATION_PRODUCT_NOT_FOUND",
+                          "enum": [
+                            "APPLICATION_PRODUCT_NOT_FOUND"
+                          ]
                         },
                         "message": {
                           "description": "Descricao do erro: 'Produto de aplicacao nao encontrado.'\n",
@@ -774,12 +846,16 @@
                       }
                     },
                     {
+                      "title": "Bank Not Found Error",
                       "description": "Representacao de um erro NotFound no qual nao foi possivel encontrar o banco informado.",
                       "properties": {
                         "code": {
                           "description": "Codigo do erro",
                           "type": "string",
-                          "example": "BANK_NOT_FOUND"
+                          "example": "BANK_NOT_FOUND",
+                          "enum": [
+                            "BANK_NOT_FOUND"
+                          ]
                         },
                         "message": {
                           "description": "Descricao do erro: 'O banco nao foi encontrado para o codigo informado.'\n",
@@ -830,12 +906,16 @@
                 "schema": {
                   "oneOf": [
                     {
+                      "title": "Payment Already Exists Error",
                       "description": "Representacao de um erro Conflict no qual o pagamento ja existe.",
                       "properties": {
                         "code": {
                           "description": "Codigo do erro",
                           "type": "string",
-                          "example": "PAYMENT_ALREADY_EXISTS"
+                          "example": "PAYMENT_ALREADY_EXISTS",
+                          "enum": [
+                            "PAYMENT_ALREADY_EXISTS"
+                          ]
                         },
                         "message": {
                           "description": "Descricao do erro: 'Pagamento ja existe.'\n",
@@ -1384,12 +1464,16 @@
         }
       },
       "ProductDisableError": {
+        "title": "Product Disable Error",
         "description": "Representacao de um erro NotFound no qual nao foi possivel encontrar o produto de aplicacao correspondente.",
         "properties": {
           "code": {
             "description": "Codigo do erro",
             "type": "string",
-            "example": "PRODUCT_DISABLED"
+            "example": "PRODUCT_DISABLED",
+            "enum": [
+              "PRODUCT_DISABLED"
+            ]
           },
           "message": {
             "description": "Descricao do erro: 'Produto nao esta habilitado.'\n",
@@ -1399,12 +1483,16 @@
         }
       },
       "PaymentAlreadyExistsError": {
+        "title": "Payment Already Exists Error",
         "description": "Representacao de um erro Conflict no qual o pagamento ja existe.",
         "properties": {
           "code": {
             "description": "Codigo do erro",
             "type": "string",
-            "example": "PAYMENT_ALREADY_EXISTS"
+            "example": "PAYMENT_ALREADY_EXISTS",
+            "enum": [
+              "PAYMENT_ALREADY_EXISTS"
+            ]
           },
           "message": {
             "description": "Descricao do erro: 'Pagamento ja existe.'\n",
@@ -1414,12 +1502,16 @@
         }
       },
       "PaymentToSameAccountError": {
+        "title": "Payment To Same Account Error",
         "description": "Representacao de um erro BadRequest no qual a conta de credito e igual a de debito.",
         "properties": {
           "code": {
             "description": "Codigo do erro",
             "type": "string",
-            "example": "PAYMENT_TO_SAME_ACCOUNT"
+            "example": "PAYMENT_TO_SAME_ACCOUNT",
+            "enum": [
+              "PAYMENT_TO_SAME_ACCOUNT"
+            ]
           },
           "message": {
             "description": "Descricao do erro: 'A conta recebedora nao pode ser a mesma que a pagadora.'\n",
@@ -1429,12 +1521,16 @@
         }
       },
       "InvalidRecipientAccount": {
+        "title": "Invalid Recipient Account",
         "description": "Representacao de um erro BadRequest no qual a o documento do recebedor informado nao e valido.",
         "properties": {
           "code": {
             "description": "Codigo do erro",
             "type": "string",
-            "example": "INVALID_RECIPIENT_INFORMATION"
+            "example": "INVALID_RECIPIENT_INFORMATION",
+            "enum": [
+              "INVALID_RECIPIENT_INFORMATION"
+            ]
           },
           "message": {
             "description": "Descricao do erro: 'Divergencia no documento do recebedor.'\n",
@@ -1444,12 +1540,16 @@
         }
       },
       "NotBusinessDayError": {
+        "title": "Not Business Day Error",
         "description": "Representacao de um erro BadRequest no qual o dia nao e valido para a operacao.",
         "properties": {
           "code": {
             "description": "Codigo do erro",
             "type": "string",
-            "example": "BUSINESS_DAY_ONLY_ERROR"
+            "example": "BUSINESS_DAY_ONLY_ERROR",
+            "enum": [
+              "BUSINESS_DAY_ONLY_ERROR"
+            ]
           },
           "message": {
             "description": "Descricao do erro: 'O dia atual nao e um dia util.'\n",
@@ -1459,12 +1559,16 @@
         }
       },
       "TimeOutOfRangeError": {
+        "title": "Time Out Of Range Error",
         "description": "Representacao de um erro BadRequest no qual a hora nao e valido para a operacao.",
         "properties": {
           "code": {
             "description": "Codigo do erro",
             "type": "string",
-            "example": "TIME_OUT_OF_RANGE"
+            "example": "TIME_OUT_OF_RANGE",
+            "enum": [
+              "TIME_OUT_OF_RANGE"
+            ]
           },
           "message": {
             "description": "Descricao do erro: 'O horario atual esta fora do range valido.'\n",
@@ -1474,12 +1578,16 @@
         }
       },
       "BankNotFoundError": {
+        "title": "Bank Not Found Error",
         "description": "Representacao de um erro NotFound no qual nao foi possivel encontrar o banco informado.",
         "properties": {
           "code": {
             "description": "Codigo do erro",
             "type": "string",
-            "example": "BANK_NOT_FOUND"
+            "example": "BANK_NOT_FOUND",
+            "enum": [
+              "BANK_NOT_FOUND"
+            ]
           },
           "message": {
             "description": "Descricao do erro: 'O banco nao foi encontrado para o codigo informado.'\n",
@@ -1489,12 +1597,16 @@
         }
       },
       "ProfileNotFoundError": {
+        "title": "Profile Not Found Error",
         "description": "Representacao de um erro NotFound no qual nao foi possivel encontrar o perfil.",
         "properties": {
           "code": {
             "description": "Codigo do erro",
             "type": "string",
-            "example": "PROFILE_NOT_FOUND"
+            "example": "PROFILE_NOT_FOUND",
+            "enum": [
+              "PROFILE_NOT_FOUND"
+            ]
           },
           "message": {
             "description": "Descricao do erro: 'Perfil nao encontrado.'\n",
@@ -1504,12 +1616,16 @@
         }
       },
       "ApplicationProductNotFoundError": {
+        "title": "Application Product Not Found Error",
         "description": "Representacao de um erro NotFound no qual nao foi possivel encontrar o produto de aplicacao correspondente.",
         "properties": {
           "code": {
             "description": "Codigo do erro",
             "type": "string",
-            "example": "APPLICATION_PRODUCT_NOT_FOUND"
+            "example": "APPLICATION_PRODUCT_NOT_FOUND",
+            "enum": [
+              "APPLICATION_PRODUCT_NOT_FOUND"
+            ]
           },
           "message": {
             "description": "Descricao do erro: 'Produto de aplicacao nao encontrado.'\n",
@@ -1519,12 +1635,16 @@
         }
       },
       "AccountNotFoundError": {
+        "title": "Account Not Found Error",
         "description": "Representacao de um erro NotFound no qual nao foi possivel encontrar a conta correspondente.",
         "properties": {
           "code": {
             "description": "Codigo do erro",
             "type": "string",
-            "example": "ACCOUNT_NOT_FOUND"
+            "example": "ACCOUNT_NOT_FOUND",
+            "enum": [
+              "ACCOUNT_NOT_FOUND"
+            ]
           },
           "message": {
             "description": "Descricao do erro: 'Conta nao encontrada.'\n",
@@ -1534,12 +1654,16 @@
         }
       },
       "AccountProductConfigurationNotFoundError": {
+        "title": "Account Product Configuration Not Found Error",
         "description": "Representacao de um erro NotFound no qual nao foi possivel encontrar o produto de aplicacao correspondente.",
         "properties": {
           "code": {
             "description": "Codigo do erro",
             "type": "string",
-            "example": "ACCOUNT_PRODUCT_CONFIGURATION_NOT_FOUND"
+            "example": "ACCOUNT_PRODUCT_CONFIGURATION_NOT_FOUND",
+            "enum": [
+              "ACCOUNT_PRODUCT_CONFIGURATION_NOT_FOUND"
+            ]
           },
           "message": {
             "description": "Descricao do erro: 'Configuracao do produto da conta nao encontrada.'\n",
@@ -1549,12 +1673,16 @@
         }
       },
       "BalanceNotFoundError": {
+        "title": "Balance Not Found Error",
         "description": "Representacao de um erro NotFound no qual nao foi possivel encontrar o saldo da conta correspondente.",
         "properties": {
           "code": {
             "description": "Codigo do erro",
             "type": "string",
-            "example": "BALANCE_NOT_FOUND"
+            "example": "BALANCE_NOT_FOUND",
+            "enum": [
+              "BALANCE_NOT_FOUND"
+            ]
           },
           "message": {
             "description": "Descricao do erro: 'Saldo nao encontrado.'\n",
@@ -1564,13 +1692,17 @@
         }
       },
       "InvalidDataError": {
+        "title": "Invalid Data Error",
         "description": "Representa um erro do tipo BadRequest onde a requisicao contem dados invalidos ou ausentes.",
         "properties": {
           "code": {
             "type": "string",
             "title": "Error code",
             "description": "The type of error",
-            "example": "INVALID_DATA"
+            "example": "INVALID_DATA",
+            "enum": [
+              "INVALID_DATA"
+            ]
           },
           "message": {
             "description": "Descricao do erro: 'Os dados fornecidos tem um formato invalido.'\n",
@@ -1580,13 +1712,17 @@
         }
       },
       "InvalidUUIDError": {
+        "title": "Invalid Uuiderror",
         "description": "Representa um erro do tipo BadRequest onde a requisicao contem uuid invalidos.",
         "properties": {
           "code": {
             "type": "string",
             "title": "Error code",
             "description": "The type of error",
-            "example": "INVALID_UUID"
+            "example": "INVALID_UUID",
+            "enum": [
+              "INVALID_UUID"
+            ]
           },
           "message": {
             "description": "Descricao do erro: 'UUID invalido.'\n",
