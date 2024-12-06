@@ -777,6 +777,18 @@
         ],
         "summary": "Cria um pagamento via integracao",
         "description": "Cria um pagamento via integracao, podendo ser PIX, TEF ou TED.",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "signature",
+            "description": "A assinatura deve ser gerada utilizando o algoritmo RSA-SHA512, com uma chave privada de pelo menos 4096 bits.\nE essencial que a chave privada seja protegida e nunca compartilhada ou exposta.\nEntrar em contato com o time do BAAS para configuracao da chave publica.\n",
+            "schema": {
+              "type": "string",
+              "format": "SHA512"
+            },
+            "required": true
+          }
+        ],
         "requestBody": {
           "content": {
             "application/json": {
@@ -1041,7 +1053,7 @@
             }
           },
           "400": {
-            "description": "Possiveis erros:\n- **PRODUCT_DISABLED** - O produto nao esta habilitado para os dados informados;\n- **ACCOUNT_PRODUCT_CONFIGURATION_NOT_FOUND** - Configuracao do produto da conta nao encontrada para os dados informados;\n- **INVALID_DATA** - Os dados fornecidos tem um formato invalido;\n- **PAYMENT_TO_SAME_ACCOUNT** - Pagamento para a mesma conta, a conta informada e igual a recebedora;\n- **INVALID_RECIPIENT_INFORMATION** - As informacoes do recebedor estao invalidas;\n- **BUSINESS_DAY_ONLY_ERROR** - Dia atual nao e um dia util;\n- **TIME_OUT_OF_RANGE** - Horario atual nao permite a realizacao da transacao;\n",
+            "description": "Possiveis erros:\n- **PRODUCT_DISABLED** - O produto nao esta habilitado para os dados informados;\n- **ACCOUNT_PRODUCT_CONFIGURATION_NOT_FOUND** - Configuracao do produto da conta nao encontrada para os dados informados;\n- **INVALID_DATA** - Os dados fornecidos tem um formato invalido;\n- **PAYMENT_TO_SAME_ACCOUNT** - Pagamento para a mesma conta, a conta informada e igual a recebedora;\n- **INVALID_RECIPIENT_INFORMATION** - As informacoes do recebedor estao invalidas;\n- **BUSINESS_DAY_ONLY_ERROR** - Dia atual nao e um dia util;\n- **TIME_OUT_OF_RANGE** - Horario atual nao permite a realizacao da transacao;\n- **INVALID_PAYLOAD_SIGNATURE** - A assinatura enviada no campo **signature** nao e valida;\n",
             "content": {
               "application/json": {
                 "schema": {
@@ -1179,6 +1191,25 @@
                           "example": "The current time is out of range."
                         }
                       }
+                    },
+                    {
+                      "title": "Invalid Payload Signature Error",
+                      "description": "Representacao de um erro BadRequest no qual a assinatura e invalida.",
+                      "properties": {
+                        "code": {
+                          "description": "Codigo do erro",
+                          "type": "string",
+                          "example": "INVALID_PAYLOAD_SIGNATURE",
+                          "enum": [
+                            "INVALID_PAYLOAD_SIGNATURE"
+                          ]
+                        },
+                        "message": {
+                          "description": "Descricao do erro: 'Assinatura do payload invalida.'\n",
+                          "type": "string",
+                          "example": "Invalid payload signature."
+                        }
+                      }
                     }
                   ]
                 },
@@ -1231,13 +1262,20 @@
                       "code": "TIME_OUT_OF_RANGE",
                       "message": "The current time is out of range."
                     }
+                  },
+                  "Example 8 - InvalidPayloadSignatureError": {
+                    "description": "A assinatura nao e valida para o payload enviado.",
+                    "value": {
+                      "code": "INVALID_PAYLOAD_SIGNATURE",
+                      "message": "Invalid payload signature."
+                    }
                   }
                 }
               }
             }
           },
           "404": {
-            "description": "Possiveis erros:\n- **ACCOUNT_NOT_FOUND** - A conta nao foi encontrada para os dados informados;\n- **PROFILE_NOT_FOUND** - O perfil nao foi encontrado para os dados informados;\n- **APPLICATION_PRODUCT_NOT_FOUND** - O produto de aplicacao nao foi encontrado para os dados informados;\n- **BANK_NOT_FOUND** - Banco nao encontrado pelo **recipient.bank_code** informado;\n",
+            "description": "Possiveis erros:\n- **ACCOUNT_NOT_FOUND** - A conta nao foi encontrada para os dados informados;\n- **PROFILE_NOT_FOUND** - O perfil nao foi encontrado para os dados informados;\n- **APPLICATION_PRODUCT_NOT_FOUND** - O produto de aplicacao nao foi encontrado para os dados informados;\n- **BANK_NOT_FOUND** - Banco nao encontrado pelo **recipient.bank_code** informado;\n- **ACCOUNT_CERTIFICATE_PUBLIC_KEY_NOT_FOUND** - Chave publica da assinatura nao encontrada para a chave informada;\n",
             "content": {
               "application/json": {
                 "schema": {
@@ -1317,6 +1355,25 @@
                           "example": "Bank was not found for the provided code."
                         }
                       }
+                    },
+                    {
+                      "title": "Account Certificate Public Key Not Found",
+                      "description": "Representacao de um erro NotFound no qual nao foi possivel encontrar a chave publica de assinatura.",
+                      "properties": {
+                        "code": {
+                          "description": "Codigo do erro",
+                          "type": "string",
+                          "example": "ACCOUNT_CERTIFICATE_PUBLIC_KEY_NOT_FOUND",
+                          "enum": [
+                            "ACCOUNT_CERTIFICATE_PUBLIC_KEY_NOT_FOUND"
+                          ]
+                        },
+                        "message": {
+                          "description": "Descricao do erro: 'Certificado publico da conta nao encontrado.'\n",
+                          "type": "string",
+                          "example": "Account certificate public key not found."
+                        }
+                      }
                     }
                   ]
                 },
@@ -1347,6 +1404,13 @@
                     "value": {
                       "code": "BANK_NOT_FOUND",
                       "message": "Bank was not found for the provided code."
+                    }
+                  },
+                  "Example 5 - AccountCertificatePublicKeyNotFound": {
+                    "description": "Chave publica nao encontrada para conta informada.",
+                    "value": {
+                      "code": "ACCOUNT_CERTIFICATE_PUBLIC_KEY_NOT_FOUND",
+                      "message": "Account certificate public key not found."
                     }
                   }
                 }
@@ -2218,6 +2282,44 @@
             "description": "Descricao do erro: 'O horario atual esta fora do range valido.'\n",
             "type": "string",
             "example": "The current time is out of range."
+          }
+        }
+      },
+      "InvalidPayloadSignatureError": {
+        "title": "Invalid Payload Signature Error",
+        "description": "Representacao de um erro BadRequest no qual a assinatura e invalida.",
+        "properties": {
+          "code": {
+            "description": "Codigo do erro",
+            "type": "string",
+            "example": "INVALID_PAYLOAD_SIGNATURE",
+            "enum": [
+              "INVALID_PAYLOAD_SIGNATURE"
+            ]
+          },
+          "message": {
+            "description": "Descricao do erro: 'Assinatura do payload invalida.'\n",
+            "type": "string",
+            "example": "Invalid payload signature."
+          }
+        }
+      },
+      "AccountCertificatePublicKeyNotFound": {
+        "title": "Account Certificate Public Key Not Found",
+        "description": "Representacao de um erro NotFound no qual nao foi possivel encontrar a chave publica de assinatura.",
+        "properties": {
+          "code": {
+            "description": "Codigo do erro",
+            "type": "string",
+            "example": "ACCOUNT_CERTIFICATE_PUBLIC_KEY_NOT_FOUND",
+            "enum": [
+              "ACCOUNT_CERTIFICATE_PUBLIC_KEY_NOT_FOUND"
+            ]
+          },
+          "message": {
+            "description": "Descricao do erro: 'Certificado publico da conta nao encontrado.'\n",
+            "type": "string",
+            "example": "Account certificate public key not found."
           }
         }
       },
