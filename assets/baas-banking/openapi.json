@@ -507,7 +507,7 @@
             }
           },
           "400": {
-            "description": "Error with types [BadRequest, FailedToCreateAccountBalanceError, AccountTypeInvalid, PersonNotActive, InvalidClientCodeError, NotAllowedForThisDocumentNumber, JuricalPersonIncompleteData].",
+            "description": "Error with types [BadRequest, FailedToCreateAccountBalanceError, AccountTypeInvalid, PersonNotActive, InvalidClientCodeError, NotAllowedForThisDocumentNumber, JuricalPersonIncompleteData, InvalidModalityError].",
             "content": {
               "application/json": {
                 "schema": {
@@ -701,6 +701,31 @@
                           "title": "Error message",
                           "description": "Describes a message informing a reason for the error",
                           "example": "Jurical person has incomplete data."
+                        },
+                        "status_code": {
+                          "type": "number",
+                          "description": "Error status code",
+                          "example": "400"
+                        }
+                      }
+                    },
+                    {
+                      "title": "Invalid modality error.",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "title": "Error code",
+                          "description": "The type of error",
+                          "example": "INVALID_MODALITY_ERROR",
+                          "enum": [
+                            "INVALID_MODALITY_ERROR"
+                          ]
+                        },
+                        "message": {
+                          "type": "string",
+                          "title": "Error message",
+                          "description": "Describes a message informing a reason for the error",
+                          "example": "Invalid modality error."
                         },
                         "status_code": {
                           "type": "number",
@@ -3608,6 +3633,31 @@
             "title": "Error message",
             "description": "Describes a message informing a reason for the error",
             "example": "Jurical person has incomplete data."
+          },
+          "status_code": {
+            "type": "number",
+            "description": "Error status code",
+            "example": "400"
+          }
+        }
+      },
+      "InvalidModalityError": {
+        "title": "Invalid modality error.",
+        "properties": {
+          "code": {
+            "type": "string",
+            "title": "Error code",
+            "description": "The type of error",
+            "example": "INVALID_MODALITY_ERROR",
+            "enum": [
+              "INVALID_MODALITY_ERROR"
+            ]
+          },
+          "message": {
+            "type": "string",
+            "title": "Error message",
+            "description": "Describes a message informing a reason for the error",
+            "example": "Invalid modality error."
           },
           "status_code": {
             "type": "number",
