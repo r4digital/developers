@@ -8,11 +8,11 @@
   "servers": [
     {
       "description": "Development",
-      "url": "https://develop.r4digital.cloud/transfer"
+      "url": "https://api-dev.bancorandon.com/baas/transfer"
     },
     {
       "description": "Production",
-      "url": "https://api.r4digital.cloud/transfer"
+      "url": "https://api.bancorandon.com/baas/transfer"
     }
   ],
   "security": [
