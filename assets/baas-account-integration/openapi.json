@@ -334,6 +334,17 @@
             "example": "24c7a78d-ed48-4f9a-82c8-051d662be415",
             "description": "ID do pagamento",
             "required": true
+          },
+          {
+            "in": "query",
+            "name": "account_id",
+            "schema": {
+              "type": "string",
+              "description": "Unique account identifier.",
+              "format": "uuid-v4",
+              "example": "6d814c28-fe73-443c-bfe0-48d518aa32fa"
+            },
+            "required": true
           }
         ],
         "responses": {
@@ -1418,7 +1429,7 @@
             }
           },
           "409": {
-            "description": "Possiveis erros:\n- **PAYMENT_ALREADY_EXISTS** - Pagamento ja existe para o **id** informado;\n",
+            "description": "Possiveis erros:\n- **PAYMENT_ALREADY_EXISTS** - Pagamento ja existe para o **id** informado;\n- **DUPLICATED_RESOURCE** - Transacao ja existe para o **id** informado;\n",
             "content": {
               "application/json": {
                 "schema": {
@@ -1441,6 +1452,25 @@
                           "example": "Payment already exists."
                         }
                       }
+                    },
+                    {
+                      "title": "Duplicated Resource Error",
+                      "description": "Representacao de um erro Conflict no qual a transacao ja existe.",
+                      "properties": {
+                        "code": {
+                          "description": "Codigo do erro",
+                          "type": "string",
+                          "example": "DUPLICATED_RESOURCE",
+                          "enum": [
+                            "DUPLICATED_RESOURCE"
+                          ]
+                        },
+                        "message": {
+                          "description": "Descricao do erro: 'Recurso duplicado.'\n",
+                          "type": "string",
+                          "example": "Duplicated resource."
+                        }
+                      }
                     }
                   ]
                 },
@@ -1450,6 +1480,13 @@
                     "value": {
                       "code": "PAYMENT_ALREADY_EXISTS",
                       "message": "Payment already exists."
+                    }
+                  },
+                  "Example 2 - DuplicatedResourceError": {
+                    "description": "Recurso duplicado.",
+                    "value": {
+                      "code": "DUPLICATED_RESOURCE",
+                      "message": "Duplicated resource."
                     }
                   }
                 }
@@ -2489,6 +2526,25 @@
             "description": "Descricao do erro: 'UUID invalido.'\n",
             "type": "string",
             "example": "Invalid uuid."
+          }
+        }
+      },
+      "DuplicatedResourceError": {
+        "title": "Duplicated Resource Error",
+        "description": "Representacao de um erro Conflict no qual a transacao ja existe.",
+        "properties": {
+          "code": {
+            "description": "Codigo do erro",
+            "type": "string",
+            "example": "DUPLICATED_RESOURCE",
+            "enum": [
+              "DUPLICATED_RESOURCE"
+            ]
+          },
+          "message": {
+            "description": "Descricao do erro: 'Recurso duplicado.'\n",
+            "type": "string",
+            "example": "Duplicated resource."
           }
         }
       },
