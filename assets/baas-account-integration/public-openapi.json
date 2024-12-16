@@ -3,7 +3,7 @@
   "info": {
     "version": "0.0.1",
     "title": "Baas Edge Account Integration",
-    "description": "**Descricao**: Api responsavel pela integracao de sistemas de contas PJ diretamente com o BaaS.\n\n# Notificacao de troca de Status\n\nAlgumas trocas de status podem acionar notificacoes.\n\nPara receber estas notificacoes e necessario solicitar a configuracao da URL de notificacao.\n\n| Tipo do Evento                      | Status do Pagamento     | Descricao                                                                               |\n|------------------------------------ | ----------------------- | --------------------------------------------------------------------------------------- |\n| `integration_payment_analyzed`      | ANALYZED                | Pagamento analizado pelo antifraude.                                                    |\n| `integration_payment_not_confirmed` | NOT_CONFIRMED           | Pagamento nao foi confirmado, por falha de assinatura ou payload divergente.            |\n| `integration_payment_refund`        | REFUND                  | Pagamento estornado.                                                                    |\n| `integration_payment_rejected`      | REJECTED                | Pagamento rejeitado, verificar campo reason para detalhes.                              |\n| `integration_payment_error`         | ERROR                   | Erro inesperado no pagamento.                                                           |\n| `integration_payment_done`          | DONE                    | Pagamento realizado e finalizado com sucesso.                                           |\n\n### Schema da chamada de notificacao\n\nEste objeto sera enviado via chamada HTTP no metodo POST, no qual deve ser respondida com status 200 em ate 5 segundos.\n\n#### *Header*\n```json\n{\n  X-R4-Application: GUID, // ID da aplicacao da conta\n  X-R4-Integration: GUID, // ID da integracao\n  X-R4-Delivery: GUID, // ID da tentativa de notificacao\n  X-R4-Event: {event_type}, // Tipo do evento da notificacao (Tipo do evento na tabela acima)\n  User-Agent: R4-Hookshot\n}\n```\n\n#### *Body*\n```\n{\n  \"object_kind\": \"{event_type}\", // Tipo do evento da notificacao (Tipo do evento na tabela acima)\n  \"object_id\": \"GUID\", // ID do pagamento\n  \"account_id\": \"GUID\" // ID da conta\n  \"application_id\": \"GUID\" // ID da aplicacao da conta\n  \"integration_id\": \"GUID\" // ID da integracao\n}\n```\n\n# Erros\n\nEste servico utiliza os [Codigos de status HTTP de resposta](https://en.wikipedia.org/wiki/List_of_HTTP_status_codes) para indicar o sucesso ou falha das requisicoes realizadas a API.\n\nNo geral possuem tres faixas de codigos de status:\n\n- `2xx` codigo de status de sucesso, confirmando que a requisicao realizada ocorreu como esperado.\n\n- `4xx` codigo de status de erro indicando que o problema esta nos dados informados.\n\n- `5xx` codigo de status de erro indicando que o problema se originou no servidor.\n\n</br>\n\n## Erros Genericos\n\nEstes erros podem ocorrer em qualquer rota que for utilizada neste servico:\n\n<details>\n<summary><b>401</b></summary>\n</br>\n\nToken de autenticacao informado esta expirado.\n```json\n{\n  \"details\": {\n    \"reason\": \"Jwt is expired\"\n  },\n  \"status_code\": \"INVALID_AUTHENTICATION\",\n  \"message\": \"The provided authentication is invalid\"\n}\n```\n</br>\n\nErro ao tentar acessar a API sem enviar o header de autenticacao com formato Bearer token.\n```json\n{\n  \"code\":'AUTHENTICATION_FAILED'\n  \"message\": 'Authentication failed.'\n}\n```\n</details>\n\n<details>\n<summary><b>403</b></summary>\n</br>\n\nToken de autenticacao obrigatorio nao informado na requisicao ou nao possui acesso a esta rota.\n```json\n{\n  \"details\": {\n    \"reason\": \"RBAC: access denied\"\n  },\n  \"message\": \"You do not have permission to access the requested resource\",\n  \"status_code\": \"FORBIDDEN\"\n}\n```\n</br>\n\nEsta operacao nao e permitida para o token de autenticacao informado.\n```json\n{\n  \"code\":\"MISSING_PRODUCT_PERMISSION\"\n  \"message\": \"Missing product permission.\"\n}\n```\n\nProduto desabilitado.\n```json\n{\n  \"code\":\"PRODUCT_DISABLED\"\n  \"message\": \"Product is not enabled.\"\n}\n```\n</details>\n\n<details>\n<summary><b>404</b></summary>\n</br>\n\nA rota que esta sendo requisitada nao existe.\n```json\n{\n  \"code\":\"PAGE_NOT_FOUND\"\n  \"message\": \"Page not found.\"\n}\n```\n</details>\n\n<details>\n<summary><b>408</b></summary>\n</br>\n\nEste erro indica que o tempo de resposta para a requisicao chegou ao seu limite, recomenda-se retentar.\n```json\n{\n  \"code\":\"TIMEOUT_EXCEEDED\"\n  \"message\": \"Timeout exceeded\"\n}\n```\n</details>\n\n<details>\n<summary><b>500</b></summary>\n</br>\n\nErro indicando que houve uma falha interna no servidor, contatate o suporte.\n```json\n{\n  \"code\":\"INTERNAL_SERVER_ERROR\"\n  \"message\": \"Unexpected error with our service\"\n}\n```\n</details>\n</summary>\n"
+    "description": "**Descrição**: Api responsável pela integração de sistemas de contas PJ diretamente com o BaaS.\n\n# Notificação de troca de Status\n\nAlgumas trocas de status podem acionar notificações.\n\nPara receber estas notificações é necessário solicitar a configuração da URL de notificação.\n\n| Tipo do Evento                      | Status do Pagamento     | Descrição                                                                               |\n|------------------------------------ | ----------------------- | --------------------------------------------------------------------------------------- |\n| `integration_payment_analyzed`      | ANALYZED                | Pagamento analizado pelo antifraude.                                                    |\n| `integration_payment_not_confirmed` | NOT_CONFIRMED           | Pagamento não foi confirmado, por falha de assinatura ou payload divergente.            |\n| `integration_payment_refund`        | REFUND                  | Pagamento estornado.                                                                    |\n| `integration_payment_rejected`      | REJECTED                | Pagamento rejeitado, verificar campo reason para detalhes.                              |\n| `integration_payment_error`         | ERROR                   | Erro inesperado no pagamento.                                                           |\n| `integration_payment_done`          | DONE                    | Pagamento realizado e finalizado com sucesso.                                           |\n\n### Schema da chamada de notificação\n\nEste objeto será enviado via chamada HTTP no método POST, no qual deve ser respondida com status 200 em até 5 segundos.\n\n#### *Header*\n```json\n{\n  X-R4-Application: GUID, // ID da aplicação da conta\n  X-R4-Integration: GUID, // ID da integração\n  X-R4-Delivery: GUID, // ID da tentativa de notificação\n  X-R4-Event: {event_type}, // Tipo do evento da notificação (Tipo do evento na tabela acima)\n  User-Agent: R4-Hookshot\n}\n```\n\n#### *Body*\n```\n{\n  \"object_kind\": \"{event_type}\", // Tipo do evento da notificação (Tipo do evento na tabela acima)\n  \"object_id\": \"GUID\", // ID do pagamento\n  \"account_id\": \"GUID\" // ID da conta\n  \"application_id\": \"GUID\" // ID da aplicação da conta\n  \"integration_id\": \"GUID\" // ID da integração\n}\n```\n\n# Erros\n\nEste serviço utiliza os [Códigos de status HTTP de resposta](https://en.wikipedia.org/wiki/List_of_HTTP_status_codes) para indicar o sucesso ou falha das requisições realizadas à API.\n\nNo geral possuem três faixas de códigos de status:\n\n- `2xx` código de status de sucesso, confirmando que a requisição realizada ocorreu como esperado.\n\n- `4xx` código de status de erro indicando que o problema está nos dados informados.\n\n- `5xx` código de status de erro indicando que o problema se originou no servidor.\n\n</br>\n\n## Erros Genéricos\n\nEstes erros podem ocorrer em qualquer rota que for utilizada neste serviço:\n\n<details>\n<summary><b>401</b></summary>\n</br>\n\nToken de autenticação informado está expirado.\n```json\n{\n  \"details\": {\n    \"reason\": \"Jwt is expired\"\n  },\n  \"status_code\": \"INVALID_AUTHENTICATION\",\n  \"message\": \"The provided authentication is invalid\"\n}\n```\n</br>\n\nErro ao tentar acessar a API sem enviar o header de autenticação com formato Bearer token.\n```json\n{\n  \"code\":'AUTHENTICATION_FAILED'\n  \"message\": 'Authentication failed.'\n}\n```\n</details>\n\n<details>\n<summary><b>403</b></summary>\n</br>\n\nToken de autenticação obrigatório não informado na requisição ou não possui acesso a esta rota.\n```json\n{\n  \"details\": {\n    \"reason\": \"RBAC: access denied\"\n  },\n  \"message\": \"You do not have permission to access the requested resource\",\n  \"status_code\": \"FORBIDDEN\"\n}\n```\n</br>\n\nEsta operação não é permitida para o token de autenticação informado.\n```json\n{\n  \"code\":\"MISSING_PRODUCT_PERMISSION\"\n  \"message\": \"Missing product permission.\"\n}\n```\n\nProduto desabilitado.\n```json\n{\n  \"code\":\"PRODUCT_DISABLED\"\n  \"message\": \"Product is not enabled.\"\n}\n```\n</details>\n\n<details>\n<summary><b>404</b></summary>\n</br>\n\nA rota que está sendo requisitada não existe.\n```json\n{\n  \"code\":\"PAGE_NOT_FOUND\"\n  \"message\": \"Page not found.\"\n}\n```\n</details>\n\n<details>\n<summary><b>408</b></summary>\n</br>\n\nEste erro indica que o tempo de resposta para a requisição chegou ao seu limite, recomenda-se retentar.\n```json\n{\n  \"code\":\"TIMEOUT_EXCEEDED\"\n  \"message\": \"Timeout exceeded\"\n}\n```\n</details>\n\n<details>\n<summary><b>500</b></summary>\n</br>\n\nErro indicando que houve uma falha interna no servidor, contatate o suporte.\n```json\n{\n  \"code\":\"INTERNAL_SERVER_ERROR\"\n  \"message\": \"Unexpected error with our service\"\n}\n```\n</details>\n</summary>\n"
   },
   "servers": [
     {
@@ -11,7 +11,7 @@
       "url": "https://api-dev.bancorandon.com/baas/account-integration"
     },
     {
-      "description": "Producao",
+      "description": "Produção",
       "url": "https://api.bancorandon.com/baas/account-integration"
     }
   ],
@@ -48,7 +48,7 @@
                   "properties": {
                     "value": {
                       "type": "integer",
-                      "description": "Saldo disponivel.",
+                      "description": "Saldo disponível.",
                       "example": 15230
                     },
                     "blocked_value": {
@@ -63,12 +63,12 @@
                     },
                     "created_at": {
                       "type": "string",
-                      "description": "Data de criacao do saldo.",
+                      "description": "Data de criação do saldo.",
                       "example": "2020-08-06T22:10:00Z"
                     },
                     "updated_at": {
                       "type": "string",
-                      "description": "Data de atualizacao do saldo.",
+                      "description": "Data de atualização do saldo.",
                       "example": "2020-08-06T22:10:00Z"
                     }
                   }
@@ -77,17 +77,17 @@
             }
           },
           "400": {
-            "description": "Possiveis erros:\n- **PRODUCT_DISABLED** - O produto nao esta habilitado para os dados informados;\n- **ACCOUNT_PRODUCT_CONFIGURATION_NOT_FOUND** - Configuracao do produto da conta nao encontrada para os dados informados;\n- **INVALID_DATA** - Os dados fornecidos tem um formato invalido;\n- **INVALID_UUID** - A requisicao contem uuid invalidos;\n",
+            "description": "Possíveis erros:\n- **PRODUCT_DISABLED** - O produto não está habilitado para os dados informados;\n- **ACCOUNT_PRODUCT_CONFIGURATION_NOT_FOUND** - Configuração do produto da conta não encontrada para os dados informados;\n- **INVALID_DATA** - Os dados fornecidos têm um formato inválido;\n- **INVALID_UUID** - A requisição contém uuid inválidos;\n",
             "content": {
               "application/json": {
                 "schema": {
                   "oneOf": [
                     {
                       "title": "Product Disabled Error",
-                      "description": "Representacao de um erro NotFound no qual nao foi possivel encontrar o produto de aplicacao correspondente.",
+                      "description": "Representação de um erro NotFound no qual não foi possível encontrar o produto de aplicação correspondente.",
                       "properties": {
                         "code": {
-                          "description": "Codigo do erro",
+                          "description": "Código do erro",
                           "type": "string",
                           "example": "PRODUCT_DISABLED",
                           "enum": [
@@ -95,7 +95,7 @@
                           ]
                         },
                         "message": {
-                          "description": "Descricao do erro: 'Produto nao esta habilitado.'\n",
+                          "description": "Descrição do erro: 'Produto não está habilitado.'\n",
                           "type": "string",
                           "example": "Product is not enabled."
                         }
@@ -103,10 +103,10 @@
                     },
                     {
                       "title": "Account Product Configuration Not Found Error",
-                      "description": "Representacao de um erro NotFound no qual nao foi possivel encontrar o produto de aplicacao correspondente.",
+                      "description": "Representação de um erro NotFound no qual não foi possível encontrar o produto de aplicação correspondente.",
                       "properties": {
                         "code": {
-                          "description": "Codigo do erro",
+                          "description": "Código do erro",
                           "type": "string",
                           "example": "ACCOUNT_PRODUCT_CONFIGURATION_NOT_FOUND",
                           "enum": [
@@ -114,7 +114,7 @@
                           ]
                         },
                         "message": {
-                          "description": "Descricao do erro: 'Configuracao do produto da conta nao encontrada.'\n",
+                          "description": "Descrição do erro: 'Configuração do produto da conta não encontrada.'\n",
                           "type": "string",
                           "example": "Account product configuration not found."
                         }
@@ -122,7 +122,7 @@
                     },
                     {
                       "title": "Invalid Data Error",
-                      "description": "Representa um erro do tipo BadRequest onde a requisicao contem dados invalidos ou ausentes.",
+                      "description": "Representa um erro do tipo BadRequest onde a requisição contém dados inválidos ou ausentes.",
                       "properties": {
                         "code": {
                           "type": "string",
@@ -134,7 +134,7 @@
                           ]
                         },
                         "message": {
-                          "description": "Descricao do erro: 'Os dados fornecidos tem um formato invalido.'\n",
+                          "description": "Descrição do erro: 'Os dados fornecidos têm um formato inválido.'\n",
                           "type": "string",
                           "example": "The data provided has an invalid format."
                         }
@@ -142,7 +142,7 @@
                     },
                     {
                       "title": "Invalid Uuiderror",
-                      "description": "Representa um erro do tipo BadRequest onde a requisicao contem uuid invalidos.",
+                      "description": "Representa um erro do tipo BadRequest onde a requisição contém uuid inválidos.",
                       "properties": {
                         "code": {
                           "type": "string",
@@ -154,7 +154,7 @@
                           ]
                         },
                         "message": {
-                          "description": "Descricao do erro: 'UUID invalido.'\n",
+                          "description": "Descrição do erro: 'UUID inválido.'\n",
                           "type": "string",
                           "example": "Invalid uuid."
                         }
@@ -164,28 +164,28 @@
                 },
                 "examples": {
                   "Example 1 - ProductDisabledError": {
-                    "description": "Produto nao esta habilitado.",
+                    "description": "Produto não está habilitado.",
                     "value": {
                       "code": "PRODUCT_DISABLED",
                       "message": "Product is not enabled."
                     }
                   },
                   "Example 2 - AccountProductConfigurationNotFoundError": {
-                    "description": "Configuracao do produto da conta nao encontrada.",
+                    "description": "Configuração do produto da conta não encontrada.",
                     "value": {
                       "code": "ACCOUNT_PRODUCT_CONFIGURATION_NOT_FOUND",
                       "message": "Account product configuration not found."
                     }
                   },
                   "Example 3 - InvalidDataError": {
-                    "description": "Os dados fornecidos tem um formato invalido.",
+                    "description": "Os dados fornecidos têm um formato inválido.",
                     "value": {
                       "code": "INVALID_DATA",
                       "message": "The data provided has an invalid format."
                     }
                   },
                   "Example 4 - InvalidUUIDError": {
-                    "description": "A requisicao contem uuid invalidos.",
+                    "description": "A requisição contém uuid inválidos.",
                     "value": {
                       "code": "INVALID_UUID",
                       "message": "invalid uuid."
@@ -196,17 +196,17 @@
             }
           },
           "404": {
-            "description": "Possiveis erros:\n- **ACCOUNT_NOT_FOUND** - A conta nao foi encontrada para os dados informados;\n- **PROFILE_NOT_FOUND** - O perfil nao foi encontrado para os dados informados;\n- **APPLICATION_PRODUCT_NOT_FOUND** - O produto de aplicacao nao foi encontrado para os dados informados;\n- **BALANCE_NOT_FOUND** - O saldo nao foi encontrado para a conta informada;\n",
+            "description": "Possíveis erros:\n- **ACCOUNT_NOT_FOUND** - A conta não foi encontrada para os dados informados;\n- **PROFILE_NOT_FOUND** - O perfil não foi encontrado para os dados informados;\n- **APPLICATION_PRODUCT_NOT_FOUND** - O produto de aplicação não foi encontrado para os dados informados;\n- **BALANCE_NOT_FOUND** - O saldo não foi encontrado para a conta informada;\n",
             "content": {
               "application/json": {
                 "schema": {
                   "oneOf": [
                     {
                       "title": "Account Not Found Error",
-                      "description": "Representacao de um erro NotFound no qual nao foi possivel encontrar a conta correspondente.",
+                      "description": "Representação de um erro NotFound no qual não foi possível encontrar a conta correspondente.",
                       "properties": {
                         "code": {
-                          "description": "Codigo do erro",
+                          "description": "Código do erro",
                           "type": "string",
                           "example": "ACCOUNT_NOT_FOUND",
                           "enum": [
@@ -214,7 +214,7 @@
                           ]
                         },
                         "message": {
-                          "description": "Descricao do erro: 'Conta nao encontrada.'\n",
+                          "description": "Descrição do erro: 'Conta não encontrada.'\n",
                           "type": "string",
                           "example": "Account not found."
                         }
@@ -222,10 +222,10 @@
                     },
                     {
                       "title": "Profile Not Found Error",
-                      "description": "Representacao de um erro NotFound no qual nao foi possivel encontrar o perfil.",
+                      "description": "Representação de um erro NotFound no qual não foi possível encontrar o perfil.",
                       "properties": {
                         "code": {
-                          "description": "Codigo do erro",
+                          "description": "Código do erro",
                           "type": "string",
                           "example": "PROFILE_NOT_FOUND",
                           "enum": [
@@ -233,7 +233,7 @@
                           ]
                         },
                         "message": {
-                          "description": "Descricao do erro: 'Perfil nao encontrado.'\n",
+                          "description": "Descrição do erro: 'Perfil não encontrado.'\n",
                           "type": "string",
                           "example": "Profile not found"
                         }
@@ -241,10 +241,10 @@
                     },
                     {
                       "title": "Application Product Not Found Error",
-                      "description": "Representacao de um erro NotFound no qual nao foi possivel encontrar o produto de aplicacao correspondente.",
+                      "description": "Representação de um erro NotFound no qual não foi possível encontrar o produto de aplicação correspondente.",
                       "properties": {
                         "code": {
-                          "description": "Codigo do erro",
+                          "description": "Código do erro",
                           "type": "string",
                           "example": "APPLICATION_PRODUCT_NOT_FOUND",
                           "enum": [
@@ -252,7 +252,7 @@
                           ]
                         },
                         "message": {
-                          "description": "Descricao do erro: 'Produto de aplicacao nao encontrado.'\n",
+                          "description": "Descrição do erro: 'Produto de aplicação não encontrado.'\n",
                           "type": "string",
                           "example": "Application product not found."
                         }
@@ -260,10 +260,10 @@
                     },
                     {
                       "title": "Balance Not Found Error",
-                      "description": "Representacao de um erro NotFound no qual nao foi possivel encontrar o saldo da conta correspondente.",
+                      "description": "Representação de um erro NotFound no qual não foi possível encontrar o saldo da conta correspondente.",
                       "properties": {
                         "code": {
-                          "description": "Codigo do erro",
+                          "description": "Código do erro",
                           "type": "string",
                           "example": "BALANCE_NOT_FOUND",
                           "enum": [
@@ -271,7 +271,7 @@
                           ]
                         },
                         "message": {
-                          "description": "Descricao do erro: 'Saldo nao encontrado.'\n",
+                          "description": "Descrição do erro: 'Saldo não encontrado.'\n",
                           "type": "string",
                           "example": "Balance not found."
                         }
@@ -281,28 +281,28 @@
                 },
                 "examples": {
                   "Example 1 - AccountNotFoundError": {
-                    "description": "Conta nao encontrada.",
+                    "description": "Conta não encontrada.",
                     "value": {
                       "code": "ACCOUNT_NOT_FOUND",
                       "message": "Account not found."
                     }
                   },
                   "Example 2 - ProfileNotFoundError": {
-                    "description": "Perfil nao encontrado.",
+                    "description": "Perfil não encontrado.",
                     "value": {
                       "code": "PROFILE_NOT_FOUND",
                       "message": "Profile not found."
                     }
                   },
                   "Example 3 - ApplicationProductNotFoundError": {
-                    "description": "Produto de aplicacao nao encontrado.",
+                    "description": "Produto de aplicação não encontrado.",
                     "value": {
                       "code": "APPLICATION_PRODUCT_NOT_FOUND",
                       "message": "Application product not found."
                     }
                   },
                   "Example 4 - BalanceNotFoundError": {
-                    "description": "Saldo da conta nao encontrado.",
+                    "description": "Saldo da conta não encontrado.",
                     "value": {
                       "code": "BALANCE_NOT_FOUND",
                       "message": "Balance not found"
@@ -371,19 +371,19 @@
                     "id": {
                       "type": "string",
                       "format": "uuid-v4",
-                      "description": "ID unico do pagamento",
+                      "description": "ID único do pagamento",
                       "example": "52f979b7-dcc6-45a6-a7b9-657398b0f0cf"
                     },
                     "integration_id": {
                       "type": "string",
                       "format": "uuid-v4",
-                      "description": "ID de integracao",
+                      "description": "ID de integração",
                       "example": "e969284c-d101-4bf6-9f68-d6e76189cbe2"
                     },
                     "application_id": {
                       "type": "string",
                       "format": "uuid-v4",
-                      "description": "ID da aplicacao",
+                      "description": "ID da aplicação",
                       "example": "c9f263c5-4965-497a-858e-2f93cf73e95f"
                     },
                     "account_id": {
@@ -394,7 +394,7 @@
                     },
                     "operation_type": {
                       "type": "string",
-                      "description": "Tipo de operacao",
+                      "description": "Tipo de operação",
                       "example": "PIX",
                       "enum": [
                         "PIX",
@@ -430,7 +430,7 @@
                     },
                     "conciliation_id": {
                       "type": "string",
-                      "description": "ID de conciliacao",
+                      "description": "ID de conciliação",
                       "example": "INV12345"
                     },
                     "end_to_end_id": {
@@ -440,7 +440,7 @@
                     },
                     "description": {
                       "type": "string",
-                      "description": "Descricao do pagamento",
+                      "description": "Descrição do pagamento",
                       "example": "Payment for invoice #12345"
                     },
                     "recipient": {
@@ -448,12 +448,12 @@
                       "properties": {
                         "bank_code": {
                           "type": "integer",
-                          "description": "Codigo do banco do destinatario",
+                          "description": "Código do banco do destinatário",
                           "example": 123
                         },
                         "name": {
                           "type": "string",
-                          "description": "Nome do destinatario",
+                          "description": "Nome do destinatário",
                           "example": "Jane Doe"
                         },
                         "document_type": {
@@ -467,22 +467,22 @@
                         },
                         "document_number": {
                           "type": "integer",
-                          "description": "Numero do documento (CPF ou CNPJ)",
+                          "description": "Número do documento (CPF ou CNPJ)",
                           "example": 12345678901
                         },
                         "agency_number": {
                           "type": "integer",
-                          "description": "Numero da agencia do banco",
+                          "description": "Número da agência do banco",
                           "example": 4567
                         },
                         "account_number": {
                           "type": "integer",
-                          "description": "Numero da conta bancaria",
+                          "description": "Número da conta bancária",
                           "example": 89101112
                         },
                         "account_type": {
                           "type": "string",
-                          "description": "Tipo de conta bancaria",
+                          "description": "Tipo de conta bancária",
                           "example": "CHECKING_ACCOUNT",
                           "enum": [
                             "CHECKING_ACCOUNT",
@@ -497,23 +497,23 @@
                     },
                     "created_at": {
                       "type": "string",
-                      "description": "Data e hora da criacao de pagamento",
+                      "description": "Data e hora da criação de pagamento",
                       "example": "2024-10-01T10:15:30.000Z"
                     },
                     "updated_at": {
                       "type": "string",
-                      "description": "Data e hora da ultima atualizacao de pagamento",
+                      "description": "Data e hora da última atualização de pagamento",
                       "example": "2024-10-01T10:15:30.000Z"
                     },
                     "occurrences": {
                       "type": "array",
-                      "description": "Ocorrencias associados ao pagamento",
+                      "description": "Ocorrências associados ao pagamento",
                       "items": {
                         "type": "object",
                         "properties": {
                           "code": {
                             "type": "string",
-                            "description": "Codigo da ocorrencia",
+                            "description": "Código da ocorrência",
                             "example": "CREATED",
                             "enum": [
                               "CREATED",
@@ -529,12 +529,12 @@
                           },
                           "created_at": {
                             "type": "string",
-                            "description": "Data da ocorrencia",
+                            "description": "Data da ocorrência",
                             "example": "2024-10-01T10:15:30.000Z"
                           },
                           "reason": {
                             "type": "string",
-                            "description": "Razao da ocorrencia",
+                            "description": "Razão da ocorrência",
                             "example": "INSUFFICIENT_BALANCE"
                           }
                         }
@@ -546,17 +546,17 @@
             }
           },
           "400": {
-            "description": "Possiveis erros:\n- **PRODUCT_DISABLED** - O produto nao esta habilitado para os dados informados.\n- **ACCOUNT_PRODUCT_CONFIGURATION_NOT_FOUND** - Configuracao do produto da conta nao encontrada para os dados informados.\n- **INVALID_DATA** - Os dados fornecidos tem um formato invalido.\n- **INVALID_UUID** - A requisicao contem uuid invalidos.\n",
+            "description": "Possíveis erros:\n- **PRODUCT_DISABLED** - O produto não está habilitado para os dados informados.\n- **ACCOUNT_PRODUCT_CONFIGURATION_NOT_FOUND** - Configuração do produto da conta não encontrada para os dados informados.\n- **INVALID_DATA** - Os dados fornecidos têm um formato inválido.\n- **INVALID_UUID** - A requisição contém uuid inválidos.\n",
             "content": {
               "application/json": {
                 "schema": {
                   "oneOf": [
                     {
                       "title": "Product Disabled Error",
-                      "description": "Representacao de um erro NotFound no qual nao foi possivel encontrar o produto de aplicacao correspondente.",
+                      "description": "Representação de um erro NotFound no qual não foi possível encontrar o produto de aplicação correspondente.",
                       "properties": {
                         "code": {
-                          "description": "Codigo do erro",
+                          "description": "Código do erro",
                           "type": "string",
                           "example": "PRODUCT_DISABLED",
                           "enum": [
@@ -564,7 +564,7 @@
                           ]
                         },
                         "message": {
-                          "description": "Descricao do erro: 'Produto nao esta habilitado.'\n",
+                          "description": "Descrição do erro: 'Produto não está habilitado.'\n",
                           "type": "string",
                           "example": "Product is not enabled."
                         }
@@ -572,10 +572,10 @@
                     },
                     {
                       "title": "Account Product Configuration Not Found Error",
-                      "description": "Representacao de um erro NotFound no qual nao foi possivel encontrar o produto de aplicacao correspondente.",
+                      "description": "Representação de um erro NotFound no qual não foi possível encontrar o produto de aplicação correspondente.",
                       "properties": {
                         "code": {
-                          "description": "Codigo do erro",
+                          "description": "Código do erro",
                           "type": "string",
                           "example": "ACCOUNT_PRODUCT_CONFIGURATION_NOT_FOUND",
                           "enum": [
@@ -583,7 +583,7 @@
                           ]
                         },
                         "message": {
-                          "description": "Descricao do erro: 'Configuracao do produto da conta nao encontrada.'\n",
+                          "description": "Descrição do erro: 'Configuração do produto da conta não encontrada.'\n",
                           "type": "string",
                           "example": "Account product configuration not found."
                         }
@@ -591,7 +591,7 @@
                     },
                     {
                       "title": "Invalid Data Error",
-                      "description": "Representa um erro do tipo BadRequest onde a requisicao contem dados invalidos ou ausentes.",
+                      "description": "Representa um erro do tipo BadRequest onde a requisição contém dados inválidos ou ausentes.",
                       "properties": {
                         "code": {
                           "type": "string",
@@ -603,7 +603,7 @@
                           ]
                         },
                         "message": {
-                          "description": "Descricao do erro: 'Os dados fornecidos tem um formato invalido.'\n",
+                          "description": "Descrição do erro: 'Os dados fornecidos têm um formato inválido.'\n",
                           "type": "string",
                           "example": "The data provided has an invalid format."
                         }
@@ -611,7 +611,7 @@
                     },
                     {
                       "title": "Invalid Uuiderror",
-                      "description": "Representa um erro do tipo BadRequest onde a requisicao contem uuid invalidos.",
+                      "description": "Representa um erro do tipo BadRequest onde a requisição contém uuid inválidos.",
                       "properties": {
                         "code": {
                           "type": "string",
@@ -623,7 +623,7 @@
                           ]
                         },
                         "message": {
-                          "description": "Descricao do erro: 'UUID invalido.'\n",
+                          "description": "Descrição do erro: 'UUID inválido.'\n",
                           "type": "string",
                           "example": "Invalid uuid."
                         }
@@ -633,28 +633,28 @@
                 },
                 "examples": {
                   "Example 1 - ProductDisabledError": {
-                    "description": "Produto nao esta habilitado.",
+                    "description": "Produto não está habilitado.",
                     "value": {
                       "code": "PRODUCT_DISABLED",
                       "message": "Product is not enabled"
                     }
                   },
                   "Example 2 - AccountProductConfigurationNotFound": {
-                    "description": "Configuracao do produto da conta nao encontrada.",
+                    "description": "Configuração do produto da conta não encontrada.",
                     "value": {
                       "code": "ACCOUNT_PRODUCT_CONFIGURATION_NOT_FOUND",
                       "message": "Account product configuration not found"
                     }
                   },
                   "Example 3 - InvalidDataError": {
-                    "description": "Os dados fornecidos tem um formato invalido.",
+                    "description": "Os dados fornecidos têm um formato inválido.",
                     "value": {
                       "code": "INVALID_DATA",
                       "message": "The data provided has an invalid format"
                     }
                   },
                   "Example 4 - InvalidUUIDError": {
-                    "description": "A requisicao contem uuid invalidos.",
+                    "description": "A requisição contém uuid inválidos.",
                     "value": {
                       "code": "INVALID_UUID",
                       "message": "invalid uuid"
@@ -665,17 +665,17 @@
             }
           },
           "404": {
-            "description": "Possiveis erros:\n- **ACCOUNT_NOT_FOUND** - A conta nao foi encontrada para os dados informados.\n- **PROFILE_NOT_FOUND** - O perfil nao foi encontrado para os dados informados.\n- **APPLICATION_PRODUCT_NOT_FOUND** - O produto de aplicacao nao foi encontrado para os dados informados.\n- **INTEGRATION_PAYMENT_NOT_FOUND** - O Pagamento nao encontrado para o id informado.\n",
+            "description": "Possíveis erros:\n- **ACCOUNT_NOT_FOUND** - A conta não foi encontrada para os dados informados.\n- **PROFILE_NOT_FOUND** - O perfil não foi encontrado para os dados informados.\n- **APPLICATION_PRODUCT_NOT_FOUND** - O produto de aplicação não foi encontrado para os dados informados.\n- **INTEGRATION_PAYMENT_NOT_FOUND** - O Pagamento não encontrado para o id informado.\n",
             "content": {
               "application/json": {
                 "schema": {
                   "oneOf": [
                     {
                       "title": "Account Not Found Error",
-                      "description": "Representacao de um erro NotFound no qual nao foi possivel encontrar a conta correspondente.",
+                      "description": "Representação de um erro NotFound no qual não foi possível encontrar a conta correspondente.",
                       "properties": {
                         "code": {
-                          "description": "Codigo do erro",
+                          "description": "Código do erro",
                           "type": "string",
                           "example": "ACCOUNT_NOT_FOUND",
                           "enum": [
@@ -683,7 +683,7 @@
                           ]
                         },
                         "message": {
-                          "description": "Descricao do erro: 'Conta nao encontrada.'\n",
+                          "description": "Descrição do erro: 'Conta não encontrada.'\n",
                           "type": "string",
                           "example": "Account not found."
                         }
@@ -691,10 +691,10 @@
                     },
                     {
                       "title": "Profile Not Found Error",
-                      "description": "Representacao de um erro NotFound no qual nao foi possivel encontrar o perfil.",
+                      "description": "Representação de um erro NotFound no qual não foi possível encontrar o perfil.",
                       "properties": {
                         "code": {
-                          "description": "Codigo do erro",
+                          "description": "Código do erro",
                           "type": "string",
                           "example": "PROFILE_NOT_FOUND",
                           "enum": [
@@ -702,7 +702,7 @@
                           ]
                         },
                         "message": {
-                          "description": "Descricao do erro: 'Perfil nao encontrado.'\n",
+                          "description": "Descrição do erro: 'Perfil não encontrado.'\n",
                           "type": "string",
                           "example": "Profile not found"
                         }
@@ -710,10 +710,10 @@
                     },
                     {
                       "title": "Application Product Not Found Error",
-                      "description": "Representacao de um erro NotFound no qual nao foi possivel encontrar o produto de aplicacao correspondente.",
+                      "description": "Representação de um erro NotFound no qual não foi possível encontrar o produto de aplicação correspondente.",
                       "properties": {
                         "code": {
-                          "description": "Codigo do erro",
+                          "description": "Código do erro",
                           "type": "string",
                           "example": "APPLICATION_PRODUCT_NOT_FOUND",
                           "enum": [
@@ -721,22 +721,22 @@
                           ]
                         },
                         "message": {
-                          "description": "Descricao do erro: 'Produto de aplicacao nao encontrado.'\n",
+                          "description": "Descrição do erro: 'Produto de aplicação não encontrado.'\n",
                           "type": "string",
                           "example": "Application product not found."
                         }
                       }
                     },
                     {
-                      "description": "Representacao de um erro NotFound no qual nao foi possivel encontrar o pagamento correspondente.",
+                      "description": "Representação de um erro NotFound no qual não foi possível encontrar o pagamento correspondente.",
                       "properties": {
                         "code": {
-                          "description": "Codigo do erro",
+                          "description": "Código do erro",
                           "type": "string",
                           "example": "INTEGRATION_PAYMENT_NOT_FOUND"
                         },
                         "message": {
-                          "description": "Descricao do erro: 'Pagamento de integracao nao encontrado'\n",
+                          "description": "Descrição do erro: 'Pagamento de integração não encontrado'\n",
                           "type": "string",
                           "example": "Integration payment not found."
                         }
@@ -746,28 +746,28 @@
                 },
                 "examples": {
                   "Example 1 - AccountNotFoundError": {
-                    "description": "Conta nao encontrada.",
+                    "description": "Conta não encontrada.",
                     "value": {
                       "code": "ACCOUNT_NOT_FOUND",
                       "message": "Account not found"
                     }
                   },
                   "Example 2 - ProfileNotFoundError": {
-                    "description": "Perfil nao encontrado.",
+                    "description": "Perfil não encontrado.",
                     "value": {
                       "code": "PROFILE_NOT_FOUND",
                       "message": "Profile not found"
                     }
                   },
                   "Example 3 - ApplicationProductNotFoundError": {
-                    "description": "Produto de aplicacao nao encontrado.",
+                    "description": "Produto de aplicação não encontrado.",
                     "value": {
                       "code": "APPLICATION_PRODUCT_NOT_FOUND",
                       "message": "Application product not found"
                     }
                   },
                   "Example 4 - IntegrationPaymentNotFoundError": {
-                    "description": "Pagamento de integracao nao encontrado.",
+                    "description": "Pagamento de integração não encontrado.",
                     "value": {
                       "code": "INTEGRATION_PAYMENT_NOT_FOUND",
                       "message": "Integration payment not found."
@@ -786,13 +786,13 @@
         "tags": [
           "Pagamentos"
         ],
-        "summary": "Cria um pagamento via integracao",
-        "description": "Cria um pagamento via integracao, podendo ser PIX, TEF ou TED.",
+        "summary": "Cria um pagamento via integração",
+        "description": "Cria um pagamento via integração, podendo ser PIX, TEF ou TED.",
         "parameters": [
           {
             "in": "header",
             "name": "signature",
-            "description": "A assinatura deve ser gerada utilizando o algoritmo RSA-SHA512, com uma chave privada de pelo menos 4096 bits.\nE essencial que a chave privada seja protegida e nunca compartilhada ou exposta.\nEntrar em contato com o time do BAAS para configuracao da chave publica.\n",
+            "description": "A assinatura deve ser gerada utilizando o algoritmo RSA-SHA512, com uma chave privada de pelo menos 4096 bits.\nÉ essencial que a chave privada seja protegida e nunca compartilhada ou exposta.\nEntrar em contato com o time do BAAS para configuração da chave pública.\n",
             "schema": {
               "type": "string",
               "format": "SHA512"
@@ -815,18 +815,18 @@
                   "id": {
                     "type": "string",
                     "format": "uuid-v4",
-                    "description": "Identificador unico do pagamento.",
+                    "description": "Identificador único do pagamento.",
                     "example": "6380ca86-bbae-48a8-a6c0-9a52cbb38d4f"
                   },
                   "account_id": {
                     "type": "string",
                     "format": "uuid-v4",
-                    "description": "Identificador unico da conta.",
+                    "description": "Identificador único da conta.",
                     "example": "3e6873fe-5c75-472b-84ae-ca3c96f196f3"
                   },
                   "goal": {
                     "type": "number",
-                    "description": "Objetivo do pagamento, usando em TED e TEF, quando nao enviado sera 10 (opcional)."
+                    "description": "Objetivo do pagamento, usando em TED e TEF, quando não enviado será 10 (opcional)."
                   },
                   "value": {
                     "type": "number",
@@ -834,11 +834,11 @@
                   },
                   "conciliation_id": {
                     "type": "string",
-                    "description": "ID de conciliacao gerado pelo cliente (opcional)."
+                    "description": "ID de conciliação gerado pelo cliente (opcional)."
                   },
                   "description": {
                     "type": "string",
-                    "description": "Descricao do pagamento (opcional)."
+                    "description": "Descrição do pagamento (opcional)."
                   },
                   "recipient": {
                     "required": [
@@ -852,7 +852,7 @@
                       "account_type"
                     ],
                     "type": "object",
-                    "description": "Conta que recebera o pagamento.",
+                    "description": "Conta que receberá o pagamento.",
                     "properties": {
                       "name": {
                         "type": "string",
@@ -860,7 +860,7 @@
                       },
                       "document_number": {
                         "type": "integer",
-                        "description": "Numero do documento do recebedor."
+                        "description": "Número do documento do recebedor."
                       },
                       "document_type": {
                         "type": "string",
@@ -872,23 +872,23 @@
                       },
                       "bank_code": {
                         "type": "integer",
-                        "description": "Codigo do banco do recebedor."
+                        "description": "Código do banco do recebedor."
                       },
                       "agency_number": {
                         "type": "integer",
-                        "description": "Numero da agencia do recebedor."
+                        "description": "Número da agência do recebedor."
                       },
                       "account_number": {
                         "type": "integer",
-                        "description": "Numero da conta do recebedor."
+                        "description": "Número da conta do recebedor."
                       },
                       "account_digit": {
                         "type": "integer",
-                        "description": "Digito da conta do recebedor."
+                        "description": "Dígito da conta do recebedor."
                       },
                       "account_type": {
                         "type": "string",
-                        "description": "Tipo de conta do recebedor:\n * `CHECKING_ACCOUNT` - Conta corrente\n * `SALARY_ACCOUNT` - Conta salario\n * `SAVINGS_ACCOUNT` - Conta poupanca \n * `PAYMENT_ACCOUNT` - Conta pagamento\n",
+                        "description": "Tipo de conta do recebedor:\n * `CHECKING_ACCOUNT` - Conta corrente\n * `SALARY_ACCOUNT` - Conta salário\n * `SAVINGS_ACCOUNT` - Conta poupança \n * `PAYMENT_ACCOUNT` - Conta pagamento\n",
                         "enum": [
                           "CHECKING_ACCOUNT",
                           "SAVINGS_ACCOUNT",
@@ -912,7 +912,7 @@
               "application/json": {
                 "schema": {
                   "type": "object",
-                  "description": "Descreve as propriedades da operacao criada.",
+                  "description": "Descreve as propriedades da operação criada.",
                   "required": [
                     "id",
                     "integration_id",
@@ -929,30 +929,30 @@
                     "id": {
                       "type": "string",
                       "format": "uuid-v4",
-                      "description": "Identificador unico do pagamento.",
+                      "description": "Identificador único do pagamento.",
                       "example": "6380ca86-bbae-48a8-a6c0-9a52cbb38d4f"
                     },
                     "integration_id": {
                       "type": "string",
                       "format": "uuid-v4",
-                      "description": "Identificador unico da integracao.",
+                      "description": "Identificador único da integração.",
                       "example": "000d23fa-c63c-4268-b617-4749733b3b84"
                     },
                     "application_id": {
                       "type": "string",
                       "format": "uuid-v4",
-                      "description": "Identificador unico da aplicacao da conta.",
+                      "description": "Identificador único da aplicação da conta.",
                       "example": "9efcc6b3-3cec-410b-a241-b1919f3ea033"
                     },
                     "account_id": {
                       "type": "string",
                       "format": "uuid-v4",
-                      "description": "Identificador unico da conta.",
+                      "description": "Identificador único da conta.",
                       "example": "3e6873fe-5c75-472b-84ae-ca3c96f196f3"
                     },
                     "operation_type": {
                       "type": "string",
-                      "description": "Tipo da operacao PIX ou TRANSFER(TED | TEF).",
+                      "description": "Tipo da operação PIX ou TRANSFER(TED | TEF).",
                       "enum": [
                         "PIX",
                         "TRANSFER"
@@ -960,7 +960,7 @@
                     },
                     "goal": {
                       "type": "number",
-                      "description": "Objetivo do pagamento, usando em TED e TEF, quando nao enviado sera 10 (opcional)."
+                      "description": "Objetivo do pagamento, usando em TED e TEF, quando não enviado será 10 (opcional)."
                     },
                     "value": {
                       "type": "number",
@@ -968,11 +968,11 @@
                     },
                     "conciliation_id": {
                       "type": "string",
-                      "description": "ID de conciliacao gerado pelo cliente."
+                      "description": "ID de conciliação gerado pelo cliente."
                     },
                     "description": {
                       "type": "string",
-                      "description": "Descricao do pagamento."
+                      "description": "Descrição do pagamento."
                     },
                     "status": {
                       "type": "string",
@@ -990,7 +990,7 @@
                     },
                     "recipient": {
                       "type": "object",
-                      "description": "Conta que recebera o pagamento.",
+                      "description": "Conta que receberá o pagamento.",
                       "required": [
                         "name",
                         "document_number",
@@ -1008,7 +1008,7 @@
                         },
                         "document_number": {
                           "type": "integer",
-                          "description": "Numero do documento do recebedor."
+                          "description": "Número do documento do recebedor."
                         },
                         "document_type": {
                           "type": "string",
@@ -1020,23 +1020,23 @@
                         },
                         "bank_code": {
                           "type": "integer",
-                          "description": "Codigo do banco do recebedor."
+                          "description": "Código do banco do recebedor."
                         },
                         "agency_number": {
                           "type": "integer",
-                          "description": "Numero da agencia do recebedor."
+                          "description": "Número da agência do recebedor."
                         },
                         "account_number": {
                           "type": "integer",
-                          "description": "Numero da conta do recebedor."
+                          "description": "Número da conta do recebedor."
                         },
                         "account_digit": {
                           "type": "integer",
-                          "description": "Digito da conta do recebedor."
+                          "description": "Dígito da conta do recebedor."
                         },
                         "account_type": {
                           "type": "string",
-                          "description": "Tipo de conta do recebedor:\n * `CHECKING_ACCOUNT` - Conta corrente\n * `SALARY_ACCOUNT` - Conta salario\n * `SAVINGS_ACCOUNT` - Conta poupanca \n * `PAYMENT_ACCOUNT` - Conta pagamento.\n",
+                          "description": "Tipo de conta do recebedor:\n * `CHECKING_ACCOUNT` - Conta corrente\n * `SALARY_ACCOUNT` - Conta salário\n * `SAVINGS_ACCOUNT` - Conta poupança \n * `PAYMENT_ACCOUNT` - Conta pagamento.\n",
                           "enum": [
                             "CHECKING_ACCOUNT",
                             "SAVINGS_ACCOUNT",
@@ -1050,12 +1050,12 @@
                     },
                     "created_at": {
                       "type": "string",
-                      "description": "Data de criacao do pagamento.",
+                      "description": "Data de criação do pagamento.",
                       "example": "2022-01-13T13:53:01.463Z"
                     },
                     "updated_at": {
                       "type": "string",
-                      "description": "Data da ultima atualizacao do pagamento.",
+                      "description": "Data da última atualização do pagamento.",
                       "example": "2022-01-13T13:53:01.463Z"
                     }
                   }
@@ -1064,17 +1064,17 @@
             }
           },
           "400": {
-            "description": "Possiveis erros:\n- **PRODUCT_DISABLED** - O produto nao esta habilitado para os dados informados;\n- **ACCOUNT_PRODUCT_CONFIGURATION_NOT_FOUND** - Configuracao do produto da conta nao encontrada para os dados informados;\n- **INVALID_DATA** - Os dados fornecidos tem um formato invalido;\n- **PAYMENT_TO_SAME_ACCOUNT** - Pagamento para a mesma conta, a conta informada e igual a recebedora;\n- **INVALID_RECIPIENT_INFORMATION** - As informacoes do recebedor estao invalidas;\n- **BUSINESS_DAY_ONLY_ERROR** - Dia atual nao e um dia util;\n- **TIME_OUT_OF_RANGE** - Horario atual nao permite a realizacao da transacao;\n- **INVALID_PAYLOAD_SIGNATURE** - A assinatura enviada no campo **signature** nao e valida;\n",
+            "description": "Possíveis erros:\n- **PRODUCT_DISABLED** - O produto não está habilitado para os dados informados;\n- **ACCOUNT_PRODUCT_CONFIGURATION_NOT_FOUND** - Configuração do produto da conta não encontrada para os dados informados;\n- **INVALID_DATA** - Os dados fornecidos têm um formato inválido;\n- **PAYMENT_TO_SAME_ACCOUNT** - Pagamento para a mesma conta, a conta informada é igual a recebedora;\n- **INVALID_RECIPIENT_INFORMATION** - As informações do recebedor estão inválidas;\n- **BUSINESS_DAY_ONLY_ERROR** - Dia atual não é um dia útil;\n- **TIME_OUT_OF_RANGE** - Horário atual não permite a realização da transação;\n- **INVALID_PAYLOAD_SIGNATURE** - A assinatura enviada no campo **signature** não é válida;\n",
             "content": {
               "application/json": {
                 "schema": {
                   "oneOf": [
                     {
                       "title": "Product Disabled Error",
-                      "description": "Representacao de um erro NotFound no qual nao foi possivel encontrar o produto de aplicacao correspondente.",
+                      "description": "Representação de um erro NotFound no qual não foi possível encontrar o produto de aplicação correspondente.",
                       "properties": {
                         "code": {
-                          "description": "Codigo do erro",
+                          "description": "Código do erro",
                           "type": "string",
                           "example": "PRODUCT_DISABLED",
                           "enum": [
@@ -1082,7 +1082,7 @@
                           ]
                         },
                         "message": {
-                          "description": "Descricao do erro: 'Produto nao esta habilitado.'\n",
+                          "description": "Descrição do erro: 'Produto não está habilitado.'\n",
                           "type": "string",
                           "example": "Product is not enabled."
                         }
@@ -1090,10 +1090,10 @@
                     },
                     {
                       "title": "Account Product Configuration Not Found Error",
-                      "description": "Representacao de um erro NotFound no qual nao foi possivel encontrar o produto de aplicacao correspondente.",
+                      "description": "Representação de um erro NotFound no qual não foi possível encontrar o produto de aplicação correspondente.",
                       "properties": {
                         "code": {
-                          "description": "Codigo do erro",
+                          "description": "Código do erro",
                           "type": "string",
                           "example": "ACCOUNT_PRODUCT_CONFIGURATION_NOT_FOUND",
                           "enum": [
@@ -1101,7 +1101,7 @@
                           ]
                         },
                         "message": {
-                          "description": "Descricao do erro: 'Configuracao do produto da conta nao encontrada.'\n",
+                          "description": "Descrição do erro: 'Configuração do produto da conta não encontrada.'\n",
                           "type": "string",
                           "example": "Account product configuration not found."
                         }
@@ -1109,7 +1109,7 @@
                     },
                     {
                       "title": "Invalid Data Error",
-                      "description": "Representa um erro do tipo BadRequest onde a requisicao contem dados invalidos ou ausentes.",
+                      "description": "Representa um erro do tipo BadRequest onde a requisição contém dados inválidos ou ausentes.",
                       "properties": {
                         "code": {
                           "type": "string",
@@ -1121,7 +1121,7 @@
                           ]
                         },
                         "message": {
-                          "description": "Descricao do erro: 'Os dados fornecidos tem um formato invalido.'\n",
+                          "description": "Descrição do erro: 'Os dados fornecidos têm um formato inválido.'\n",
                           "type": "string",
                           "example": "The data provided has an invalid format."
                         }
@@ -1129,10 +1129,10 @@
                     },
                     {
                       "title": "Payment To Same Account Error",
-                      "description": "Representacao de um erro BadRequest no qual a conta de credito e igual a de debito.",
+                      "description": "Representação de um erro BadRequest no qual a conta de crédito é igual a de débito.",
                       "properties": {
                         "code": {
-                          "description": "Codigo do erro",
+                          "description": "Código do erro",
                           "type": "string",
                           "example": "PAYMENT_TO_SAME_ACCOUNT",
                           "enum": [
@@ -1140,7 +1140,7 @@
                           ]
                         },
                         "message": {
-                          "description": "Descricao do erro: 'A conta recebedora nao pode ser a mesma que a pagadora.'\n",
+                          "description": "Descrição do erro: 'A conta recebedora não pode ser a mesma que a pagadora.'\n",
                           "type": "string",
                           "example": "The recipent account cannot be the same as the payer."
                         }
@@ -1148,10 +1148,10 @@
                     },
                     {
                       "title": "Invalid Recipient Account",
-                      "description": "Representacao de um erro BadRequest no qual a o documento do recebedor informado nao e valido.",
+                      "description": "Representação de um erro BadRequest no qual a o documento do recebedor informado não é válido.",
                       "properties": {
                         "code": {
-                          "description": "Codigo do erro",
+                          "description": "Código do erro",
                           "type": "string",
                           "example": "INVALID_RECIPIENT_INFORMATION",
                           "enum": [
@@ -1159,7 +1159,7 @@
                           ]
                         },
                         "message": {
-                          "description": "Descricao do erro: 'Divergencia no documento do recebedor.'\n",
+                          "description": "Descrição do erro: 'Divergência no documento do recebedor.'\n",
                           "type": "string",
                           "example": "Divergence in recipient's document number."
                         }
@@ -1167,10 +1167,10 @@
                     },
                     {
                       "title": "Not Business Day Error",
-                      "description": "Representacao de um erro BadRequest no qual o dia nao e valido para a operacao.",
+                      "description": "Representação de um erro BadRequest no qual o dia não é válido para a operação.",
                       "properties": {
                         "code": {
-                          "description": "Codigo do erro",
+                          "description": "Código do erro",
                           "type": "string",
                           "example": "BUSINESS_DAY_ONLY_ERROR",
                           "enum": [
@@ -1178,7 +1178,7 @@
                           ]
                         },
                         "message": {
-                          "description": "Descricao do erro: 'O dia atual nao e um dia util.'\n",
+                          "description": "Descrição do erro: 'O dia atual não é um dia útil.'\n",
                           "type": "string",
                           "example": "The current day is not a business day."
                         }
@@ -1186,10 +1186,10 @@
                     },
                     {
                       "title": "Time Out Of Range Error",
-                      "description": "Representacao de um erro BadRequest no qual a hora nao e valido para a operacao.",
+                      "description": "Representação de um erro BadRequest no qual a hora não é válido para a operação.",
                       "properties": {
                         "code": {
-                          "description": "Codigo do erro",
+                          "description": "Código do erro",
                           "type": "string",
                           "example": "TIME_OUT_OF_RANGE",
                           "enum": [
@@ -1197,7 +1197,7 @@
                           ]
                         },
                         "message": {
-                          "description": "Descricao do erro: 'O horario atual esta fora do range valido.'\n",
+                          "description": "Descrição do erro: 'O horário atual está fora do range válido.'\n",
                           "type": "string",
                           "example": "The current time is out of range."
                         }
@@ -1205,10 +1205,10 @@
                     },
                     {
                       "title": "Invalid Payload Signature Error",
-                      "description": "Representacao de um erro BadRequest no qual a assinatura e invalida.",
+                      "description": "Representação de um erro BadRequest no qual a assinatura é inválida.",
                       "properties": {
                         "code": {
-                          "description": "Codigo do erro",
+                          "description": "Código do erro",
                           "type": "string",
                           "example": "INVALID_PAYLOAD_SIGNATURE",
                           "enum": [
@@ -1216,7 +1216,7 @@
                           ]
                         },
                         "message": {
-                          "description": "Descricao do erro: 'Assinatura do payload invalida.'\n",
+                          "description": "Descrição do erro: 'Assinatura do payload inválida.'\n",
                           "type": "string",
                           "example": "Invalid payload signature."
                         }
@@ -1226,56 +1226,56 @@
                 },
                 "examples": {
                   "Example 1 - ProductDisabledError": {
-                    "description": "Produto nao esta habilitado.",
+                    "description": "Produto não está habilitado.",
                     "value": {
                       "code": "PRODUCT_DISABLED",
                       "message": "Product is not enabled."
                     }
                   },
                   "Example 2 - AccountProductConfigurationNotFound": {
-                    "description": "Configuracao do produto da conta nao encontrada.",
+                    "description": "Configuração do produto da conta não encontrada.",
                     "value": {
                       "code": "ACCOUNT_PRODUCT_CONFIGURATION_NOT_FOUND",
                       "message": "Account product configuration not found."
                     }
                   },
                   "Example 3 - InvalidDataError": {
-                    "description": "Os dados fornecidos tem um formato invalido.",
+                    "description": "Os dados fornecidos têm um formato inválido.",
                     "value": {
                       "code": "INVALID_DATA",
                       "message": "The data provided has an invalid format."
                     }
                   },
                   "Example 4 - PaymentToSameAccountError": {
-                    "description": "Conta de debito igual a de credito.",
+                    "description": "Conta de débito igual a de crédito.",
                     "value": {
                       "code": "PAYMENT_TO_SAME_ACCOUNT",
                       "message": "The recipent account cannot be the same as the payer."
                     }
                   },
                   "Example 5 - InvalidRecipientAccount": {
-                    "description": "Divergencia no documento do recebedor.",
+                    "description": "Divergência no documento do recebedor.",
                     "value": {
                       "code": "INVALID_RECIPIENT_INFORMATION",
                       "message": "Divergence in recipient's document number."
                     }
                   },
                   "Example 6 - NotBusinessDayError": {
-                    "description": "Dia atual nao e um dia util.",
+                    "description": "Dia atual não é um dia útil.",
                     "value": {
                       "code": "BUSINESS_DAY_ONLY_ERROR",
                       "message": "The current day is not a business day."
                     }
                   },
                   "Example 7 - TimeOutOfRangeError": {
-                    "description": "Horario atual nao permite a realizacao da transacao.",
+                    "description": "Horário atual não permite a realização da transação.",
                     "value": {
                       "code": "TIME_OUT_OF_RANGE",
                       "message": "The current time is out of range."
                     }
                   },
                   "Example 8 - InvalidPayloadSignatureError": {
-                    "description": "A assinatura nao e valida para o payload enviado.",
+                    "description": "A assinatura não é valida para o payload enviado.",
                     "value": {
                       "code": "INVALID_PAYLOAD_SIGNATURE",
                       "message": "Invalid payload signature."
@@ -1286,17 +1286,17 @@
             }
           },
           "404": {
-            "description": "Possiveis erros:\n- **ACCOUNT_NOT_FOUND** - A conta nao foi encontrada para os dados informados;\n- **PROFILE_NOT_FOUND** - O perfil nao foi encontrado para os dados informados;\n- **APPLICATION_PRODUCT_NOT_FOUND** - O produto de aplicacao nao foi encontrado para os dados informados;\n- **BANK_NOT_FOUND** - Banco nao encontrado pelo **recipient.bank_code** informado;\n- **ACCOUNT_CERTIFICATE_PUBLIC_KEY_NOT_FOUND** - Chave publica da assinatura nao encontrada para a chave informada;\n",
+            "description": "Possíveis erros:\n- **ACCOUNT_NOT_FOUND** - A conta não foi encontrada para os dados informados;\n- **PROFILE_NOT_FOUND** - O perfil não foi encontrado para os dados informados;\n- **APPLICATION_PRODUCT_NOT_FOUND** - O produto de aplicação não foi encontrado para os dados informados;\n- **BANK_NOT_FOUND** - Banco não encontrado pelo **recipient.bank_code** informado;\n- **ACCOUNT_CERTIFICATE_PUBLIC_KEY_NOT_FOUND** - Chave pública da assinatura não encontrada para a chave informada;\n",
             "content": {
               "application/json": {
                 "schema": {
                   "oneOf": [
                     {
                       "title": "Account Not Found Error",
-                      "description": "Representacao de um erro NotFound no qual nao foi possivel encontrar a conta correspondente.",
+                      "description": "Representação de um erro NotFound no qual não foi possível encontrar a conta correspondente.",
                       "properties": {
                         "code": {
-                          "description": "Codigo do erro",
+                          "description": "Código do erro",
                           "type": "string",
                           "example": "ACCOUNT_NOT_FOUND",
                           "enum": [
@@ -1304,7 +1304,7 @@
                           ]
                         },
                         "message": {
-                          "description": "Descricao do erro: 'Conta nao encontrada.'\n",
+                          "description": "Descrição do erro: 'Conta não encontrada.'\n",
                           "type": "string",
                           "example": "Account not found."
                         }
@@ -1312,10 +1312,10 @@
                     },
                     {
                       "title": "Profile Not Found Error",
-                      "description": "Representacao de um erro NotFound no qual nao foi possivel encontrar o perfil.",
+                      "description": "Representação de um erro NotFound no qual não foi possível encontrar o perfil.",
                       "properties": {
                         "code": {
-                          "description": "Codigo do erro",
+                          "description": "Código do erro",
                           "type": "string",
                           "example": "PROFILE_NOT_FOUND",
                           "enum": [
@@ -1323,7 +1323,7 @@
                           ]
                         },
                         "message": {
-                          "description": "Descricao do erro: 'Perfil nao encontrado.'\n",
+                          "description": "Descrição do erro: 'Perfil não encontrado.'\n",
                           "type": "string",
                           "example": "Profile not found"
                         }
@@ -1331,10 +1331,10 @@
                     },
                     {
                       "title": "Application Product Not Found Error",
-                      "description": "Representacao de um erro NotFound no qual nao foi possivel encontrar o produto de aplicacao correspondente.",
+                      "description": "Representação de um erro NotFound no qual não foi possível encontrar o produto de aplicação correspondente.",
                       "properties": {
                         "code": {
-                          "description": "Codigo do erro",
+                          "description": "Código do erro",
                           "type": "string",
                           "example": "APPLICATION_PRODUCT_NOT_FOUND",
                           "enum": [
@@ -1342,7 +1342,7 @@
                           ]
                         },
                         "message": {
-                          "description": "Descricao do erro: 'Produto de aplicacao nao encontrado.'\n",
+                          "description": "Descrição do erro: 'Produto de aplicação não encontrado.'\n",
                           "type": "string",
                           "example": "Application product not found."
                         }
@@ -1350,10 +1350,10 @@
                     },
                     {
                       "title": "Bank Not Found Error",
-                      "description": "Representacao de um erro NotFound no qual nao foi possivel encontrar o banco informado.",
+                      "description": "Representação de um erro NotFound no qual não foi possível encontrar o banco informado.",
                       "properties": {
                         "code": {
-                          "description": "Codigo do erro",
+                          "description": "Código do erro",
                           "type": "string",
                           "example": "BANK_NOT_FOUND",
                           "enum": [
@@ -1361,7 +1361,7 @@
                           ]
                         },
                         "message": {
-                          "description": "Descricao do erro: 'O banco nao foi encontrado para o codigo informado.'\n",
+                          "description": "Descrição do erro: 'O banco não foi encontrado para o código informado.'\n",
                           "type": "string",
                           "example": "Bank was not found for the provided code."
                         }
@@ -1369,10 +1369,10 @@
                     },
                     {
                       "title": "Account Certificate Public Key Not Found",
-                      "description": "Representacao de um erro NotFound no qual nao foi possivel encontrar a chave publica de assinatura.",
+                      "description": "Representação de um erro NotFound no qual não foi possível encontrar a chave pública de assinatura.",
                       "properties": {
                         "code": {
-                          "description": "Codigo do erro",
+                          "description": "Código do erro",
                           "type": "string",
                           "example": "ACCOUNT_CERTIFICATE_PUBLIC_KEY_NOT_FOUND",
                           "enum": [
@@ -1380,7 +1380,7 @@
                           ]
                         },
                         "message": {
-                          "description": "Descricao do erro: 'Certificado publico da conta nao encontrado.'\n",
+                          "description": "Descrição do erro: 'Certificado público da conta não encontrado.'\n",
                           "type": "string",
                           "example": "Account certificate public key not found."
                         }
@@ -1390,35 +1390,35 @@
                 },
                 "examples": {
                   "Example 1 - AccountNotFoundError": {
-                    "description": "Conta nao encontrada.",
+                    "description": "Conta não encontrada.",
                     "value": {
                       "code": "ACCOUNT_NOT_FOUND",
                       "message": "Account not found."
                     }
                   },
                   "Example 2 - ProfileNotFoundError": {
-                    "description": "Perfil nao encontrado.",
+                    "description": "Perfil não encontrado.",
                     "value": {
                       "code": "PROFILE_NOT_FOUND",
                       "message": "Profile not found."
                     }
                   },
                   "Example 3 - ApplicationProductNotFoundError": {
-                    "description": "Produto de aplicacao nao encontrado.",
+                    "description": "Produto de aplicação não encontrado.",
                     "value": {
                       "code": "APPLICATION_PRODUCT_NOT_FOUND",
                       "message": "Application product not found."
                     }
                   },
                   "Example 4 - BankNotFoundError": {
-                    "description": "Banco nao encontrado pelo codigo informado.",
+                    "description": "Banco não encontrado pelo código informado.",
                     "value": {
                       "code": "BANK_NOT_FOUND",
                       "message": "Bank was not found for the provided code."
                     }
                   },
                   "Example 5 - AccountCertificatePublicKeyNotFound": {
-                    "description": "Chave publica nao encontrada para conta informada.",
+                    "description": "Chave pública não encontrada para conta informada.",
                     "value": {
                       "code": "ACCOUNT_CERTIFICATE_PUBLIC_KEY_NOT_FOUND",
                       "message": "Account certificate public key not found."
@@ -1429,17 +1429,17 @@
             }
           },
           "409": {
-            "description": "Possiveis erros:\n- **PAYMENT_ALREADY_EXISTS** - Pagamento ja existe para o **id** informado;\n- **DUPLICATED_RESOURCE** - Transacao ja existe para o **id** informado;\n",
+            "description": "Possíveis erros:\n- **PAYMENT_ALREADY_EXISTS** - Pagamento já existe para o **id** informado;\n- **DUPLICATED_RESOURCE** - Transação já existe para o **id** informado;\n",
             "content": {
               "application/json": {
                 "schema": {
                   "oneOf": [
                     {
                       "title": "Payment Already Exists Error",
-                      "description": "Representacao de um erro Conflict no qual o pagamento ja existe.",
+                      "description": "Representação de um erro Conflict no qual o pagamento já existe.",
                       "properties": {
                         "code": {
-                          "description": "Codigo do erro",
+                          "description": "Código do erro",
                           "type": "string",
                           "example": "PAYMENT_ALREADY_EXISTS",
                           "enum": [
@@ -1447,7 +1447,7 @@
                           ]
                         },
                         "message": {
-                          "description": "Descricao do erro: 'Pagamento ja existe.'\n",
+                          "description": "Descrição do erro: 'Pagamento já existe.'\n",
                           "type": "string",
                           "example": "Payment already exists."
                         }
@@ -1455,10 +1455,10 @@
                     },
                     {
                       "title": "Duplicated Resource Error",
-                      "description": "Representacao de um erro Conflict no qual a transacao ja existe.",
+                      "description": "Representação de um erro Conflict no qual a transação já existe.",
                       "properties": {
                         "code": {
-                          "description": "Codigo do erro",
+                          "description": "Código do erro",
                           "type": "string",
                           "example": "DUPLICATED_RESOURCE",
                           "enum": [
@@ -1466,7 +1466,7 @@
                           ]
                         },
                         "message": {
-                          "description": "Descricao do erro: 'Recurso duplicado.'\n",
+                          "description": "Descrição do erro: 'Recurso duplicado.'\n",
                           "type": "string",
                           "example": "Duplicated resource."
                         }
@@ -1476,7 +1476,7 @@
                 },
                 "examples": {
                   "Example 1 - PaymentAlreadyExistsError": {
-                    "description": "Pagamento ja existe.",
+                    "description": "Pagamento já existe.",
                     "value": {
                       "code": "PAYMENT_ALREADY_EXISTS",
                       "message": "Payment already exists."
@@ -1499,8 +1499,8 @@
         "tags": [
           "Pagamentos"
         ],
-        "summary": "Lista pagamentos realizados via integracao",
-        "description": "Retorna uma lista de pagamentos realizados via integracao.",
+        "summary": "Lista pagamentos realizados via integração",
+        "description": "Retorna uma lista de pagamentos realizados via integração.",
         "operationId": "ListIntegrationPayments",
         "parameters": [
           {
@@ -1510,7 +1510,7 @@
               "type": "string",
               "example": "eyJmaWVsZCI6ImNyZWF0ZWRfYXQiLCJ2YWx1ZSI6IjIwMjQtMTEtMTlUMTk6Mjk6MzIuNDI0WiIsImxpbWl0IjoyfQ=="
             },
-            "description": "Filtro Base64 para trazer apenas pagamentos realizados apos o valor informado.",
+            "description": "Filtro Base64 para trazer apenas pagamentos realizados após o valor informado.",
             "required": false
           },
           {
@@ -1530,7 +1530,7 @@
               "type": "integer",
               "example": 10
             },
-            "description": "O numero de pagamentos a serem devolvidos. Pode ser omitido se fornecido antes ou depois nos filtros com limite incorporado neles. Se nada for fornecido, o padrao sera 10 como limite.",
+            "description": "O número de pagamentos a serem devolvidos. Pode ser omitido se fornecido antes ou depois nos filtros com limite incorporado neles. Se nada for fornecido, o padrão será 10 como limite.",
             "required": false
           },
           {
@@ -1541,7 +1541,7 @@
               "format": "date-time",
               "example": "2024-11-21T13:37:37.022Z"
             },
-            "description": "Data de inicio do filtro, acima ou igual ao campo created_at.",
+            "description": "Data de início do filtro, acima ou igual ao campo created_at.",
             "required": false
           },
           {
@@ -1552,7 +1552,7 @@
               "format": "date-time",
               "example": "2024-11-21T13:37:37.022Z"
             },
-            "description": "Data de termino para filtrar, abaixo ou igual ao campo created_at.",
+            "description": "Data de término para filtrar, abaixo ou igual ao campo created_at.",
             "required": false
           },
           {
@@ -1582,7 +1582,7 @@
             "name": "account_id",
             "schema": {
               "type": "string",
-              "description": "Identificador unico da conta.",
+              "description": "Identificador único da conta.",
               "format": "uuid-v4"
             },
             "example": "6d814c28-fe73-443c-bfe0-48d518aa32fa",
@@ -1591,7 +1591,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Pagamentos realizados via integracao retornados.",
+            "description": "Pagamentos realizados via integração retornados.",
             "content": {
               "application/json": {
                 "schema": {
@@ -1619,30 +1619,30 @@
                           "id": {
                             "type": "string",
                             "format": "uuid-v4",
-                            "description": "Identificador unico do pagamento.",
+                            "description": "Identificador único do pagamento.",
                             "example": "6380ca86-bbae-48a8-a6c0-9a52cbb38d4f"
                           },
                           "integration_id": {
                             "type": "string",
                             "format": "uuid-v4",
-                            "description": "Identificador unico da integracao.",
+                            "description": "Identificador único da integração.",
                             "example": "000d23fa-c63c-4268-b617-4749733b3b84"
                           },
                           "application_id": {
                             "type": "string",
                             "format": "uuid-v4",
-                            "description": "Identificador unico da applicacao.",
+                            "description": "Identificador único da applicação.",
                             "example": "9efcc6b3-3cec-410b-a241-b1919f3ea033"
                           },
                           "account_id": {
                             "type": "string",
                             "format": "uuid-v4",
-                            "description": "Identificador unico da conta.",
+                            "description": "Identificador único da conta.",
                             "example": "3e6873fe-5c75-472b-84ae-ca3c96f196f3"
                           },
                           "operation_type": {
                             "type": "string",
-                            "description": "Tipo da operacao PIX ou TRANSFERENCIA (TED | TEF).",
+                            "description": "Tipo da operação PIX ou TRANSFERÊNCIA (TED | TEF).",
                             "enum": [
                               "PIX",
                               "TRANSFER"
@@ -1650,7 +1650,7 @@
                           },
                           "goal": {
                             "type": "number",
-                            "description": "Objetivo do pagamento, usado em TED e TEF, quando nao enviado sera 10."
+                            "description": "Objetivo do pagamento, usado em TED e TEF, quando não enviado será 10."
                           },
                           "end_to_end_id": {
                             "type": "string",
@@ -1659,12 +1659,12 @@
                           },
                           "antifraud_score": {
                             "type": "number",
-                            "description": "Score da analise antifraude.",
+                            "description": "Score da análise antifraude.",
                             "example": 10
                           },
                           "antifraud_analysis": {
                             "type": "string",
-                            "description": "Resultado da analise antifraude.",
+                            "description": "Resultado da análise antifraude.",
                             "enum": [
                               "WITH_SUSPECT",
                               "WITHOUT_SUSPECT",
@@ -1677,11 +1677,11 @@
                           },
                           "conciliation_id": {
                             "type": "string",
-                            "description": "Identificador de conciliacao do pagamento."
+                            "description": "Identificador de conciliação do pagamento."
                           },
                           "description": {
                             "type": "string",
-                            "description": "Descricao do pagamento."
+                            "description": "Descrição do pagamento."
                           },
                           "status": {
                             "type": "string",
@@ -1717,7 +1717,7 @@
                               },
                               "document_number": {
                                 "type": "integer",
-                                "description": "Numero do documento do recebedor."
+                                "description": "Número do documento do recebedor."
                               },
                               "document_type": {
                                 "type": "string",
@@ -1729,23 +1729,23 @@
                               },
                               "bank_code": {
                                 "type": "integer",
-                                "description": "Codigo do banco do recebedor."
+                                "description": "Código do banco do recebedor."
                               },
                               "agency_number": {
                                 "type": "integer",
-                                "description": "Numero da agencia do recebedor."
+                                "description": "Número da agência do recebedor."
                               },
                               "account_number": {
                                 "type": "integer",
-                                "description": "Numero da conta do recebedor."
+                                "description": "Número da conta do recebedor."
                               },
                               "account_digit": {
                                 "type": "integer",
-                                "description": "Digito da conta do recebedor."
+                                "description": "Dígito da conta do recebedor."
                               },
                               "account_type": {
                                 "type": "string",
-                                "description": "Tipo de conta do recebedor:\n * `CHECKING_ACCOUNT` - Conta corrente\n * `SALARY_ACCOUNT` - Conta salario\n * `SAVINGS_ACCOUNT` - Conta poupanca \n * `PAYMENT_ACCOUNT` - Conta pagamento.\n",
+                                "description": "Tipo de conta do recebedor:\n * `CHECKING_ACCOUNT` - Conta corrente\n * `SALARY_ACCOUNT` - Conta salário\n * `SAVINGS_ACCOUNT` - Conta poupança \n * `PAYMENT_ACCOUNT` - Conta pagamento.\n",
                                 "enum": [
                                   "CHECKING_ACCOUNT",
                                   "SAVINGS_ACCOUNT",
@@ -1759,23 +1759,23 @@
                           },
                           "created_at": {
                             "type": "string",
-                            "description": "Data de criacao do pagamento.",
+                            "description": "Data de criação do pagamento.",
                             "example": "2022-01-13T13:53:01.463Z"
                           },
                           "updated_at": {
                             "type": "string",
-                            "description": "Data da ultima atualizacao do pagamento.",
+                            "description": "Data da última atualização do pagamento.",
                             "example": "2022-01-13T13:53:01.463Z"
                           },
                           "occurrences": {
                             "type": "array",
                             "items": {
                               "type": "object",
-                              "description": "Ocorrencias relacionadas ao pagamento.",
+                              "description": "Ocorrências relacionadas ao pagamento.",
                               "properties": {
                                 "status": {
                                   "type": "string",
-                                  "description": "Status da ocorrencia.",
+                                  "description": "Status da ocorrência.",
                                   "enum": [
                                     "CREATED",
                                     "IN_ANALYSIS",
@@ -1789,7 +1789,7 @@
                                 },
                                 "created_at": {
                                   "type": "string",
-                                  "description": "Data de criacao da ocorrencia.",
+                                  "description": "Data de criação da ocorrência.",
                                   "example": "2022-01-13T13:53:01.463Z"
                                 }
                               }
@@ -1805,17 +1805,17 @@
                           "type": "string",
                           "format": "base64",
                           "example": "eyJmaWVsZCI6ImNyZWF0ZWRfYXQiLCJ2YWx1ZSI6IjIwMjQtMTEtMTlUMTk6Mjk6MzIuNDI0WiIsImxpbWl0IjoyfQ==",
-                          "description": "Cursor apontando para o ultimo item da lista. Se nao existirem mais itens, a propriedade sera removida da resposta."
+                          "description": "Cursor apontando para o último item da lista. Se não existirem mais itens, a propriedade será removida da resposta."
                         },
                         "before": {
                           "type": "string",
                           "format": "base64",
                           "example": "eyJmaWVsZCI6ImNyZWF0ZWRfYXQiLCJ2YWx1ZSI6IjIwMjQtMTEtMTlUMTk6Mjk6MzIuNDI0WiIsImxpbWl0IjoyfQ==",
-                          "description": "Cursor apontando para o primeiro item da lista. Se for o primeiro item disponivel, a propriedade sera removida da resposta."
+                          "description": "Cursor apontando para o primeiro item da lista. Se for o primeiro item disponível, a propriedade será removida da resposta."
                         },
                         "limit": {
                           "type": "number",
-                          "description": "Numero de itens retornados.",
+                          "description": "Número de itens retornados.",
                           "example": 10
                         }
                       }
@@ -1843,7 +1843,7 @@
         "properties": {
           "value": {
             "type": "integer",
-            "description": "Saldo disponivel.",
+            "description": "Saldo disponível.",
             "example": 15230
           },
           "blocked_value": {
@@ -1858,12 +1858,12 @@
           },
           "created_at": {
             "type": "string",
-            "description": "Data de criacao do saldo.",
+            "description": "Data de criação do saldo.",
             "example": "2020-08-06T22:10:00Z"
           },
           "updated_at": {
             "type": "string",
-            "description": "Data de atualizacao do saldo.",
+            "description": "Data de atualização do saldo.",
             "example": "2020-08-06T22:10:00Z"
           }
         }
@@ -1887,19 +1887,19 @@
           "id": {
             "type": "string",
             "format": "uuid-v4",
-            "description": "ID unico do pagamento",
+            "description": "ID único do pagamento",
             "example": "52f979b7-dcc6-45a6-a7b9-657398b0f0cf"
           },
           "integration_id": {
             "type": "string",
             "format": "uuid-v4",
-            "description": "ID de integracao",
+            "description": "ID de integração",
             "example": "e969284c-d101-4bf6-9f68-d6e76189cbe2"
           },
           "application_id": {
             "type": "string",
             "format": "uuid-v4",
-            "description": "ID da aplicacao",
+            "description": "ID da aplicação",
             "example": "c9f263c5-4965-497a-858e-2f93cf73e95f"
           },
           "account_id": {
@@ -1910,7 +1910,7 @@
           },
           "operation_type": {
             "type": "string",
-            "description": "Tipo de operacao",
+            "description": "Tipo de operação",
             "example": "PIX",
             "enum": [
               "PIX",
@@ -1946,7 +1946,7 @@
           },
           "conciliation_id": {
             "type": "string",
-            "description": "ID de conciliacao",
+            "description": "ID de conciliação",
             "example": "INV12345"
           },
           "end_to_end_id": {
@@ -1956,7 +1956,7 @@
           },
           "description": {
             "type": "string",
-            "description": "Descricao do pagamento",
+            "description": "Descrição do pagamento",
             "example": "Payment for invoice #12345"
           },
           "recipient": {
@@ -1964,12 +1964,12 @@
             "properties": {
               "bank_code": {
                 "type": "integer",
-                "description": "Codigo do banco do destinatario",
+                "description": "Código do banco do destinatário",
                 "example": 123
               },
               "name": {
                 "type": "string",
-                "description": "Nome do destinatario",
+                "description": "Nome do destinatário",
                 "example": "Jane Doe"
               },
               "document_type": {
@@ -1983,22 +1983,22 @@
               },
               "document_number": {
                 "type": "integer",
-                "description": "Numero do documento (CPF ou CNPJ)",
+                "description": "Número do documento (CPF ou CNPJ)",
                 "example": 12345678901
               },
               "agency_number": {
                 "type": "integer",
-                "description": "Numero da agencia do banco",
+                "description": "Número da agência do banco",
                 "example": 4567
               },
               "account_number": {
                 "type": "integer",
-                "description": "Numero da conta bancaria",
+                "description": "Número da conta bancária",
                 "example": 89101112
               },
               "account_type": {
                 "type": "string",
-                "description": "Tipo de conta bancaria",
+                "description": "Tipo de conta bancária",
                 "example": "CHECKING_ACCOUNT",
                 "enum": [
                   "CHECKING_ACCOUNT",
@@ -2013,23 +2013,23 @@
           },
           "created_at": {
             "type": "string",
-            "description": "Data e hora da criacao de pagamento",
+            "description": "Data e hora da criação de pagamento",
             "example": "2024-10-01T10:15:30.000Z"
           },
           "updated_at": {
             "type": "string",
-            "description": "Data e hora da ultima atualizacao de pagamento",
+            "description": "Data e hora da última atualização de pagamento",
             "example": "2024-10-01T10:15:30.000Z"
           },
           "occurrences": {
             "type": "array",
-            "description": "Ocorrencias associados ao pagamento",
+            "description": "Ocorrências associados ao pagamento",
             "items": {
               "type": "object",
               "properties": {
                 "code": {
                   "type": "string",
-                  "description": "Codigo da ocorrencia",
+                  "description": "Código da ocorrência",
                   "example": "CREATED",
                   "enum": [
                     "CREATED",
@@ -2045,12 +2045,12 @@
                 },
                 "created_at": {
                   "type": "string",
-                  "description": "Data da ocorrencia",
+                  "description": "Data da ocorrência",
                   "example": "2024-10-01T10:15:30.000Z"
                 },
                 "reason": {
                   "type": "string",
-                  "description": "Razao da ocorrencia",
+                  "description": "Razão da ocorrência",
                   "example": "INSUFFICIENT_BALANCE"
                 }
               }
@@ -2060,7 +2060,7 @@
       },
       "CreatePaymentIntegrationResponse": {
         "type": "object",
-        "description": "Descreve as propriedades da operacao criada.",
+        "description": "Descreve as propriedades da operação criada.",
         "required": [
           "id",
           "integration_id",
@@ -2077,30 +2077,30 @@
           "id": {
             "type": "string",
             "format": "uuid-v4",
-            "description": "Identificador unico do pagamento.",
+            "description": "Identificador único do pagamento.",
             "example": "6380ca86-bbae-48a8-a6c0-9a52cbb38d4f"
           },
           "integration_id": {
             "type": "string",
             "format": "uuid-v4",
-            "description": "Identificador unico da integracao.",
+            "description": "Identificador único da integração.",
             "example": "000d23fa-c63c-4268-b617-4749733b3b84"
           },
           "application_id": {
             "type": "string",
             "format": "uuid-v4",
-            "description": "Identificador unico da aplicacao da conta.",
+            "description": "Identificador único da aplicação da conta.",
             "example": "9efcc6b3-3cec-410b-a241-b1919f3ea033"
           },
           "account_id": {
             "type": "string",
             "format": "uuid-v4",
-            "description": "Identificador unico da conta.",
+            "description": "Identificador único da conta.",
             "example": "3e6873fe-5c75-472b-84ae-ca3c96f196f3"
           },
           "operation_type": {
             "type": "string",
-            "description": "Tipo da operacao PIX ou TRANSFER(TED | TEF).",
+            "description": "Tipo da operação PIX ou TRANSFER(TED | TEF).",
             "enum": [
               "PIX",
               "TRANSFER"
@@ -2108,7 +2108,7 @@
           },
           "goal": {
             "type": "number",
-            "description": "Objetivo do pagamento, usando em TED e TEF, quando nao enviado sera 10 (opcional)."
+            "description": "Objetivo do pagamento, usando em TED e TEF, quando não enviado será 10 (opcional)."
           },
           "value": {
             "type": "number",
@@ -2116,11 +2116,11 @@
           },
           "conciliation_id": {
             "type": "string",
-            "description": "ID de conciliacao gerado pelo cliente."
+            "description": "ID de conciliação gerado pelo cliente."
           },
           "description": {
             "type": "string",
-            "description": "Descricao do pagamento."
+            "description": "Descrição do pagamento."
           },
           "status": {
             "type": "string",
@@ -2138,7 +2138,7 @@
           },
           "recipient": {
             "type": "object",
-            "description": "Conta que recebera o pagamento.",
+            "description": "Conta que receberá o pagamento.",
             "required": [
               "name",
               "document_number",
@@ -2156,7 +2156,7 @@
               },
               "document_number": {
                 "type": "integer",
-                "description": "Numero do documento do recebedor."
+                "description": "Número do documento do recebedor."
               },
               "document_type": {
                 "type": "string",
@@ -2168,23 +2168,23 @@
               },
               "bank_code": {
                 "type": "integer",
-                "description": "Codigo do banco do recebedor."
+                "description": "Código do banco do recebedor."
               },
               "agency_number": {
                 "type": "integer",
-                "description": "Numero da agencia do recebedor."
+                "description": "Número da agência do recebedor."
               },
               "account_number": {
                 "type": "integer",
-                "description": "Numero da conta do recebedor."
+                "description": "Número da conta do recebedor."
               },
               "account_digit": {
                 "type": "integer",
-                "description": "Digito da conta do recebedor."
+                "description": "Dígito da conta do recebedor."
               },
               "account_type": {
                 "type": "string",
-                "description": "Tipo de conta do recebedor:\n * `CHECKING_ACCOUNT` - Conta corrente\n * `SALARY_ACCOUNT` - Conta salario\n * `SAVINGS_ACCOUNT` - Conta poupanca \n * `PAYMENT_ACCOUNT` - Conta pagamento.\n",
+                "description": "Tipo de conta do recebedor:\n * `CHECKING_ACCOUNT` - Conta corrente\n * `SALARY_ACCOUNT` - Conta salário\n * `SAVINGS_ACCOUNT` - Conta poupança \n * `PAYMENT_ACCOUNT` - Conta pagamento.\n",
                 "enum": [
                   "CHECKING_ACCOUNT",
                   "SAVINGS_ACCOUNT",
@@ -2198,22 +2198,22 @@
           },
           "created_at": {
             "type": "string",
-            "description": "Data de criacao do pagamento.",
+            "description": "Data de criação do pagamento.",
             "example": "2022-01-13T13:53:01.463Z"
           },
           "updated_at": {
             "type": "string",
-            "description": "Data da ultima atualizacao do pagamento.",
+            "description": "Data da última atualização do pagamento.",
             "example": "2022-01-13T13:53:01.463Z"
           }
         }
       },
       "ProductDisabledError": {
         "title": "Product Disabled Error",
-        "description": "Representacao de um erro NotFound no qual nao foi possivel encontrar o produto de aplicacao correspondente.",
+        "description": "Representação de um erro NotFound no qual não foi possível encontrar o produto de aplicação correspondente.",
         "properties": {
           "code": {
-            "description": "Codigo do erro",
+            "description": "Código do erro",
             "type": "string",
             "example": "PRODUCT_DISABLED",
             "enum": [
@@ -2221,7 +2221,7 @@
             ]
           },
           "message": {
-            "description": "Descricao do erro: 'Produto nao esta habilitado.'\n",
+            "description": "Descrição do erro: 'Produto não está habilitado.'\n",
             "type": "string",
             "example": "Product is not enabled."
           }
@@ -2229,10 +2229,10 @@
       },
       "PaymentAlreadyExistsError": {
         "title": "Payment Already Exists Error",
-        "description": "Representacao de um erro Conflict no qual o pagamento ja existe.",
+        "description": "Representação de um erro Conflict no qual o pagamento já existe.",
         "properties": {
           "code": {
-            "description": "Codigo do erro",
+            "description": "Código do erro",
             "type": "string",
             "example": "PAYMENT_ALREADY_EXISTS",
             "enum": [
@@ -2240,7 +2240,7 @@
             ]
           },
           "message": {
-            "description": "Descricao do erro: 'Pagamento ja existe.'\n",
+            "description": "Descrição do erro: 'Pagamento já existe.'\n",
             "type": "string",
             "example": "Payment already exists."
           }
@@ -2248,10 +2248,10 @@
       },
       "PaymentToSameAccountError": {
         "title": "Payment To Same Account Error",
-        "description": "Representacao de um erro BadRequest no qual a conta de credito e igual a de debito.",
+        "description": "Representação de um erro BadRequest no qual a conta de crédito é igual a de débito.",
         "properties": {
           "code": {
-            "description": "Codigo do erro",
+            "description": "Código do erro",
             "type": "string",
             "example": "PAYMENT_TO_SAME_ACCOUNT",
             "enum": [
@@ -2259,7 +2259,7 @@
             ]
           },
           "message": {
-            "description": "Descricao do erro: 'A conta recebedora nao pode ser a mesma que a pagadora.'\n",
+            "description": "Descrição do erro: 'A conta recebedora não pode ser a mesma que a pagadora.'\n",
             "type": "string",
             "example": "The recipent account cannot be the same as the payer."
           }
@@ -2267,10 +2267,10 @@
       },
       "InvalidRecipientAccount": {
         "title": "Invalid Recipient Account",
-        "description": "Representacao de um erro BadRequest no qual a o documento do recebedor informado nao e valido.",
+        "description": "Representação de um erro BadRequest no qual a o documento do recebedor informado não é válido.",
         "properties": {
           "code": {
-            "description": "Codigo do erro",
+            "description": "Código do erro",
             "type": "string",
             "example": "INVALID_RECIPIENT_INFORMATION",
             "enum": [
@@ -2278,7 +2278,7 @@
             ]
           },
           "message": {
-            "description": "Descricao do erro: 'Divergencia no documento do recebedor.'\n",
+            "description": "Descrição do erro: 'Divergência no documento do recebedor.'\n",
             "type": "string",
             "example": "Divergence in recipient's document number."
           }
@@ -2286,10 +2286,10 @@
       },
       "NotBusinessDayError": {
         "title": "Not Business Day Error",
-        "description": "Representacao de um erro BadRequest no qual o dia nao e valido para a operacao.",
+        "description": "Representação de um erro BadRequest no qual o dia não é válido para a operação.",
         "properties": {
           "code": {
-            "description": "Codigo do erro",
+            "description": "Código do erro",
             "type": "string",
             "example": "BUSINESS_DAY_ONLY_ERROR",
             "enum": [
@@ -2297,7 +2297,7 @@
             ]
           },
           "message": {
-            "description": "Descricao do erro: 'O dia atual nao e um dia util.'\n",
+            "description": "Descrição do erro: 'O dia atual não é um dia útil.'\n",
             "type": "string",
             "example": "The current day is not a business day."
           }
@@ -2305,10 +2305,10 @@
       },
       "TimeOutOfRangeError": {
         "title": "Time Out Of Range Error",
-        "description": "Representacao de um erro BadRequest no qual a hora nao e valido para a operacao.",
+        "description": "Representação de um erro BadRequest no qual a hora não é válido para a operação.",
         "properties": {
           "code": {
-            "description": "Codigo do erro",
+            "description": "Código do erro",
             "type": "string",
             "example": "TIME_OUT_OF_RANGE",
             "enum": [
@@ -2316,7 +2316,7 @@
             ]
           },
           "message": {
-            "description": "Descricao do erro: 'O horario atual esta fora do range valido.'\n",
+            "description": "Descrição do erro: 'O horário atual está fora do range válido.'\n",
             "type": "string",
             "example": "The current time is out of range."
           }
@@ -2324,10 +2324,10 @@
       },
       "InvalidPayloadSignatureError": {
         "title": "Invalid Payload Signature Error",
-        "description": "Representacao de um erro BadRequest no qual a assinatura e invalida.",
+        "description": "Representação de um erro BadRequest no qual a assinatura é inválida.",
         "properties": {
           "code": {
-            "description": "Codigo do erro",
+            "description": "Código do erro",
             "type": "string",
             "example": "INVALID_PAYLOAD_SIGNATURE",
             "enum": [
@@ -2335,7 +2335,7 @@
             ]
           },
           "message": {
-            "description": "Descricao do erro: 'Assinatura do payload invalida.'\n",
+            "description": "Descrição do erro: 'Assinatura do payload inválida.'\n",
             "type": "string",
             "example": "Invalid payload signature."
           }
@@ -2343,10 +2343,10 @@
       },
       "AccountCertificatePublicKeyNotFound": {
         "title": "Account Certificate Public Key Not Found",
-        "description": "Representacao de um erro NotFound no qual nao foi possivel encontrar a chave publica de assinatura.",
+        "description": "Representação de um erro NotFound no qual não foi possível encontrar a chave pública de assinatura.",
         "properties": {
           "code": {
-            "description": "Codigo do erro",
+            "description": "Código do erro",
             "type": "string",
             "example": "ACCOUNT_CERTIFICATE_PUBLIC_KEY_NOT_FOUND",
             "enum": [
@@ -2354,7 +2354,7 @@
             ]
           },
           "message": {
-            "description": "Descricao do erro: 'Certificado publico da conta nao encontrado.'\n",
+            "description": "Descrição do erro: 'Certificado público da conta não encontrado.'\n",
             "type": "string",
             "example": "Account certificate public key not found."
           }
@@ -2362,10 +2362,10 @@
       },
       "BankNotFoundError": {
         "title": "Bank Not Found Error",
-        "description": "Representacao de um erro NotFound no qual nao foi possivel encontrar o banco informado.",
+        "description": "Representação de um erro NotFound no qual não foi possível encontrar o banco informado.",
         "properties": {
           "code": {
-            "description": "Codigo do erro",
+            "description": "Código do erro",
             "type": "string",
             "example": "BANK_NOT_FOUND",
             "enum": [
@@ -2373,7 +2373,7 @@
             ]
           },
           "message": {
-            "description": "Descricao do erro: 'O banco nao foi encontrado para o codigo informado.'\n",
+            "description": "Descrição do erro: 'O banco não foi encontrado para o código informado.'\n",
             "type": "string",
             "example": "Bank was not found for the provided code."
           }
@@ -2381,10 +2381,10 @@
       },
       "ProfileNotFoundError": {
         "title": "Profile Not Found Error",
-        "description": "Representacao de um erro NotFound no qual nao foi possivel encontrar o perfil.",
+        "description": "Representação de um erro NotFound no qual não foi possível encontrar o perfil.",
         "properties": {
           "code": {
-            "description": "Codigo do erro",
+            "description": "Código do erro",
             "type": "string",
             "example": "PROFILE_NOT_FOUND",
             "enum": [
@@ -2392,7 +2392,7 @@
             ]
           },
           "message": {
-            "description": "Descricao do erro: 'Perfil nao encontrado.'\n",
+            "description": "Descrição do erro: 'Perfil não encontrado.'\n",
             "type": "string",
             "example": "Profile not found"
           }
@@ -2400,10 +2400,10 @@
       },
       "ApplicationProductNotFoundError": {
         "title": "Application Product Not Found Error",
-        "description": "Representacao de um erro NotFound no qual nao foi possivel encontrar o produto de aplicacao correspondente.",
+        "description": "Representação de um erro NotFound no qual não foi possível encontrar o produto de aplicação correspondente.",
         "properties": {
           "code": {
-            "description": "Codigo do erro",
+            "description": "Código do erro",
             "type": "string",
             "example": "APPLICATION_PRODUCT_NOT_FOUND",
             "enum": [
@@ -2411,7 +2411,7 @@
             ]
           },
           "message": {
-            "description": "Descricao do erro: 'Produto de aplicacao nao encontrado.'\n",
+            "description": "Descrição do erro: 'Produto de aplicação não encontrado.'\n",
             "type": "string",
             "example": "Application product not found."
           }
@@ -2419,10 +2419,10 @@
       },
       "AccountNotFoundError": {
         "title": "Account Not Found Error",
-        "description": "Representacao de um erro NotFound no qual nao foi possivel encontrar a conta correspondente.",
+        "description": "Representação de um erro NotFound no qual não foi possível encontrar a conta correspondente.",
         "properties": {
           "code": {
-            "description": "Codigo do erro",
+            "description": "Código do erro",
             "type": "string",
             "example": "ACCOUNT_NOT_FOUND",
             "enum": [
@@ -2430,7 +2430,7 @@
             ]
           },
           "message": {
-            "description": "Descricao do erro: 'Conta nao encontrada.'\n",
+            "description": "Descrição do erro: 'Conta não encontrada.'\n",
             "type": "string",
             "example": "Account not found."
           }
@@ -2438,10 +2438,10 @@
       },
       "AccountProductConfigurationNotFoundError": {
         "title": "Account Product Configuration Not Found Error",
-        "description": "Representacao de um erro NotFound no qual nao foi possivel encontrar o produto de aplicacao correspondente.",
+        "description": "Representação de um erro NotFound no qual não foi possível encontrar o produto de aplicação correspondente.",
         "properties": {
           "code": {
-            "description": "Codigo do erro",
+            "description": "Código do erro",
             "type": "string",
             "example": "ACCOUNT_PRODUCT_CONFIGURATION_NOT_FOUND",
             "enum": [
@@ -2449,7 +2449,7 @@
             ]
           },
           "message": {
-            "description": "Descricao do erro: 'Configuracao do produto da conta nao encontrada.'\n",
+            "description": "Descrição do erro: 'Configuração do produto da conta não encontrada.'\n",
             "type": "string",
             "example": "Account product configuration not found."
           }
@@ -2457,10 +2457,10 @@
       },
       "BalanceNotFoundError": {
         "title": "Balance Not Found Error",
-        "description": "Representacao de um erro NotFound no qual nao foi possivel encontrar o saldo da conta correspondente.",
+        "description": "Representação de um erro NotFound no qual não foi possível encontrar o saldo da conta correspondente.",
         "properties": {
           "code": {
-            "description": "Codigo do erro",
+            "description": "Código do erro",
             "type": "string",
             "example": "BALANCE_NOT_FOUND",
             "enum": [
@@ -2468,22 +2468,22 @@
             ]
           },
           "message": {
-            "description": "Descricao do erro: 'Saldo nao encontrado.'\n",
+            "description": "Descrição do erro: 'Saldo não encontrado.'\n",
             "type": "string",
             "example": "Balance not found."
           }
         }
       },
       "IntegrationPaymentNotFoundError": {
-        "description": "Representacao de um erro NotFound no qual nao foi possivel encontrar o pagamento correspondente.",
+        "description": "Representação de um erro NotFound no qual não foi possível encontrar o pagamento correspondente.",
         "properties": {
           "code": {
-            "description": "Codigo do erro",
+            "description": "Código do erro",
             "type": "string",
             "example": "INTEGRATION_PAYMENT_NOT_FOUND"
           },
           "message": {
-            "description": "Descricao do erro: 'Pagamento de integracao nao encontrado'\n",
+            "description": "Descrição do erro: 'Pagamento de integração não encontrado'\n",
             "type": "string",
             "example": "Integration payment not found."
           }
@@ -2491,7 +2491,7 @@
       },
       "InvalidDataError": {
         "title": "Invalid Data Error",
-        "description": "Representa um erro do tipo BadRequest onde a requisicao contem dados invalidos ou ausentes.",
+        "description": "Representa um erro do tipo BadRequest onde a requisição contém dados inválidos ou ausentes.",
         "properties": {
           "code": {
             "type": "string",
@@ -2503,7 +2503,7 @@
             ]
           },
           "message": {
-            "description": "Descricao do erro: 'Os dados fornecidos tem um formato invalido.'\n",
+            "description": "Descrição do erro: 'Os dados fornecidos têm um formato inválido.'\n",
             "type": "string",
             "example": "The data provided has an invalid format."
           }
@@ -2511,7 +2511,7 @@
       },
       "InvalidUUIDError": {
         "title": "Invalid Uuiderror",
-        "description": "Representa um erro do tipo BadRequest onde a requisicao contem uuid invalidos.",
+        "description": "Representa um erro do tipo BadRequest onde a requisição contém uuid inválidos.",
         "properties": {
           "code": {
             "type": "string",
@@ -2523,7 +2523,7 @@
             ]
           },
           "message": {
-            "description": "Descricao do erro: 'UUID invalido.'\n",
+            "description": "Descrição do erro: 'UUID inválido.'\n",
             "type": "string",
             "example": "Invalid uuid."
           }
@@ -2531,10 +2531,10 @@
       },
       "DuplicatedResourceError": {
         "title": "Duplicated Resource Error",
-        "description": "Representacao de um erro Conflict no qual a transacao ja existe.",
+        "description": "Representação de um erro Conflict no qual a transação já existe.",
         "properties": {
           "code": {
-            "description": "Codigo do erro",
+            "description": "Código do erro",
             "type": "string",
             "example": "DUPLICATED_RESOURCE",
             "enum": [
@@ -2542,7 +2542,7 @@
             ]
           },
           "message": {
-            "description": "Descricao do erro: 'Recurso duplicado.'\n",
+            "description": "Descrição do erro: 'Recurso duplicado.'\n",
             "type": "string",
             "example": "Duplicated resource."
           }
@@ -2568,30 +2568,30 @@
           "id": {
             "type": "string",
             "format": "uuid-v4",
-            "description": "Identificador unico do pagamento.",
+            "description": "Identificador único do pagamento.",
             "example": "6380ca86-bbae-48a8-a6c0-9a52cbb38d4f"
           },
           "integration_id": {
             "type": "string",
             "format": "uuid-v4",
-            "description": "Identificador unico da integracao.",
+            "description": "Identificador único da integração.",
             "example": "000d23fa-c63c-4268-b617-4749733b3b84"
           },
           "application_id": {
             "type": "string",
             "format": "uuid-v4",
-            "description": "Identificador unico da applicacao.",
+            "description": "Identificador único da applicação.",
             "example": "9efcc6b3-3cec-410b-a241-b1919f3ea033"
           },
           "account_id": {
             "type": "string",
             "format": "uuid-v4",
-            "description": "Identificador unico da conta.",
+            "description": "Identificador único da conta.",
             "example": "3e6873fe-5c75-472b-84ae-ca3c96f196f3"
           },
           "operation_type": {
             "type": "string",
-            "description": "Tipo da operacao PIX ou TRANSFERENCIA (TED | TEF).",
+            "description": "Tipo da operação PIX ou TRANSFERÊNCIA (TED | TEF).",
             "enum": [
               "PIX",
               "TRANSFER"
@@ -2599,7 +2599,7 @@
           },
           "goal": {
             "type": "number",
-            "description": "Objetivo do pagamento, usado em TED e TEF, quando nao enviado sera 10."
+            "description": "Objetivo do pagamento, usado em TED e TEF, quando não enviado será 10."
           },
           "end_to_end_id": {
             "type": "string",
@@ -2608,12 +2608,12 @@
           },
           "antifraud_score": {
             "type": "number",
-            "description": "Score da analise antifraude.",
+            "description": "Score da análise antifraude.",
             "example": 10
           },
           "antifraud_analysis": {
             "type": "string",
-            "description": "Resultado da analise antifraude.",
+            "description": "Resultado da análise antifraude.",
             "enum": [
               "WITH_SUSPECT",
               "WITHOUT_SUSPECT",
@@ -2626,11 +2626,11 @@
           },
           "conciliation_id": {
             "type": "string",
-            "description": "Identificador de conciliacao do pagamento."
+            "description": "Identificador de conciliação do pagamento."
           },
           "description": {
             "type": "string",
-            "description": "Descricao do pagamento."
+            "description": "Descrição do pagamento."
           },
           "status": {
             "type": "string",
@@ -2666,7 +2666,7 @@
               },
               "document_number": {
                 "type": "integer",
-                "description": "Numero do documento do recebedor."
+                "description": "Número do documento do recebedor."
               },
               "document_type": {
                 "type": "string",
@@ -2678,23 +2678,23 @@
               },
               "bank_code": {
                 "type": "integer",
-                "description": "Codigo do banco do recebedor."
+                "description": "Código do banco do recebedor."
               },
               "agency_number": {
                 "type": "integer",
-                "description": "Numero da agencia do recebedor."
+                "description": "Número da agência do recebedor."
               },
               "account_number": {
                 "type": "integer",
-                "description": "Numero da conta do recebedor."
+                "description": "Número da conta do recebedor."
               },
               "account_digit": {
                 "type": "integer",
-                "description": "Digito da conta do recebedor."
+                "description": "Dígito da conta do recebedor."
               },
               "account_type": {
                 "type": "string",
-                "description": "Tipo de conta do recebedor:\n * `CHECKING_ACCOUNT` - Conta corrente\n * `SALARY_ACCOUNT` - Conta salario\n * `SAVINGS_ACCOUNT` - Conta poupanca \n * `PAYMENT_ACCOUNT` - Conta pagamento.\n",
+                "description": "Tipo de conta do recebedor:\n * `CHECKING_ACCOUNT` - Conta corrente\n * `SALARY_ACCOUNT` - Conta salário\n * `SAVINGS_ACCOUNT` - Conta poupança \n * `PAYMENT_ACCOUNT` - Conta pagamento.\n",
                 "enum": [
                   "CHECKING_ACCOUNT",
                   "SAVINGS_ACCOUNT",
@@ -2708,23 +2708,23 @@
           },
           "created_at": {
             "type": "string",
-            "description": "Data de criacao do pagamento.",
+            "description": "Data de criação do pagamento.",
             "example": "2022-01-13T13:53:01.463Z"
           },
           "updated_at": {
             "type": "string",
-            "description": "Data da ultima atualizacao do pagamento.",
+            "description": "Data da última atualização do pagamento.",
             "example": "2022-01-13T13:53:01.463Z"
           },
           "occurrences": {
             "type": "array",
             "items": {
               "type": "object",
-              "description": "Ocorrencias relacionadas ao pagamento.",
+              "description": "Ocorrências relacionadas ao pagamento.",
               "properties": {
                 "status": {
                   "type": "string",
-                  "description": "Status da ocorrencia.",
+                  "description": "Status da ocorrência.",
                   "enum": [
                     "CREATED",
                     "IN_ANALYSIS",
@@ -2738,7 +2738,7 @@
                 },
                 "created_at": {
                   "type": "string",
-                  "description": "Data de criacao da ocorrencia.",
+                  "description": "Data de criação da ocorrência.",
                   "example": "2022-01-13T13:53:01.463Z"
                 }
               }
