@@ -442,7 +442,7 @@
                     "product_id",
                     "kind",
                     "term",
-                    "maturity_date",
+                    "operation_maturity_date",
                     "value",
                     "repurchase_grace_period",
                     "calculation_criteria",
@@ -499,7 +499,7 @@
                       "example": 1,
                       "description": "The operation term"
                     },
-                    "maturity_date": {
+                    "operation_maturity_date": {
                       "type": "string",
                       "format": "date",
                       "description": "Investment maturity date",
@@ -610,6 +610,12 @@
                       "type": "number",
                       "description": "Indicates the minimum remaining value",
                       "example": 500
+                    },
+                    "product_maturity_date": {
+                      "type": "string",
+                      "format": "date",
+                      "description": "Product maturity date",
+                      "example": "2023-11-06T03:00:00.000Z"
                     },
                     "occurrences": {
                       "type": "array",
@@ -916,7 +922,7 @@
                     "product_id",
                     "kind",
                     "term",
-                    "maturity_date",
+                    "operation_maturity_date",
                     "value",
                     "repurchase_grace_period",
                     "calculation_criteria",
@@ -973,7 +979,7 @@
                       "example": 1,
                       "description": "The operation term"
                     },
-                    "maturity_date": {
+                    "operation_maturity_date": {
                       "type": "string",
                       "format": "date",
                       "description": "Investment maturity date",
@@ -1084,6 +1090,12 @@
                       "type": "number",
                       "description": "Indicates the minimum remaining value",
                       "example": 500
+                    },
+                    "product_maturity_date": {
+                      "type": "string",
+                      "format": "date",
+                      "description": "Product maturity date",
+                      "example": "2023-11-06T03:00:00.000Z"
                     },
                     "occurrences": {
                       "type": "array",
@@ -3070,7 +3082,7 @@
           "product_id",
           "kind",
           "term",
-          "maturity_date",
+          "operation_maturity_date",
           "value",
           "repurchase_grace_period",
           "calculation_criteria",
@@ -3127,7 +3139,7 @@
             "example": 1,
             "description": "The operation term"
           },
-          "maturity_date": {
+          "operation_maturity_date": {
             "type": "string",
             "format": "date",
             "description": "Investment maturity date",
@@ -3238,6 +3250,12 @@
             "type": "number",
             "description": "Indicates the minimum remaining value",
             "example": 500
+          },
+          "product_maturity_date": {
+            "type": "string",
+            "format": "date",
+            "description": "Product maturity date",
+            "example": "2023-11-06T03:00:00.000Z"
           },
           "occurrences": {
             "type": "array",
