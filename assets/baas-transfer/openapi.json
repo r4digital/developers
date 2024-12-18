@@ -451,6 +451,35 @@
                           }
                         }
                       }
+                    },
+                    {
+                      "title": "Payment To Same Account",
+                      "properties": {
+                        "error": {
+                          "type": "object",
+                          "properties": {
+                            "code": {
+                              "type": "string",
+                              "title": "Error code",
+                              "example": "PAYMENT_TO_SAME_ACCOUNT",
+                              "enum": [
+                                "PAYMENT_TO_SAME_ACCOUNT"
+                              ]
+                            },
+                            "message": {
+                              "type": "string",
+                              "title": "Error message",
+                              "description": "The recipent account cannot be the same as the payer.",
+                              "example": "The recipent account cannot be the same as the payer."
+                            },
+                            "status_code": {
+                              "type": "number",
+                              "description": "400",
+                              "example": "400"
+                            }
+                          }
+                        }
+                      }
                     }
                   ]
                 }
@@ -2334,6 +2363,35 @@
               "status_code": {
                 "type": "number",
                 "description": "Error status code",
+                "example": "400"
+              }
+            }
+          }
+        }
+      },
+      "PaymentToSameAccount": {
+        "title": "Payment To Same Account",
+        "properties": {
+          "error": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "string",
+                "title": "Error code",
+                "example": "PAYMENT_TO_SAME_ACCOUNT",
+                "enum": [
+                  "PAYMENT_TO_SAME_ACCOUNT"
+                ]
+              },
+              "message": {
+                "type": "string",
+                "title": "Error message",
+                "description": "The recipent account cannot be the same as the payer.",
+                "example": "The recipent account cannot be the same as the payer."
+              },
+              "status_code": {
+                "type": "number",
+                "description": "400",
                 "example": "400"
               }
             }
