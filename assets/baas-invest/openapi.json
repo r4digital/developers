@@ -302,6 +302,11 @@
                             "type": "number",
                             "description": "Liquid income from the application, difference between liquid value and applied value",
                             "example": 68717.71
+                          },
+                          "redemption_minimum_value": {
+                            "type": "number",
+                            "description": "Redemption minimum value",
+                            "example": 500
                           }
                         }
                       }
@@ -2992,6 +2997,11 @@
             "type": "number",
             "description": "Liquid income from the application, difference between liquid value and applied value",
             "example": 68717.71
+          },
+          "redemption_minimum_value": {
+            "type": "number",
+            "description": "Redemption minimum value",
+            "example": 500
           }
         }
       },
