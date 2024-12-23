@@ -61,6 +61,22 @@
                       "description": "Valor total da conta, value + blocked_value.",
                       "example": 0
                     },
+                    "blocked_values": {
+                      "type": "object",
+                      "description": "Valores bloqueados por tipo.",
+                      "properties": {
+                        "administrative": {
+                          "type": "number",
+                          "description": "Bloqueios administrativos.",
+                          "example": 0
+                        },
+                        "judicial": {
+                          "type": "number",
+                          "description": "Bloqueios judiciais.",
+                          "example": 0
+                        }
+                      }
+                    },
                     "created_at": {
                       "type": "string",
                       "description": "Data de criação do saldo.",
@@ -1304,6 +1320,22 @@
             "type": "number",
             "description": "Valor total da conta, value + blocked_value.",
             "example": 0
+          },
+          "blocked_values": {
+            "type": "object",
+            "description": "Valores bloqueados por tipo.",
+            "properties": {
+              "administrative": {
+                "type": "number",
+                "description": "Bloqueios administrativos.",
+                "example": 0
+              },
+              "judicial": {
+                "type": "number",
+                "description": "Bloqueios judiciais.",
+                "example": 0
+              }
+            }
           },
           "created_at": {
             "type": "string",
