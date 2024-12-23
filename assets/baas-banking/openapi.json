@@ -1760,6 +1760,22 @@
                       "description": "Total amount of the account, corresponds to the sum of value and blocked_value",
                       "example": 0
                     },
+                    "blocked_values": {
+                      "type": "object",
+                      "description": "Blocked values by type",
+                      "properties": {
+                        "administrative": {
+                          "type": "number",
+                          "description": "Administrative blocked amount",
+                          "example": 0
+                        },
+                        "judicial": {
+                          "type": "number",
+                          "description": "Judicial blocked amount",
+                          "example": 0
+                        }
+                      }
+                    },
                     "created_at": {
                       "type": "string",
                       "description": "Creation date of balance.",
